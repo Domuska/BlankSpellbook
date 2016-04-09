@@ -70,16 +70,42 @@
     </RelativeLayout>
 
 
-    
-    <ListView
-        android:id="@+id/drawer_listView"
+
+    <RelativeLayout
+        android:id="@+id/drawer_layout2"
         android:layout_width="240dp"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="#111"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
-        />
+        android:layout_gravity="left">
+
+
+        <ListView
+            android:id="@+id/drawer_listView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:background="@color/md_grey_500"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0dp"
+            />
+
+        <Button
+            android:id="@+id/drawer_button_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:text="nappi 1"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/drawer_button_1"
+            android:layout_alignRight="@+id/drawer_button_1"
+            android:layout_alignParentBottom="true"
+            android:text="nappi 2"/>
+
+
+    </RelativeLayout>
 
 
 

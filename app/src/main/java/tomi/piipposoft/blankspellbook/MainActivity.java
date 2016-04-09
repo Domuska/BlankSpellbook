@@ -25,6 +25,11 @@ import android.widget.Toast;
 import tomi.piipposoft.blankspellbook.Database.PowerContract;
 import tomi.piipposoft.blankspellbook.Fragments.SetSpellbookNameDialog;
 
+/**
+ *
+ *
+ */
+
 public class MainActivity extends AppCompatActivity {
 
     private Button spellBookButton, dailySpellsButton;

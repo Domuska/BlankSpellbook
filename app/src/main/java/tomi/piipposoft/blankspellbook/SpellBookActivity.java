@@ -6,10 +6,18 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
+
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.model.DividerDrawerItem;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import tomi.piipposoft.blankspellbook.Database.PowerContract;
 import tomi.piipposoft.blankspellbook.Database.PowerListContract;
@@ -18,6 +26,8 @@ import tomi.piipposoft.blankspellbook.Database.PowerListContract;
  * Activity where all user's spell books are listed in a list
  *
  * http://developer.android.com/training/basics/data-storage/databases.html
+ *
+ * This activity uses https://github.com/mikepenz/MaterialDrawer
  */
 public class SpellBookActivity extends AppCompatActivity {
 
@@ -235,6 +245,30 @@ public class SpellBookActivity extends AppCompatActivity {
 
         myDb = powerDbHelper.getWritableDatabase();
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(toolbar);
+
+        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("Sepon Spellbook");
+        PrimaryDrawerItem item2 = new PrimaryDrawerItem().withName("Askon Spellbook");
+
+        Drawer drawer = new DrawerBuilder()
+                .withActivity(this)
+                .withToolbar(toolbar)
+                .addDrawerItems(
+                        item1,
+                        new DividerDrawerItem(),
+                        item2
+                )
+                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener(){
+
+                    @Override
+                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        Toast.makeText(SpellBookActivity.this, "painoit nappulaa kohadssa " + position, Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "painoit nappulaa kohadssa " + position);
+                        return true;
+                    }
+                })
+                .build();
 
 
 
