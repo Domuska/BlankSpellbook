@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         //handle the navigation drawer
+
         String[] textRows = { "Ithiel's spells", "Dromgar's abilities", "Owen's spells" };
         DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ListView mDrawerListView = (ListView) findViewById(R.id.drawer_listView);

@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.DrawableRes;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -54,6 +55,8 @@ public class SpellBookActivity extends AppCompatActivity {
     private final String TAG = "SpellBookActivity";
     private String powerBookId;
 
+    private FloatingActionButton fab;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +66,16 @@ public class SpellBookActivity extends AppCompatActivity {
         Intent thisIntent = getIntent();
         powerBookId = thisIntent.getStringExtra(EXTRA_POWER_BOOK_ID);
         Log.d(TAG, "ID got from extras: " + powerBookId);
+
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "you pressed FAB, putting stuff into DB...");
+                populateDBHelperMethod();
+            }
+        });
 
 
         /*Log.d(TAG, "Instantiating powerListDbHelper");
@@ -251,16 +264,13 @@ public class SpellBookActivity extends AppCompatActivity {
         //TODO put here recyclerview to show the list of items
 
 
-        Log.d(TAG, "Instantiating powerDbHelper");
+        //Log.d(TAG, "Instantiating powerDbHelper");
         powerDbHelper = new PowerContract.PowerHelper(getApplicationContext());
 
         myDb = powerDbHelper.getWritableDatabase();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
-
-        //TODO: kun profiilia vaihdetaan jotenkin pitäisi saada tyhjennettyä nykyinen itemien lista: https://github.com/mikepenz/MaterialDrawer/issues/860
-
 
         DrawerHelper.createDrawer(this, toolbar);
 
@@ -292,5 +302,20 @@ public class SpellBookActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    private void populateDBHelperMethod(){
+
+        myDb = powerDbHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put(PowerContract.PowerListEntry.COLUMN_NAME_POWER_LIST_NAME, "Suikan priestin power list");
+        myDb.insert(
+                PowerContract.PowerListEntry.TABLE_NAME,
+                null,
+                values
+        );
     }
 }
