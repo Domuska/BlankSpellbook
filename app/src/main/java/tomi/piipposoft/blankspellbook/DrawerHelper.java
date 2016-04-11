@@ -1,7 +1,6 @@
 package tomi.piipposoft.blankspellbook;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.widget.Toolbar;
@@ -11,12 +10,11 @@ import android.widget.Toast;
 
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
+import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
-import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
@@ -34,13 +32,13 @@ public class DrawerHelper {
     private static SQLiteDatabase myDb;
     private static PowerContract.PowerHelper powerDbHelper;
 
+    private static final long SPELL_BOOK_PROFILE_IDENTIFIER = 1;
+    private static final long DAILY_POWER_PROFILE_IDENTIFIER = 2;
+
     public static void createDrawer(Activity activity, Toolbar toolbar) {
 
         final Activity callerActivity = activity;
         final String TAG = "createDrawer, called by " + activity.getLocalClassName();
-
-
-
 
         powerDbHelper = new PowerContract.PowerHelper(activity.getApplicationContext());
         myDb = powerDbHelper.getReadableDatabase();
@@ -65,8 +63,9 @@ public class DrawerHelper {
                 sortOrder
         );
 
-        final List<IDrawerItem> spellBooks = new ArrayList<>();
 
+        //generate drawerItems with data from DB
+        final List<IDrawerItem> spellBooks = new ArrayList<>();
         int i = 0;
         try {
             while (cursor.moveToNext()) {
@@ -82,8 +81,9 @@ public class DrawerHelper {
 
 
 
-        //TODO: muutetaan nämä dynaamisesti luoduiksi tietokannasta
-        final PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("Sepon Spellbook");
+
+
+        /*final PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("Sepon Spellbook");
         final PrimaryDrawerItem item2 = new PrimaryDrawerItem().withName("Askon Spellbook");
         final PrimaryDrawerItem item3 = new PrimaryDrawerItem().withName("Sepon daily spellit");
         final SecondaryDrawerItem item4 = new SecondaryDrawerItem().withName("secondary drawer item");
@@ -94,29 +94,17 @@ public class DrawerHelper {
         itemList.add(item7);
 
         final PrimaryDrawerItem item5 = new PrimaryDrawerItem().withName("Section header").withEnabled(false).withSelectable(false);
-        final PrimaryDrawerItem itemWithChildren = new PrimaryDrawerItem().withName("Section header").withSubItems(itemList);
+        final PrimaryDrawerItem itemWithChildren = new PrimaryDrawerItem().withName("Section header").withSubItems(itemList);*/
 
 
         //Create the drawer itself
-        //TODO: Notice, the position you get in onItemClick might not be correct, headers are apparently also items in it and might screw up things if you use positions
-
-        //TODO: we can add a custom view as header of the drawer with .withHeader, could use this instead of monkeying around with accountHeader:
-        //http://stackoverflow.com/questions/7838921/android-listview-addheaderview-nullpointerexception-for-predefined-views-defin/7839013#7839013
-        //https://github.com/mikepenz/MaterialDrawer/issues/760
-        final com.mikepenz.materialdrawer.Drawer drawer = new DrawerBuilder()
+        final Drawer drawer = new DrawerBuilder()
                 .withActivity(callerActivity)
                 .withToolbar(toolbar)
-                /*.addDrawerItems(
-                        item1,
-                        new DividerDrawerItem(),
-                        item2
-                )*/
                 .withOnDrawerItemClickListener(new com.mikepenz.materialdrawer.Drawer.OnDrawerItemClickListener() {
 
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        //Toast.makeText(callerActivity, "painoit nappulaa kohdassa " + position, Toast.LENGTH_SHORT).show();
-                        //Log.d(TAG, "painoit nappulaa kohdassa " + position);
                         Toast.makeText(callerActivity, "ID of the spell book: " + drawerItem.getIdentifier(), Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "ID of the spell book: " + drawerItem.getIdentifier());
                         return true;
@@ -124,9 +112,15 @@ public class DrawerHelper {
                 })
                 .build();
 
+        //initially populate the list with items
+        populateSpellBooksList(drawer, spellBooks);
 
-        final ProfileDrawerItem spellBooksProfile = new ProfileDrawerItem().withName("Spell Books").withIcon(callerActivity.getResources().getDrawable(R.drawable.iqql_spellbook_billfold));
-        final ProfileDrawerItem dailySpellsProfile = new ProfileDrawerItem().withName("Power List");
+
+        final ProfileDrawerItem spellBooksProfile = new ProfileDrawerItem().withName("Sp ell Books")
+                .withIcon(callerActivity.getResources().getDrawable(R.drawable.iqql_spellbook_billfold))
+                .withIdentifier(SPELL_BOOK_PROFILE_IDENTIFIER);
+        final ProfileDrawerItem dailySpellsProfile = new ProfileDrawerItem().withName("Power List")
+                .withIdentifier(DAILY_POWER_PROFILE_IDENTIFIER);
 
 
         //create the header for the drawer and register it to the drawer
@@ -142,17 +136,10 @@ public class DrawerHelper {
                         drawer.removeAllItems();
 
                         if (profile.equals(spellBooksProfile)) {
-
-                            //drawer.addItem(new SectionDrawerItem().withName("Saved spell books"));
-
-                            for(int i = 0; i < spellBooks.size(); i++){
-                                drawer.addItem(spellBooks.get(i));
-                            }
-
-                            drawer.addStickyFooterItem(new PrimaryDrawerItem().withName("Add new spell book"));
+                            populateSpellBooksList(drawer, spellBooks);
 
                         } else if (profile.equals(dailySpellsProfile)) {
-                            drawer.addItem(item3);
+                            //drawer.addItem(item3);
                         }
                         return true;
                     }
@@ -160,8 +147,17 @@ public class DrawerHelper {
                 .build();
 
 
+
+
     }
 
+    private static void populateSpellBooksList(Drawer drawer, List<IDrawerItem> collection){
+
+        for(int i = 0; i < collection.size(); i++){
+            drawer.addItem(collection.get(i));
+        }
+        drawer.addStickyFooterItem(new PrimaryDrawerItem().withName("Add new spell book"));
+    }
 
 }
 
