@@ -4,6 +4,10 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.support.annotation.DrawableRes;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -13,10 +17,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.mikepenz.iconics.typeface.IIcon;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.holder.ImageHolder;
+import com.mikepenz.materialdrawer.holder.StringHolder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
@@ -254,53 +261,8 @@ public class SpellBookActivity extends AppCompatActivity {
 
         //TODO: kun profiilia vaihdetaan jotenkin pitäisi saada tyhjennettyä nykyinen itemien lista: https://github.com/mikepenz/MaterialDrawer/issues/860
 
-        //Create the header for the drawer...
-        AccountHeader drawerHeader = new AccountHeaderBuilder()
-                .withActivity(this)
-                .withHeaderBackground(R.drawable.drawer_header_background)
-                .addProfiles(new ProfileDrawerItem().withName("Spell Books").withIcon(getResources().getDrawable(R.drawable.iqql_spellbook_billfold)), new ProfileDrawerItem().withName("Power List"))
-                .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
-                    @Override
-                    public boolean onProfileChanged(View view, IProfile profile, boolean current) {
-                        //drawer.removeAllItems();
-                        return true;
-                    }
-                })
-                .build();
 
-
-
-        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("Sepon Spellbook");
-        PrimaryDrawerItem item2 = new PrimaryDrawerItem().withName("Askon Spellbook");
-
-
-        //Create the drawer itself
-        //TODO: Notice, the position you get in onItemClick might not be correct, headers are apparently also items in it and might screw up things if you use positions
-
-        //TODO: we can add a custom view as header of the drawer with .withHeader, could use this instead of monkeying around with accountHeader:
-        //http://stackoverflow.com/questions/7838921/android-listview-addheaderview-nullpointerexception-for-predefined-views-defin/7839013#7839013
-        //https://github.com/mikepenz/MaterialDrawer/issues/760
-        Drawer drawer = new DrawerBuilder()
-                .withActivity(this)
-                .withToolbar(toolbar)
-                .withAccountHeader(drawerHeader)
-                .addDrawerItems(
-                        item1,
-                        new DividerDrawerItem(),
-                        item2
-                )
-                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener(){
-
-                    @Override
-                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        Toast.makeText(SpellBookActivity.this, "painoit nappulaa kohdassa " + position, Toast.LENGTH_SHORT).show();
-                        Log.d(TAG, "painoit nappulaa kohdassa " + position);
-                        return true;
-                    }
-                })
-                .build();
-
-
+        DrawerHelper.createDrawer(this, toolbar);
 
 
 
