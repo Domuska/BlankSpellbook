@@ -9,7 +9,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 
-import tomi.piipposoft.blankspellbook.Database.PowerContract;
+import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
 import tomi.piipposoft.blankspellbook.R;
 
 /**
@@ -30,7 +30,7 @@ public class SetSpellbookNameDialog extends DialogFragment {
 
         //handle adding a new spell book
 
-        PowerContract.PowerHelper powerDbHelper = new PowerContract.PowerHelper(getActivity().getApplicationContext());
+        BlankSpellBookContract.PowerHelper powerDbHelper = new BlankSpellBookContract.PowerHelper(getActivity().getApplicationContext());
         SQLiteDatabase myDb = powerDbHelper.getWritableDatabase();
 
 

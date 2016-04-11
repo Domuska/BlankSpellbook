@@ -2,12 +2,7 @@ package tomi.piipposoft.blankspellbook;
 
 import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.support.annotation.DrawableRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,23 +11,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
-import com.mikepenz.iconics.typeface.IIcon;
-import com.mikepenz.materialdrawer.AccountHeader;
-import com.mikepenz.materialdrawer.AccountHeaderBuilder;
-import com.mikepenz.materialdrawer.Drawer;
-import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.holder.ImageHolder;
-import com.mikepenz.materialdrawer.holder.StringHolder;
-import com.mikepenz.materialdrawer.model.DividerDrawerItem;
-import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
-import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IProfile;
-
-import tomi.piipposoft.blankspellbook.Database.PowerContract;
-import tomi.piipposoft.blankspellbook.Database.PowerListContract;
+import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
 
 /**
  * Activity where all user's spell books are listed in a list
@@ -48,7 +28,7 @@ public class SpellBookActivity extends AppCompatActivity {
 
     //private SpellbookContract.SpellbookListHelper powerListDbHelper;
     //private PowerListContract.PowerListHelper powerListDbHelper;
-    private PowerContract.PowerHelper powerDbHelper;
+    private BlankSpellBookContract.PowerListHelper powerDbHelper;
     private SQLiteDatabase myDb;
 
 
@@ -265,7 +245,7 @@ public class SpellBookActivity extends AppCompatActivity {
 
 
         //Log.d(TAG, "Instantiating powerDbHelper");
-        powerDbHelper = new PowerContract.PowerHelper(getApplicationContext());
+        powerDbHelper = new BlankSpellBookContract.PowerListHelper(getApplicationContext());
 
         myDb = powerDbHelper.getWritableDatabase();
 
@@ -311,9 +291,9 @@ public class SpellBookActivity extends AppCompatActivity {
 
         ContentValues values = new ContentValues();
 
-        values.put(PowerContract.PowerListEntry.COLUMN_NAME_POWER_LIST_NAME, "Suikan priestin power list");
+        values.put(BlankSpellBookContract.PowerListEntry.COLUMN_NAME_POWER_LIST_NAME, "Suikan priestin power list");
         myDb.insert(
-                PowerContract.PowerListEntry.TABLE_NAME,
+                BlankSpellBookContract.PowerListEntry.TABLE_NAME,
                 null,
                 values
         );

@@ -1,16 +1,12 @@
 package tomi.piipposoft.blankspellbook;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -20,9 +16,9 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import tomi.piipposoft.blankspellbook.Database.PowerContract;
+import com.mikepenz.materialdrawer.Drawer;
+
 import tomi.piipposoft.blankspellbook.Fragments.SetSpellbookNameDialog;
 
 /**
@@ -73,15 +69,20 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
 
+
         //handle the navigation drawer
 
-        String[] textRows = { "Ithiel's spells", "Dromgar's abilities", "Owen's spells" };
+        DrawerHelper.createDrawer(this, toolbar);
+
+
+         //OLD OWN IMPLEMENTATION OF NAVIGATION DRAWER, SHOULD GO TO TRASH BIN
+        /*String[] textRows = { "Ithiel's spells", "Dromgar's abilities", "Owen's spells" };
         DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ListView mDrawerListView = (ListView) findViewById(R.id.drawer_listView);
 
         mDrawerListView.setAdapter(new ArrayAdapter<String>(
                 this, R.layout.drawer_list_item, textRows
-        ));
+        ));*/
 
         Button mAddSpellBookButton = (Button) findViewById(R.id.drawer_addSpellBookButton);
         mAddSpellBookButton.setOnClickListener(new View.OnClickListener(){
@@ -94,7 +95,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         //add button to toolbar to open the drawer
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+
+        mDrawerToggle = new ActionBarDrawerToggle(this, DrawerHelper.getDrawerLayout(),
                 R.string.open_drawer_info,
                 R.string.close_drawer_info){
 
@@ -111,8 +113,10 @@ public class MainActivity extends AppCompatActivity {
 
         };
 
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-        toolbar.setNavigationIcon(R.mipmap.ic_menu_black_24dp);
+
+        //mDrawerLayout.setDrawerListener(mDrawerToggle);
+        //toolbar.setNavigationIcon(R.mipmap.ic_menu_black_24dp);
+
 
     }
 
