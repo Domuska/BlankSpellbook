@@ -1,13 +1,12 @@
 package tomi.piipposoft.blankspellbook;
 
 import android.app.Activity;
-import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -54,7 +53,7 @@ public class DrawerHelper{
         callerActivity = (AppCompatActivity) activity;
         TAG = "createDrawer, called by " + activity.getLocalClassName();
 
-        //fetchDataFromDB();
+        //fetchSpellBookDataFromDB();
 
         //Create the drawer itself
         mDrawer = new DrawerBuilder()
@@ -65,17 +64,12 @@ public class DrawerHelper{
 
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        //Toast.makeText(callerActivity, "ID of the spell book: " + drawerItem.getIdentifier(), Toast.LENGTH_SHORT).show();
 
                         if (drawerItem.getIdentifier() == ADD_SPELL_BOOK_FOOTER_IDENTIFIER) {
-                            //populateDBHelperMethod();
-                            showSetSpellbookNameDialog();
-
-
+                            DialogFragment dialog = new SetSpellbookNameDialog();
+                            dialog.show(callerActivity.getSupportFragmentManager(), "SetSpellBookDialogFragment");
                             populateSpellBooksList(mDrawer);
-                        } else {
-                            Log.d(TAG, "clicked item was not footer, doing something else");
-                            //this whole onItemClick thing should not be here, see populateSpellBooksList TODO
+
                         }
 
                         Log.d(TAG, "Drawer item identifier: " + drawerItem.getIdentifier());
@@ -108,13 +102,10 @@ public class DrawerHelper{
                         mDrawer.removeAllItems();
 
                         if (profile.equals(spellBooksProfile)) {
-
                             populateSpellBooksList(mDrawer);
 
                         } else if (profile.equals(dailySpellsProfile)) {
-
-                            //drawer.addItem(item3);
-
+                            //TODO: handle daily spells profile side
                         }
                         return true;
                     }
@@ -136,7 +127,7 @@ public class DrawerHelper{
      * Helper method to fetch the data from database
      * Will store the data in arrayList spellBooks class variable
      */
-    private static void fetchDataFromDB(){
+    private static void fetchSpellBookDataFromDB(){
 
         //// TODO: 11-Apr-16 should most likely be put to asynctask at some point
 
@@ -144,7 +135,6 @@ public class DrawerHelper{
         myDb = powerDbHelper.getReadableDatabase();
 
         //get all spell books and daily spell lists from DB
-        //should this be put into an asynctask?
 
         String[] projection = {
                 BlankSpellBookContract.PowerListEntry._ID,
@@ -171,9 +161,11 @@ public class DrawerHelper{
             int i = 0;
             try {
                 while (cursor.moveToNext()) {
-                    spellBooks.add(new PrimaryDrawerItem()
-                            .withName(cursor.getString(cursor.getColumnIndexOrThrow(PowerListContract.PowerListEntry.COLUMN_NAME_POWER_LIST_NAME)))
-                            .withIdentifier(cursor.getLong(cursor.getColumnIndexOrThrow(PowerListContract.PowerListEntry._ID))));
+                    spellBooks.add(initializeSpellBookListItem(
+                            cursor.getString(cursor.getColumnIndexOrThrow(PowerListContract.PowerListEntry.COLUMN_NAME_POWER_LIST_NAME)),
+                            cursor.getLong(cursor.getColumnIndexOrThrow(PowerListContract.PowerListEntry._ID))
+                    ));
+
                     Log.d(TAG, "_ID of item found: " + cursor.getLong(cursor.getColumnIndexOrThrow(PowerListContract.PowerListEntry._ID)));
                     i++;
                 }
@@ -198,19 +190,34 @@ public class DrawerHelper{
 
         drawer.removeAllItems();
 
-        fetchDataFromDB();
+        fetchSpellBookDataFromDB();
 
-        //// TODO: 11-Apr-16 add onDrawerItemClickListeners to the drawer items
         for (int i = 0; i < spellBooks.size(); i++) {
             drawer.addItem(spellBooks.get(i));
+
         }
 
 
         if(drawer.getStickyFooter() == null) {
-
+            //note, onDrawerItemClickListener not added here because it does not seem to work,
+            //it is added to the drawer itself. Maybe a bug in MaterialDrawer library?
             drawer.addStickyFooterItem(new PrimaryDrawerItem()
                     .withName("Add new spell book")
-                    .withIdentifier(ADD_SPELL_BOOK_FOOTER_IDENTIFIER));
+                    .withIdentifier(ADD_SPELL_BOOK_FOOTER_IDENTIFIER)
+                    /*.withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                        @Override
+                        public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+
+                            showSetSpellbookNameDialog();
+                            //DialogFragment dialog = new SetSpellbookNameDialog();
+                            //dialog.show(callerActivity.getSupportFragmentManager(), "SetSpellBookDialogFragment");
+                            Log.d(TAG, "clicked add new spell book button!");
+                            populateSpellBooksList(mDrawer);
+
+                            return true;
+                        }
+                    })*/
+            );
         }
     }
 
@@ -224,7 +231,34 @@ public class DrawerHelper{
 
     }
 
-    private static void populateDBHelperMethod(){
+    /**
+     * Helper method used to initialize a drawer item in the spell book side
+     *
+     * @param itemName name of the item
+     * @param itemId ID of the item (from database)
+     * @return a newly initialized PrimaryDrawerItem with onDrawerItemClickListener added
+     */
+    private static PrimaryDrawerItem initializeSpellBookListItem(String itemName, final Long itemId) {
+
+        return new PrimaryDrawerItem()
+                .withName(itemName)
+                .withIdentifier(itemId)
+                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+
+                        Intent i = new Intent(callerActivity, SpellBookActivity.class);
+                        i.putExtra(SpellBookActivity.EXTRA_POWER_BOOK_ID, itemId);
+                        callerActivity.startActivity(i);
+                        return true;
+                    }
+                });
+    }
+
+}
+
+/*
+private static void populateDBHelperMethod(){
 
         myDb = powerDbHelper.getWritableDatabase();
 
@@ -237,15 +271,7 @@ public class DrawerHelper{
                 values
         );
     }
-
-    private static void showSetSpellbookNameDialog(){
-
-        DialogFragment dialog = new SetSpellbookNameDialog();
-        dialog.show(callerActivity.getSupportFragmentManager(), "SetSpellBookDialogFragment");
-
-    }
-
-}
+ */
 
 /*
  AccountHeader drawerHeader = new AccountHeaderBuilder()

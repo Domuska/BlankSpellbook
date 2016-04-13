@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -13,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
+import tomi.piipposoft.blankspellbook.Fragments.SetSpellbookNameDialog;
 
 /**
  * Activity where all user's spell books are listed in a list
@@ -21,7 +23,8 @@ import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
  *
  *
  */
-public class SpellBookActivity extends AppCompatActivity {
+public class SpellBookActivity extends AppCompatActivity
+        implements SetSpellbookNameDialog.NoticeDialogListener{
 
     //TODO: put this field to preferences maybe?
     public static final String EXTRA_POWER_BOOK_ID = "powerBookId";
@@ -33,7 +36,7 @@ public class SpellBookActivity extends AppCompatActivity {
 
 
     private final String TAG = "SpellBookActivity";
-    private String powerBookId;
+    private Long powerBookId;
 
     private FloatingActionButton fab;
 
@@ -44,7 +47,7 @@ public class SpellBookActivity extends AppCompatActivity {
         setContentView(R.layout.activity_spell_book);
 
         Intent thisIntent = getIntent();
-        powerBookId = thisIntent.getStringExtra(EXTRA_POWER_BOOK_ID);
+        powerBookId = thisIntent.getLongExtra(EXTRA_POWER_BOOK_ID, -1);
         Log.d(TAG, "ID got from extras: " + powerBookId);
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -285,6 +288,12 @@ public class SpellBookActivity extends AppCompatActivity {
     }
 
 
+    // The method that is called when positive button on SetSpellbookNameDialog is clicked
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        DrawerHelper.updateDrawer();
+    }
+
     private void populateDBHelperMethod(){
 
         myDb = powerDbHelper.getWritableDatabase();
@@ -298,4 +307,6 @@ public class SpellBookActivity extends AppCompatActivity {
                 values
         );
     }
+
+
 }
