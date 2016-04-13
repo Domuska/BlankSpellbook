@@ -37,13 +37,14 @@ import tomi.piipposoft.blankspellbook.Fragments.SetSpellbookNameDialog;
 public class DrawerHelper{
 
     private static SQLiteDatabase myDb;
-    private static BlankSpellBookContract.PowerListHelper powerDbHelper;
+    private static BlankSpellBookContract.PowerListEntryHelper powerDbHelper;
     private static AppCompatActivity callerActivity;
     private static String TAG;
 
-    private static final long SPELL_BOOK_PROFILE_IDENTIFIER = 1;
-    private static final long DAILY_POWER_PROFILE_IDENTIFIER = 2;
-    private static final long ADD_SPELL_BOOK_FOOTER_IDENTIFIER = 3;
+    private static final long SPELL_BOOK_PROFILE_IDENTIFIER = -1;
+    private static final long DAILY_POWER_PROFILE_IDENTIFIER = -2;
+    private static final long ADD_SPELL_BOOK_FOOTER_IDENTIFIER = -3;
+    private static final long ADD_DAILY_POWER_LIST_FOOTER_IDENTIFIER = -4;
 
     private static Drawer mDrawer;
     private static List<IDrawerItem> spellBooks;
@@ -71,11 +72,16 @@ public class DrawerHelper{
                             populateSpellBooksList(mDrawer);
 
                         }
+                        else if (drawerItem.getIdentifier() == ADD_DAILY_POWER_LIST_FOOTER_IDENTIFIER){
+
+                            // handle what happens when profile is set to daily power list
+                        }
 
                         Log.d(TAG, "Drawer item identifier: " + drawerItem.getIdentifier());
-                        return true;
+                        return false;
                     }
                 })
+                .withCloseOnClick(false)
                 .build();
 
         //initially populate the list with items
@@ -105,7 +111,8 @@ public class DrawerHelper{
                             populateSpellBooksList(mDrawer);
 
                         } else if (profile.equals(dailySpellsProfile)) {
-                            //TODO: handle daily spells profile side
+                            populateDailyPowersList(mDrawer);
+
                         }
                         return true;
                     }
@@ -131,7 +138,7 @@ public class DrawerHelper{
 
         //// TODO: 11-Apr-16 should most likely be put to asynctask at some point
 
-        powerDbHelper = new BlankSpellBookContract.PowerListHelper(callerActivity.getApplicationContext());
+        powerDbHelper = new BlankSpellBookContract.PowerListEntryHelper(callerActivity.getApplicationContext());
         myDb = powerDbHelper.getReadableDatabase();
 
         //get all spell books and daily spell lists from DB
@@ -189,6 +196,12 @@ public class DrawerHelper{
     private static void populateSpellBooksList(Drawer drawer){
 
         drawer.removeAllItems();
+        drawer.removeAllStickyFooterItems();
+
+
+        drawer.addStickyFooterItem(new PrimaryDrawerItem()
+                .withName("Add new spell book")
+                .withIdentifier(ADD_SPELL_BOOK_FOOTER_IDENTIFIER));
 
         fetchSpellBookDataFromDB();
 
@@ -198,12 +211,12 @@ public class DrawerHelper{
         }
 
 
-        if(drawer.getStickyFooter() == null) {
+       /* if(drawer.getStickyFooter() == null) {
             //note, onDrawerItemClickListener not added here because it does not seem to work,
             //it is added to the drawer itself. Maybe a bug in MaterialDrawer library?
             drawer.addStickyFooterItem(new PrimaryDrawerItem()
                     .withName("Add new spell book")
-                    .withIdentifier(ADD_SPELL_BOOK_FOOTER_IDENTIFIER)
+                    .withIdentifier(ADD_SPELL_BOOK_FOOTER_IDENTIFIER)*/
                     /*.withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                         @Override
                         public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
@@ -217,8 +230,8 @@ public class DrawerHelper{
                             return true;
                         }
                     })*/
-            );
-        }
+            //);
+        //}
     }
 
     /**
@@ -228,7 +241,13 @@ public class DrawerHelper{
      */
     private static void populateDailyPowersList(Drawer drawer){
 
+        drawer.removeAllItems();
+        drawer.removeAllStickyFooterItems();
 
+
+        drawer.addStickyFooterItem(new PrimaryDrawerItem()
+            .withName("Add new daily power list")
+            .withIdentifier(ADD_DAILY_POWER_LIST_FOOTER_IDENTIFIER));
     }
 
     /**

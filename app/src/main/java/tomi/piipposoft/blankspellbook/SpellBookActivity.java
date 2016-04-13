@@ -31,7 +31,7 @@ public class SpellBookActivity extends AppCompatActivity
 
     //private SpellbookContract.SpellbookListHelper powerListDbHelper;
     //private PowerListContract.PowerListHelper powerListDbHelper;
-    private BlankSpellBookContract.PowerListHelper powerDbHelper;
+    private BlankSpellBookContract.PowerListEntryHelper powerDbHelper;
     private SQLiteDatabase myDb;
 
 
@@ -55,8 +55,8 @@ public class SpellBookActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "you pressed FAB, putting stuff into DB...");
-                populateDBHelperMethod();
+                Log.d(TAG, "you pressed FAB!");
+
             }
         });
 
@@ -248,7 +248,7 @@ public class SpellBookActivity extends AppCompatActivity
 
 
         //Log.d(TAG, "Instantiating powerDbHelper");
-        powerDbHelper = new BlankSpellBookContract.PowerListHelper(getApplicationContext());
+        powerDbHelper = new BlankSpellBookContract.PowerListEntryHelper(getApplicationContext());
 
         myDb = powerDbHelper.getWritableDatabase();
 

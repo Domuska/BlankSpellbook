@@ -57,8 +57,6 @@ public class SetSpellbookNameDialog extends DialogFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-
-
     }
 
     @NonNull
