@@ -19,7 +19,7 @@ import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
  *
  * http://developer.android.com/training/basics/data-storage/databases.html
  *
- * This activity uses https://github.com/mikepenz/MaterialDrawer
+ *
  */
 public class SpellBookActivity extends AppCompatActivity {
 

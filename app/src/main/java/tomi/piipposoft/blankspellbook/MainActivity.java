@@ -26,12 +26,15 @@ import tomi.piipposoft.blankspellbook.Fragments.SetSpellbookNameDialog;
  *
  */
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements SetSpellbookNameDialog.NoticeDialogListener{
 
     private Button spellBookButton, dailySpellsButton;
     private FloatingActionButton fab;
     private Activity thisActivity;
     private ActionBarDrawerToggle mDrawerToggle;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,14 +87,14 @@ public class MainActivity extends AppCompatActivity {
                 this, R.layout.drawer_list_item, textRows
         ));*/
 
-        Button mAddSpellBookButton = (Button) findViewById(R.id.drawer_addSpellBookButton);
+        /*Button mAddSpellBookButton = (Button) findViewById(R.id.drawer_addSpellBookButton);
         mAddSpellBookButton.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v){
                 showSetSpellbookNameDialog();
             }
-        });
+        });*/
 
 
         //add button to toolbar to open the drawer
@@ -157,11 +160,10 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
-    private void showSetSpellbookNameDialog(){
-
-        DialogFragment dialog = new SetSpellbookNameDialog();
-        dialog.show(getSupportFragmentManager(), "SetSpellBookDialogFragment");
+    // The method that is called when positive button on SetSpellbookNameDialog is clicked
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        DrawerHelper.updateDrawer();
     }
 
 

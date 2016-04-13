@@ -7,7 +7,7 @@
 
     <!-- instead of this we could use the neat edittext thingy from design support library -->
     <EditText
-        android:id="@+id/spellbookname"
+        android:id="@+id/edittext_spellbookname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/createspellbook_hint"
