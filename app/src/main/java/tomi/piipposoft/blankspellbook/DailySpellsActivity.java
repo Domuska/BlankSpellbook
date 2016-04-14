@@ -49,7 +49,7 @@ public class DailySpellsActivity extends AppCompatActivity
 
     // The method that is called when positive button on SetSpellbookNameDialog is clicked
     @Override
-    public void onDialogPositiveClick(DialogFragment dialog) {
-        DrawerHelper.updateDrawer();
+    public void onSetSpellbookNameDialogPositiveClick(DialogFragment dialog) {
+        DrawerHelper.updateSpellBookList();
     }
 }

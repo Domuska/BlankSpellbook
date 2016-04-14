@@ -27,6 +27,7 @@ import java.util.List;
 
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
 import tomi.piipposoft.blankspellbook.Database.PowerListContract;
+import tomi.piipposoft.blankspellbook.Fragments.SetDailyPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.Fragments.SetSpellbookNameDialog;
 
 /**
@@ -37,7 +38,7 @@ import tomi.piipposoft.blankspellbook.Fragments.SetSpellbookNameDialog;
 public class DrawerHelper{
 
     private static SQLiteDatabase myDb;
-    private static BlankSpellBookContract.PowerListEntryHelper powerDbHelper;
+    private static BlankSpellBookContract.DBHelper mDbHelper;
     private static AppCompatActivity callerActivity;
     private static String TAG;
 
@@ -56,7 +57,7 @@ public class DrawerHelper{
 
 
 
-        //fetchSpellBookDataFromDB();
+        //fetchSpellBookListDataFromDB();
 
         //Create the drawer itself
         mDrawer = new DrawerBuilder()
@@ -72,13 +73,15 @@ public class DrawerHelper{
                         if (drawerItem.getIdentifier() == ADD_POWER_LIST_FOOTER_IDENTIFIER) {
 
                             DialogFragment dialog = new SetSpellbookNameDialog();
-                            dialog.show(callerActivity.getSupportFragmentManager(), "SetSpellBookDialogFragment");
-                            populateSpellBooksList(mDrawer);
+                            dialog.show(callerActivity.getSupportFragmentManager(), "SetSpellBookNameDialogFragment");
+                            //populateSpellBooksList(mDrawer);
 
                         }
                         else if (drawerItem.getIdentifier() == ADD_DAILY_POWER_LIST_FOOTER_IDENTIFIER){
 
-                            // handle what happens when profile is set to daily power list
+                            DialogFragment dialog = new SetDailyPowerListNameDialog();
+                            dialog.show(callerActivity.getSupportFragmentManager(), "SetDailyPowerListNameDialog");
+                            //populateDailyPowersList(mDrawer);
                         }
 
                         //Log.d(TAG, "Drawer item identifier: " + drawerItem.getIdentifier());
@@ -109,11 +112,10 @@ public class DrawerHelper{
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
 
                     //Handle account changing
-
                     @Override
                     public boolean onProfileChanged(View view, IProfile profile, boolean current) {
 
-                        Log.d(TAG, "withOnAccoutnHeader... ID: " + profile.getIdentifier());
+                        Log.d(TAG, "withOnAccountHeader... profile ID: " + profile.getIdentifier());
 
                         if (profile.getIdentifier() == SPELL_BOOKS_PROFILE_IDENTIFIER) {
                             populateSpellBooksList(mDrawer);
@@ -132,8 +134,12 @@ public class DrawerHelper{
         return mDrawer.getDrawerLayout();
     }
 
-    public static void updateDrawer(){
+    public static void updateSpellBookList(){
         populateSpellBooksList(mDrawer);
+    }
+
+    public static void updateDailyPowersList(){
+        populateDailyPowersList(mDrawer);
     }
 
 
@@ -141,12 +147,12 @@ public class DrawerHelper{
      * Helper method to fetch the data from database
      * Will store the data in arrayList spellBooks class variable
      */
-    private static void fetchSpellBookDataFromDB(){
+    private static void fetchSpellBookListDataFromDB(){
 
         //// TODO: 11-Apr-16 should most likely be put to asynctask at some point
 
-        powerDbHelper = new BlankSpellBookContract.PowerListEntryHelper(callerActivity.getApplicationContext());
-        myDb = powerDbHelper.getReadableDatabase();
+        mDbHelper = new BlankSpellBookContract.DBHelper(callerActivity.getApplicationContext());
+        myDb = mDbHelper.getReadableDatabase();
 
         //get all spell books and daily spell lists from DB
 
@@ -209,12 +215,16 @@ public class DrawerHelper{
                 .withName("Add new spell book")
                 .withIdentifier(ADD_POWER_LIST_FOOTER_IDENTIFIER));
 
-        fetchSpellBookDataFromDB();
+        fetchSpellBookListDataFromDB();
 
         for (int i = 0; i < spellBooks.size(); i++) {
             drawer.addItem(spellBooks.get(i));
 
         }
+    }
+
+    private static void fetchDailyPowerListDataFromDB(){
+
     }
 
     /**
@@ -262,7 +272,7 @@ public class DrawerHelper{
 /*
 private static void populateDBHelperMethod(){
 
-        myDb = powerDbHelper.getWritableDatabase();
+        myDb = mDbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
 

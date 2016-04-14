@@ -31,7 +31,7 @@ public class SpellBookActivity extends AppCompatActivity
 
     //private SpellbookContract.SpellbookListHelper powerListDbHelper;
     //private PowerListContract.PowerListHelper powerListDbHelper;
-    private BlankSpellBookContract.PowerListEntryHelper powerDbHelper;
+    private BlankSpellBookContract.DBHelper mDbHelper;
     private SQLiteDatabase myDb;
 
 
@@ -63,10 +63,10 @@ public class SpellBookActivity extends AppCompatActivity
 
         /*Log.d(TAG, "Instantiating powerListDbHelper");
         //powerListDbHelper = new PowerListContract.PowerListHelper(getApplicationContext());
-        powerDbHelper = new PowerContract.PowerHelper(getApplicationContext());
+        mDbHelper = new PowerContract.PowerHelper(getApplicationContext());
 
         //myDb = powerListDbHelper.getWritableDatabase();
-        myDb = powerDbHelper.getWritableDatabase();
+        myDb = mDbHelper.getWritableDatabase();
 
         ContentValues values2 = new ContentValues();
         //values2.put(PowerListContract.PowerListEntry.COLUMN_NAME_POWER_LIST_ID, 123);
@@ -84,7 +84,7 @@ public class SpellBookActivity extends AppCompatActivity
 
 
         //myDb = powerListDbHelper.getReadableDatabase();
-        myDb = powerDbHelper.getReadableDatabase();
+        myDb = mDbHelper.getReadableDatabase();
 
         //specify which columns from the database we use
         String[] projection2 = {
@@ -140,9 +140,9 @@ public class SpellBookActivity extends AppCompatActivity
         //Long powerListId = cursor3.getLong(cursor3.getColumnIndexOrThrow(PowerListContract.PowerListEntry._ID));
         Long powerListId = cursor3.getLong(cursor3.getColumnIndexOrThrow(PowerContract.PowerListEntry._ID));
 
-        powerDbHelper = new PowerContract.PowerHelper(getApplicationContext());
+        mDbHelper = new PowerContract.PowerHelper(getApplicationContext());
 
-        myDb = powerDbHelper.getWritableDatabase();
+        myDb = mDbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
 
@@ -159,7 +159,7 @@ public class SpellBookActivity extends AppCompatActivity
                 null,
                 values);
 
-        myDb = powerDbHelper.getReadableDatabase();
+        myDb = mDbHelper.getReadableDatabase();
 
         String[] projection = {
             PowerContract.PowerEntry.COLUMN_NAME_POWER_NAME,
@@ -247,10 +247,10 @@ public class SpellBookActivity extends AppCompatActivity
         //TODO put here recyclerview to show the list of items
 
 
-        //Log.d(TAG, "Instantiating powerDbHelper");
-        powerDbHelper = new BlankSpellBookContract.PowerListEntryHelper(getApplicationContext());
+        //Log.d(TAG, "Instantiating mDbHelper");
+        mDbHelper = new BlankSpellBookContract.DBHelper(getApplicationContext());
 
-        myDb = powerDbHelper.getWritableDatabase();
+        myDb = mDbHelper.getWritableDatabase();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
@@ -290,13 +290,13 @@ public class SpellBookActivity extends AppCompatActivity
 
     // The method that is called when positive button on SetSpellbookNameDialog is clicked
     @Override
-    public void onDialogPositiveClick(DialogFragment dialog) {
-        DrawerHelper.updateDrawer();
+    public void onSetSpellbookNameDialogPositiveClick(DialogFragment dialog) {
+        DrawerHelper.updateSpellBookList();
     }
 
     private void populateDBHelperMethod(){
 
-        myDb = powerDbHelper.getWritableDatabase();
+        myDb = mDbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
 

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 
 import android.support.v4.app.DialogFragment;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,12 +12,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 
-import com.mikepenz.materialdrawer.Drawer;
-
+import tomi.piipposoft.blankspellbook.Fragments.SetDailyPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.Fragments.SetSpellbookNameDialog;
 
 /**
@@ -27,7 +23,8 @@ import tomi.piipposoft.blankspellbook.Fragments.SetSpellbookNameDialog;
  */
 
 public class MainActivity extends AppCompatActivity
-        implements SetSpellbookNameDialog.NoticeDialogListener{
+        implements SetSpellbookNameDialog.NoticeDialogListener,
+        SetDailyPowerListNameDialog.NoticeDialogListener{
 
     private Button spellBookButton, dailySpellsButton;
     private FloatingActionButton fab;
@@ -162,9 +159,13 @@ public class MainActivity extends AppCompatActivity
 
     // The method that is called when positive button on SetSpellbookNameDialog is clicked
     @Override
-    public void onDialogPositiveClick(DialogFragment dialog) {
-        DrawerHelper.updateDrawer();
+    public void onSetSpellbookNameDialogPositiveClick(DialogFragment dialog) {
+        DrawerHelper.updateSpellBookList();
     }
 
+    @Override
+    public void onSetDailyPowerNameDialogPositiveClick(DialogFragment dialog) {
+        DrawerHelper.updateDailyPowersList();
+    }
 
 }

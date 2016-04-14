@@ -12,10 +12,13 @@
 
 
     <!-- Strings for alert dialogs -->
-    <string name="alertdialog_createspellbook">Create new spellbook</string>
+    <string name="alertdialog_createspellbook">Create new spell book</string>
     <string name="createspellbook_hint">Spellbook\'s name</string>
+    <string name="alertdialog_createdailypowerlist">Create new daily power list</string>
+    <string name="createdailypowerlist_hint">Power List\'s name</string>
     <string name="createspellbook_create">Create</string>
     <string name="createspellbook_cancel">Cancel</string>
+
 
     <!-- Strings for spell book's ordinary fields -->
     <string name = "spellbook_name">Name</string>
