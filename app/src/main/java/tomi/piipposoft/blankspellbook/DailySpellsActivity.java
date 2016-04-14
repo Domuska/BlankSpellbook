@@ -21,7 +21,6 @@ public class DailySpellsActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerHelper.createDrawer(this, toolbar);
 
     }
 
@@ -45,6 +44,12 @@ public class DailySpellsActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DrawerHelper.createDrawer(this, (Toolbar)findViewById(R.id.my_toolbar));
     }
 
     // The method that is called when positive button on SetSpellbookNameDialog is clicked

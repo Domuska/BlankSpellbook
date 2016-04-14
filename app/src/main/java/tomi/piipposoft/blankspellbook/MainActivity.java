@@ -14,6 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.mikepenz.materialdrawer.Drawer;
+
 import tomi.piipposoft.blankspellbook.Fragments.SetDailyPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.Fragments.SetSpellbookNameDialog;
 
@@ -70,11 +72,6 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
 
-        //handle the navigation drawer
-
-        DrawerHelper.createDrawer(this, toolbar);
-
-
          //OLD OWN IMPLEMENTATION OF NAVIGATION DRAWER, SHOULD GO TO TRASH BIN
         /*String[] textRows = { "Ithiel's spells", "Dromgar's abilities", "Owen's spells" };
         DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -95,8 +92,7 @@ public class MainActivity extends AppCompatActivity
 
 
         //add button to toolbar to open the drawer
-
-        mDrawerToggle = new ActionBarDrawerToggle(this, DrawerHelper.getDrawerLayout(),
+        /*mDrawerToggle = new ActionBarDrawerToggle(this, DrawerHelper.getDrawerLayout(),
                 R.string.open_drawer_info,
                 R.string.close_drawer_info){
 
@@ -111,7 +107,7 @@ public class MainActivity extends AppCompatActivity
                 getSupportActionBar().setTitle("Power lists");
             }
 
-        };
+        };*/
 
 
         //mDrawerLayout.setDrawerListener(mDrawerToggle);
@@ -164,8 +160,45 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        //create navigation drawer
+        DrawerHelper.createDrawer(this, (Toolbar)this.findViewById(R.id.my_toolbar));
+
+        //add button to toolbar to open the drawer
+        mDrawerToggle = new ActionBarDrawerToggle(this, DrawerHelper.getDrawerLayout(),
+                R.string.open_drawer_info,
+                R.string.close_drawer_info){
+
+            public void onDrawerClosed(View view){
+                super.onDrawerClosed(view);
+                getSupportActionBar().setTitle("Blank spellbook");
+
+            }
+
+            public void onDrawerOpened(View view){
+                super.onDrawerOpened(view);
+                getSupportActionBar().setTitle("Power lists");
+            }
+
+        };
+    }
+
+    @Override
     public void onSetDailyPowerNameDialogPositiveClick(DialogFragment dialog) {
         DrawerHelper.updateDailyPowersList();
     }
 
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+    }
 }

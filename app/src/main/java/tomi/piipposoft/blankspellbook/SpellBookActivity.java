@@ -255,7 +255,7 @@ public class SpellBookActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerHelper.createDrawer(this, toolbar);
+
 
 
 
@@ -263,6 +263,12 @@ public class SpellBookActivity extends AppCompatActivity
         //String spellBookName = cursor.getString(cursor.getColumnIndex(SpellBookContract.SpellBookList.COLUMN_NAME_POWER_LIST_NAME));
         //Toast.makeText(this, spellBookName, Toast.LENGTH_LONG).show();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DrawerHelper.createDrawer(this, (Toolbar)findViewById(R.id.my_toolbar));
     }
 
     @Override
@@ -292,6 +298,11 @@ public class SpellBookActivity extends AppCompatActivity
     @Override
     public void onSetSpellbookNameDialogPositiveClick(DialogFragment dialog) {
         DrawerHelper.updateSpellBookList();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     private void populateDBHelperMethod(){

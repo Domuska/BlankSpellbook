@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -59,39 +61,10 @@ public class DrawerHelper{
         mDbHelper = new BlankSpellBookContract.DBHelper(callerActivity.getApplicationContext());
 
 
-        //fetchSpellBookListDataFromDB();
+        createDrawer(toolbar);
 
         //Create the drawer itself
-        mDrawer = new DrawerBuilder()
-                .withActivity(callerActivity)
-                .withToolbar(toolbar)
-                .withActionBarDrawerToggle(true)
-                .withOnDrawerItemClickListener(new com.mikepenz.materialdrawer.Drawer.OnDrawerItemClickListener() {
 
-                    // Handle sticky footer item clicks
-                    @Override
-                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-
-                        if (drawerItem.getIdentifier() == ADD_POWER_LIST_FOOTER_IDENTIFIER) {
-
-                            DialogFragment dialog = new SetSpellbookNameDialog();
-                            dialog.show(callerActivity.getSupportFragmentManager(), "SetSpellBookNameDialogFragment");
-                            //populateSpellBooksList(mDrawer);
-
-                        }
-                        else if (drawerItem.getIdentifier() == ADD_DAILY_POWER_LIST_FOOTER_IDENTIFIER){
-
-                            DialogFragment dialog = new SetDailyPowerListNameDialog();
-                            dialog.show(callerActivity.getSupportFragmentManager(), "SetDailyPowerListNameDialog");
-                            //populateDailyPowersList(mDrawer);
-                        }
-
-                        //Log.d(TAG, "Drawer item identifier: " + drawerItem.getIdentifier());
-                        return false;
-                    }
-                })
-                .withCloseOnClick(false)
-                .build();
 
         //initially populate the list with items
         populateSpellBooksList(mDrawer);
@@ -130,6 +103,8 @@ public class DrawerHelper{
                 })
                 .build();
 
+
+
     }
 
     public static DrawerLayout getDrawerLayout(){
@@ -144,6 +119,57 @@ public class DrawerHelper{
         populateDailyPowersList(mDrawer);
     }
 
+
+    private static void createDrawer(Toolbar toolbar){
+        mDrawer = new DrawerBuilder()
+                .withActivity(callerActivity)
+                .withToolbar(toolbar)
+                .withActionBarDrawerToggle(true)
+                .withOnDrawerItemClickListener(new com.mikepenz.materialdrawer.Drawer.OnDrawerItemClickListener() {
+
+                    // Handle sticky footer item clicks
+                    @Override
+                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+
+                        if (drawerItem.getIdentifier() == ADD_POWER_LIST_FOOTER_IDENTIFIER) {
+
+
+                            try {
+                                DialogFragment dialog = new SetSpellbookNameDialog();
+                                dialog.show(callerActivity.getSupportFragmentManager(), "SetSpellBookNameDialogFragment");
+                            } catch(IllegalStateException e){
+                                /* do nothing, apparently there is no way to avoid this error after
+                                    saveInstanceState has been performed,see:
+                                    http://stackoverflow.com/questions/7575921/illegalstateexception-can-not-perform-this-action-after-onsaveinstancestate-wit */
+                                Log.d(TAG, "error while opening SetSpellbookNameDialog");
+                                e.printStackTrace();
+
+                            }
+                            //populateSpellBooksList(mDrawer);
+
+                        }
+                        else if (drawerItem.getIdentifier() == ADD_DAILY_POWER_LIST_FOOTER_IDENTIFIER){
+
+                            try {
+                                DialogFragment dialog = new SetDailyPowerListNameDialog();
+                                dialog.show(callerActivity.getSupportFragmentManager(), "SetDailyPowerListNameDialog");
+                            }catch(IllegalStateException e){
+                                /* do nothing, apparently there is no way to avoid this error after
+                                    saveInstanceState has been performed,see:
+                                    http://stackoverflow.com/questions/7575921/illegalstateexception-can-not-perform-this-action-after-onsaveinstancestate-wit */
+                                Log.d(TAG, "error while opening SetDailyPowerListNameDialog");
+                                e.printStackTrace();
+                            }
+                            //populateDailyPowersList(mDrawer);
+                        }
+
+                        //Log.d(TAG, "Drawer item identifier: " + drawerItem.getIdentifier());
+                        return false;
+                    }
+                })
+                .withCloseOnClick(false)
+                .build();
+    }
 
     /**
      * Helper method to fetch the data from database
@@ -179,7 +205,7 @@ public class DrawerHelper{
 
             //generate drawerItems with data from DB
             spellBooks = new ArrayList<>();
-            int i = 0;
+
             try {
                 while (cursor.moveToNext()) {
                     spellBooks.add(initializeSpellBookListItem(
@@ -188,7 +214,7 @@ public class DrawerHelper{
                     ));
 
                     Log.d(TAG, "_ID of item found: " + cursor.getLong(cursor.getColumnIndexOrThrow(PowerListContract.PowerListEntry._ID)));
-                    i++;
+
                 }
             } finally {
                 cursor.close();

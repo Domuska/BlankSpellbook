@@ -14,12 +14,15 @@
   </component>
   <component name="AndroidLogFilters">
     <option name="TOOL_WINDOW_CUSTOM_FILTER" value="spell" />
-    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="No Filters" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fe5b0253-4850-4363-941d-4e8306108c93" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/Database/BlankSpellBookContract.java" afterPath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/Database/BlankSpellBookContract.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/DailySpellsActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/DailySpellsActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/DrawerHelper.java" afterPath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/DrawerHelper.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/MainActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/SpellBookActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/SpellBookActivity.java" />
     </list>
     <ignored path="Blank Spellbook.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -33,29 +36,6 @@
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
-  </component>
-  <component name="DockManager">
-    <window id="1">
-      <content type="file-editors">
-        <state>
-          <leaf>
-            <file leaf-file-name="BlankSpellBookContract.java" pinned="false" current-in-tab="true">
-              <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/Database/BlankSpellBookContract.java">
-                <provider selected="true" editor-type-id="text-editor">
-                  <state vertical-scroll-proportion="1.1831896">
-                    <caret line="179" column="116" selection-start-line="179" selection-start-column="116" selection-end-line="179" selection-end-column="116" />
-                    <folding>
-                      <element signature="e#8075#8076#0" expanded="true" />
-                      <element signature="e#8152#8153#0" expanded="true" />
-                    </folding>
-                  </state>
-                </provider>
-              </entry>
-            </file>
-          </leaf>
-        </state>
-      </content>
-    </window>
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="ExternalProjectsManager">
@@ -74,20 +54,20 @@
         <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="144" column="0" selection-start-line="144" selection-start-column="0" selection-end-line="144" selection-end-column="0" />
+              <caret line="201" column="0" selection-start-line="201" selection-start-column="0" selection-end-line="201" selection-end-column="0" />
               <folding>
-                <element signature="e#3216#3241#0" expanded="true" />
-                <element signature="e#3259#3285#0" expanded="true" />
+                <element signature="e#5439#5464#0" expanded="true" />
+                <element signature="e#5482#5508#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DailySpellsActivity.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="DailySpellsActivity.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/DailySpellsActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="41" column="46" selection-start-line="41" selection-start-column="46" selection-end-line="41" selection-end-column="46" />
+            <state vertical-scroll-proportion="0.13396226">
+              <caret line="39" column="0" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -109,7 +89,7 @@
         <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/Fragments/SetDailyPowerListNameDialog.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="65" column="40" selection-start-line="65" selection-start-column="40" selection-end-line="65" selection-end-column="40" />
+              <caret line="55" column="0" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#2787#2823#0" expanded="true" />
@@ -124,25 +104,27 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DrawerHelper.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="DrawerHelper.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/DrawerHelper.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="8.55132">
-              <caret line="311" column="49" selection-start-line="311" selection-start-column="49" selection-end-line="311" selection-end-column="49" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="119" column="5" selection-start-line="119" selection-start-column="5" selection-end-line="119" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#2658#3870#0" expanded="true" />
-                <element signature="e#3869#3870#0" expanded="true" />
-                <element signature="e#4934#5672#0" expanded="true" />
-                <element signature="e#5671#5672#0" expanded="true" />
-                <element signature="e#5756#5757#0" expanded="true" />
-                <element signature="e#5804#5805#0" expanded="true" />
-                <element signature="e#5851#5852#0" expanded="true" />
-                <element signature="e#5898#5899#0" expanded="true" />
-                <element signature="e#5947#5948#0" expanded="true" />
-                <element signature="e#5995#5996#0" expanded="true" />
-                <element signature="e#13197#13523#0" expanded="true" />
-                <element signature="e#13522#13523#0" expanded="true" />
+                <element signature="e#3498#4236#0" expanded="true" />
+                <element signature="e#4235#4236#0" expanded="true" />
+                <element signature="e#4322#4323#0" expanded="true" />
+                <element signature="e#4370#4371#0" expanded="true" />
+                <element signature="e#4417#4418#0" expanded="true" />
+                <element signature="e#4464#4465#0" expanded="true" />
+                <element signature="e#4513#4514#0" expanded="true" />
+                <element signature="e#4561#4562#0" expanded="true" />
+                <element signature="e#4838#7290#0" expanded="true" />
+                <element signature="e#7289#7290#0" expanded="true" />
+                <element signature="e#13720#14241#0" expanded="true" />
+                <element signature="e#14240#14241#0" expanded="true" />
+                <element signature="e#14518#14844#0" expanded="true" />
+                <element signature="e#14843#14844#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -152,10 +134,22 @@
         <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/SpellBookActivity.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="40" column="37" selection-start-line="40" selection-start-column="37" selection-end-line="40" selection-end-column="37" />
+              <caret line="271" column="5" selection-start-line="271" selection-start-column="5" selection-end-line="271" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#10541#10542#0" expanded="true" />
+                <element signature="e#10592#10593#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BlankSpellBookContract.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/Database/BlankSpellBookContract.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="180" column="47" selection-start-line="180" selection-start-column="47" selection-end-line="180" selection-end-column="47" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -1769,15 +1763,15 @@
         <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/Database/SpellBookContract.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/set_spellbook_name_dialog.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/DailySpellsActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/set_daily_power_list_name_dialog.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/Fragments/SetSpellbookNameDialog.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/Fragments/SetDailyPowerListNameDialog.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/SpellBookActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/DrawerHelper.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/Database/BlankSpellBookContract.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/DrawerHelper.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/MainActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/SpellBookActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/DailySpellsActivity.java" />
       </list>
     </option>
   </component>
@@ -2373,7 +2367,7 @@
       <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4288965" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Android Monitor" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.5802048" sideWeight="0.49388754" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3651877" sideWeight="0.49388754" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -2456,6 +2450,8 @@
           <caret line="75" column="0" selection-start-line="75" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#10541#10542#0" expanded="true" />
+            <element signature="e#10592#10593#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2466,6 +2462,8 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#10541#10542#0" expanded="true" />
+            <element signature="e#10592#10593#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2483,6 +2481,8 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#10541#10542#0" expanded="true" />
+            <element signature="e#10592#10593#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2510,8 +2510,8 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="31" column="11" selection-start-line="31" selection-start-column="11" selection-end-line="31" selection-end-column="11" />
           <folding>
-            <element signature="e#3216#3241#0" expanded="true" />
-            <element signature="e#3259#3285#0" expanded="true" />
+            <element signature="e#5439#5464#0" expanded="true" />
+            <element signature="e#5482#5508#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2529,6 +2529,8 @@
           <caret line="61" column="27" selection-start-line="61" selection-start-column="27" selection-end-line="61" selection-end-column="27" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#10541#10542#0" expanded="true" />
+            <element signature="e#10592#10593#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2556,8 +2558,8 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="31" column="11" selection-start-line="31" selection-start-column="11" selection-end-line="31" selection-end-column="11" />
           <folding>
-            <element signature="e#3216#3241#0" expanded="true" />
-            <element signature="e#3259#3285#0" expanded="true" />
+            <element signature="e#5439#5464#0" expanded="true" />
+            <element signature="e#5482#5508#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2575,6 +2577,8 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#10541#10542#0" expanded="true" />
+            <element signature="e#10592#10593#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2591,8 +2595,8 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#3216#3241#0" expanded="true" />
-            <element signature="e#3259#3285#0" expanded="true" />
+            <element signature="e#5439#5464#0" expanded="true" />
+            <element signature="e#5482#5508#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2603,6 +2607,8 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#10541#10542#0" expanded="true" />
+            <element signature="e#10592#10593#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2846,17 +2852,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="144" column="0" selection-start-line="144" selection-start-column="0" selection-end-line="144" selection-end-column="0" />
-          <folding>
-            <element signature="e#3216#3241#0" expanded="true" />
-            <element signature="e#3259#3285#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/Fragments/SetSpellbookNameDialog.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -2867,20 +2862,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/SpellBookActivity.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/Database/BlankSpellBookContract.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="40" column="37" selection-start-line="40" selection-start-column="37" selection-end-line="40" selection-end-column="37" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/DailySpellsActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="41" column="46" selection-start-line="41" selection-start-column="46" selection-end-line="41" selection-end-column="46" />
+          <caret line="180" column="47" selection-start-line="180" selection-start-column="47" selection-end-line="180" selection-end-column="47" />
           <folding />
         </state>
       </provider>
@@ -2888,7 +2873,7 @@
     <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/Fragments/SetDailyPowerListNameDialog.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="65" column="40" selection-start-line="65" selection-start-column="40" selection-end-line="65" selection-end-column="40" />
+          <caret line="55" column="0" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#2787#2823#0" expanded="true" />
@@ -2904,34 +2889,56 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/DrawerHelper.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="8.55132">
-          <caret line="311" column="49" selection-start-line="311" selection-start-column="49" selection-end-line="311" selection-end-column="49" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="119" column="5" selection-start-line="119" selection-start-column="5" selection-end-line="119" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#2658#3870#0" expanded="true" />
-            <element signature="e#3869#3870#0" expanded="true" />
-            <element signature="e#4934#5672#0" expanded="true" />
-            <element signature="e#5671#5672#0" expanded="true" />
-            <element signature="e#5756#5757#0" expanded="true" />
-            <element signature="e#5804#5805#0" expanded="true" />
-            <element signature="e#5851#5852#0" expanded="true" />
-            <element signature="e#5898#5899#0" expanded="true" />
-            <element signature="e#5947#5948#0" expanded="true" />
-            <element signature="e#5995#5996#0" expanded="true" />
-            <element signature="e#13197#13523#0" expanded="true" />
-            <element signature="e#13522#13523#0" expanded="true" />
+            <element signature="e#3498#4236#0" expanded="true" />
+            <element signature="e#4235#4236#0" expanded="true" />
+            <element signature="e#4322#4323#0" expanded="true" />
+            <element signature="e#4370#4371#0" expanded="true" />
+            <element signature="e#4417#4418#0" expanded="true" />
+            <element signature="e#4464#4465#0" expanded="true" />
+            <element signature="e#4513#4514#0" expanded="true" />
+            <element signature="e#4561#4562#0" expanded="true" />
+            <element signature="e#4838#7290#0" expanded="true" />
+            <element signature="e#7289#7290#0" expanded="true" />
+            <element signature="e#13720#14241#0" expanded="true" />
+            <element signature="e#14240#14241#0" expanded="true" />
+            <element signature="e#14518#14844#0" expanded="true" />
+            <element signature="e#14843#14844#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/Database/BlankSpellBookContract.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.1831896">
-          <caret line="179" column="116" selection-start-line="179" selection-start-column="116" selection-end-line="179" selection-end-column="116" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="201" column="0" selection-start-line="201" selection-start-column="0" selection-end-line="201" selection-end-column="0" />
           <folding>
-            <element signature="e#8075#8076#0" expanded="true" />
-            <element signature="e#8152#8153#0" expanded="true" />
+            <element signature="e#5439#5464#0" expanded="true" />
+            <element signature="e#5482#5508#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/SpellBookActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="271" column="5" selection-start-line="271" selection-start-column="5" selection-end-line="271" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#10541#10542#0" expanded="true" />
+            <element signature="e#10592#10593#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/DailySpellsActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.13396226">
+          <caret line="39" column="0" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
