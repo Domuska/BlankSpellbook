@@ -37,7 +37,7 @@ import tomi.piipposoft.blankspellbook.Fragments.SetSpellbookNameDialog;
  */
 public class DrawerHelper{
 
-    private static SQLiteDatabase myDb;
+    private static SQLiteDatabase mDb;
     private static BlankSpellBookContract.DBHelper mDbHelper;
     private static AppCompatActivity callerActivity;
     private static String TAG;
@@ -49,12 +49,14 @@ public class DrawerHelper{
 
     private static Drawer mDrawer;
     private static List<IDrawerItem> spellBooks;
+    private static List<IDrawerItem> dailyPowerLists;
 
     public static void createDrawer(Activity activity, Toolbar toolbar) {
 
         callerActivity = (AppCompatActivity) activity;
         TAG = "createDrawer, called by " + activity.getLocalClassName();
 
+        mDbHelper = new BlankSpellBookContract.DBHelper(callerActivity.getApplicationContext());
 
 
         //fetchSpellBookListDataFromDB();
@@ -151,8 +153,7 @@ public class DrawerHelper{
 
         //// TODO: 11-Apr-16 should most likely be put to asynctask at some point
 
-        mDbHelper = new BlankSpellBookContract.DBHelper(callerActivity.getApplicationContext());
-        myDb = mDbHelper.getReadableDatabase();
+        mDb = mDbHelper.getReadableDatabase();
 
         //get all spell books and daily spell lists from DB
 
@@ -165,7 +166,7 @@ public class DrawerHelper{
 
         try {
 
-            Cursor cursor = myDb.query(
+            Cursor cursor = mDb.query(
                     BlankSpellBookContract.PowerListEntry.TABLE_NAME,
                     projection,
                     null,
@@ -219,11 +220,81 @@ public class DrawerHelper{
 
         for (int i = 0; i < spellBooks.size(); i++) {
             drawer.addItem(spellBooks.get(i));
-
         }
     }
 
     private static void fetchDailyPowerListDataFromDB(){
+
+        mDb = mDbHelper.getReadableDatabase();
+
+        String[] projection = {
+                BlankSpellBookContract.DailyPowerListEntry._ID,
+                BlankSpellBookContract.DailyPowerListEntry.COLUMN_NAME_DAILY_POWER_LIST_NAME
+        };
+
+        String sortOrder = BlankSpellBookContract.DailyPowerListEntry.
+                COLUMN_NAME_DAILY_POWER_LIST_NAME + " DESC";
+
+        try {
+            Cursor cursor = mDb.query(
+                    BlankSpellBookContract.DailyPowerListEntry.TABLE_NAME,
+                    projection,
+                    null,
+                    null,
+                    null,
+                    null,
+                    sortOrder
+            );
+
+            dailyPowerLists = new ArrayList<>();
+
+            try{
+                while (cursor.moveToNext()){
+                    dailyPowerLists.add(initializeDailyPowerListItem(
+                            cursor.getString(cursor.getColumnIndexOrThrow(BlankSpellBookContract.DailyPowerListEntry.COLUMN_NAME_DAILY_POWER_LIST_NAME)),
+                            cursor.getLong(cursor.getColumnIndexOrThrow(BlankSpellBookContract.DailyPowerListEntry._ID))
+                    ));
+
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+        catch(SQLiteException e) {
+            Toast.makeText(callerActivity, "Something went wrong with database, sorry!", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "SQLite exception caught!");
+            e.printStackTrace();
+        }
+
+        /*
+        * try {
+
+
+
+
+            //generate drawerItems with data from DB
+            spellBooks = new ArrayList<>();
+            int i = 0;
+            try {
+                while (cursor.moveToNext()) {
+                    spellBooks.add(initializeSpellBookListItem(
+                            cursor.getString(cursor.getColumnIndexOrThrow(PowerListContract.PowerListEntry.COLUMN_NAME_POWER_LIST_NAME)),
+                            cursor.getLong(cursor.getColumnIndexOrThrow(PowerListContract.PowerListEntry._ID))
+                    ));
+
+                    Log.d(TAG, "_ID of item found: " + cursor.getLong(cursor.getColumnIndexOrThrow(PowerListContract.PowerListEntry._ID)));
+                    i++;
+                }
+            } finally {
+                cursor.close();
+            }
+
+        }
+        catch(SQLiteException e){
+            Toast.makeText(callerActivity, "Something went wrong with database, sorry!", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "SQLite exception caught!");
+            e.printStackTrace();
+        }*/
 
     }
 
@@ -240,6 +311,12 @@ public class DrawerHelper{
         drawer.addStickyFooterItem(new PrimaryDrawerItem()
             .withName("Add new daily power list")
             .withIdentifier(ADD_DAILY_POWER_LIST_FOOTER_IDENTIFIER));
+
+        fetchDailyPowerListDataFromDB();
+
+        for(int i = 0; i < dailyPowerLists.size(); i++){
+            drawer.addItem(dailyPowerLists.get(i));
+        }
     }
 
     /**
@@ -267,17 +344,31 @@ public class DrawerHelper{
                 });
     }
 
+    private static PrimaryDrawerItem initializeDailyPowerListItem (String itemName, final Long itemId){
+
+        return new PrimaryDrawerItem()
+                .withName(itemName)
+                .withIdentifier(itemId)
+                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        // TODO: 14-Apr-16 handle moving to daily power activity
+                        return true;
+                    }
+                });
+    }
+
 }
 
 /*
 private static void populateDBHelperMethod(){
 
-        myDb = mDbHelper.getWritableDatabase();
+        mDb = mDbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
 
         values.put(BlankSpellBookContract.PowerListEntry.COLUMN_NAME_POWER_LIST_NAME, "Suikan priestin power list");
-        myDb.insert(
+        mDb.insert(
                 BlankSpellBookContract.PowerListEntry.TABLE_NAME,
                 null,
                 values
