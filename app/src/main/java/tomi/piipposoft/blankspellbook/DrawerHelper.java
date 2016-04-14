@@ -41,9 +41,9 @@ public class DrawerHelper{
     private static AppCompatActivity callerActivity;
     private static String TAG;
 
-    private static final long SPELL_BOOK_PROFILE_IDENTIFIER = -1;
-    private static final long DAILY_POWER_PROFILE_IDENTIFIER = -2;
-    private static final long ADD_SPELL_BOOK_FOOTER_IDENTIFIER = -3;
+    private static final long SPELL_BOOKS_PROFILE_IDENTIFIER = -5;
+    private static final long DAILY_POWERS_PROFILE_IDENTIFIER = -2;
+    private static final long ADD_POWER_LIST_FOOTER_IDENTIFIER = -3;
     private static final long ADD_DAILY_POWER_LIST_FOOTER_IDENTIFIER = -4;
 
     private static Drawer mDrawer;
@@ -54,6 +54,8 @@ public class DrawerHelper{
         callerActivity = (AppCompatActivity) activity;
         TAG = "createDrawer, called by " + activity.getLocalClassName();
 
+
+
         //fetchSpellBookDataFromDB();
 
         //Create the drawer itself
@@ -63,10 +65,12 @@ public class DrawerHelper{
                 .withActionBarDrawerToggle(true)
                 .withOnDrawerItemClickListener(new com.mikepenz.materialdrawer.Drawer.OnDrawerItemClickListener() {
 
+                    // Handle sticky footer item clicks
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
 
-                        if (drawerItem.getIdentifier() == ADD_SPELL_BOOK_FOOTER_IDENTIFIER) {
+                        if (drawerItem.getIdentifier() == ADD_POWER_LIST_FOOTER_IDENTIFIER) {
+
                             DialogFragment dialog = new SetSpellbookNameDialog();
                             dialog.show(callerActivity.getSupportFragmentManager(), "SetSpellBookDialogFragment");
                             populateSpellBooksList(mDrawer);
@@ -77,7 +81,7 @@ public class DrawerHelper{
                             // handle what happens when profile is set to daily power list
                         }
 
-                        Log.d(TAG, "Drawer item identifier: " + drawerItem.getIdentifier());
+                        //Log.d(TAG, "Drawer item identifier: " + drawerItem.getIdentifier());
                         return false;
                     }
                 })
@@ -90,9 +94,9 @@ public class DrawerHelper{
 
         final ProfileDrawerItem spellBooksProfile = new ProfileDrawerItem().withName("Spell Books")
                 .withIcon(callerActivity.getResources().getDrawable(R.drawable.iqql_spellbook_billfold))
-                .withIdentifier(SPELL_BOOK_PROFILE_IDENTIFIER);
-        final ProfileDrawerItem dailySpellsProfile = new ProfileDrawerItem().withName("Power List")
-                .withIdentifier(DAILY_POWER_PROFILE_IDENTIFIER);
+                .withIdentifier(SPELL_BOOKS_PROFILE_IDENTIFIER);
+        final ProfileDrawerItem dailySpellsProfile = new ProfileDrawerItem().withName("Daily Power Lists")
+                .withIdentifier(DAILY_POWERS_PROFILE_IDENTIFIER);
 
 
         //create the header for the drawer and register it to the drawer
@@ -103,16 +107,19 @@ public class DrawerHelper{
                 .withProfileImagesVisible(false)
                 .withDrawer(mDrawer)
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
+
+                    //Handle account changing
+
                     @Override
                     public boolean onProfileChanged(View view, IProfile profile, boolean current) {
-                        mDrawer.removeAllItems();
 
-                        if (profile.equals(spellBooksProfile)) {
+                        Log.d(TAG, "withOnAccoutnHeader... ID: " + profile.getIdentifier());
+
+                        if (profile.getIdentifier() == SPELL_BOOKS_PROFILE_IDENTIFIER) {
                             populateSpellBooksList(mDrawer);
 
-                        } else if (profile.equals(dailySpellsProfile)) {
+                        } else if (profile.getIdentifier() == DAILY_POWERS_PROFILE_IDENTIFIER) {
                             populateDailyPowersList(mDrawer);
-
                         }
                         return true;
                     }
@@ -189,7 +196,7 @@ public class DrawerHelper{
     }
 
     /**
-     * Helper method to populate the drawer spellbooks side
+     * Helper method to populate the drawer spell books side
      *
      * @param drawer
      */
@@ -198,10 +205,9 @@ public class DrawerHelper{
         drawer.removeAllItems();
         drawer.removeAllStickyFooterItems();
 
-
         drawer.addStickyFooterItem(new PrimaryDrawerItem()
                 .withName("Add new spell book")
-                .withIdentifier(ADD_SPELL_BOOK_FOOTER_IDENTIFIER));
+                .withIdentifier(ADD_POWER_LIST_FOOTER_IDENTIFIER));
 
         fetchSpellBookDataFromDB();
 
@@ -209,29 +215,6 @@ public class DrawerHelper{
             drawer.addItem(spellBooks.get(i));
 
         }
-
-
-       /* if(drawer.getStickyFooter() == null) {
-            //note, onDrawerItemClickListener not added here because it does not seem to work,
-            //it is added to the drawer itself. Maybe a bug in MaterialDrawer library?
-            drawer.addStickyFooterItem(new PrimaryDrawerItem()
-                    .withName("Add new spell book")
-                    .withIdentifier(ADD_SPELL_BOOK_FOOTER_IDENTIFIER)*/
-                    /*.withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                        @Override
-                        public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-
-                            showSetSpellbookNameDialog();
-                            //DialogFragment dialog = new SetSpellbookNameDialog();
-                            //dialog.show(callerActivity.getSupportFragmentManager(), "SetSpellBookDialogFragment");
-                            Log.d(TAG, "clicked add new spell book button!");
-                            populateSpellBooksList(mDrawer);
-
-                            return true;
-                        }
-                    })*/
-            //);
-        //}
     }
 
     /**
@@ -243,7 +226,6 @@ public class DrawerHelper{
 
         drawer.removeAllItems();
         drawer.removeAllStickyFooterItems();
-
 
         drawer.addStickyFooterItem(new PrimaryDrawerItem()
             .withName("Add new daily power list")
@@ -268,6 +250,7 @@ public class DrawerHelper{
 
                         Intent i = new Intent(callerActivity, SpellBookActivity.class);
                         i.putExtra(SpellBookActivity.EXTRA_POWER_BOOK_ID, itemId);
+                        mDrawer.closeDrawer();
                         callerActivity.startActivity(i);
                         return true;
                     }
