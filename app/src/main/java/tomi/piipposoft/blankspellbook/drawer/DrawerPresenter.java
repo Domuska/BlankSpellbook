@@ -52,8 +52,6 @@ public class DrawerPresenter{
                 values
         );
 
-
-
         //get the data from DB and tell view to update itself
         mDrawerView.showPowerList(fetchSpellBookListDataFromDB(new ArrayList<IDrawerItem>()));
 

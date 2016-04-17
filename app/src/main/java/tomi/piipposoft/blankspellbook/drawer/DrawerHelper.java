@@ -39,8 +39,7 @@ import tomi.piipposoft.blankspellbook.powerlist.SpellBookActivity;
 public class DrawerHelper implements
         DrawerContract.View {
 
-    private static SQLiteDatabase mDb;
-    private static BlankSpellBookContract.DBHelper mDbHelper;
+
     private static AppCompatActivity callerActivity;
     private static String TAG;
 
@@ -50,8 +49,8 @@ public class DrawerHelper implements
     private static final long ADD_DAILY_POWER_LIST_FOOTER_IDENTIFIER = -4;
 
     private static Drawer mDrawer;
-    private static List<IDrawerItem> spellBooks;
-    private static List<IDrawerItem> dailyPowerLists;
+
+
 
     private DrawerListener mDrawerListener;
 
@@ -71,7 +70,6 @@ public class DrawerHelper implements
         callerActivity = (AppCompatActivity) activity;
         TAG = "createDrawer, called by " + activity.getLocalClassName();
 
-        mDbHelper = new BlankSpellBookContract.DBHelper(callerActivity.getApplicationContext());
 
         //Create the drawer itself
         createDrawer(toolbar);
@@ -146,7 +144,6 @@ public class DrawerHelper implements
                                 e.printStackTrace();
 
                             }
-                            //populateSpellBooksList(mDrawer);
 
                         }
                         else if (drawerItem.getIdentifier() == ADD_DAILY_POWER_LIST_FOOTER_IDENTIFIER){
@@ -161,10 +158,8 @@ public class DrawerHelper implements
                                 Log.d(TAG, "error while opening SetDailyPowerListNameDialog");
                                 e.printStackTrace();
                             }
-                            //populateDailyPowersList(mDrawer);
                         }
 
-                        //Log.d(TAG, "Drawer item identifier: " + drawerItem.getIdentifier());
                         return false;
                     }
                 })
@@ -271,122 +266,5 @@ public class DrawerHelper implements
         }
     }
 
-    /**
-     * Helper method used to initialize a drawer item in the spell book side
-     *
-     * @param itemName name of the item
-     * @param itemId ID of the item (from database)
-     * @return a newly initialized PrimaryDrawerItem with onDrawerItemClickListener added
-     */
-//    private static PrimaryDrawerItem initializeSpellBookListItem(String itemName, final Long itemId) {
-//
-//        return new PrimaryDrawerItem()
-//                .withName(itemName)
-//                .withIdentifier(itemId)
-//                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-//                    @Override
-//                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-//
-//                        Intent i = new Intent(callerActivity, SpellBookActivity.class);
-//                        i.putExtra(SpellBookActivity.EXTRA_POWER_BOOK_ID, itemId);
-//                        mDrawer.closeDrawer();
-//                        callerActivity.startActivity(i);
-//                        return true;
-//                    }
-//                });
-//    }
-
-//    private static PrimaryDrawerItem initializeDailyPowerListItem (String itemName, final Long itemId){
-//
-//        return new PrimaryDrawerItem()
-//                .withName(itemName)
-//                .withIdentifier(itemId)
-//                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-//                    @Override
-//                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-//                        // TODO: 14-Apr-16 handle moving to daily power activity
-//                        return true;
-//                    }
-//                });
-//    }
 
 }
-
-/*
-private static void populateDBHelperMethod(){
-
-        mDb = mDbHelper.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-
-        values.put(BlankSpellBookContract.PowerListEntry.COLUMN_NAME_POWER_LIST_NAME, "Suikan priestin power list");
-        mDb.insert(
-                BlankSpellBookContract.PowerListEntry.TABLE_NAME,
-                null,
-                values
-        );
-    }
- */
-
-/*
- AccountHeader drawerHeader = new AccountHeaderBuilder()
-                .withActivity(callerActivity)
-                .withHeaderBackground(R.drawable.drawer_header_background)
-                .addProfiles(spellBooksProfile, dailySpellsProfile)
-                .withProfileImagesVisible(false)
-                .withDrawer(drawer)
-                .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
-                    @Override
-                    public boolean onProfileChanged(View view, IProfile profile, boolean current) {
-                        drawer.removeAllItems();
-
-                        if (profile.equals(spellBooksProfile)) {
-                            drawer.addItem(itemWithChildren);
-                            drawer.addItem(new SectionDrawerItem().withName("section"));
-
-                            drawer.addItem(item2);
-                            new DividerDrawerItem();
-                            drawer.addItem(item2);
-                            new DividerDrawerItem();
-                            drawer.addItem(item2);
-                            new DividerDrawerItem();
-                            drawer.addItem(item2);
-                            new DividerDrawerItem();
-                            drawer.addItem(item2);
-                            new DividerDrawerItem();
-                            drawer.addItem(item2);
-                            new DividerDrawerItem();
-                            drawer.addItem(item2);
-                            new DividerDrawerItem();
-                            drawer.addItem(item2);
-                            new DividerDrawerItem();
-                            drawer.addItem(item2);
-                            new DividerDrawerItem();
-                            drawer.addItem(item2);
-                            new DividerDrawerItem();
-
-
-                            drawer.addStickyFooterItem(new PrimaryDrawerItem().withName("Add new spell book"));
-
-                        } else if (profile.equals(dailySpellsProfile)) {
-                            drawer.addItem(item3);
-                        }
-                        return true;
-                    }
-                })
-                .build();
- */
-
-
-/*final PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("Sepon Spellbook");
-        final PrimaryDrawerItem item2 = new PrimaryDrawerItem().withName("Askon Spellbook");
-        final PrimaryDrawerItem item3 = new PrimaryDrawerItem().withName("Sepon daily spellit");
-        final SecondaryDrawerItem item4 = new SecondaryDrawerItem().withName("secondary drawer item");
-        final SecondaryDrawerItem item7 = new SecondaryDrawerItem().withName("secondary drawer item 2");
-
-        final List<IDrawerItem> itemList = new ArrayList<>();
-        itemList.add(item4);
-        itemList.add(item7);
-
-        final PrimaryDrawerItem item5 = new PrimaryDrawerItem().withName("Section header").withEnabled(false).withSelectable(false);
-        final PrimaryDrawerItem itemWithChildren = new PrimaryDrawerItem().withName("Section header").withSubItems(itemList);*/
