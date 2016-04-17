@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
-import tomi.piipposoft.blankspellbook.Database.PowerListContract;
 import tomi.piipposoft.blankspellbook.dialog_fragments.SetDailyPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.dialog_fragments.SetSpellbookNameDialog;
 import tomi.piipposoft.blankspellbook.R;
@@ -44,8 +43,8 @@ public class DrawerHelper implements DrawerContract.View{
     private static AppCompatActivity callerActivity;
     private static String TAG;
 
-    private static final long SPELL_BOOKS_PROFILE_IDENTIFIER = -5;
-    private static final long DAILY_POWERS_PROFILE_IDENTIFIER = -2;
+    private static final long POWER_LISTS_PROFILE_IDENTIFIER = -5;
+    private static final long DAILY_POWER_LISTS_PROFILE_IDENTIFIER = -2;
     private static final long ADD_POWER_LIST_FOOTER_IDENTIFIER = -3;
     private static final long ADD_DAILY_POWER_LIST_FOOTER_IDENTIFIER = -4;
 
@@ -53,8 +52,16 @@ public class DrawerHelper implements DrawerContract.View{
     private static List<IDrawerItem> spellBooks;
     private static List<IDrawerItem> dailyPowerLists;
 
-    public DrawerHelper(Activity activity, Toolbar toolbar){
+    private NoticeProfileChangedListener mProfileChangedListener;
+
+    public interface NoticeProfileChangedListener{
+        void powerListProfileSelected();
+    }
+
+    public DrawerHelper(Activity activity, Toolbar toolbar ){
         createDrawer(activity, toolbar);
+        mProfileChangedListener = (NoticeProfileChangedListener) activity;
+
     }
 
     public void createDrawer(Activity activity, Toolbar toolbar) {
@@ -71,14 +78,15 @@ public class DrawerHelper implements DrawerContract.View{
 
 
         //initially populate the list with items
-        populateSpellBooksList(mDrawer);
+//        populateSpellBooksList(mDrawer);
+
 
 
         final ProfileDrawerItem spellBooksProfile = new ProfileDrawerItem().withName("Spell Books")
                 .withIcon(callerActivity.getResources().getDrawable(R.drawable.iqql_spellbook_billfold))
-                .withIdentifier(SPELL_BOOKS_PROFILE_IDENTIFIER);
+                .withIdentifier(POWER_LISTS_PROFILE_IDENTIFIER);
         final ProfileDrawerItem dailySpellsProfile = new ProfileDrawerItem().withName("Daily Power Lists")
-                .withIdentifier(DAILY_POWERS_PROFILE_IDENTIFIER);
+                .withIdentifier(DAILY_POWER_LISTS_PROFILE_IDENTIFIER);
 
 
         //create the header for the drawer and register it to the drawer
@@ -96,10 +104,12 @@ public class DrawerHelper implements DrawerContract.View{
 
                         Log.d(TAG, "withOnAccountHeader... profile ID: " + profile.getIdentifier());
 
-                        if (profile.getIdentifier() == SPELL_BOOKS_PROFILE_IDENTIFIER) {
-                            populateSpellBooksList(mDrawer);
+                        if (profile.getIdentifier() == POWER_LISTS_PROFILE_IDENTIFIER) {
+//                            populateSpellBooksList(mDrawer);
+                            mProfileChangedListener.powerListProfileSelected();
 
-                        } else if (profile.getIdentifier() == DAILY_POWERS_PROFILE_IDENTIFIER) {
+
+                        } else if (profile.getIdentifier() == DAILY_POWER_LISTS_PROFILE_IDENTIFIER) {
                             populateDailyPowersList(mDrawer);
                         }
                         return true;
@@ -124,7 +134,7 @@ public class DrawerHelper implements DrawerContract.View{
 //    }
 
 
-    private static void createDrawer(Toolbar toolbar){
+    private void createDrawer(Toolbar toolbar){
         mDrawer = new DrawerBuilder()
                 .withActivity(callerActivity)
                 .withToolbar(toolbar)
@@ -176,23 +186,24 @@ public class DrawerHelper implements DrawerContract.View{
     }
 
     @Override
-    public void showPowerListItems(List<IDrawerItem> drawerItems) {
+    public void showPowerListItems() {
 
     }
 
     @Override
-    public void showDailyPowerListItems(List<IDrawerItem> drawerItems) {
+    public void showDailyPowerListItems() {
 
     }
 
     @Override
-    public void showDailyPowerList() {
+    public void showDailyPowerList(List<IDrawerItem> drawerItems) {
         populateDailyPowersList(mDrawer);
     }
 
     @Override
-    public void showPowerList() {
-        populateSpellBooksList(mDrawer);
+    public void showPowerList(List<IDrawerItem> drawerItems) {
+        Log.d(TAG, "showpowerlist called");
+        populateSpellBooksList(mDrawer, drawerItems);
     }
 
     /**
@@ -203,53 +214,53 @@ public class DrawerHelper implements DrawerContract.View{
 
         //// TODO: 11-Apr-16 should most likely be put to asynctask at some point
 
-        mDb = mDbHelper.getReadableDatabase();
-
-        //get all spell books and daily spell lists from DB
-
-        String[] projection = {
-                BlankSpellBookContract.PowerListEntry._ID,
-                BlankSpellBookContract.PowerListEntry.COLUMN_NAME_POWER_LIST_NAME
-        };
-
-        String sortOrder = BlankSpellBookContract.PowerListEntry.COLUMN_NAME_POWER_LIST_NAME + " DESC";
-
-        try {
-
-            Cursor cursor = mDb.query(
-                    BlankSpellBookContract.PowerListEntry.TABLE_NAME,
-                    projection,
-                    null,
-                    null,
-                    null,
-                    null,
-                    sortOrder
-            );
-
-
-            //generate drawerItems with data from DB
-            spellBooks = new ArrayList<>();
-
-            try {
-                while (cursor.moveToNext()) {
-                    spellBooks.add(initializeSpellBookListItem(
-                            cursor.getString(cursor.getColumnIndexOrThrow(PowerListContract.PowerListEntry.COLUMN_NAME_POWER_LIST_NAME)),
-                            cursor.getLong(cursor.getColumnIndexOrThrow(PowerListContract.PowerListEntry._ID))
-                    ));
-
-                    Log.d(TAG, "_ID of item found: " + cursor.getLong(cursor.getColumnIndexOrThrow(PowerListContract.PowerListEntry._ID)));
-
-                }
-            } finally {
-                cursor.close();
-            }
-
-        }
-        catch(SQLiteException e){
-            Toast.makeText(callerActivity, "Something went wrong with database, sorry!", Toast.LENGTH_SHORT).show();
-            Log.d(TAG, "SQLite exception caught!");
-            e.printStackTrace();
-        }
+//        mDb = mDbHelper.getReadableDatabase();
+//
+//        //get all spell books and daily spell lists from DB
+//
+//        String[] projection = {
+//                BlankSpellBookContract.PowerListEntry._ID,
+//                BlankSpellBookContract.PowerListEntry.COLUMN_NAME_POWER_LIST_NAME
+//        };
+//
+//        String sortOrder = BlankSpellBookContract.PowerListEntry.COLUMN_NAME_POWER_LIST_NAME + " DESC";
+//
+//        try {
+//
+//            Cursor cursor = mDb.query(
+//                    BlankSpellBookContract.PowerListEntry.TABLE_NAME,
+//                    projection,
+//                    null,
+//                    null,
+//                    null,
+//                    null,
+//                    sortOrder
+//            );
+//
+//
+//            //generate drawerItems with data from DB
+//            spellBooks = new ArrayList<>();
+//
+//            try {
+//                while (cursor.moveToNext()) {
+//                    spellBooks.add(initializeSpellBookListItem(
+//                            cursor.getString(cursor.getColumnIndexOrThrow(PowerListContract.PowerListEntry.COLUMN_NAME_POWER_LIST_NAME)),
+//                            cursor.getLong(cursor.getColumnIndexOrThrow(PowerListContract.PowerListEntry._ID))
+//                    ));
+//
+//                    Log.d(TAG, "_ID of item found: " + cursor.getLong(cursor.getColumnIndexOrThrow(PowerListContract.PowerListEntry._ID)));
+//
+//                }
+//            } finally {
+//                cursor.close();
+//            }
+//
+//        }
+//        catch(SQLiteException e){
+//            Toast.makeText(callerActivity, "Something went wrong with database, sorry!", Toast.LENGTH_SHORT).show();
+//            Log.d(TAG, "SQLite exception caught!");
+//            e.printStackTrace();
+//        }
     }
 
     /**
@@ -257,7 +268,7 @@ public class DrawerHelper implements DrawerContract.View{
      *
      * @param drawer
      */
-    private void populateSpellBooksList(Drawer drawer){
+    private void populateSpellBooksList(Drawer drawer,List<IDrawerItem> drawerItems){
 
         drawer.removeAllItems();
         drawer.removeAllStickyFooterItems();
@@ -266,10 +277,24 @@ public class DrawerHelper implements DrawerContract.View{
                 .withName("Add new spell book")
                 .withIdentifier(ADD_POWER_LIST_FOOTER_IDENTIFIER));
 
-        fetchSpellBookListDataFromDB();
+//        fetchSpellBookListDataFromDB();
 
-        for (int i = 0; i < spellBooks.size(); i++) {
-            drawer.addItem(spellBooks.get(i));
+        for (int i = 0; i < drawerItems.size(); i++) {
+            final PrimaryDrawerItem item = (PrimaryDrawerItem)drawerItems.get(i);
+            item.withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+
+                @Override
+                public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                    Intent i = new Intent(callerActivity, SpellBookActivity.class);
+                    Log.d(TAG, "clicked item had ID " + item.getIdentifier());
+                    i.putExtra(SpellBookActivity.EXTRA_POWER_BOOK_ID, item.getIdentifier());
+                    mDrawer.closeDrawer();
+                    callerActivity.startActivity(i);
+                    return true;
+                }
+            });
+
+            drawer.addItem(drawerItems.get(i));
         }
     }
 
@@ -376,23 +401,23 @@ public class DrawerHelper implements DrawerContract.View{
      * @param itemId ID of the item (from database)
      * @return a newly initialized PrimaryDrawerItem with onDrawerItemClickListener added
      */
-    private static PrimaryDrawerItem initializeSpellBookListItem(String itemName, final Long itemId) {
-
-        return new PrimaryDrawerItem()
-                .withName(itemName)
-                .withIdentifier(itemId)
-                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                    @Override
-                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-
-                        Intent i = new Intent(callerActivity, SpellBookActivity.class);
-                        i.putExtra(SpellBookActivity.EXTRA_POWER_BOOK_ID, itemId);
-                        mDrawer.closeDrawer();
-                        callerActivity.startActivity(i);
-                        return true;
-                    }
-                });
-    }
+//    private static PrimaryDrawerItem initializeSpellBookListItem(String itemName, final Long itemId) {
+//
+//        return new PrimaryDrawerItem()
+//                .withName(itemName)
+//                .withIdentifier(itemId)
+//                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+//                    @Override
+//                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+//
+//                        Intent i = new Intent(callerActivity, SpellBookActivity.class);
+//                        i.putExtra(SpellBookActivity.EXTRA_POWER_BOOK_ID, itemId);
+//                        mDrawer.closeDrawer();
+//                        callerActivity.startActivity(i);
+//                        return true;
+//                    }
+//                });
+//    }
 
     private static PrimaryDrawerItem initializeDailyPowerListItem (String itemName, final Long itemId){
 

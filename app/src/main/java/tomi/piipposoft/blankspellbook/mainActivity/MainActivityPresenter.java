@@ -43,6 +43,11 @@ public class MainActivityPresenter extends DrawerPresenter
     }
 
     @Override
+    public void drawerOpened() {
+//        this.showDrawerContents();
+    }
+
+    @Override
     public void listPowerListItemClicked(@NonNull long itemId) {
 
     }
@@ -54,7 +59,7 @@ public class MainActivityPresenter extends DrawerPresenter
 
     @Override
     public void powerListProfileSelected() {
-
+        this.showPowerLists();
     }
 
     @Override

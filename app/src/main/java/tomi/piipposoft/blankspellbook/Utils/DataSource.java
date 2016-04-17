@@ -13,4 +13,5 @@ public class DataSource {
     public static BlankSpellBookContract.DBHelper getDatasource(Activity activity){
         return new BlankSpellBookContract.DBHelper(activity.getApplicationContext());
     }
+
 }

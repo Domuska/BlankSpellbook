@@ -31,7 +31,8 @@ import tomi.piipposoft.blankspellbook.powerlist.SpellBookActivity;
 public class MainActivity extends AppCompatActivity
         implements SetSpellbookNameDialog.NoticeDialogListener,
         SetDailyPowerListNameDialog.NoticeDialogListener,
-        MainActivityContract.View {
+        MainActivityContract.View,
+        DrawerHelper.NoticeProfileChangedListener{
 
     private Button spellBookButton, dailySpellsButton;
     private FloatingActionButton fab;
@@ -177,8 +178,6 @@ public class MainActivity extends AppCompatActivity
     public void onResume(){
         super.onResume();
 
-        //create navigation drawer
-//        DrawerHelper.createDrawer(this, (Toolbar)this.findViewById(R.id.my_toolbar));
         mDrawerHelper = new DrawerHelper(this, (Toolbar) findViewById(R.id.my_toolbar));
 
         mActionlistener = new MainActivityPresenter(DataSource.getDatasource(this), this, mDrawerHelper);
@@ -202,6 +201,9 @@ public class MainActivity extends AppCompatActivity
             }
 
         };
+
+        // Make the drawer initialize itself
+        mDrawerActionListener.powerListProfileSelected();
     }
 
 
@@ -216,8 +218,11 @@ public class MainActivity extends AppCompatActivity
     public void onSetSpellBookNameDialogPositiveClick(DialogFragment dialog, String powerListName) {
 
         mDrawerActionListener.addPowerList(powerListName);
+    }
 
-
+    @Override
+    public void powerListProfileSelected() {
+        mDrawerActionListener.powerListProfileSelected();
     }
 
     @Override

@@ -13,11 +13,11 @@ public interface DrawerContract {
 
     interface View {
 
-        void showPowerListItems(List<IDrawerItem> drawerItems);
-        void showDailyPowerListItems(List<IDrawerItem> drawerItems);
+        void showPowerListItems();
+        void showDailyPowerListItems();
 
-        void showDailyPowerList();
-        void showPowerList();
+        void showDailyPowerList(List<IDrawerItem> drawerItems);
+        void showPowerList(List<IDrawerItem> drawerItems);
 
     }
 
@@ -25,6 +25,8 @@ public interface DrawerContract {
 
         void addPowerList(@NonNull String powerListName);
         void addDailyPowerList(@NonNull String dailyPowerListName);
+
+        void drawerOpened();
 
         void listPowerListItemClicked(@NonNull long itemId);
         void listDailyPowerListItemClicked(@NonNull long itemId);
