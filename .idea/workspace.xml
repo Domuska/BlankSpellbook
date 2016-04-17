@@ -18,11 +18,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fe5b0253-4850-4363-941d-4e8306108c93" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/Database/PowerListContract.java" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/drawer/DrawerHelper.java" afterPath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/drawer/DrawerHelper.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/drawer/DrawerPresenter.java" afterPath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/drawer/DrawerPresenter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/mainActivity/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/mainActivity/MainActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/mainActivity/MainActivityPresenter.java" afterPath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/mainActivity/MainActivityPresenter.java" />
     </list>
     <ignored path="Blank Spellbook.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -158,13 +156,13 @@
       <file leaf-file-name="DrawerPresenter.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/drawer/DrawerPresenter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.4609375">
-              <caret line="70" column="0" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.36132812">
+              <caret line="61" column="76" selection-start-line="61" selection-start-column="76" selection-end-line="61" selection-end-column="76" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="method#fetchSpellBookListDataFromDB#0;class#DrawerPresenter#0" expanded="false" />
-                <element signature="e#7197#7523#0" expanded="true" />
-                <element signature="e#7522#7523#0" expanded="true" />
+                <element signature="e#6899#7225#0" expanded="true" />
+                <element signature="e#7224#7225#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -1813,8 +1811,8 @@
         <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/dialog_fragments/SetPowerListNameDialog.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/mainActivity/MainActivityPresenter.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/mainActivity/MainActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/drawer/DrawerPresenter.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/drawer/DrawerHelper.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/drawer/DrawerPresenter.java" />
       </list>
     </option>
   </component>
@@ -2549,13 +2547,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/Database/PowerListContract.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="17" column="75" selection-start-line="17" selection-start-column="75" selection-end-line="17" selection-end-column="75" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/powerlist/SpellBookActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -2861,14 +2852,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/Database/PowerListContract.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="22" column="0" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/Database/BlankSpellBookContract.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="3.5961537">
@@ -2927,19 +2910,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/drawer/DrawerPresenter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4609375">
-          <caret line="70" column="0" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#fetchSpellBookListDataFromDB#0;class#DrawerPresenter#0" expanded="false" />
-            <element signature="e#7197#7523#0" expanded="true" />
-            <element signature="e#7522#7523#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/drawer/DrawerHelper.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.82435346">
@@ -2951,6 +2921,19 @@
             <element signature="e#9525#9526#0" expanded="true" />
             <element signature="e#10232#10703#0" expanded="true" />
             <element signature="e#10702#10703#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/drawer/DrawerPresenter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.36132812">
+          <caret line="61" column="76" selection-start-line="61" selection-start-column="76" selection-end-line="61" selection-end-column="76" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#fetchSpellBookListDataFromDB#0;class#DrawerPresenter#0" expanded="false" />
+            <element signature="e#6899#7225#0" expanded="true" />
+            <element signature="e#7224#7225#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -1,15 +1,12 @@
 package tomi.piipposoft.blankspellbook.drawer;
 
 import android.content.ContentValues;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
@@ -19,9 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
-import tomi.piipposoft.blankspellbook.Database.PowerListContract;
-import tomi.piipposoft.blankspellbook.Utils.DataSource;
-import tomi.piipposoft.blankspellbook.powerlist.SpellBookActivity;
 
 /**
  * Created by Domu on 17-Apr-16.
