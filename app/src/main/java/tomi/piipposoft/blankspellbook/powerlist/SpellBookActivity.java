@@ -298,7 +298,7 @@ public class SpellBookActivity extends AppCompatActivity
 
     // The method that is called when positive button on SetSpellbookNameDialog is clicked
     @Override
-    public void onSetSpellbookNameDialogPositiveClick(DialogFragment dialog, String powerListName) {
+    public void onSetSpellBookNameDialogPositiveClick(DialogFragment dialog, String powerListName) {
 //        DrawerHelper.updateSpellBookList();
     }
 

@@ -11,10 +11,10 @@ public interface MainActivityContract {
 
     interface View{
 
-        void dummyMethod();
+
     }
 
     interface UserActionListener{
-        DrawerContract.UserActionListener getInstance();
+        DrawerContract.UserActionListener getDrawerContractInstance();
     }
 }

@@ -115,13 +115,13 @@ public class DrawerHelper implements DrawerContract.View{
         return mDrawer.getDrawerLayout();
     }
 
-    public static void updateSpellBookList(){
-        populateSpellBooksList(mDrawer);
-    }
+//    public static void updateSpellBookList(){
+//        populateSpellBooksList(mDrawer);
+//    }
 
-    public static void updateDailyPowersList(){
-        populateDailyPowersList(mDrawer);
-    }
+//    public static void updateDailyPowersList(){
+//        populateDailyPowersList(mDrawer);
+//    }
 
 
     private static void createDrawer(Toolbar toolbar){
@@ -187,7 +187,7 @@ public class DrawerHelper implements DrawerContract.View{
 
     @Override
     public void showDailyPowerList() {
-
+        populateDailyPowersList(mDrawer);
     }
 
     @Override
@@ -257,7 +257,7 @@ public class DrawerHelper implements DrawerContract.View{
      *
      * @param drawer
      */
-    private static void populateSpellBooksList(Drawer drawer){
+    private void populateSpellBooksList(Drawer drawer){
 
         drawer.removeAllItems();
         drawer.removeAllStickyFooterItems();
@@ -353,7 +353,7 @@ public class DrawerHelper implements DrawerContract.View{
      *
      * @param drawer
      */
-    private static void populateDailyPowersList(Drawer drawer){
+    private void populateDailyPowersList(Drawer drawer){
 
         drawer.removeAllItems();
         drawer.removeAllStickyFooterItems();

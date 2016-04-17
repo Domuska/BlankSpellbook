@@ -29,7 +29,7 @@ public class SetDailyPowerListNameDialog extends DialogFragment {
      * implement this interface in order to receive event callbacks.
      * Each method passes the DialogFragment in case the host needs to query it. */
     public interface NoticeDialogListener{
-        void onSetDailyPowerNameDialogPositiveClick(DialogFragment dialog);
+        void onSetDailyPowerNameDialogPositiveClick(DialogFragment dialog, String dailyPowerListName);
     }
 
     // Use this instance of the interface to deliver action events
@@ -63,12 +63,6 @@ public class SetDailyPowerListNameDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
-        //handle adding a new spell book
-
-        final BlankSpellBookContract.DBHelper powerDbHelper =
-                new BlankSpellBookContract.DBHelper(getActivity().getApplicationContext());
-        final SQLiteDatabase myDb = powerDbHelper.getWritableDatabase();
-
         View view = inflater.inflate(R.layout.set_daily_power_list_name_dialog, null);
         final EditText dialogEditText = (EditText) view.findViewById(R.id.edittext_dailypowerlistname);
 
@@ -78,19 +72,8 @@ public class SetDailyPowerListNameDialog extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-
-                        ContentValues values = new ContentValues();
-                        values.put(BlankSpellBookContract.DailyPowerListEntry.COLUMN_NAME_DAILY_POWER_LIST_NAME,
+                        mListener.onSetDailyPowerNameDialogPositiveClick(SetDailyPowerListNameDialog.this,
                                 dialogEditText.getText().toString());
-
-                        myDb.insert(
-                                BlankSpellBookContract.DailyPowerListEntry.TABLE_NAME,
-                                null,
-                                values
-                        );
-
-
-                        mListener.onSetDailyPowerNameDialogPositiveClick(SetDailyPowerListNameDialog.this);
 
                     }
                 })

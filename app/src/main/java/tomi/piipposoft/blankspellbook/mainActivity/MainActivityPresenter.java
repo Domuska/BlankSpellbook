@@ -28,7 +28,7 @@ public class MainActivityPresenter extends DrawerPresenter
     }
 
     @Override
-    public DrawerContract.UserActionListener getInstance() {
+    public DrawerContract.UserActionListener getDrawerContractInstance() {
         return this;
     }
 
@@ -39,7 +39,7 @@ public class MainActivityPresenter extends DrawerPresenter
 
     @Override
     public void addDailyPowerList(@NonNull String dailyPowerListName) {
-//        super.addDailyPowerList(dailyPowerListName);
+        this.addNewDailyPowerList(dailyPowerListName);
     }
 
     @Override

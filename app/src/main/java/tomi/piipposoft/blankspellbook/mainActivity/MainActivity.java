@@ -2,7 +2,6 @@ package tomi.piipposoft.blankspellbook.mainActivity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 
 import android.support.v4.app.DialogFragment;
@@ -183,7 +182,7 @@ public class MainActivity extends AppCompatActivity
         mDrawerHelper = new DrawerHelper(this, (Toolbar) findViewById(R.id.my_toolbar));
 
         mActionlistener = new MainActivityPresenter(DataSource.getDatasource(this), this, mDrawerHelper);
-        mDrawerActionListener = mActionlistener.getInstance();
+        mDrawerActionListener = mActionlistener.getDrawerContractInstance();
 
 
         //add button to toolbar to open the drawer
@@ -207,24 +206,17 @@ public class MainActivity extends AppCompatActivity
 
 
     @Override
-    public void onSetDailyPowerNameDialogPositiveClick(DialogFragment dialog) {
-        DrawerHelper.updateDailyPowersList();
+    public void onSetDailyPowerNameDialogPositiveClick(DialogFragment dialog, String dailyPowerListName) {
+        mDrawerActionListener.addDailyPowerList(dailyPowerListName);
 
     }
 
-    // The method that is called when positive button on SetSpellbookNameDialog is clicked
+    // Called when positive button on SetSpellBookNameDialog is clicked
     @Override
-    public void onSetSpellbookNameDialogPositiveClick(DialogFragment dialog, String powerListName) {
-        //DrawerHelper.updateSpellBookList();
-//        mActionlistener.addNewPowerList(powerListName);
+    public void onSetSpellBookNameDialogPositiveClick(DialogFragment dialog, String powerListName) {
 
         mDrawerActionListener.addPowerList(powerListName);
 
-
-    }
-
-    @Override
-    public void dummyMethod() {
 
     }
 

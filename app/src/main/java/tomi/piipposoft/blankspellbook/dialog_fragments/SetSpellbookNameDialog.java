@@ -2,10 +2,8 @@ package tomi.piipposoft.blankspellbook.dialog_fragments;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -14,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
-import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
 import tomi.piipposoft.blankspellbook.R;
 
 /**
@@ -29,7 +26,7 @@ public class SetSpellbookNameDialog extends DialogFragment {
      * implement this interface in order to receive event callbacks.
      * Each method passes the DialogFragment in case the host needs to query it. */
     public interface NoticeDialogListener{
-        void onSetSpellbookNameDialogPositiveClick(DialogFragment dialog, String PowerListName);
+        void onSetSpellBookNameDialogPositiveClick(DialogFragment dialog, String PowerListName);
     }
 
     // Use this instance of the interface to deliver action events
@@ -63,11 +60,6 @@ public class SetSpellbookNameDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
-        //handle adding a new spell book
-
-        //final BlankSpellBookContract.DBHelper powerDbHelper = new BlankSpellBookContract.DBHelper(getActivity().getApplicationContext());
-        //final SQLiteDatabase myDb = powerDbHelper.getWritableDatabase();
-
         View view = inflater.inflate(R.layout.set_spellbook_name_dialog, null);
         final EditText dialogEditText = (EditText) view.findViewById(R.id.edittext_spellbookname);
 
@@ -77,18 +69,7 @@ public class SetSpellbookNameDialog extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-//                        ContentValues values = new ContentValues();
-//                        values.put(BlankSpellBookContract.PowerListEntry.COLUMN_NAME_POWER_LIST_NAME,
-//                                    dialogEditText.getText().toString());
-//
-//                        myDb.insert(
-//                                BlankSpellBookContract.PowerListEntry.TABLE_NAME,
-//                                null,
-//                                values
-//                        );
-//
-//                        mListener.onSetSpellbookNameDialogPositiveClick(SetSpellbookNameDialog.this);
-                        mListener.onSetSpellbookNameDialogPositiveClick(SetSpellbookNameDialog.this, dialogEditText.getText().toString());
+                        mListener.onSetSpellBookNameDialogPositiveClick(SetSpellbookNameDialog.this, dialogEditText.getText().toString());
 
                     }
                 })

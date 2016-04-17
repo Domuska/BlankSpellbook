@@ -27,7 +27,7 @@ public class DrawerPresenter{
     }
 
 
-    public void addNewPowerList(@NonNull String powerListName) {
+    protected void addNewPowerList(@NonNull String powerListName) {
 
         mDb = this.mDbHelper.getWritableDatabase();
 
@@ -45,6 +45,23 @@ public class DrawerPresenter{
         //tell view to update itself
         mDrawerView.showPowerList();
 
+    }
+
+    protected void addNewDailyPowerList(@NonNull String dailyPowerListName){
+
+        mDb = this.mDbHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(BlankSpellBookContract.DailyPowerListEntry.COLUMN_NAME_DAILY_POWER_LIST_NAME,
+        dailyPowerListName);
+
+        mDb.insert(
+                BlankSpellBookContract.DailyPowerListEntry.TABLE_NAME,
+                null,
+                values
+        );
+
+        mDrawerView.showDailyPowerList();
     }
 
 
