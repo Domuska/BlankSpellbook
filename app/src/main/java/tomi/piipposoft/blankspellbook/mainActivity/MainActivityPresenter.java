@@ -16,6 +16,7 @@ public class MainActivityPresenter extends DrawerPresenter
         MainActivityContract.UserActionListener {
 
     private final MainActivityContract.View mMainActivityView;
+    private final DrawerContract.ViewActivity mDrawerActivityView;
 
 
     public MainActivityPresenter(
@@ -24,12 +25,7 @@ public class MainActivityPresenter extends DrawerPresenter
             @NonNull DrawerHelper drawerHelper){
         super(dbHelper, drawerHelper);
         mMainActivityView = mainActivityView;
-
-    }
-
-    @Override
-    public DrawerContract.UserActionListener getDrawerContractInstance() {
-        return this;
+        mDrawerActivityView = (DrawerContract.ViewActivity)mMainActivityView;
     }
 
     @Override
@@ -44,17 +40,19 @@ public class MainActivityPresenter extends DrawerPresenter
 
     @Override
     public void drawerOpened() {
-//        this.showDrawerContents();
     }
 
     @Override
-    public void listPowerListItemClicked(@NonNull long itemId) {
+    public void listPowerListItemClicked(@NonNull long itemId, String name) {
 
+//        mMainActivityView.openPowerList(itemId, name);
+        mDrawerActivityView.openPowerList(itemId, name);
     }
 
     @Override
     public void listDailyPowerListItemClicked(@NonNull long itemId) {
-
+//        mMainActivityView.openDailyPowerList(itemId);
+        mDrawerActivityView.openDailyPowerList(itemId);
     }
 
     @Override

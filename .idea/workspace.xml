@@ -14,23 +14,19 @@
   </component>
   <component name="AndroidLogFilters">
     <option name="TOOL_WINDOW_CUSTOM_FILTER" value="spell" />
-    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="No Filters" />
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fe5b0253-4850-4363-941d-4e8306108c93" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/powerlist/PowerListPresenter.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/powerlist/SpellbookContract.java" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/drawer/DrawerContract.java" afterPath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/drawer/DrawerContract.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/drawer/DrawerHelper.java" afterPath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/drawer/DrawerHelper.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/mainActivity/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/mainActivity/MainActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/menu/menu_daily_spells.xml" afterPath="$PROJECT_DIR$/app/src/main/res/menu/menu_daily_spells.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/menu/menu_spell_book.xml" afterPath="$PROJECT_DIR$/app/src/main/res/menu/menu_spell_book.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/dailypowerlist/DailySpellsActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/dailypowerlist/DailyPowerListActivity.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/powerlist/SpellBookActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/powerlist/powerListActivity.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/powerlist/SpellBookPresenter.java" afterPath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/powerlist/PowerListContract.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_daily_spells.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_daily_power_list.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_spell_book.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_power_list.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/mainActivity/MainActivityContract.java" afterPath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/mainActivity/MainActivityContract.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/mainActivity/MainActivityPresenter.java" afterPath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/mainActivity/MainActivityPresenter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/powerlist/PowerListContract.java" afterPath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/powerlist/PowerListContract.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/powerlist/PowerListPresenter.java" afterPath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/powerlist/PowerListPresenter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/powerlist/powerListActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/powerlist/powerListActivity.java" />
     </list>
     <ignored path="Blank Spellbook.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -46,22 +42,59 @@
     <option name="PATCH_PATH" value="" />
   </component>
   <component name="DockManager">
-    <window id="1">
+    <window id="2">
       <content type="file-editors">
         <state>
           <leaf>
-            <file leaf-file-name="DrawerHelper.java" pinned="false" current-in-tab="true">
+            <file leaf-file-name="MainActivityContract.java" pinned="false" current-in-tab="false">
+              <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/mainActivity/MainActivityContract.java">
+                <provider selected="true" editor-type-id="text-editor">
+                  <state vertical-scroll-proportion="0.0">
+                    <caret line="9" column="39" selection-start-line="9" selection-start-column="39" selection-end-line="9" selection-end-column="39" />
+                    <folding>
+                      <element signature="imports" expanded="true" />
+                    </folding>
+                  </state>
+                </provider>
+              </entry>
+            </file>
+            <file leaf-file-name="MainActivityPresenter.java" pinned="false" current-in-tab="false">
+              <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/mainActivity/MainActivityPresenter.java">
+                <provider selected="true" editor-type-id="text-editor">
+                  <state vertical-scroll-proportion="0.0">
+                    <caret line="36" column="63" selection-start-line="36" selection-start-column="63" selection-end-line="36" selection-end-column="63" />
+                    <folding>
+                      <element signature="imports" expanded="true" />
+                    </folding>
+                  </state>
+                </provider>
+              </entry>
+            </file>
+            <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="true">
+              <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/mainActivity/MainActivity.java">
+                <provider selected="true" editor-type-id="text-editor">
+                  <state vertical-scroll-proportion="0.54956895">
+                    <caret line="224" column="75" selection-start-line="224" selection-start-column="75" selection-end-line="224" selection-end-column="75" />
+                    <folding>
+                      <element signature="e#6137#6162#0" expanded="true" />
+                      <element signature="e#6180#6206#0" expanded="true" />
+                      <element signature="e#7652#7653#0" expanded="true" />
+                      <element signature="e#7716#7717#0" expanded="true" />
+                    </folding>
+                  </state>
+                </provider>
+              </entry>
+            </file>
+            <file leaf-file-name="DrawerHelper.java" pinned="false" current-in-tab="false">
               <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/drawer/DrawerHelper.java">
                 <provider selected="true" editor-type-id="text-editor">
-                  <state vertical-scroll-proportion="-0.98922414">
-                    <caret line="53" column="5" selection-start-line="53" selection-start-column="5" selection-end-line="53" selection-end-column="5" />
+                  <state vertical-scroll-proportion="0.0">
+                    <caret line="160" column="95" selection-start-line="160" selection-start-column="95" selection-end-line="160" selection-end-column="95" />
                     <folding>
-                      <element signature="e#4200#4201#0" expanded="true" />
-                      <element signature="e#4248#4249#0" expanded="true" />
-                      <element signature="e#8082#8751#0" expanded="true" />
-                      <element signature="e#8750#8751#0" expanded="true" />
-                      <element signature="e#9457#9928#0" expanded="true" />
-                      <element signature="e#9927#9928#0" expanded="true" />
+                      <element signature="e#8288#9036#0" expanded="true" />
+                      <element signature="e#9035#9036#0" expanded="true" />
+                      <element signature="e#9742#10209#0" expanded="true" />
+                      <element signature="e#10208#10209#0" expanded="true" />
                     </folding>
                   </state>
                 </provider>
@@ -85,104 +118,52 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/mainActivity/MainActivity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="44" column="39" selection-start-line="44" selection-start-column="39" selection-end-line="44" selection-end-column="39" />
-              <folding>
-                <element signature="e#7148#7149#0" expanded="true" />
-                <element signature="e#7212#7213#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MainActivityContract.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/mainActivity/MainActivityContract.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SetDailyPowerListNameDialog.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/dialog_fragments/SetDailyPowerListNameDialog.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="24" column="65" selection-start-line="24" selection-start-column="65" selection-end-line="24" selection-end-column="65" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SetPowerListNameDialog.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/dialog_fragments/SetPowerListNameDialog.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="28" column="27" selection-start-line="28" selection-start-column="27" selection-end-line="28" selection-end-column="27" />
-              <folding>
-                <element signature="e#2478#2805#0" expanded="true" />
-                <element signature="e#2804#2805#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="PowerListActivity.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="PowerListActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/powerlist/PowerListActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.43085882">
-              <caret line="307" column="0" selection-start-line="307" selection-start-column="0" selection-end-line="307" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="70" column="0" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
+              <folding>
+                <element signature="e#5036#5037#0" expanded="true" />
+                <element signature="e#5100#5101#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PowerListPresenter.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/powerlist/PowerListPresenter.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="41" column="32" selection-start-line="41" selection-start-column="32" selection-end-line="41" selection-end-column="32" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#1164#1165#0" expanded="true" />
+                <element signature="e#1215#1216#0" expanded="true" />
+                <element signature="e#1786#1787#0" expanded="true" />
+                <element signature="e#1823#1824#0" expanded="true" />
+                <element signature="e#1888#1889#0" expanded="true" />
+                <element signature="e#1930#1931#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PowerListContract.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/powerlist/PowerListContract.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="8" column="48" selection-start-line="8" selection-start-column="48" selection-end-line="8" selection-end-column="48" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MainActivityPresenter.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/mainActivity/MainActivityPresenter.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="39" column="13" selection-start-line="39" selection-start-column="13" selection-end-line="39" selection-end-column="13" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#1014#1015#0" expanded="true" />
-                <element signature="e#1041#1042#0" expanded="true" />
-                <element signature="e#1117#1118#0" expanded="true" />
-                <element signature="e#1168#1169#0" expanded="true" />
-                <element signature="e#1646#1647#0" expanded="true" />
-                <element signature="e#1683#1684#0" expanded="true" />
-                <element signature="e#1748#1749#0" expanded="true" />
-                <element signature="e#1790#1791#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DrawerPresenter.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/drawer/DrawerPresenter.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="72" column="0" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="method#fetchSpellBookListDataFromDB#0;class#DrawerPresenter#0" expanded="false" />
-                <element signature="e#6897#7223#0" expanded="true" />
-                <element signature="e#7222#7223#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DrawerContract.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="DrawerContract.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/drawer/DrawerContract.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="26" column="30" selection-start-line="26" selection-start-column="13" selection-end-line="26" selection-end-column="30" />
+            <state vertical-scroll-proportion="0.36612904">
+              <caret line="32" column="85" selection-start-line="32" selection-start-column="85" selection-end-line="32" selection-end-column="85" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -1813,18 +1794,20 @@
         <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/powerlist/SpellBookActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/drawer/DrawerContract2.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/mainActivity/DrawerContract2.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/mainActivity/MainActivityContract.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/dialog_fragments/SetDailyPowerListNameDialog.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/Utils/DataSource.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/drawer/DrawerContract.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/dialog_fragments/SetSpellbookNameDialog.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/dialog_fragments/SetPowerListNameDialog.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/mainActivity/MainActivityPresenter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/drawer/DrawerHelper.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/drawer/DrawerPresenter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/mainActivity/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/powerlist/powerListActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/drawer/DrawerHelper.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/mainActivity/MainActivityContract.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/powerlist/PowerListContract.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/mainActivity/MainActivityPresenter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/powerlist/PowerListPresenter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/mainActivity/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/powerlist/PowerListActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/drawer/DrawerContract.java" />
       </list>
     </option>
   </component>
@@ -2023,6 +2006,28 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="drawer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Blank Spellbook" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blankspellbook" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Database" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -2467,8 +2472,8 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32954547" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4288965" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18657565" sideWeight="0.49388754" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26507396" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26279864" sideWeight="0.49388754" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -2585,8 +2590,10 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="31" column="11" selection-start-line="31" selection-start-column="11" selection-end-line="31" selection-end-column="11" />
           <folding>
-            <element signature="e#7148#7149#0" expanded="true" />
-            <element signature="e#7212#7213#0" expanded="true" />
+            <element signature="e#6137#6162#0" expanded="true" />
+            <element signature="e#6180#6206#0" expanded="true" />
+            <element signature="e#7652#7653#0" expanded="true" />
+            <element signature="e#7716#7717#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2611,8 +2618,10 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#7148#7149#0" expanded="true" />
-            <element signature="e#7212#7213#0" expanded="true" />
+            <element signature="e#6137#6162#0" expanded="true" />
+            <element signature="e#6180#6206#0" expanded="true" />
+            <element signature="e#7652#7653#0" expanded="true" />
+            <element signature="e#7716#7717#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2828,42 +2837,10 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/powerlist/PowerListContract.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="5" column="30" selection-start-line="5" selection-start-column="30" selection-end-line="5" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/powerlist/PowerListPresenter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="5" column="31" selection-start-line="5" selection-start-column="31" selection-end-line="5" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/dailypowerlist/DailyPowerListActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="56" column="4" selection-start-line="56" selection-start-column="4" selection-end-line="56" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/mainActivity/MainActivityContract.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/dialog_fragments/SetDailyPowerListNameDialog.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="24" column="65" selection-start-line="24" selection-start-column="65" selection-end-line="24" selection-end-column="65" />
           <folding />
         </state>
       </provider>
@@ -2886,45 +2863,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/dialog_fragments/SetPowerListNameDialog.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="28" column="27" selection-start-line="28" selection-start-column="27" selection-end-line="28" selection-end-column="27" />
-          <folding>
-            <element signature="e#2478#2805#0" expanded="true" />
-            <element signature="e#2804#2805#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/drawer/DrawerContract.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="26" column="30" selection-start-line="26" selection-start-column="13" selection-end-line="26" selection-end-column="30" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/mainActivity/MainActivityPresenter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="39" column="13" selection-start-line="39" selection-start-column="13" selection-end-line="39" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1014#1015#0" expanded="true" />
-            <element signature="e#1041#1042#0" expanded="true" />
-            <element signature="e#1117#1118#0" expanded="true" />
-            <element signature="e#1168#1169#0" expanded="true" />
-            <element signature="e#1646#1647#0" expanded="true" />
-            <element signature="e#1683#1684#0" expanded="true" />
-            <element signature="e#1748#1749#0" expanded="true" />
-            <element signature="e#1790#1791#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/drawer/DrawerPresenter.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -2934,32 +2872,6 @@
             <element signature="method#fetchSpellBookListDataFromDB#0;class#DrawerPresenter#0" expanded="false" />
             <element signature="e#6897#7223#0" expanded="true" />
             <element signature="e#7222#7223#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/drawer/DrawerHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.98922414">
-          <caret line="53" column="5" selection-start-line="53" selection-start-column="5" selection-end-line="53" selection-end-column="5" />
-          <folding>
-            <element signature="e#4200#4201#0" expanded="true" />
-            <element signature="e#4248#4249#0" expanded="true" />
-            <element signature="e#8082#8751#0" expanded="true" />
-            <element signature="e#8750#8751#0" expanded="true" />
-            <element signature="e#9457#9928#0" expanded="true" />
-            <element signature="e#9927#9928#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/mainActivity/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="44" column="39" selection-start-line="44" selection-start-column="39" selection-end-line="44" selection-end-column="39" />
-          <folding>
-            <element signature="e#7148#7149#0" expanded="true" />
-            <element signature="e#7212#7213#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2975,11 +2887,113 @@
         <state />
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/dialog_fragments/SetDailyPowerListNameDialog.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.7176128">
+          <caret line="44" column="56" selection-start-line="44" selection-start-column="56" selection-end-line="44" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/dialog_fragments/SetPowerListNameDialog.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3959243">
+          <caret line="28" column="27" selection-start-line="28" selection-start-column="27" selection-end-line="28" selection-end-column="27" />
+          <folding>
+            <element signature="e#2478#2805#0" expanded="true" />
+            <element signature="e#2804#2805#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/drawer/DrawerHelper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="160" column="95" selection-start-line="160" selection-start-column="95" selection-end-line="160" selection-end-column="95" />
+          <folding>
+            <element signature="e#8288#9036#0" expanded="true" />
+            <element signature="e#9035#9036#0" expanded="true" />
+            <element signature="e#9742#10209#0" expanded="true" />
+            <element signature="e#10208#10209#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/mainActivity/MainActivityContract.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="9" column="39" selection-start-line="9" selection-start-column="39" selection-end-line="9" selection-end-column="39" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/powerlist/PowerListContract.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="8" column="48" selection-start-line="8" selection-start-column="48" selection-end-line="8" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/mainActivity/MainActivityPresenter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="36" column="63" selection-start-line="36" selection-start-column="63" selection-end-line="36" selection-end-column="63" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/mainActivity/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.54956895">
+          <caret line="224" column="75" selection-start-line="224" selection-start-column="75" selection-end-line="224" selection-end-column="75" />
+          <folding>
+            <element signature="e#6137#6162#0" expanded="true" />
+            <element signature="e#6180#6206#0" expanded="true" />
+            <element signature="e#7652#7653#0" expanded="true" />
+            <element signature="e#7716#7717#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/powerlist/PowerListActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.43085882">
-          <caret line="307" column="0" selection-start-line="307" selection-start-column="0" selection-end-line="307" selection-end-column="0" />
-          <folding />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="70" column="0" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
+          <folding>
+            <element signature="e#5036#5037#0" expanded="true" />
+            <element signature="e#5100#5101#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/powerlist/PowerListPresenter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="41" column="32" selection-start-line="41" selection-start-column="32" selection-end-line="41" selection-end-column="32" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1164#1165#0" expanded="true" />
+            <element signature="e#1215#1216#0" expanded="true" />
+            <element signature="e#1786#1787#0" expanded="true" />
+            <element signature="e#1823#1824#0" expanded="true" />
+            <element signature="e#1888#1889#0" expanded="true" />
+            <element signature="e#1930#1931#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/tomi/piipposoft/blankspellbook/drawer/DrawerContract.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.36612904">
+          <caret line="32" column="85" selection-start-line="32" selection-start-column="85" selection-end-line="32" selection-end-column="85" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

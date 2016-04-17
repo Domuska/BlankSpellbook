@@ -10,11 +10,12 @@ import tomi.piipposoft.blankspellbook.drawer.DrawerContract;
 public interface MainActivityContract {
 
     interface View{
-
+//        void openPowerList(Long powerListId, String name);
+//        void openDailyPowerList(Long dailyPowerListId);
 
     }
 
     interface UserActionListener{
-        DrawerContract.UserActionListener getDrawerContractInstance();
+
     }
 }

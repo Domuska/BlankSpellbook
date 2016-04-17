@@ -11,16 +11,27 @@ import java.util.List;
  */
 public interface DrawerContract {
 
+
+    /**
+     * Used by presenters to tell the drawer to show a list of items
+     */
     interface View {
-
-        void showPowerListItems();
-        void showDailyPowerListItems();
-
         void showDailyPowerList(List<IDrawerItem> drawerItems);
         void showPowerList(List<IDrawerItem> drawerItems);
 
     }
 
+    /**
+     * Used by presenters to tell the running activity to start new activites
+     */
+    interface ViewActivity {
+        void openPowerList(Long powerListId, String name);
+        void openDailyPowerList(Long dailyPowerListId);
+    }
+
+    /**
+     * Used by activities to tell presenter that an item in the list has been clicked
+     */
     interface UserActionListener{
 
         void addPowerList(@NonNull String powerListName);
@@ -28,8 +39,8 @@ public interface DrawerContract {
 
         void drawerOpened();
 
-        void listPowerListItemClicked(@NonNull long itemId);
-        void listDailyPowerListItemClicked(@NonNull long itemId);
+        void listPowerListItemClicked(long itemId, String name);
+        void listDailyPowerListItemClicked(long itemId);
 
         void powerListProfileSelected();
         void dailyPowerListProfileSelected();

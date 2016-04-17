@@ -14,6 +14,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+
 import tomi.piipposoft.blankspellbook.R;
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
 import tomi.piipposoft.blankspellbook.dailypowerlist.DailyPowerListActivity;
@@ -32,7 +35,8 @@ public class MainActivity extends AppCompatActivity
         implements MainActivityContract.View,
         DrawerHelper.DrawerListener,
         SetPowerListNameDialog.NoticeDialogListener,
-        SetDailyPowerListNameDialog.NoticeDialogListener{
+        SetDailyPowerListNameDialog.NoticeDialogListener,
+        DrawerContract.ViewActivity{
 
     private Button spellBookButton, dailySpellsButton;
     private FloatingActionButton fab;
@@ -175,11 +179,11 @@ public class MainActivity extends AppCompatActivity
     public void onResume(){
         super.onResume();
 
-        mDrawerHelper = new DrawerHelper(this, (Toolbar) findViewById(R.id.my_toolbar));
+        mDrawerHelper = DrawerHelper.getInstance(this, (Toolbar) findViewById(R.id.my_toolbar));
 
         mActionlistener = new MainActivityPresenter(DataSource.getDatasource(this), this, mDrawerHelper);
-        mDrawerActionListener = mActionlistener.getDrawerContractInstance();
 
+        mDrawerActionListener = (DrawerContract.UserActionListener) mActionlistener;
 
         //add button to toolbar to open the drawer
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerHelper.getDrawerLayout(),
@@ -203,6 +207,58 @@ public class MainActivity extends AppCompatActivity
         mDrawerActionListener.powerListProfileSelected();
     }
 
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+    }
+
+    //FROM MAIN ACTIVITY CONTRACT INTERFACE
+
+
+    // FROM DRAWER CONTRACT VIEWACTIVITY INTERFACE
+
+    @Override
+    public void openPowerList(Long powerListId, String powerListName) {
+        Intent i = new Intent(this, PowerListActivity.class);
+        i.putExtra(PowerListActivity.EXTRA_POWER_LIST_ID, powerListId);
+        i.putExtra(PowerListActivity.EXTRA_POWER_LIST_NAME, powerListName);
+        startActivity(i);
+    }
+
+    @Override
+    public void openDailyPowerList(Long dailyPowerListId) {
+        // TODO: 17-Apr-16 handle opening a new daily power list activity
+    }
+
+
+    // FROM DRAWER CONTRACT VIEW INTERFACE
+
+    @Override
+    public void dailyPowerListProfileSelected() {
+        mDrawerActionListener.dailyPowerListProfileSelected();
+    }
+
+    @Override
+    public void powerListProfileSelected() {
+        mDrawerActionListener.powerListProfileSelected();
+    }
+
+
+    @Override
+    public void powerListClicked(IDrawerItem clickedItem) {
+        PrimaryDrawerItem item = (PrimaryDrawerItem)clickedItem;
+        mDrawerActionListener.listPowerListItemClicked(
+                item.getIdentifier(),
+                item.getName().toString());
+    }
+
+    @Override
+    public void dailyPowerListClicked(IDrawerItem clickedItem) {
+        mDrawerActionListener.listDailyPowerListItemClicked(clickedItem.getIdentifier());
+    }
+
+    // FROM POPUP FRAGMENT INTERFACES
 
     @Override
     public void onSetDailyPowerNameDialogPositiveClick(DialogFragment dialog, String dailyPowerListName) {
@@ -215,21 +271,5 @@ public class MainActivity extends AppCompatActivity
     public void onSetPowerListNameDialogPositiveClick(DialogFragment dialog, String powerListName) {
 
         mDrawerActionListener.addPowerList(powerListName);
-    }
-
-    @Override
-    public void dailyPowerListProfileSelected() {
-        mDrawerActionListener.dailyPowerListProfileSelected();
-    }
-
-    @Override
-    public void powerListProfileSelected() {
-        mDrawerActionListener.powerListProfileSelected();
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-
     }
 }

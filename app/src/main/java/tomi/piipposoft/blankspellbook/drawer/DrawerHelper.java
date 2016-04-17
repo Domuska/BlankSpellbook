@@ -44,19 +44,33 @@ public class DrawerHelper implements
 
     private static Drawer mDrawer;
 
-
+    private static DrawerHelper instance;
 
     private DrawerListener mDrawerListener;
 
     public interface DrawerListener {
         void dailyPowerListProfileSelected();
         void powerListProfileSelected();
+        void powerListClicked(IDrawerItem clickedItem);
+        void dailyPowerListClicked(IDrawerItem clickedItem);
+
     }
 
-    public DrawerHelper(Activity activity, Toolbar toolbar ){
+    private DrawerHelper(Activity activity, Toolbar toolbar ){
         createDrawer(activity, toolbar);
         mDrawerListener = (DrawerListener) activity;
 
+    }
+
+    private DrawerHelper(){}
+
+    public static DrawerHelper getInstance(Activity activity, Toolbar toolbar){
+
+        if(instance == null){
+            return new DrawerHelper(activity, toolbar);
+        }
+        else
+            return instance;
     }
 
     public void createDrawer(Activity activity, Toolbar toolbar) {
@@ -159,21 +173,8 @@ public class DrawerHelper implements
                 })
                 .withCloseOnClick(false)
                 .build();
-    }
 
-    /**
-     * From drawerContract
-     */
-    @Override
-    public void showPowerListItems() {
 
-    }
-
-    /**
-     * From drawerContract
-     */
-    @Override
-    public void showDailyPowerListItems() {
 
     }
 
@@ -215,12 +216,14 @@ public class DrawerHelper implements
 
                 @Override
                 public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                    Intent i = new Intent(callerActivity, PowerListActivity.class);
-                    Log.d(TAG, "PowerListActivity launching, supplying extra ID: " + item.getIdentifier()
-                            + " item name: " + item.getName());
-                    i.putExtra(PowerListActivity.EXTRA_POWER_BOOK_ID, item.getIdentifier());
-                    mDrawer.closeDrawer();
-                    callerActivity.startActivity(i);
+//                    Intent i = new Intent(callerActivity, PowerListActivity.class);
+//                    Log.d(TAG, "PowerListActivity launching, supplying extra ID: " + item.getIdentifier()
+//                            + " item name: " + item.getName());
+//                    i.putExtra(PowerListActivity.EXTRA_POWER_LIST_ID, item.getIdentifier());
+//                    mDrawer.closeDrawer();
+//                    callerActivity.startActivity(i);
+
+                    mDrawerListener.powerListClicked(drawerItem);
                     return true;
                 }
             });
@@ -249,9 +252,9 @@ public class DrawerHelper implements
             item.withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                 @Override
                 public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                    // TODO: 17-Apr-16 Handle moving to DailyPowerListActivity
-                    Log.d(TAG, "dailyPowerListActivity launching, supplying extra ID: " + item.getIdentifier()
-                    + " item name: " + item.getName());
+                    mDrawerListener.dailyPowerListClicked(drawerItem);
+//                    Log.d(TAG, "dailyPowerListActivity launching, supplying extra ID: " + item.getIdentifier()
+//                    + " item name: " + item.getName());
                     return true;
                 }
             });

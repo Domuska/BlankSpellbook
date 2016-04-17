@@ -1,8 +1,6 @@
 package tomi.piipposoft.blankspellbook.powerlist;
 
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -13,9 +11,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+
+import tomi.piipposoft.blankspellbook.Utils.DataSource;
+import tomi.piipposoft.blankspellbook.dialog_fragments.SetDailyPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.dialog_fragments.SetPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.R;
+import tomi.piipposoft.blankspellbook.drawer.DrawerContract;
+import tomi.piipposoft.blankspellbook.drawer.DrawerHelper;
 
 /**
  * Activity where all user's spell books are listed in a list
@@ -25,19 +29,22 @@ import tomi.piipposoft.blankspellbook.R;
  *
  */
 public class PowerListActivity extends AppCompatActivity
-        implements SetPowerListNameDialog.NoticeDialogListener{
+        implements SetPowerListNameDialog.NoticeDialogListener,
+        SetDailyPowerListNameDialog.NoticeDialogListener,
+        DrawerHelper.DrawerListener,
+        PowerListContract.View,
+        DrawerContract.ViewActivity{
 
     //TODO: put this field to preferences maybe?
-    public static final String EXTRA_POWER_BOOK_ID = "powerBookId";
+    public static final String EXTRA_POWER_LIST_ID = "powerListId";
+    public static final String EXTRA_POWER_LIST_NAME = "powerBookName";
 
-    //private SpellbookContract.SpellbookListHelper powerListDbHelper;
-    //private PowerListContract.PowerListHelper powerListDbHelper;
-    private BlankSpellBookContract.DBHelper mDbHelper;
-    private SQLiteDatabase myDb;
-
+    private DrawerContract.UserActionListener mDrawerActionListener;
+    private PowerListContract.UserActionListener mActionListener;
 
     private final String TAG = "SpellBookActivity";
-    private Long powerBookId;
+    private Long powerListId;
+    private String powerListName;
 
     private FloatingActionButton fab;
 
@@ -48,8 +55,9 @@ public class PowerListActivity extends AppCompatActivity
         setContentView(R.layout.activity_power_list);
 
         Intent thisIntent = getIntent();
-        powerBookId = thisIntent.getLongExtra(EXTRA_POWER_BOOK_ID, -1);
-        Log.d(TAG, "ID got from extras: " + powerBookId);
+        powerListId = thisIntent.getLongExtra(EXTRA_POWER_LIST_ID, -1);
+        powerListName = thisIntent.getStringExtra(EXTRA_POWER_LIST_NAME);
+        Log.d(TAG, "ID got from extras: " + powerListId + " name got from extras: " + powerListName);
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
 
@@ -61,8 +69,139 @@ public class PowerListActivity extends AppCompatActivity
             }
         });
 
+        //TODO put here recyclerview to show the list of items
 
-        /*Log.d(TAG, "Instantiating powerListDbHelper");
+        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        toolbar.setTitle(powerListName);
+        setSupportActionBar(toolbar);
+
+
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
+        //initialize listeners
+        mActionListener = new PowerListPresenter(
+                DataSource.getDatasource(this),
+                this,
+                DrawerHelper.getInstance(this, (Toolbar) findViewById(R.id.my_toolbar)));
+
+        mDrawerActionListener = (DrawerContract.UserActionListener) mActionListener;
+
+        mDrawerActionListener.powerListProfileSelected();
+
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_spell_book, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    // FROM POWER LIST CONTRACT INTERFACE
+
+
+
+
+    // FROM POPUP FRAGMENT INTERFACES
+
+    // The method that is called when positive button on SetSpellbookNameDialog is clicked
+    @Override
+    public void onSetPowerListNameDialogPositiveClick(DialogFragment dialog, String powerListName) {
+
+    }
+
+    @Override
+    public void onSetDailyPowerNameDialogPositiveClick(DialogFragment dialog, String dailyPowerListName) {
+
+    }
+
+    // FROM DRAWER CONTRACT ACTIVITY VIEW INTERFACE
+
+    @Override
+    public void openPowerList(Long powerListId, String powerListName) {
+        Intent i = new Intent(this, PowerListActivity.class);
+        i.putExtra(PowerListActivity.EXTRA_POWER_LIST_ID, powerListId);
+        i.putExtra(PowerListActivity.EXTRA_POWER_LIST_NAME, powerListName);
+        startActivity(i);
+    }
+
+    @Override
+    public void openDailyPowerList(Long dailyPowerListId) {
+        // handle opening daily power list activity
+    }
+
+
+    // FROM DRAWER CONTRACT VIEW INTERFACE
+
+    @Override
+    public void powerListProfileSelected() {
+        mDrawerActionListener.powerListProfileSelected();
+    }
+
+    @Override
+    public void dailyPowerListProfileSelected() {
+        mDrawerActionListener.dailyPowerListProfileSelected();
+    }
+
+    @Override
+    public void powerListClicked(IDrawerItem clickedItem) {
+        PrimaryDrawerItem item = (PrimaryDrawerItem)clickedItem;
+        mDrawerActionListener.listPowerListItemClicked(
+                item.getIdentifier(),
+                item.getName().toString());
+    }
+
+    @Override
+    public void dailyPowerListClicked(IDrawerItem clickedItem) {
+        mDrawerActionListener.listDailyPowerListItemClicked(clickedItem.getIdentifier());
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+//    private void populateDBHelperMethod(){
+//
+//        myDb = mDbHelper.getWritableDatabase();
+//
+//        ContentValues values = new ContentValues();
+//
+//        values.put(BlankSpellBookContract.PowerListEntry.COLUMN_NAME_POWER_LIST_NAME, "Suikan priestin power list");
+//        myDb.insert(
+//                BlankSpellBookContract.PowerListEntry.TABLE_NAME,
+//                null,
+//                values
+//        );
+//    }
+
+
+}
+/*Log.d(TAG, "Instantiating powerListDbHelper");
         //powerListDbHelper = new PowerListContract.PowerListHelper(getApplicationContext());
         mDbHelper = new PowerContract.PowerHelper(getApplicationContext());
 
@@ -244,81 +383,3 @@ public class PowerListActivity extends AppCompatActivity
         Toast.makeText(this, powerListName, Toast.LENGTH_LONG).show();
 
         */
-
-        //TODO put here recyclerview to show the list of items
-
-
-        //Log.d(TAG, "Instantiating mDbHelper");
-        mDbHelper = new BlankSpellBookContract.DBHelper(getApplicationContext());
-
-        myDb = mDbHelper.getWritableDatabase();
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        setSupportActionBar(toolbar);
-
-
-
-
-
-
-        //String spellBookName = cursor.getString(cursor.getColumnIndex(SpellBookContract.SpellBookList.COLUMN_NAME_POWER_LIST_NAME));
-        //Toast.makeText(this, spellBookName, Toast.LENGTH_LONG).show();
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-//        DrawerHelper.createDrawer(this, (Toolbar)findViewById(R.id.my_toolbar));
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_spell_book, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-
-    // The method that is called when positive button on SetSpellbookNameDialog is clicked
-    @Override
-    public void onSetPowerListNameDialogPositiveClick(DialogFragment dialog, String powerListName) {
-//        DrawerHelper.updateSpellBookList();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
-    private void populateDBHelperMethod(){
-
-        myDb = mDbHelper.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-
-        values.put(BlankSpellBookContract.PowerListEntry.COLUMN_NAME_POWER_LIST_NAME, "Suikan priestin power list");
-        myDb.insert(
-                BlankSpellBookContract.PowerListEntry.TABLE_NAME,
-                null,
-                values
-        );
-    }
-
-
-}
