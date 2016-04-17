@@ -10,13 +10,13 @@ import android.view.MenuItem;
 import tomi.piipposoft.blankspellbook.dialog_fragments.SetPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.R;
 
-public class DailySpellsActivity extends AppCompatActivity
+public class DailyPowerListActivity extends AppCompatActivity
         implements SetPowerListNameDialog.NoticeDialogListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_daily_spells);
+        setContentView(R.layout.activity_daily_power_list);
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);

@@ -2,16 +2,12 @@ package tomi.piipposoft.blankspellbook.drawer;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -22,14 +18,12 @@ import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
 import tomi.piipposoft.blankspellbook.dialog_fragments.SetDailyPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.dialog_fragments.SetPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.R;
-import tomi.piipposoft.blankspellbook.powerlist.SpellBookActivity;
+import tomi.piipposoft.blankspellbook.powerlist.PowerListActivity;
 
 /**
  * Created by Domu on 11-Apr-16.
@@ -221,10 +215,10 @@ public class DrawerHelper implements
 
                 @Override
                 public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                    Intent i = new Intent(callerActivity, SpellBookActivity.class);
+                    Intent i = new Intent(callerActivity, PowerListActivity.class);
                     Log.d(TAG, "PowerListActivity launching, supplying extra ID: " + item.getIdentifier()
                             + " item name: " + item.getName());
-                    i.putExtra(SpellBookActivity.EXTRA_POWER_BOOK_ID, item.getIdentifier());
+                    i.putExtra(PowerListActivity.EXTRA_POWER_BOOK_ID, item.getIdentifier());
                     mDrawer.closeDrawer();
                     callerActivity.startActivity(i);
                     return true;

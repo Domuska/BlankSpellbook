@@ -16,12 +16,12 @@ import android.widget.Button;
 
 import tomi.piipposoft.blankspellbook.R;
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
-import tomi.piipposoft.blankspellbook.dailypowerlist.DailySpellsActivity;
+import tomi.piipposoft.blankspellbook.dailypowerlist.DailyPowerListActivity;
 import tomi.piipposoft.blankspellbook.dialog_fragments.SetDailyPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.dialog_fragments.SetPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.drawer.DrawerContract;
 import tomi.piipposoft.blankspellbook.drawer.DrawerHelper;
-import tomi.piipposoft.blankspellbook.powerlist.SpellBookActivity;
+import tomi.piipposoft.blankspellbook.powerlist.PowerListActivity;
 
 /**
  *
@@ -48,19 +48,16 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
         setContentView(R.layout.activity_main);
         thisActivity = this;
 
         spellBookButton = (Button) findViewById(R.id.button_Spellbook);
         dailySpellsButton = (Button) findViewById(R.id.button_dailySpells);
 
-
         spellBookButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(thisActivity, SpellBookActivity.class);
+                Intent i = new Intent(thisActivity, PowerListActivity.class);
                 startActivity(i);
             }
         });
@@ -71,7 +68,7 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(thisActivity, DailySpellsActivity.class);
+                Intent i = new Intent(thisActivity, DailyPowerListActivity.class);
                 startActivity(i);
             }
 

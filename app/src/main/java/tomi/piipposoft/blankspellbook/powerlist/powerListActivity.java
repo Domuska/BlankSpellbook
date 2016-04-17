@@ -24,7 +24,7 @@ import tomi.piipposoft.blankspellbook.R;
  *
  *
  */
-public class SpellBookActivity extends AppCompatActivity
+public class PowerListActivity extends AppCompatActivity
         implements SetPowerListNameDialog.NoticeDialogListener{
 
     //TODO: put this field to preferences maybe?
@@ -45,7 +45,7 @@ public class SpellBookActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_spell_book);
+        setContentView(R.layout.activity_power_list);
 
         Intent thisIntent = getIntent();
         powerBookId = thisIntent.getLongExtra(EXTRA_POWER_BOOK_ID, -1);

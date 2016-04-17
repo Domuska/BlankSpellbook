@@ -19,11 +19,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".powerlist.SpellBookActivity"
+            android:name=".powerlist.PowerListActivity"
             android:label="@string/title_activity_spell_book" >
         </activity>
         <activity
-            android:name=".dailypowerlist.DailySpellsActivity"
+            android:name=".dailypowerlist.DailyPowerListActivity"
             android:label="@string/title_activity_daily_spells" >
         </activity>
     </application>
