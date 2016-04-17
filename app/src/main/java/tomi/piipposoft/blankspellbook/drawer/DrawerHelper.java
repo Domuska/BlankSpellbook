@@ -73,16 +73,8 @@ public class DrawerHelper implements
 
         mDbHelper = new BlankSpellBookContract.DBHelper(callerActivity.getApplicationContext());
 
-
-        createDrawer(toolbar);
-
         //Create the drawer itself
-
-
-        //initially populate the list with items
-//        populateSpellBooksList(mDrawer);
-
-
+        createDrawer(toolbar);
 
         final ProfileDrawerItem spellBooksProfile = new ProfileDrawerItem().withName("Spell Books")
                 .withIcon(callerActivity.getResources().getDrawable(R.drawable.iqql_spellbook_billfold))
@@ -112,7 +104,8 @@ public class DrawerHelper implements
 
 
                         } else if (profile.getIdentifier() == DAILY_POWER_LISTS_PROFILE_IDENTIFIER) {
-                            populateDailyPowersList(mDrawer);
+//                            populateDailyPowersList(mDrawer);
+                            mDrawerListener.dailyPowerListProfileSelected();
                         }
                         return true;
                     }
@@ -126,14 +119,6 @@ public class DrawerHelper implements
     public DrawerLayout getDrawerLayout(){
         return mDrawer.getDrawerLayout();
     }
-
-//    public static void updateSpellBookList(){
-//        populateSpellBooksList(mDrawer);
-//    }
-
-//    public static void updateDailyPowersList(){
-//        populateDailyPowersList(mDrawer);
-//    }
 
 
     private void createDrawer(Toolbar toolbar){
@@ -208,7 +193,7 @@ public class DrawerHelper implements
      */
     @Override
     public void showDailyPowerList(List<IDrawerItem> drawerItems) {
-        populateDailyPowersList(mDrawer);
+        populateDailyPowersList(mDrawer, drawerItems);
     }
 
     /**
@@ -220,71 +205,12 @@ public class DrawerHelper implements
         populateSpellBooksList(mDrawer, drawerItems);
     }
 
-
-
-    /**
-     * Helper method to fetch the data from database
-     * Will store the data in arrayList spellBooks class variable
-     */
-    private static void fetchSpellBookListDataFromDB(){
-
-        //// TODO: 11-Apr-16 should most likely be put to asynctask at some point
-
-//        mDb = mDbHelper.getReadableDatabase();
-//
-//        //get all spell books and daily spell lists from DB
-//
-//        String[] projection = {
-//                BlankSpellBookContract.PowerListEntry._ID,
-//                BlankSpellBookContract.PowerListEntry.COLUMN_NAME_POWER_LIST_NAME
-//        };
-//
-//        String sortOrder = BlankSpellBookContract.PowerListEntry.COLUMN_NAME_POWER_LIST_NAME + " DESC";
-//
-//        try {
-//
-//            Cursor cursor = mDb.query(
-//                    BlankSpellBookContract.PowerListEntry.TABLE_NAME,
-//                    projection,
-//                    null,
-//                    null,
-//                    null,
-//                    null,
-//                    sortOrder
-//            );
-//
-//
-//            //generate drawerItems with data from DB
-//            spellBooks = new ArrayList<>();
-//
-//            try {
-//                while (cursor.moveToNext()) {
-//                    spellBooks.add(initializeSpellBookListItem(
-//                            cursor.getString(cursor.getColumnIndexOrThrow(PowerListContract.PowerListEntry.COLUMN_NAME_POWER_LIST_NAME)),
-//                            cursor.getLong(cursor.getColumnIndexOrThrow(PowerListContract.PowerListEntry._ID))
-//                    ));
-//
-//                    Log.d(TAG, "_ID of item found: " + cursor.getLong(cursor.getColumnIndexOrThrow(PowerListContract.PowerListEntry._ID)));
-//
-//                }
-//            } finally {
-//                cursor.close();
-//            }
-//
-//        }
-//        catch(SQLiteException e){
-//            Toast.makeText(callerActivity, "Something went wrong with database, sorry!", Toast.LENGTH_SHORT).show();
-//            Log.d(TAG, "SQLite exception caught!");
-//            e.printStackTrace();
-//        }
-    }
-
     /**
      * Helper method to populate the drawer spell books side
      *
      * @param drawer
      */
-    private void populateSpellBooksList(Drawer drawer,List<IDrawerItem> drawerItems){
+    private void populateSpellBooksList(Drawer drawer, List<IDrawerItem> drawerItems){
 
         drawer.removeAllItems();
         drawer.removeAllStickyFooterItems();
@@ -293,7 +219,6 @@ public class DrawerHelper implements
                 .withName("Add new spell book")
                 .withIdentifier(ADD_POWER_LIST_FOOTER_IDENTIFIER));
 
-//        fetchSpellBookListDataFromDB();
 
         for (int i = 0; i < drawerItems.size(); i++) {
             final PrimaryDrawerItem item = (PrimaryDrawerItem)drawerItems.get(i);
@@ -302,7 +227,8 @@ public class DrawerHelper implements
                 @Override
                 public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
                     Intent i = new Intent(callerActivity, SpellBookActivity.class);
-                    Log.d(TAG, "clicked item had ID " + item.getIdentifier());
+                    Log.d(TAG, "PowerListActivity launching, supplying extra ID: " + item.getIdentifier()
+                            + " item name: " + item.getName());
                     i.putExtra(SpellBookActivity.EXTRA_POWER_BOOK_ID, item.getIdentifier());
                     mDrawer.closeDrawer();
                     callerActivity.startActivity(i);
@@ -314,87 +240,12 @@ public class DrawerHelper implements
         }
     }
 
-    private static void fetchDailyPowerListDataFromDB(){
-
-        mDb = mDbHelper.getReadableDatabase();
-
-        String[] projection = {
-                BlankSpellBookContract.DailyPowerListEntry._ID,
-                BlankSpellBookContract.DailyPowerListEntry.COLUMN_NAME_DAILY_POWER_LIST_NAME
-        };
-
-        String sortOrder = BlankSpellBookContract.DailyPowerListEntry.
-                COLUMN_NAME_DAILY_POWER_LIST_NAME + " DESC";
-
-        try {
-            Cursor cursor = mDb.query(
-                    BlankSpellBookContract.DailyPowerListEntry.TABLE_NAME,
-                    projection,
-                    null,
-                    null,
-                    null,
-                    null,
-                    sortOrder
-            );
-
-            dailyPowerLists = new ArrayList<>();
-
-            try{
-                while (cursor.moveToNext()){
-                    dailyPowerLists.add(initializeDailyPowerListItem(
-                            cursor.getString(cursor.getColumnIndexOrThrow(BlankSpellBookContract.DailyPowerListEntry.COLUMN_NAME_DAILY_POWER_LIST_NAME)),
-                            cursor.getLong(cursor.getColumnIndexOrThrow(BlankSpellBookContract.DailyPowerListEntry._ID))
-                    ));
-
-                }
-            } finally {
-                cursor.close();
-            }
-        }
-        catch(SQLiteException e) {
-            Toast.makeText(callerActivity, "Something went wrong with database, sorry!", Toast.LENGTH_SHORT).show();
-            Log.d(TAG, "SQLite exception caught!");
-            e.printStackTrace();
-        }
-
-        /*
-        * try {
-
-
-
-
-            //generate drawerItems with data from DB
-            spellBooks = new ArrayList<>();
-            int i = 0;
-            try {
-                while (cursor.moveToNext()) {
-                    spellBooks.add(initializeSpellBookListItem(
-                            cursor.getString(cursor.getColumnIndexOrThrow(PowerListContract.PowerListEntry.COLUMN_NAME_POWER_LIST_NAME)),
-                            cursor.getLong(cursor.getColumnIndexOrThrow(PowerListContract.PowerListEntry._ID))
-                    ));
-
-                    Log.d(TAG, "_ID of item found: " + cursor.getLong(cursor.getColumnIndexOrThrow(PowerListContract.PowerListEntry._ID)));
-                    i++;
-                }
-            } finally {
-                cursor.close();
-            }
-
-        }
-        catch(SQLiteException e){
-            Toast.makeText(callerActivity, "Something went wrong with database, sorry!", Toast.LENGTH_SHORT).show();
-            Log.d(TAG, "SQLite exception caught!");
-            e.printStackTrace();
-        }*/
-
-    }
-
     /**
      * Helper method to populate the drawer daily powers side
      *
      * @param drawer
      */
-    private void populateDailyPowersList(Drawer drawer){
+    private void populateDailyPowersList(Drawer drawer, List<IDrawerItem> drawerItems){
 
         drawer.removeAllItems();
         drawer.removeAllStickyFooterItems();
@@ -403,10 +254,20 @@ public class DrawerHelper implements
             .withName("Add new daily power list")
             .withIdentifier(ADD_DAILY_POWER_LIST_FOOTER_IDENTIFIER));
 
-        fetchDailyPowerListDataFromDB();
+        for(int i = 0; i < drawerItems.size(); i++){
 
-        for(int i = 0; i < dailyPowerLists.size(); i++){
-            drawer.addItem(dailyPowerLists.get(i));
+            final PrimaryDrawerItem item = (PrimaryDrawerItem)drawerItems.get(i);
+            item.withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                @Override
+                public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                    // TODO: 17-Apr-16 Handle moving to DailyPowerListActivity
+                    Log.d(TAG, "dailyPowerListActivity launching, supplying extra ID: " + item.getIdentifier()
+                    + " item name: " + item.getName());
+                    return true;
+                }
+            });
+
+            drawer.addItem(drawerItems.get(i));
         }
     }
 
@@ -435,19 +296,19 @@ public class DrawerHelper implements
 //                });
 //    }
 
-    private static PrimaryDrawerItem initializeDailyPowerListItem (String itemName, final Long itemId){
-
-        return new PrimaryDrawerItem()
-                .withName(itemName)
-                .withIdentifier(itemId)
-                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                    @Override
-                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        // TODO: 14-Apr-16 handle moving to daily power activity
-                        return true;
-                    }
-                });
-    }
+//    private static PrimaryDrawerItem initializeDailyPowerListItem (String itemName, final Long itemId){
+//
+//        return new PrimaryDrawerItem()
+//                .withName(itemName)
+//                .withIdentifier(itemId)
+//                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+//                    @Override
+//                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+//                        // TODO: 14-Apr-16 handle moving to daily power activity
+//                        return true;
+//                    }
+//                });
+//    }
 
 }
 

@@ -64,7 +64,7 @@ public class MainActivityPresenter extends DrawerPresenter
 
     @Override
     public void dailyPowerListProfileSelected() {
-
+        this.showDailyPowerLists();
     }
 
 

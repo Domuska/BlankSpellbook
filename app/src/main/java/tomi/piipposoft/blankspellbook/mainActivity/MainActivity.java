@@ -222,7 +222,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void dailyPowerListProfileSelected() {
-
+        mDrawerActionListener.dailyPowerListProfileSelected();
     }
 
     @Override
