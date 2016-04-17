@@ -1,13 +1,11 @@
-package tomi.piipposoft.blankspellbook;
+package tomi.piipposoft.blankspellbook.drawer;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -29,15 +27,17 @@ import java.util.List;
 
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
 import tomi.piipposoft.blankspellbook.Database.PowerListContract;
-import tomi.piipposoft.blankspellbook.Fragments.SetDailyPowerListNameDialog;
-import tomi.piipposoft.blankspellbook.Fragments.SetSpellbookNameDialog;
+import tomi.piipposoft.blankspellbook.dialog_fragments.SetDailyPowerListNameDialog;
+import tomi.piipposoft.blankspellbook.dialog_fragments.SetSpellbookNameDialog;
+import tomi.piipposoft.blankspellbook.R;
+import tomi.piipposoft.blankspellbook.powerlist.SpellBookActivity;
 
 /**
  * Created by Domu on 11-Apr-16.
  *
  * This activity uses MaterialDrawer library by mikePenz (https://github.com/mikepenz/MaterialDrawer)
  */
-public class DrawerHelper{
+public class DrawerHelper implements DrawerContract.View{
 
     private static SQLiteDatabase mDb;
     private static BlankSpellBookContract.DBHelper mDbHelper;
@@ -53,7 +53,11 @@ public class DrawerHelper{
     private static List<IDrawerItem> spellBooks;
     private static List<IDrawerItem> dailyPowerLists;
 
-    public static void createDrawer(Activity activity, Toolbar toolbar) {
+    public DrawerHelper(Activity activity, Toolbar toolbar){
+        createDrawer(activity, toolbar);
+    }
+
+    public void createDrawer(Activity activity, Toolbar toolbar) {
 
         callerActivity = (AppCompatActivity) activity;
         TAG = "createDrawer, called by " + activity.getLocalClassName();
@@ -107,7 +111,7 @@ public class DrawerHelper{
 
     }
 
-    public static DrawerLayout getDrawerLayout(){
+    public DrawerLayout getDrawerLayout(){
         return mDrawer.getDrawerLayout();
     }
 
@@ -169,6 +173,26 @@ public class DrawerHelper{
                 })
                 .withCloseOnClick(false)
                 .build();
+    }
+
+    @Override
+    public void showPowerListItems(List<IDrawerItem> drawerItems) {
+
+    }
+
+    @Override
+    public void showDailyPowerListItems(List<IDrawerItem> drawerItems) {
+
+    }
+
+    @Override
+    public void showDailyPowerList() {
+
+    }
+
+    @Override
+    public void showPowerList() {
+        populateSpellBooksList(mDrawer);
     }
 
     /**

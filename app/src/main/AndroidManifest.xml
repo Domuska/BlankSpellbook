@@ -10,7 +10,7 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:debuggable="true">
         <activity
-            android:name=".MainActivity"
+            android:name=".mainActivity.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,11 +19,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SpellBookActivity"
+            android:name=".powerlist.SpellBookActivity"
             android:label="@string/title_activity_spell_book" >
         </activity>
         <activity
-            android:name=".DailySpellsActivity"
+            android:name=".dailypowerlist.DailySpellsActivity"
             android:label="@string/title_activity_daily_spells" >
         </activity>
     </application>

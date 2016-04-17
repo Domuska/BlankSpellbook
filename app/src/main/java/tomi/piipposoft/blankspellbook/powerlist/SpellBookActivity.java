@@ -1,4 +1,4 @@
-package tomi.piipposoft.blankspellbook;
+package tomi.piipposoft.blankspellbook.powerlist;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -14,7 +14,9 @@ import android.view.MenuItem;
 import android.view.View;
 
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
-import tomi.piipposoft.blankspellbook.Fragments.SetSpellbookNameDialog;
+import tomi.piipposoft.blankspellbook.dialog_fragments.SetSpellbookNameDialog;
+import tomi.piipposoft.blankspellbook.R;
+import tomi.piipposoft.blankspellbook.drawer.DrawerHelper;
 
 /**
  * Activity where all user's spell books are listed in a list
@@ -268,7 +270,7 @@ public class SpellBookActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        DrawerHelper.createDrawer(this, (Toolbar)findViewById(R.id.my_toolbar));
+//        DrawerHelper.createDrawer(this, (Toolbar)findViewById(R.id.my_toolbar));
     }
 
     @Override
@@ -296,8 +298,8 @@ public class SpellBookActivity extends AppCompatActivity
 
     // The method that is called when positive button on SetSpellbookNameDialog is clicked
     @Override
-    public void onSetSpellbookNameDialogPositiveClick(DialogFragment dialog) {
-        DrawerHelper.updateSpellBookList();
+    public void onSetSpellbookNameDialogPositiveClick(DialogFragment dialog, String powerListName) {
+//        DrawerHelper.updateSpellBookList();
     }
 
     @Override

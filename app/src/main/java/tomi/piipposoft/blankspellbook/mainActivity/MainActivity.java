@@ -1,7 +1,8 @@
-package tomi.piipposoft.blankspellbook;
+package tomi.piipposoft.blankspellbook.mainActivity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 
 import android.support.v4.app.DialogFragment;
@@ -14,10 +15,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import com.mikepenz.materialdrawer.Drawer;
-
-import tomi.piipposoft.blankspellbook.Fragments.SetDailyPowerListNameDialog;
-import tomi.piipposoft.blankspellbook.Fragments.SetSpellbookNameDialog;
+import tomi.piipposoft.blankspellbook.R;
+import tomi.piipposoft.blankspellbook.Utils.DataSource;
+import tomi.piipposoft.blankspellbook.dialog_fragments.SetDailyPowerListNameDialog;
+import tomi.piipposoft.blankspellbook.dialog_fragments.SetSpellbookNameDialog;
+import tomi.piipposoft.blankspellbook.dailypowerlist.DailySpellsActivity;
+import tomi.piipposoft.blankspellbook.drawer.DrawerContract;
+import tomi.piipposoft.blankspellbook.drawer.DrawerHelper;
+import tomi.piipposoft.blankspellbook.powerlist.SpellBookActivity;
 
 /**
  *
@@ -26,18 +31,25 @@ import tomi.piipposoft.blankspellbook.Fragments.SetSpellbookNameDialog;
 
 public class MainActivity extends AppCompatActivity
         implements SetSpellbookNameDialog.NoticeDialogListener,
-        SetDailyPowerListNameDialog.NoticeDialogListener{
+        SetDailyPowerListNameDialog.NoticeDialogListener,
+        MainActivityContract.View {
 
     private Button spellBookButton, dailySpellsButton;
     private FloatingActionButton fab;
     private Activity thisActivity;
     private ActionBarDrawerToggle mDrawerToggle;
+    private MainActivityContract.UserActionListener mActionlistener;
+    private DrawerContract.UserActionListener mDrawerActionListener;
 
 
+    private DrawerHelper mDrawerHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
         setContentView(R.layout.activity_main);
         thisActivity = this;
 
@@ -67,6 +79,7 @@ public class MainActivity extends AppCompatActivity
 
 
         //set the support library's toolbar as application toolbar
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
@@ -153,11 +166,7 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    // The method that is called when positive button on SetSpellbookNameDialog is clicked
-    @Override
-    public void onSetSpellbookNameDialogPositiveClick(DialogFragment dialog) {
-        DrawerHelper.updateSpellBookList();
-    }
+
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -170,10 +179,15 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
 
         //create navigation drawer
-        DrawerHelper.createDrawer(this, (Toolbar)this.findViewById(R.id.my_toolbar));
+//        DrawerHelper.createDrawer(this, (Toolbar)this.findViewById(R.id.my_toolbar));
+        mDrawerHelper = new DrawerHelper(this, (Toolbar) findViewById(R.id.my_toolbar));
+
+        mActionlistener = new MainActivityPresenter(DataSource.getDatasource(this), this, mDrawerHelper);
+        mDrawerActionListener = mActionlistener.getInstance();
+
 
         //add button to toolbar to open the drawer
-        mDrawerToggle = new ActionBarDrawerToggle(this, DrawerHelper.getDrawerLayout(),
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerHelper.getDrawerLayout(),
                 R.string.open_drawer_info,
                 R.string.close_drawer_info){
 
@@ -191,9 +205,27 @@ public class MainActivity extends AppCompatActivity
         };
     }
 
+
     @Override
     public void onSetDailyPowerNameDialogPositiveClick(DialogFragment dialog) {
         DrawerHelper.updateDailyPowersList();
+
+    }
+
+    // The method that is called when positive button on SetSpellbookNameDialog is clicked
+    @Override
+    public void onSetSpellbookNameDialogPositiveClick(DialogFragment dialog, String powerListName) {
+        //DrawerHelper.updateSpellBookList();
+//        mActionlistener.addNewPowerList(powerListName);
+
+        mDrawerActionListener.addPowerList(powerListName);
+
+
+    }
+
+    @Override
+    public void dummyMethod() {
+
     }
 
     @Override
