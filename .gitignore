@@ -32,6 +32,9 @@ proguard/
 # Android Studio captures folder
 captures/
 
+# My own stuff
+.idea/workspace.xml
+
 # =========================
 # Operating System Files
 # =========================
