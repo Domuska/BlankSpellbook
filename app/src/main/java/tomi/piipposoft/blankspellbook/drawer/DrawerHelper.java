@@ -27,7 +27,7 @@ import java.util.List;
 
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
 import tomi.piipposoft.blankspellbook.dialog_fragments.SetDailyPowerListNameDialog;
-import tomi.piipposoft.blankspellbook.dialog_fragments.SetSpellbookNameDialog;
+import tomi.piipposoft.blankspellbook.dialog_fragments.SetPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.R;
 import tomi.piipposoft.blankspellbook.powerlist.SpellBookActivity;
 
@@ -36,7 +36,10 @@ import tomi.piipposoft.blankspellbook.powerlist.SpellBookActivity;
  *
  * This activity uses MaterialDrawer library by mikePenz (https://github.com/mikepenz/MaterialDrawer)
  */
-public class DrawerHelper implements DrawerContract.View{
+public class DrawerHelper implements
+        DrawerContract.View,
+        SetPowerListNameDialog.NoticeDialogListener,
+        SetDailyPowerListNameDialog.NoticeDialogListener{
 
     private static SQLiteDatabase mDb;
     private static BlankSpellBookContract.DBHelper mDbHelper;
@@ -52,15 +55,18 @@ public class DrawerHelper implements DrawerContract.View{
     private static List<IDrawerItem> spellBooks;
     private static List<IDrawerItem> dailyPowerLists;
 
-    private NoticeProfileChangedListener mProfileChangedListener;
+    private DrawerListener mDrawerListener;
 
-    public interface NoticeProfileChangedListener{
+    public interface DrawerListener {
+        void dailyPowerListNameEntered(String name);
+        void powerListNameEntered(String name);
+        void dailyPowerListProfileSelected();
         void powerListProfileSelected();
     }
 
     public DrawerHelper(Activity activity, Toolbar toolbar ){
         createDrawer(activity, toolbar);
-        mProfileChangedListener = (NoticeProfileChangedListener) activity;
+        mDrawerListener = (DrawerListener) activity;
 
     }
 
@@ -106,7 +112,7 @@ public class DrawerHelper implements DrawerContract.View{
 
                         if (profile.getIdentifier() == POWER_LISTS_PROFILE_IDENTIFIER) {
 //                            populateSpellBooksList(mDrawer);
-                            mProfileChangedListener.powerListProfileSelected();
+                            mDrawerListener.powerListProfileSelected();
 
 
                         } else if (profile.getIdentifier() == DAILY_POWER_LISTS_PROFILE_IDENTIFIER) {
@@ -149,7 +155,7 @@ public class DrawerHelper implements DrawerContract.View{
 
 
                             try {
-                                DialogFragment dialog = new SetSpellbookNameDialog();
+                                DialogFragment dialog = new SetPowerListNameDialog();
                                 dialog.show(callerActivity.getSupportFragmentManager(), "SetSpellBookNameDialogFragment");
                             } catch(IllegalStateException e){
                                 /* do nothing, apparently there is no way to avoid this error after
@@ -185,26 +191,60 @@ public class DrawerHelper implements DrawerContract.View{
                 .build();
     }
 
+    /**
+     * Set power list name popup
+     * @param dialog
+     * @param powerListName
+     */
+    @Override
+    public void onSetPowerListNameDialogPositiveClick(DialogFragment dialog, String powerListName) {
+        mDrawerListener.powerListNameEntered(powerListName);
+    }
+
+    /**
+     * Set set daily power list name popup
+     * @param dialog
+     * @param dailyPowerListName
+     */
+    @Override
+    public void onSetDailyPowerNameDialogPositiveClick(DialogFragment dialog, String dailyPowerListName) {
+        mDrawerListener.dailyPowerListNameEntered(dailyPowerListName);
+    }
+
+    /**
+     * From drawerContract
+     */
     @Override
     public void showPowerListItems() {
 
     }
 
+    /**
+     * From drawerContract
+     */
     @Override
     public void showDailyPowerListItems() {
 
     }
 
+    /**
+     * From drawerContract
+     */
     @Override
     public void showDailyPowerList(List<IDrawerItem> drawerItems) {
         populateDailyPowersList(mDrawer);
     }
 
+    /**
+     * From drawerContract
+     */
     @Override
     public void showPowerList(List<IDrawerItem> drawerItems) {
         Log.d(TAG, "showpowerlist called");
         populateSpellBooksList(mDrawer, drawerItems);
     }
+
+
 
     /**
      * Helper method to fetch the data from database

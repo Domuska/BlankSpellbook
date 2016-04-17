@@ -19,14 +19,14 @@ import tomi.piipposoft.blankspellbook.R;
  *
  * http://developer.android.com/guide/topics/ui/dialogs.html
  */
-public class SetSpellbookNameDialog extends DialogFragment {
+public class SetPowerListNameDialog extends DialogFragment {
 
 
     /* The activity that creates an instance of this dialog fragment must
      * implement this interface in order to receive event callbacks.
      * Each method passes the DialogFragment in case the host needs to query it. */
     public interface NoticeDialogListener{
-        void onSetSpellBookNameDialogPositiveClick(DialogFragment dialog, String PowerListName);
+        void onSetPowerListNameDialogPositiveClick(DialogFragment dialog, String PowerListName);
     }
 
     // Use this instance of the interface to deliver action events
@@ -69,14 +69,14 @@ public class SetSpellbookNameDialog extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        mListener.onSetSpellBookNameDialogPositiveClick(SetSpellbookNameDialog.this, dialogEditText.getText().toString());
+                        mListener.onSetPowerListNameDialogPositiveClick(SetPowerListNameDialog.this, dialogEditText.getText().toString());
 
                     }
                 })
                 .setNegativeButton(R.string.createspellbook_cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        SetSpellbookNameDialog.this.getDialog().cancel();
+                        SetPowerListNameDialog.this.getDialog().cancel();
                     }
                 });
 

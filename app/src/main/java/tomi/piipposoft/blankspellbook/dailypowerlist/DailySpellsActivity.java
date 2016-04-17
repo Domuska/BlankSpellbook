@@ -7,12 +7,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import tomi.piipposoft.blankspellbook.dialog_fragments.SetSpellbookNameDialog;
+import tomi.piipposoft.blankspellbook.dialog_fragments.SetPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.R;
-import tomi.piipposoft.blankspellbook.drawer.DrawerHelper;
 
 public class DailySpellsActivity extends AppCompatActivity
-        implements SetSpellbookNameDialog.NoticeDialogListener{
+        implements SetPowerListNameDialog.NoticeDialogListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +55,7 @@ public class DailySpellsActivity extends AppCompatActivity
 
     // The method that is called when positive button on SetSpellbookNameDialog is clicked
     @Override
-    public void onSetSpellBookNameDialogPositiveClick(DialogFragment dialog, String powerListName) {
+    public void onSetPowerListNameDialogPositiveClick(DialogFragment dialog, String powerListName) {
 //        DrawerHelper.updateSpellBookList();
     }
 }

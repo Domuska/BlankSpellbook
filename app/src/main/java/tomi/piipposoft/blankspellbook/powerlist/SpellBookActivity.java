@@ -14,9 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
-import tomi.piipposoft.blankspellbook.dialog_fragments.SetSpellbookNameDialog;
+import tomi.piipposoft.blankspellbook.dialog_fragments.SetPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.R;
-import tomi.piipposoft.blankspellbook.drawer.DrawerHelper;
 
 /**
  * Activity where all user's spell books are listed in a list
@@ -26,7 +25,7 @@ import tomi.piipposoft.blankspellbook.drawer.DrawerHelper;
  *
  */
 public class SpellBookActivity extends AppCompatActivity
-        implements SetSpellbookNameDialog.NoticeDialogListener{
+        implements SetPowerListNameDialog.NoticeDialogListener{
 
     //TODO: put this field to preferences maybe?
     public static final String EXTRA_POWER_BOOK_ID = "powerBookId";
@@ -298,7 +297,7 @@ public class SpellBookActivity extends AppCompatActivity
 
     // The method that is called when positive button on SetSpellbookNameDialog is clicked
     @Override
-    public void onSetSpellBookNameDialogPositiveClick(DialogFragment dialog, String powerListName) {
+    public void onSetPowerListNameDialogPositiveClick(DialogFragment dialog, String powerListName) {
 //        DrawerHelper.updateSpellBookList();
     }
 
