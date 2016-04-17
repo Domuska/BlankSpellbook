@@ -84,9 +84,7 @@ public class DrawerPresenter{
     }
 
     /**
-     * Helper method
-     * @param powerLists
-     * @return
+     * Helper method for fetching data for the power list drawer side
      */
     private List<IDrawerItem> fetchSpellBookListDataFromDB(List<IDrawerItem> powerLists){
 
@@ -143,14 +141,6 @@ public class DrawerPresenter{
         return powerLists;
     }
 
-
-
-    /**
-     * Helper method
-     * @param itemName
-     * @param itemId
-     * @return
-     */
     private PrimaryDrawerItem initializeSpellBookListItem(String itemName, final Long itemId) {
 
         return new PrimaryDrawerItem()
@@ -160,7 +150,7 @@ public class DrawerPresenter{
     }
 
     /**
-     *
+     * Helper method for fetching data for the daily power list drawer side
      */
     private List<IDrawerItem> fetchDailyPowerListDataFromDB(List<IDrawerItem> dailyPowerLists) {
         mDb = mDbHelper.getReadableDatabase();
@@ -209,9 +199,6 @@ public class DrawerPresenter{
 
     }
 
-        /**
-         *
-         */
     private static PrimaryDrawerItem initializeDailyPowerListItem(String itemName, final Long itemId) {
 
         return new PrimaryDrawerItem()

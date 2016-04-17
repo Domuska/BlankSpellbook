@@ -1,7 +1,6 @@
-package tomi.piipposoft.blankspellbook.mainActivity;
+package tomi.piipposoft.blankspellbook.powerdetails;
 
 import android.support.annotation.NonNull;
-
 
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
 import tomi.piipposoft.blankspellbook.drawer.DrawerContract;
@@ -11,25 +10,38 @@ import tomi.piipposoft.blankspellbook.drawer.DrawerPresenter;
 /**
  * Created by Domu on 17-Apr-16.
  */
-public class MainActivityPresenter extends DrawerPresenter
-        implements DrawerContract.UserActionListener,
-        MainActivityContract.UserActionListener {
+public class PowerDetailsPresenter extends DrawerPresenter
+        implements PowerDetailsContract.UserActionListener,
+        DrawerContract.UserActionListener{
 
-    private final MainActivityContract.View mMainActivityView;
+    private final PowerDetailsContract.View mPowerDetailsView;
     private final DrawerContract.ViewActivity mDrawerActivityView;
 
-
-    public MainActivityPresenter(
+    public PowerDetailsPresenter(
             @NonNull BlankSpellBookContract.DBHelper dbHelper,
-            @NonNull MainActivityContract.View mainActivityView,
+            @NonNull PowerDetailsContract.View powerDetailsView,
             @NonNull DrawerHelper drawerHelper){
         super(dbHelper, drawerHelper);
-        mMainActivityView = mainActivityView;
-        mDrawerActivityView = (DrawerContract.ViewActivity)mMainActivityView;
+        mPowerDetailsView = powerDetailsView;
+        mDrawerActivityView = (DrawerContract.ViewActivity) mPowerDetailsView;
     }
 
+
+    // FROM PowerDetailsContract
+
     @Override
-    public void addPowerList(@NonNull String powerListName){
+    public void showPowerDetails(long powerId) {
+        if(powerId == PowerDetailsActivity.ADD_NEW_POWER_DETAILS){
+            mPowerDetailsView.showEmptyForms();
+        }
+        else
+            mPowerDetailsView.showFilledForms();
+
+    }
+
+    // FROM DRAWERCONTRACT USERACTIONLISTENER
+    @Override
+    public void addPowerList(@NonNull String powerListName) {
         this.addNewPowerList(powerListName);
     }
 
@@ -43,12 +55,12 @@ public class MainActivityPresenter extends DrawerPresenter
     }
 
     @Override
-    public void powerListItemClicked(@NonNull long itemId, String name) {
+    public void powerListItemClicked(long itemId, String name) {
         mDrawerActivityView.openPowerList(itemId, name);
     }
 
     @Override
-    public void dailyPowerListItemClicked(@NonNull long itemId) {
+    public void dailyPowerListItemClicked(long itemId) {
         mDrawerActivityView.openDailyPowerList(itemId);
     }
 
@@ -61,6 +73,4 @@ public class MainActivityPresenter extends DrawerPresenter
     public void dailyPowerListProfileSelected() {
         this.showDailyPowerLists();
     }
-
-
 }

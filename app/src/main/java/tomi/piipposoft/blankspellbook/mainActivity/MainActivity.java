@@ -78,55 +78,10 @@ public class MainActivity extends AppCompatActivity
 
         });
 
-
         //set the support library's toolbar as application toolbar
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
-
-
-         //OLD OWN IMPLEMENTATION OF NAVIGATION DRAWER, SHOULD GO TO TRASH BIN
-        /*String[] textRows = { "Ithiel's spells", "Dromgar's abilities", "Owen's spells" };
-        DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ListView mDrawerListView = (ListView) findViewById(R.id.drawer_listView);
-
-        mDrawerListView.setAdapter(new ArrayAdapter<String>(
-                this, R.layout.drawer_list_item, textRows
-        ));*/
-
-        /*Button mAddSpellBookButton = (Button) findViewById(R.id.drawer_addSpellBookButton);
-        mAddSpellBookButton.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View v){
-                showSetSpellbookNameDialog();
-            }
-        });*/
-
-
-        //add button to toolbar to open the drawer
-        /*mDrawerToggle = new ActionBarDrawerToggle(this, DrawerHelper.getDrawerLayout(),
-                R.string.open_drawer_info,
-                R.string.close_drawer_info){
-
-            public void onDrawerClosed(View view){
-                super.onDrawerClosed(view);
-                getSupportActionBar().setTitle("Blank spellbook");
-
-            }
-
-            public void onDrawerOpened(View view){
-                super.onDrawerOpened(view);
-                getSupportActionBar().setTitle("Power lists");
-            }
-
-        };*/
-
-
-        //mDrawerLayout.setDrawerListener(mDrawerToggle);
-        //toolbar.setNavigationIcon(R.mipmap.ic_menu_black_24dp);
-
 
     }
 
@@ -223,7 +178,8 @@ public class MainActivity extends AppCompatActivity
         Intent i = new Intent(this, PowerListActivity.class);
         i.putExtra(PowerListActivity.EXTRA_POWER_LIST_ID, powerListId);
         i.putExtra(PowerListActivity.EXTRA_POWER_LIST_NAME, powerListName);
-        DrawerHelper.getInstance(this, (Toolbar)findViewById(R.id.my_toolbar)).closeDrawer();
+//        DrawerHelper.getInstance(this, (Toolbar)findViewById(R.id.my_toolbar)).closeDrawer();
+        mDrawerHelper.closeDrawer();
         startActivity(i);
     }
 
@@ -249,14 +205,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void powerListClicked(IDrawerItem clickedItem) {
         PrimaryDrawerItem item = (PrimaryDrawerItem)clickedItem;
-        mDrawerActionListener.listPowerListItemClicked(
+        mDrawerActionListener.powerListItemClicked(
                 item.getIdentifier(),
                 item.getName().toString());
     }
 
     @Override
     public void dailyPowerListClicked(IDrawerItem clickedItem) {
-        mDrawerActionListener.listDailyPowerListItemClicked(clickedItem.getIdentifier());
+        mDrawerActionListener.dailyPowerListItemClicked(clickedItem.getIdentifier());
     }
 
     // FROM POPUP FRAGMENT INTERFACES

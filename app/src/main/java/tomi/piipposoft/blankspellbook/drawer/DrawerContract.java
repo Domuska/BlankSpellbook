@@ -39,8 +39,8 @@ public interface DrawerContract {
 
         void drawerOpened();
 
-        void listPowerListItemClicked(long itemId, String name);
-        void listDailyPowerListItemClicked(long itemId);
+        void powerListItemClicked(long itemId, String name);
+        void dailyPowerListItemClicked(long itemId);
 
         void powerListProfileSelected();
         void dailyPowerListProfileSelected();

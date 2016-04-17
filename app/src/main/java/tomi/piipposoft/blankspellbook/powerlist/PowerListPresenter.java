@@ -51,13 +51,13 @@ public class PowerListPresenter extends DrawerPresenter implements
     }
 
     @Override
-    public void listPowerListItemClicked(long itemId, String name) {
+    public void powerListItemClicked(long itemId, String name) {
         mDrawerActivityView.openPowerList(itemId, name);
 
     }
 
     @Override
-    public void listDailyPowerListItemClicked(long itemId) {
+    public void dailyPowerListItemClicked(long itemId) {
         mDrawerActivityView.openDailyPowerList(itemId);
     }
 

@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="tomi.piipposoft.blankspellbook" >
+    package="tomi.piipposoft.blankspellbook">
 
     <application
         android:allowBackup="true"
+        android:debuggable="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-        android:debuggable="true">
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
             android:name=".mainActivity.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,12 +19,11 @@
         </activity>
         <activity
             android:name=".powerlist.PowerListActivity"
-            android:label="@string/title_activity_spell_book" >
-        </activity>
+            android:label="@string/title_activity_spell_book"></activity>
         <activity
             android:name=".dailypowerlist.DailyPowerListActivity"
-            android:label="@string/title_activity_daily_spells" >
-        </activity>
+            android:label="@string/title_activity_daily_spells"></activity>
+        <activity android:name=".powerdetails.PowerDetailsActivity"></activity>
     </application>
 
 </manifest>

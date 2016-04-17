@@ -20,6 +20,7 @@ import tomi.piipposoft.blankspellbook.dialog_fragments.SetPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.R;
 import tomi.piipposoft.blankspellbook.drawer.DrawerContract;
 import tomi.piipposoft.blankspellbook.drawer.DrawerHelper;
+import tomi.piipposoft.blankspellbook.powerdetails.PowerDetailsActivity;
 
 /**
  * Activity where all user's spell books are listed in a list
@@ -48,6 +49,8 @@ public class PowerListActivity extends AppCompatActivity
 
     private FloatingActionButton fab;
 
+    private DrawerHelper mDrawerHelper;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +68,7 @@ public class PowerListActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "you pressed FAB!");
-                mActionListener.openPowerDetails(-1);
+                mActionListener.openPowerDetails(PowerDetailsActivity.ADD_NEW_POWER_DETAILS);
             }
         });
 
@@ -75,16 +78,13 @@ public class PowerListActivity extends AppCompatActivity
         toolbar.setTitle(powerListName);
         setSupportActionBar(toolbar);
 
-
-
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-
+        mDrawerHelper = DrawerHelper.getInstance(this, (Toolbar)findViewById(R.id.my_toolbar));
         //initialize listeners
         mActionListener = new PowerListPresenter(
                 DataSource.getDatasource(this),
@@ -131,7 +131,9 @@ public class PowerListActivity extends AppCompatActivity
     @Override
     public void showPowerDetailUI(long itemId) {
         // TODO: 17-Apr-16 Handle opening power details page
-
+        Intent i = new Intent (this, PowerDetailsActivity.class);
+        i.putExtra(PowerDetailsActivity.EXTRA_POWER_DETAIL_ID, itemId);
+        startActivity(i);
     }
 
 
@@ -142,7 +144,7 @@ public class PowerListActivity extends AppCompatActivity
         Intent i = new Intent(this, PowerListActivity.class);
         i.putExtra(PowerListActivity.EXTRA_POWER_LIST_ID, powerListId);
         i.putExtra(PowerListActivity.EXTRA_POWER_LIST_NAME, powerListName);
-        DrawerHelper.getInstance(this, (Toolbar)findViewById(R.id.my_toolbar)).closeDrawer();
+        mDrawerHelper.closeDrawer();
         startActivity(i);
     }
 
@@ -167,14 +169,14 @@ public class PowerListActivity extends AppCompatActivity
     @Override
     public void powerListClicked(IDrawerItem clickedItem) {
         PrimaryDrawerItem item = (PrimaryDrawerItem)clickedItem;
-        mDrawerActionListener.listPowerListItemClicked(
+        mDrawerActionListener.powerListItemClicked(
                 item.getIdentifier(),
                 item.getName().toString());
     }
 
     @Override
     public void dailyPowerListClicked(IDrawerItem clickedItem) {
-        mDrawerActionListener.listDailyPowerListItemClicked(clickedItem.getIdentifier());
+        mDrawerActionListener.dailyPowerListItemClicked(clickedItem.getIdentifier());
     }
 
     // FROM POPUP FRAGMENT INTERFACES

@@ -46,7 +46,7 @@ public class DrawerHelper implements
 
     private static DrawerHelper instance;
 
-    private DrawerListener mDrawerListener;
+    private static DrawerListener mDrawerListener;
 
     public interface DrawerListener {
         void dailyPowerListProfileSelected();
@@ -57,30 +57,37 @@ public class DrawerHelper implements
     }
 
     private DrawerHelper(Activity activity, Toolbar toolbar ){
-        createDrawer(activity, toolbar);
+        callerActivity = (AppCompatActivity) activity;
         mDrawerListener = (DrawerListener) activity;
-
+        createDrawer(toolbar);
     }
 
     private DrawerHelper(){}
 
     public static DrawerHelper getInstance(Activity activity, Toolbar toolbar){
 
-        if(instance == null){
-            return new DrawerHelper(activity, toolbar);
-        }
-        else
-            return instance;
+        Log.d(TAG, "drawer getInstance called");
+
+        return new DrawerHelper(activity, toolbar);
+//        if(instance == null){
+//            Log.d(TAG, "instance null, creating new instance");
+//            instance = new DrawerHelper(activity, toolbar);
+//            return instance;
+//        }
+//        else {
+//            Log.d(TAG, "instance not null, setting values and returning current instance");
+//            instance = new DrawerHelper(activity, toolbar);
+//            return instance;
+//        }
     }
 
-    public void createDrawer(Activity activity, Toolbar toolbar) {
+    private void createDrawer(Toolbar toolbar) {
 
-        callerActivity = (AppCompatActivity) activity;
-        TAG = "createDrawer, called by " + activity.getLocalClassName();
 
+        TAG = "createDrawer, called by " + callerActivity.getLocalClassName();
 
         //Create the drawer itself
-        createDrawer(toolbar);
+        populateDrawer(toolbar);
 
         final ProfileDrawerItem spellBooksProfile = new ProfileDrawerItem().withName("Spell Books")
                 .withIcon(callerActivity.getResources().getDrawable(R.drawable.iqql_spellbook_billfold))
@@ -127,7 +134,7 @@ public class DrawerHelper implements
     }
 
 
-    private void createDrawer(Toolbar toolbar){
+    private void populateDrawer(Toolbar toolbar){
         mDrawer = new DrawerBuilder()
                 .withActivity(callerActivity)
                 .withToolbar(toolbar)
