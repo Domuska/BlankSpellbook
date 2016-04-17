@@ -174,8 +174,10 @@ public class DrawerHelper implements
                 .withCloseOnClick(false)
                 .build();
 
+    }
 
-
+    public void closeDrawer(){
+        mDrawer.closeDrawer();
     }
 
     /**

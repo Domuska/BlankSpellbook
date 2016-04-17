@@ -65,7 +65,7 @@ public class PowerListActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "you pressed FAB!");
-
+                mActionListener.openPowerDetails(-1);
             }
         });
 
@@ -120,24 +120,20 @@ public class PowerListActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
 
     // FROM POWER LIST CONTRACT INTERFACE
 
-
-
-
-    // FROM POPUP FRAGMENT INTERFACES
-
-    // The method that is called when positive button on SetSpellbookNameDialog is clicked
     @Override
-    public void onSetPowerListNameDialogPositiveClick(DialogFragment dialog, String powerListName) {
+    public void showPowerDetailUI(long itemId) {
+        // TODO: 17-Apr-16 Handle opening power details page
 
     }
 
-    @Override
-    public void onSetDailyPowerNameDialogPositiveClick(DialogFragment dialog, String dailyPowerListName) {
-
-    }
 
     // FROM DRAWER CONTRACT ACTIVITY VIEW INTERFACE
 
@@ -146,6 +142,7 @@ public class PowerListActivity extends AppCompatActivity
         Intent i = new Intent(this, PowerListActivity.class);
         i.putExtra(PowerListActivity.EXTRA_POWER_LIST_ID, powerListId);
         i.putExtra(PowerListActivity.EXTRA_POWER_LIST_NAME, powerListName);
+        DrawerHelper.getInstance(this, (Toolbar)findViewById(R.id.my_toolbar)).closeDrawer();
         startActivity(i);
     }
 
@@ -180,10 +177,20 @@ public class PowerListActivity extends AppCompatActivity
         mDrawerActionListener.listDailyPowerListItemClicked(clickedItem.getIdentifier());
     }
 
+    // FROM POPUP FRAGMENT INTERFACES
+
+    // The method that is called when positive button on SetSpellbookNameDialog is clicked
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+    public void onSetPowerListNameDialogPositiveClick(DialogFragment dialog, String powerListName) {
+
     }
+
+    @Override
+    public void onSetDailyPowerNameDialogPositiveClick(DialogFragment dialog, String dailyPowerListName) {
+
+    }
+
+
 
 //    private void populateDBHelperMethod(){
 //

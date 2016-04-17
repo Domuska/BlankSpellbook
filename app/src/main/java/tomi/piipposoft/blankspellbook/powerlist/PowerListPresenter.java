@@ -26,6 +26,13 @@ public class PowerListPresenter extends DrawerPresenter implements
         mDrawerActivityView = (DrawerContract.ViewActivity)mPowerListActivity;
     }
 
+    // FROM POWERLISTCONTRACT
+
+    @Override
+    public void openPowerDetails(long itemId) {
+        mPowerListActivity.showPowerDetailUI(itemId);
+    }
+
     // FROM DRAWER CONTRACT INTERFACE
 
     @Override

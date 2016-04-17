@@ -6,11 +6,10 @@ package tomi.piipposoft.blankspellbook.powerlist;
 public interface PowerListContract {
 
     interface View{
-//        void openPowerList(Long powerListId, String name);
-//        void openDailyPowerList(Long dailyPowerListId);
+        void showPowerDetailUI(long itemId);
     }
 
     interface UserActionListener{
-
+        void openPowerDetails(long itemId);
     }
 }
