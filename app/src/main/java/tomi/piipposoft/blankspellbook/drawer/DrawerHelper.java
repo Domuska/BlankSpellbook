@@ -37,9 +37,7 @@ import tomi.piipposoft.blankspellbook.powerlist.SpellBookActivity;
  * This activity uses MaterialDrawer library by mikePenz (https://github.com/mikepenz/MaterialDrawer)
  */
 public class DrawerHelper implements
-        DrawerContract.View,
-        SetPowerListNameDialog.NoticeDialogListener,
-        SetDailyPowerListNameDialog.NoticeDialogListener{
+        DrawerContract.View {
 
     private static SQLiteDatabase mDb;
     private static BlankSpellBookContract.DBHelper mDbHelper;
@@ -58,8 +56,6 @@ public class DrawerHelper implements
     private DrawerListener mDrawerListener;
 
     public interface DrawerListener {
-        void dailyPowerListNameEntered(String name);
-        void powerListNameEntered(String name);
         void dailyPowerListProfileSelected();
         void powerListProfileSelected();
     }
@@ -189,26 +185,6 @@ public class DrawerHelper implements
                 })
                 .withCloseOnClick(false)
                 .build();
-    }
-
-    /**
-     * Set power list name popup
-     * @param dialog
-     * @param powerListName
-     */
-    @Override
-    public void onSetPowerListNameDialogPositiveClick(DialogFragment dialog, String powerListName) {
-        mDrawerListener.powerListNameEntered(powerListName);
-    }
-
-    /**
-     * Set set daily power list name popup
-     * @param dialog
-     * @param dailyPowerListName
-     */
-    @Override
-    public void onSetDailyPowerNameDialogPositiveClick(DialogFragment dialog, String dailyPowerListName) {
-        mDrawerListener.dailyPowerListNameEntered(dailyPowerListName);
     }
 
     /**

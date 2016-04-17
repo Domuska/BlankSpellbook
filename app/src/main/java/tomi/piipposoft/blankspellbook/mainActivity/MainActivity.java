@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +17,8 @@ import android.widget.Button;
 import tomi.piipposoft.blankspellbook.R;
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
 import tomi.piipposoft.blankspellbook.dailypowerlist.DailySpellsActivity;
+import tomi.piipposoft.blankspellbook.dialog_fragments.SetDailyPowerListNameDialog;
+import tomi.piipposoft.blankspellbook.dialog_fragments.SetPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.drawer.DrawerContract;
 import tomi.piipposoft.blankspellbook.drawer.DrawerHelper;
 import tomi.piipposoft.blankspellbook.powerlist.SpellBookActivity;
@@ -27,7 +30,9 @@ import tomi.piipposoft.blankspellbook.powerlist.SpellBookActivity;
 
 public class MainActivity extends AppCompatActivity
         implements MainActivityContract.View,
-        DrawerHelper.DrawerListener {
+        DrawerHelper.DrawerListener,
+        SetPowerListNameDialog.NoticeDialogListener,
+        SetDailyPowerListNameDialog.NoticeDialogListener{
 
     private Button spellBookButton, dailySpellsButton;
     private FloatingActionButton fab;
@@ -202,7 +207,7 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    /*@Override
+    @Override
     public void onSetDailyPowerNameDialogPositiveClick(DialogFragment dialog, String dailyPowerListName) {
         mDrawerActionListener.addDailyPowerList(dailyPowerListName);
 
@@ -213,16 +218,6 @@ public class MainActivity extends AppCompatActivity
     public void onSetPowerListNameDialogPositiveClick(DialogFragment dialog, String powerListName) {
 
         mDrawerActionListener.addPowerList(powerListName);
-    }*/
-
-    @Override
-    public void dailyPowerListNameEntered(String name) {
-        mDrawerActionListener.addDailyPowerList(name);
-    }
-
-    @Override
-    public void powerListNameEntered(String name) {
-        mDrawerActionListener.addPowerList(name);
     }
 
     @Override
