@@ -1,8 +1,13 @@
 package tomi.piipposoft.blankspellbook.powerlist;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -160,6 +165,7 @@ public class PowerListActivity extends AppCompatActivity
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(layoutManager);
+//        recyclerView.addItemDecoration(new RecyclerDividerDecorator(this, R.drawable.recycler_divider));
 
     }
 
@@ -274,6 +280,44 @@ public class PowerListActivity extends AppCompatActivity
     @Override
     public void onSetDailyPowerNameDialogPositiveClick(DialogFragment dialog, String dailyPowerListName) {
         // TODO: 12-Jun-16 implement
+    }
+
+    private class RecyclerDividerDecorator extends RecyclerView.ItemDecoration{
+
+        private final int[] attrs = new int[]{android.R.attr.listDivider};
+        private Drawable divider;
+
+        public RecyclerDividerDecorator(Context context){
+            final TypedArray styledAttributes = context.obtainStyledAttributes(attrs);
+            divider = styledAttributes.getDrawable(0);
+            styledAttributes.recycle();
+        }
+
+        public RecyclerDividerDecorator(Context context, int resId) {
+            divider = ContextCompat.getDrawable(context, resId);
+        }
+
+
+        @Override
+        public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+            super.onDraw(c, parent, state);
+
+            int left = parent.getPaddingLeft();
+            int right = parent.getWidth() - parent.getPaddingRight();
+
+            int childCount = parent.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                View child = parent.getChildAt(i);
+
+                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
+
+                int top = child.getBottom() + params.bottomMargin;
+                int bottom = top + divider.getIntrinsicHeight();
+
+                divider.setBounds(left, top, right, bottom);
+                divider.draw(c);
+            }
+        }
     }
 
 

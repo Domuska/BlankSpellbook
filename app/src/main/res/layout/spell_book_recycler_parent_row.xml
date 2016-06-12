@@ -2,12 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingBottom="10dp">
 
     <TextView
         android:id="@+id/recycler_parent_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="30sp"
         />
 
     <ImageButton
@@ -15,8 +17,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/recycler_parent_arrow_content_descriptor"
-        android:src="@android:drawable/arrow_down_float"
+        android:src="@drawable/ic_expand_more_black_24dp"
+        android:background="@android:color/transparent"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/recycler_divider"
+        android:layout_below="@id/recycler_parent_text_view"
+        />
 
 </RelativeLayout>
