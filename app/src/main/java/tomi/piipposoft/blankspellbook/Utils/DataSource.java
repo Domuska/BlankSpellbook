@@ -26,10 +26,24 @@ public class DataSource {
                 .setAttackRoll("level + INT")
                 .setGroupName("level 8");
 
-
-
         ArrayList<Spell> data = new ArrayList<>();
         data.add(spell);
+
+        spell = new Spell();
+        spell.setName("fireball")
+                .setGroupName("level 8");
+        data.add(spell);
+
+        spell = new Spell();
+        spell.setName("frost ray")
+                .setGroupName("lvl 1");
+        data.add(spell);
+
+        for(int i = 0; i < 10; i++) {
+            spell = new Spell();
+            spell.setName("sepon säde").setGroupName("lvl 1");
+            data.add(spell);
+        }
 
         return data;
     }

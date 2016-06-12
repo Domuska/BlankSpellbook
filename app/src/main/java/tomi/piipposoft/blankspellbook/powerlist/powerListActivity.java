@@ -62,7 +62,7 @@ public class PowerListActivity extends AppCompatActivity
     private RecyclerView.LayoutManager layoutManager;
 
     private DrawerHelper mDrawerHelper;
-    ArrayList<Spell> dataSet;
+    ArrayList<Spell> spellList;
 
 
     @Override
@@ -84,11 +84,11 @@ public class PowerListActivity extends AppCompatActivity
                 Log.d(TAG, "you pressed FAB!");
 //                mActionListener.openPowerDetails(PowerDetailsActivity.ADD_NEW_POWER_DETAILS);
                 //todo fix above
-//                dataSet.add("ali bali's superior fireball");
-//                adapter.notifyItemInserted(dataSet.size()-1);
+//                spellList.add("ali bali's superior fireball");
+//                adapter.notifyItemInserted(spellList.size()-1);
 
-//                dataSet[dataSet.length] = "ali bali's superior fireball";
-//                adapter.notifyItemInserted(dataSet.length-1);
+//                spellList[spellList.length] = "ali bali's superior fireball";
+//                adapter.notifyItemInserted(spellList.length-1);
             }
         });
 
@@ -108,24 +108,48 @@ public class PowerListActivity extends AppCompatActivity
         layoutManager = new LinearLayoutManager(this);
 
 
-        dataSet = DataSource.getSpellsWithSpellBookId(powerListId);
-//        adapter = new PowerListRecyclerAdapter(dataSet);
+        spellList = DataSource.getSpellsWithSpellBookId(powerListId);
+//        adapter = new PowerListRecyclerAdapter(spellList);
 
         final List<SpellGroup> spellGroups = new ArrayList<>();
-        SpellGroup group = new SpellGroup(dataSet.get(0).getGroupName(), dataSet);
 
-        spellGroups.add(group);
+        //ask a spell what group it belongs to
+        //check if the spellgroups has this group already in it
+            //if it does, add the spell to to this group
+            //else create a new spell group with this name and add spell to it and add the group to the spellgroups
+
+        for(int i = 0; i < spellList.size(); i++){
+            String groupName = spellList.get(i).getGroupName();
+            //extra object allocation, would be good to just use a string or somesuch
+            //to see if the spellgroup is already in the spellgroups list. see spellgroup .equals
+            SpellGroup testableGroup = new SpellGroup(groupName, new Spell());
+
+            if(spellGroups.contains(testableGroup)){
+                Log.d(TAG, "spellgroups has the group " + groupName);
+                Log.d(TAG, "" + spellGroups.get(spellGroups.indexOf(testableGroup)));
+                spellGroups.get(spellGroups.indexOf(testableGroup)).addSpell(spellList.get(i));
+            }
+            else{
+                Log.d(TAG, "spellgroups does not yet have group " + groupName);
+                Spell spell = spellList.get(i);
+                SpellGroup group = new SpellGroup(spell.getGroupName(), spell);
+                spellGroups.add(group);
+            }
+        }
+
+//        SpellGroup group = new SpellGroup(spellList.get(0).getGroupName(), spellList);
+//        spellGroups.add(group);
 
         adapter = new PowerListRecyclerAdapter(this, spellGroups);
 
         adapter.setExpandCollapseListener(new ExpandableRecyclerAdapter.ExpandCollapseListener() {
             @Override
             public void onListItemExpanded(int position) {
-                SpellGroup expandedGroup = spellGroups.get(position);
-                Toast.makeText(PowerListActivity.this,
-                        "Spell group " + expandedGroup.getGroupName() + "expanded",
-                        Toast.LENGTH_SHORT)
-                        .show();
+//                SpellGroup expandedGroup = spellGroups.get(position);
+//                Toast.makeText(PowerListActivity.this,
+//                        "Spell group " + expandedGroup.getGroupName() + "expanded",
+//                        Toast.LENGTH_SHORT)
+//                        .show();
             }
 
             @Override
@@ -244,12 +268,12 @@ public class PowerListActivity extends AppCompatActivity
     // The method that is called when positive button on SetSpellbookNameDialog is clicked
     @Override
     public void onSetPowerListNameDialogPositiveClick(DialogFragment dialog, String powerListName) {
-
+        // TODO: 12-Jun-16 implement
     }
 
     @Override
     public void onSetDailyPowerNameDialogPositiveClick(DialogFragment dialog, String dailyPowerListName) {
-
+        // TODO: 12-Jun-16 implement
     }
 
 
