@@ -38,4 +38,6 @@
     <string name="title_activity_spell_book">SpellBookActivity</string>
     <string name="title_activity_daily_spells">DailySpellsActivity</string>
 
+    <string name="recycler_parent_arrow_content_descriptor">Expand this level</string>
+
 </resources>

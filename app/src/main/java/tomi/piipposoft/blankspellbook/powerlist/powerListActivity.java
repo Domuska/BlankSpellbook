@@ -12,11 +12,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import com.bignerdranch.expandablerecyclerview.Adapter.ExpandableRecyclerAdapter;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
 import tomi.piipposoft.blankspellbook.Utils.Spell;
@@ -32,7 +35,8 @@ import tomi.piipposoft.blankspellbook.powerdetails.PowerDetailsActivity;
  *
  * http://developer.android.com/training/basics/data-storage/databases.html
  *
- *
+ * Uses library by bignerdranch: https://github.com/bignerdranch/expandable-recycler-view
+ * https://www.bignerdranch.com/blog/expand-a-recyclerview-in-four-steps/?utm_source=Android+Weekly&utm_campaign=8f0cc3ff1f-Android_Weekly_165&utm_medium=email&utm_term=0_4eb677ad19-8f0cc3ff1f-337834121
  */
 public class PowerListActivity extends AppCompatActivity
         implements SetPowerListNameDialog.NoticeDialogListener,
@@ -54,7 +58,7 @@ public class PowerListActivity extends AppCompatActivity
 
     private FloatingActionButton fab;
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
+    private PowerListRecyclerAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
     private DrawerHelper mDrawerHelper;
@@ -102,12 +106,36 @@ public class PowerListActivity extends AppCompatActivity
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
         layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
+
 
         dataSet = DataSource.getSpellsWithSpellBookId(powerListId);
-        adapter = new PowerListRecyclerAdapter(dataSet);
+//        adapter = new PowerListRecyclerAdapter(dataSet);
+
+        final List<SpellGroup> spellGroups = new ArrayList<>();
+        SpellGroup group = new SpellGroup(dataSet.get(0).getGroupName(), dataSet);
+
+        spellGroups.add(group);
+
+        adapter = new PowerListRecyclerAdapter(this, spellGroups);
+
+        adapter.setExpandCollapseListener(new ExpandableRecyclerAdapter.ExpandCollapseListener() {
+            @Override
+            public void onListItemExpanded(int position) {
+                SpellGroup expandedGroup = spellGroups.get(position);
+                Toast.makeText(PowerListActivity.this,
+                        "Spell group " + expandedGroup.getGroupName() + "expanded",
+                        Toast.LENGTH_SHORT)
+                        .show();
+            }
+
+            @Override
+            public void onListItemCollapsed(int position) {
+
+            }
+        });
 
         recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(layoutManager);
 
     }
 

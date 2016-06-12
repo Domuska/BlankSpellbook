@@ -26,7 +26,11 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.android.support:design:23.3.0'
+
+    //for drawer
     compile('com.mikepenz:materialdrawer:5.1.9@aar') {
         transitive = true
     }
+    //for expandable recycler views
+    compile 'com.bignerdranch.android:expandablerecyclerview:2.1.1'
 }

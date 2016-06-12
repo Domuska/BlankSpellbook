@@ -23,7 +23,9 @@ public class DataSource {
         spell
                 .setName("Abi zalim's horrid wilting")
                 .setHitDamage("1d10+CHA")
-                .setAttackRoll("level + INT");
+                .setAttackRoll("level + INT")
+                .setGroupName("level 8");
+
 
 
         ArrayList<Spell> data = new ArrayList<>();

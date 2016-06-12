@@ -1,10 +1,16 @@
 package tomi.piipposoft.blankspellbook.powerlist;
 
-import android.support.v7.widget.RecyclerView;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.bignerdranch.expandablerecyclerview.Adapter.ExpandableRecyclerAdapter;
+import com.bignerdranch.expandablerecyclerview.Model.ParentListItem;
+import com.bignerdranch.expandablerecyclerview.ViewHolder.ChildViewHolder;
+import com.bignerdranch.expandablerecyclerview.ViewHolder.ParentViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,42 +21,86 @@ import tomi.piipposoft.blankspellbook.Utils.Spell;
 /**
  * Created by Domu on 11-Jun-16.
  */
-public class PowerListRecyclerAdapter extends RecyclerView.Adapter<PowerListRecyclerAdapter.ViewHolder>{
+public class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
+        <PowerListRecyclerAdapter.SpellGroupViewHolder, PowerListRecyclerAdapter.SpellViewHolder>{
 
     private ArrayList<Spell> dataSet;
+    private LayoutInflater inflater;
 
-    // ADAPTER
-    public static class ViewHolder extends RecyclerView.ViewHolder{
 
-        public TextView textView;
+    public PowerListRecyclerAdapter(Context context, List<? extends ParentListItem> spellGroups){
+        super(spellGroups);
+        inflater = LayoutInflater.from(context);
+    }
 
-        public ViewHolder(View view){
+    @Override
+    public SpellGroupViewHolder onCreateParentViewHolder(ViewGroup parentViewGroup) {
+        View spellGroupView = inflater.inflate(R.layout.spell_book_recycler_parent_row, parentViewGroup, false);
+        return new SpellGroupViewHolder(spellGroupView);
+    }
+
+    @Override
+    public SpellViewHolder onCreateChildViewHolder(ViewGroup childViewGroup) {
+        View spellView = inflater.inflate(R.layout.spell_book_recycler_child_row, childViewGroup, false);
+        return new SpellViewHolder(spellView);
+    }
+
+    @Override
+    public void onBindParentViewHolder(SpellGroupViewHolder parentViewHolder, int position, ParentListItem parentListItem) {
+        SpellGroup spellGroup = (SpellGroup) parentListItem;
+        parentViewHolder.bind(spellGroup);
+    }
+
+    @Override
+    public void onBindChildViewHolder(SpellViewHolder childViewHolder, int position, Object childListItem) {
+        Spell spell = (Spell) childListItem;
+        childViewHolder.bind(spell);
+    }
+
+
+
+
+
+    // ADAPTERS
+    public class SpellGroupViewHolder extends ParentViewHolder {
+
+        public TextView parentTextView;
+        public ImageButton parentDropDownArrow;
+
+        public SpellGroupViewHolder(View view){
             super(view);
-            textView = (TextView) view.findViewById(R.id.recycler_row_text_view);
+            parentTextView = (TextView) view.findViewById(R.id.recycler_parent_text_view);
+            parentDropDownArrow = (ImageButton) view.findViewById(R.id.recycler_parent_expand_arrow);
+        }
+
+        public void bind(SpellGroup spellGroup){
+            parentTextView.setText(spellGroup.getGroupName());
+        }
+
+        @Override
+        public void setExpanded(boolean expanded) {
+            super.setExpanded(expanded);
+            // TODO: 12-Jun-16 some animation could go here
+        }
+
+        @Override
+        public void onExpansionToggled(boolean expanded) {
+            super.onExpansionToggled(expanded);
+            //todo some animations could go here
         }
     }
 
-    public PowerListRecyclerAdapter(ArrayList<Spell> dataSet){
-        this.dataSet = dataSet;
-    }
+    public class SpellViewHolder extends ChildViewHolder{
 
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.textView.setText(dataSet.get(position).getName());
+        public TextView childTextView;
 
-    }
+        public SpellViewHolder(View view){
+            super(view);
+            childTextView = (TextView) view.findViewById(R.id.recycler_child_text_view);
+        }
 
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.spell_book_recycler_row, parent, false);
-
-        ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
-    }
-
-    @Override
-    public int getItemCount() {
-        return dataSet.size();
+        public void bind(Spell spell) {
+            childTextView.setText(spell.getName());
+        }
     }
 }
