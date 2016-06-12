@@ -5,6 +5,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -14,7 +16,10 @@ import android.view.View;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
+import java.util.ArrayList;
+
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
+import tomi.piipposoft.blankspellbook.Utils.Spell;
 import tomi.piipposoft.blankspellbook.dialog_fragments.SetDailyPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.dialog_fragments.SetPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.R;
@@ -48,8 +53,12 @@ public class PowerListActivity extends AppCompatActivity
     private String powerListName;
 
     private FloatingActionButton fab;
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter adapter;
+    private RecyclerView.LayoutManager layoutManager;
 
     private DrawerHelper mDrawerHelper;
+    ArrayList<Spell> dataSet;
 
 
     @Override
@@ -64,19 +73,41 @@ public class PowerListActivity extends AppCompatActivity
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
 
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "you pressed FAB!");
-                mActionListener.openPowerDetails(PowerDetailsActivity.ADD_NEW_POWER_DETAILS);
+//                mActionListener.openPowerDetails(PowerDetailsActivity.ADD_NEW_POWER_DETAILS);
+                //todo fix above
+//                dataSet.add("ali bali's superior fireball");
+//                adapter.notifyItemInserted(dataSet.size()-1);
+
+//                dataSet[dataSet.length] = "ali bali's superior fireball";
+//                adapter.notifyItemInserted(dataSet.length-1);
             }
         });
 
         //TODO put here recyclerview to show the list of items
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        toolbar.setTitle(powerListName);
+
+        if (toolbar != null) {
+            toolbar.setTitle(powerListName);
+        }
+
         setSupportActionBar(toolbar);
+
+        //recyclerview
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
+        dataSet = DataSource.getSpellsWithSpellBookId(powerListId);
+        adapter = new PowerListRecyclerAdapter(dataSet);
+
+        recyclerView.setAdapter(adapter);
 
     }
 
@@ -132,6 +163,7 @@ public class PowerListActivity extends AppCompatActivity
     public void showPowerDetailUI(long itemId) {
         // TODO: 17-Apr-16 Handle opening power details page
         Intent i = new Intent (this, PowerDetailsActivity.class);
+        Log.d(TAG, "setting spell ID as extra: " + itemId);
         i.putExtra(PowerDetailsActivity.EXTRA_POWER_DETAIL_ID, itemId);
         startActivity(i);
     }
