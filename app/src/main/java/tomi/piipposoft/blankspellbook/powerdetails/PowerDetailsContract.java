@@ -11,7 +11,6 @@ public interface PowerDetailsContract {
     }
 
     interface UserActionListener{
-
         void showPowerDetails(long powerId);
     }
 }

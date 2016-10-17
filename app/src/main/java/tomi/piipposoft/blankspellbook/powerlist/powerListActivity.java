@@ -97,8 +97,6 @@ public class PowerListActivity extends AppCompatActivity
             }
         });
 
-        //TODO put here recyclerview to show the list of items
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
 
         if (toolbar != null) {
@@ -113,7 +111,7 @@ public class PowerListActivity extends AppCompatActivity
         layoutManager = new LinearLayoutManager(this);
 
 
-        spellList = DataSource.getSpellsWithSpellBookId(powerListId);
+        spellList = DataSource.getSpellsWithSpellBookId(getApplicationContext(), powerListId);
 //        adapter = new PowerListRecyclerAdapter(spellList);
 
         final List<SpellGroup> spellGroups = new ArrayList<>();
@@ -274,12 +272,12 @@ public class PowerListActivity extends AppCompatActivity
     // The method that is called when positive button on SetSpellbookNameDialog is clicked
     @Override
     public void onSetPowerListNameDialogPositiveClick(DialogFragment dialog, String powerListName) {
-        // TODO: 12-Jun-16 implement
+        mDrawerActionListener.addPowerList(powerListName);
     }
 
     @Override
     public void onSetDailyPowerNameDialogPositiveClick(DialogFragment dialog, String dailyPowerListName) {
-        // TODO: 12-Jun-16 implement
+        mDrawerActionListener.addDailyPowerList(dailyPowerListName);
     }
 
     private class RecyclerDividerDecorator extends RecyclerView.ItemDecoration{

@@ -61,7 +61,6 @@ public class SpellGroup implements ParentListItem{
 
     @Override
     public int hashCode() {
-
         return super.hashCode();
     }
 }

@@ -20,6 +20,10 @@ import tomi.piipposoft.blankspellbook.Utils.Spell;
 
 /**
  * Created by Domu on 11-Jun-16.
+ *
+ * Created with help from https://www.bignerdranch.com/blog/expand-a-recyclerview-in-four-steps/
+ * Has parent and child ViewHolders, when parent is clicked it is expanded
+ * and child is brought below parent
  */
 public class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
         <PowerListRecyclerAdapter.SpellGroupViewHolder, PowerListRecyclerAdapter.SpellViewHolder>{
@@ -56,8 +60,6 @@ public class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
         Spell spell = (Spell) childListItem;
         childViewHolder.bind(spell);
     }
-
-
 
 
 

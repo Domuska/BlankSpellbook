@@ -9,6 +9,7 @@
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:paddingBottom="10dp"
+        android:textColor="@color/secondary_text_material_light"
         />
 
 </RelativeLayout>

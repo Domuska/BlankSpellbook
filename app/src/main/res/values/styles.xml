@@ -5,10 +5,11 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/md_deep_orange_500</item>
         <item name="colorPrimaryDark">@color/md_deep_orange_700</item>
-        <item name="colorAccent">@color/md_green_A400</item>
+        <item name="colorAccent">@color/md_teal_300</item>
         <item name="android:colorBackground">@color/md_grey_50</item>
         <item name="android:windowBackground">?android:attr/colorBackground</item>
         <item name="android:textColorPrimary">@color/primary_dark_material_dark</item>
+        <item name="android:textColorSecondary">@color/secondary_text_material_light</item>
     </style>
 
 </resources>

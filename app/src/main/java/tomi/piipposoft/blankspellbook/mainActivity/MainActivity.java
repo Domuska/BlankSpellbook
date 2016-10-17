@@ -226,7 +226,6 @@ public class MainActivity extends AppCompatActivity
     // Called when positive button on SetSpellBookNameDialog is clicked
     @Override
     public void onSetPowerListNameDialogPositiveClick(DialogFragment dialog, String powerListName) {
-
         mDrawerActionListener.addPowerList(powerListName);
     }
 }
