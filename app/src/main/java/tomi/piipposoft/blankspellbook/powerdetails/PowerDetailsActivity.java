@@ -1,4 +1,4 @@
-package tomi.piipposoft.blankspellbook.powerdetails;
+package tomi.piipposoft.blankspellbook.PowerDetails;
 
 import android.content.Intent;
 import android.support.v4.app.DialogFragment;
@@ -14,9 +14,9 @@ import tomi.piipposoft.blankspellbook.R;
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
 import tomi.piipposoft.blankspellbook.dialog_fragments.SetDailyPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.dialog_fragments.SetPowerListNameDialog;
-import tomi.piipposoft.blankspellbook.drawer.DrawerContract;
-import tomi.piipposoft.blankspellbook.drawer.DrawerHelper;
-import tomi.piipposoft.blankspellbook.powerlist.PowerListActivity;
+import tomi.piipposoft.blankspellbook.Drawer.DrawerContract;
+import tomi.piipposoft.blankspellbook.Drawer.DrawerHelper;
+import tomi.piipposoft.blankspellbook.PowerList.PowerListActivity;
 
 public class PowerDetailsActivity extends AppCompatActivity
     implements DrawerHelper.DrawerListener,

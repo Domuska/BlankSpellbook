@@ -1,4 +1,4 @@
-package tomi.piipposoft.blankspellbook.drawer;
+package tomi.piipposoft.blankspellbook.Drawer;
 
 import android.support.annotation.NonNull;
 

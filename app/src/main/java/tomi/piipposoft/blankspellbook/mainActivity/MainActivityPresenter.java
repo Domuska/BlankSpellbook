@@ -1,12 +1,12 @@
-package tomi.piipposoft.blankspellbook.mainActivity;
+package tomi.piipposoft.blankspellbook.MainActivity;
 
 import android.support.annotation.NonNull;
 
 
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
-import tomi.piipposoft.blankspellbook.drawer.DrawerContract;
-import tomi.piipposoft.blankspellbook.drawer.DrawerHelper;
-import tomi.piipposoft.blankspellbook.drawer.DrawerPresenter;
+import tomi.piipposoft.blankspellbook.Drawer.DrawerContract;
+import tomi.piipposoft.blankspellbook.Drawer.DrawerHelper;
+import tomi.piipposoft.blankspellbook.Drawer.DrawerPresenter;
 
 /**
  * Created by Domu on 17-Apr-16.

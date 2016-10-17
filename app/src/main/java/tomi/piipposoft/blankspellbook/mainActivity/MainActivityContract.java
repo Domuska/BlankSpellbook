@@ -1,4 +1,4 @@
-package tomi.piipposoft.blankspellbook.mainActivity;
+package tomi.piipposoft.blankspellbook.MainActivity;
 
 
 /**

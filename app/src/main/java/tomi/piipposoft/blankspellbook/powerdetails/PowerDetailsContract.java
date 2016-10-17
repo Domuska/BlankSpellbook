@@ -1,4 +1,4 @@
-package tomi.piipposoft.blankspellbook.powerdetails;
+package tomi.piipposoft.blankspellbook.PowerDetails;
 
 /**
  * Created by Domu on 17-Apr-16.

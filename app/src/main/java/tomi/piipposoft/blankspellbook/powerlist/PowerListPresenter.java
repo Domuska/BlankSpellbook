@@ -1,4 +1,4 @@
-package tomi.piipposoft.blankspellbook.powerlist;
+package tomi.piipposoft.blankspellbook.PowerList;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
 import tomi.piipposoft.blankspellbook.Utils.Spell;
-import tomi.piipposoft.blankspellbook.drawer.DrawerContract;
-import tomi.piipposoft.blankspellbook.drawer.DrawerHelper;
-import tomi.piipposoft.blankspellbook.drawer.DrawerPresenter;
+import tomi.piipposoft.blankspellbook.Drawer.DrawerContract;
+import tomi.piipposoft.blankspellbook.Drawer.DrawerHelper;
+import tomi.piipposoft.blankspellbook.Drawer.DrawerPresenter;
 
 /**
  * Created by Domu on 17-Apr-16.

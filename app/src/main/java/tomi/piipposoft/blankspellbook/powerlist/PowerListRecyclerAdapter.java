@@ -1,7 +1,6 @@
-package tomi.piipposoft.blankspellbook.powerlist;
+package tomi.piipposoft.blankspellbook.PowerList;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,6 @@ import java.util.List;
 
 import tomi.piipposoft.blankspellbook.R;
 import tomi.piipposoft.blankspellbook.Utils.Spell;
-import tomi.piipposoft.blankspellbook.powerdetails.PowerDetailsActivity;
 
 /**
  * Created by Domu on 11-Jun-16.
