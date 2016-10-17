@@ -1,4 +1,4 @@
-package tomi.piipposoft.blankspellbook.PowerList;
+package tomi.piipposoft.blankspellbook.powerlist;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.bignerdranch.expandablerecyclerview.Adapter.ExpandableRecyclerAdapter;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
@@ -29,9 +30,9 @@ import tomi.piipposoft.blankspellbook.Utils.Spell;
 import tomi.piipposoft.blankspellbook.dialog_fragments.SetDailyPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.dialog_fragments.SetPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.R;
-import tomi.piipposoft.blankspellbook.Drawer.DrawerContract;
-import tomi.piipposoft.blankspellbook.Drawer.DrawerHelper;
-import tomi.piipposoft.blankspellbook.PowerDetails.PowerDetailsActivity;
+import tomi.piipposoft.blankspellbook.drawer.DrawerContract;
+import tomi.piipposoft.blankspellbook.drawer.DrawerHelper;
+import tomi.piipposoft.blankspellbook.powerdetails.PowerDetailsActivity;
 
 /**
  * Activity where all user's spell books are listed in a list

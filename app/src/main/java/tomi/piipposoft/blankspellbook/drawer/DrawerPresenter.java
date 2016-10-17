@@ -1,4 +1,4 @@
-package tomi.piipposoft.blankspellbook.Drawer;
+package tomi.piipposoft.blankspellbook.drawer;
 
 import android.content.ContentValues;
 import android.database.Cursor;

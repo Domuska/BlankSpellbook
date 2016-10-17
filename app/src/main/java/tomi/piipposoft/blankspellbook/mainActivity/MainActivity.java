@@ -1,4 +1,4 @@
-package tomi.piipposoft.blankspellbook.MainActivity;
+package tomi.piipposoft.blankspellbook.mainActivity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -22,9 +22,9 @@ import tomi.piipposoft.blankspellbook.Utils.DataSource;
 import tomi.piipposoft.blankspellbook.dailypowerlist.DailyPowerListActivity;
 import tomi.piipposoft.blankspellbook.dialog_fragments.SetDailyPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.dialog_fragments.SetPowerListNameDialog;
-import tomi.piipposoft.blankspellbook.Drawer.DrawerContract;
-import tomi.piipposoft.blankspellbook.Drawer.DrawerHelper;
-import tomi.piipposoft.blankspellbook.PowerList.PowerListActivity;
+import tomi.piipposoft.blankspellbook.drawer.DrawerContract;
+import tomi.piipposoft.blankspellbook.drawer.DrawerHelper;
+import tomi.piipposoft.blankspellbook.powerlist.PowerListActivity;
 
 /**
  *

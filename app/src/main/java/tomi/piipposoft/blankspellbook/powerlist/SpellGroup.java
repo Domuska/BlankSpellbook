@@ -1,4 +1,4 @@
-package tomi.piipposoft.blankspellbook.PowerList;
+package tomi.piipposoft.blankspellbook.powerlist;
 
 import com.bignerdranch.expandablerecyclerview.Model.ParentListItem;
 

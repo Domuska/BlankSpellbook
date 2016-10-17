@@ -1,6 +1,7 @@
-package tomi.piipposoft.blankspellbook.Drawer;
+package tomi.piipposoft.blankspellbook.drawer;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +23,7 @@ import java.util.List;
 import tomi.piipposoft.blankspellbook.dialog_fragments.SetDailyPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.dialog_fragments.SetPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.R;
+import tomi.piipposoft.blankspellbook.powerlist.PowerListActivity;
 
 /**
  * Created by Domu on 11-Apr-16.

@@ -1,4 +1,4 @@
-package tomi.piipposoft.blankspellbook.PowerList;
+package tomi.piipposoft.blankspellbook.powerlist;
 
 import android.content.Context;
 
