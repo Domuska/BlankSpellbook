@@ -1,14 +1,23 @@
 package tomi.piipposoft.blankspellbook.powerlist;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
+import java.util.ArrayList;
+
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
+import tomi.piipposoft.blankspellbook.Utils.DataSource;
+import tomi.piipposoft.blankspellbook.Utils.Spell;
 import tomi.piipposoft.blankspellbook.drawer.DrawerContract;
 import tomi.piipposoft.blankspellbook.drawer.DrawerHelper;
 import tomi.piipposoft.blankspellbook.drawer.DrawerPresenter;
 
 /**
  * Created by Domu on 17-Apr-16.
+ *
+ * This could be made smarter, check DrawerPresenter's requirements. Now dbhelper is passed as
+ * parameter to DrawerPresenter for some reason - could maybe be removed and just context
+ * passed in or somesuch.
  */
 public class PowerListPresenter extends DrawerPresenter implements
     PowerListContract.UserActionListener,
@@ -29,8 +38,16 @@ public class PowerListPresenter extends DrawerPresenter implements
     // FROM POWERLISTCONTRACT
 
     @Override
-    public void openPowerDetails(long itemId) {
-        mPowerListActivity.showPowerDetailUI(itemId);
+    public void openPowerDetails(long itemId, boolean addingNewPower) {
+        if(!addingNewPower)
+            mPowerListActivity.showPowerDetailsUI(itemId);
+        else
+            mPowerListActivity.showNewPowerUI();
+    }
+
+    @Override
+    public ArrayList<Spell> getSpellList(Context context, long powerListId) {
+        return DataSource.getSpellsWithSpellBookId(context, powerListId);
     }
 
     // FROM DRAWER CONTRACT INTERFACE
@@ -53,7 +70,6 @@ public class PowerListPresenter extends DrawerPresenter implements
     @Override
     public void powerListItemClicked(long itemId, String name) {
         mDrawerActivityView.openPowerList(itemId, name);
-
     }
 
     @Override

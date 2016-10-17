@@ -17,7 +17,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.bignerdranch.expandablerecyclerview.Adapter.ExpandableRecyclerAdapter;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
@@ -54,8 +53,8 @@ public class PowerListActivity extends AppCompatActivity
     public static final String EXTRA_POWER_LIST_ID = "powerListId";
     public static final String EXTRA_POWER_LIST_NAME = "powerBookName";
 
-    private DrawerContract.UserActionListener mDrawerActionListener;
-    private PowerListContract.UserActionListener mActionListener;
+    private DrawerContract.UserActionListener myDrawerActionListener;
+    private PowerListContract.UserActionListener myActionListener;
 
     private final String TAG = "SpellBookActivity";
     private Long powerListId;
@@ -86,14 +85,7 @@ public class PowerListActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "you pressed FAB!");
-//                mActionListener.openPowerDetails(PowerDetailsActivity.ADD_NEW_POWER_DETAILS);
-                //todo fix above
-//                spellList.add("ali bali's superior fireball");
-//                adapter.notifyItemInserted(spellList.size()-1);
-
-//                spellList[spellList.length] = "ali bali's superior fireball";
-//                adapter.notifyItemInserted(spellList.length-1);
+                myActionListener.openPowerDetails(0, true);
             }
         });
 
@@ -104,23 +96,33 @@ public class PowerListActivity extends AppCompatActivity
         }
 
         setSupportActionBar(toolbar);
+    }
 
-        //recyclerview
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        mDrawerHelper = DrawerHelper.getInstance(this, (Toolbar)findViewById(R.id.my_toolbar));
+        //initialize listeners
+        myActionListener = new PowerListPresenter(
+                DataSource.getDatasource(this),
+                this,
+                DrawerHelper.getInstance(this, (Toolbar) findViewById(R.id.my_toolbar)));
+
+        myDrawerActionListener = (DrawerContract.UserActionListener) myActionListener;
+        myDrawerActionListener.powerListProfileSelected();
+
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-
         layoutManager = new LinearLayoutManager(this);
 
-
-        spellList = DataSource.getSpellsWithSpellBookId(getApplicationContext(), powerListId);
-//        adapter = new PowerListRecyclerAdapter(spellList);
+        spellList = myActionListener.getSpellList(getApplicationContext(), powerListId);
 
         final List<SpellGroup> spellGroups = new ArrayList<>();
 
         //ask a spell what group it belongs to
         //check if the spellgroups has this group already in it
-            //if it does, add the spell to to this group
-            //else create a new spell group with this name and add spell to it and add the group to the spellgroups
-
+        //if it does, add the spell to to this group
+        //else create a new spell group with this name and add spell to it and add the group to the spellgroups
         for(int i = 0; i < spellList.size(); i++){
             String groupName = spellList.get(i).getGroupName();
             //extra object allocation, would be good to just use a string or somesuch
@@ -140,49 +142,26 @@ public class PowerListActivity extends AppCompatActivity
             }
         }
 
-//        SpellGroup group = new SpellGroup(spellList.get(0).getGroupName(), spellList);
-//        spellGroups.add(group);
+        adapter = new PowerListRecyclerAdapter(this, spellGroups, myActionListener);
 
-        adapter = new PowerListRecyclerAdapter(this, spellGroups);
-
-        adapter.setExpandCollapseListener(new ExpandableRecyclerAdapter.ExpandCollapseListener() {
-            @Override
-            public void onListItemExpanded(int position) {
-//                SpellGroup expandedGroup = spellGroups.get(position);
-//                Toast.makeText(PowerListActivity.this,
-//                        "Spell group " + expandedGroup.getGroupName() + "expanded",
-//                        Toast.LENGTH_SHORT)
-//                        .show();
-            }
-
-            @Override
-            public void onListItemCollapsed(int position) {
-
-            }
-        });
+//        adapter.setExpandCollapseListener(new ExpandableRecyclerAdapter.ExpandCollapseListener() {
+//            @Override
+//            public void onListItemExpanded(int position) {
+////                SpellGroup expandedGroup = spellGroups.get(position);
+////                Toast.makeText(PowerListActivity.this,
+////                        "Spell group " + expandedGroup.getGroupName() + "expanded",
+////                        Toast.LENGTH_SHORT)
+////                        .show();
+//            }
+//
+//            @Override
+//            public void onListItemCollapsed(int position) {
+//
+//            }
+//        });
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(layoutManager);
-//        recyclerView.addItemDecoration(new RecyclerDividerDecorator(this, R.drawable.recycler_divider));
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        mDrawerHelper = DrawerHelper.getInstance(this, (Toolbar)findViewById(R.id.my_toolbar));
-        //initialize listeners
-        mActionListener = new PowerListPresenter(
-                DataSource.getDatasource(this),
-                this,
-                DrawerHelper.getInstance(this, (Toolbar) findViewById(R.id.my_toolbar)));
-
-        mDrawerActionListener = (DrawerContract.UserActionListener) mActionListener;
-
-        mDrawerActionListener.powerListProfileSelected();
-
-
     }
 
     @Override
@@ -203,7 +182,6 @@ public class PowerListActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -216,14 +194,21 @@ public class PowerListActivity extends AppCompatActivity
     // FROM POWER LIST CONTRACT INTERFACE
 
     @Override
-    public void showPowerDetailUI(long itemId) {
-        // TODO: 17-Apr-16 Handle opening power details page
+    public void showPowerDetailsUI(long itemId) {
         Intent i = new Intent (this, PowerDetailsActivity.class);
         Log.d(TAG, "setting spell ID as extra: " + itemId);
         i.putExtra(PowerDetailsActivity.EXTRA_POWER_DETAIL_ID, itemId);
         startActivity(i);
     }
 
+    @Override
+    public void showNewPowerUI() {
+        Intent i = new Intent(this, PowerDetailsActivity.class);
+        Log.d(TAG, "opening new power details UI");
+        i.putExtra(PowerDetailsActivity.EXTRA_POWER_DETAIL_ID,
+                PowerDetailsActivity.ADD_NEW_POWER_DETAILS);
+        startActivity(i);
+    }
 
     // FROM DRAWER CONTRACT ACTIVITY VIEW INTERFACE
 
@@ -246,25 +231,25 @@ public class PowerListActivity extends AppCompatActivity
 
     @Override
     public void powerListProfileSelected() {
-        mDrawerActionListener.powerListProfileSelected();
+        myDrawerActionListener.powerListProfileSelected();
     }
 
     @Override
     public void dailyPowerListProfileSelected() {
-        mDrawerActionListener.dailyPowerListProfileSelected();
+        myDrawerActionListener.dailyPowerListProfileSelected();
     }
 
     @Override
     public void powerListClicked(IDrawerItem clickedItem) {
         PrimaryDrawerItem item = (PrimaryDrawerItem)clickedItem;
-        mDrawerActionListener.powerListItemClicked(
+        myDrawerActionListener.powerListItemClicked(
                 item.getIdentifier(),
                 item.getName().toString());
     }
 
     @Override
     public void dailyPowerListClicked(IDrawerItem clickedItem) {
-        mDrawerActionListener.dailyPowerListItemClicked(clickedItem.getIdentifier());
+        myDrawerActionListener.dailyPowerListItemClicked(clickedItem.getIdentifier());
     }
 
     // FROM POPUP FRAGMENT INTERFACES
@@ -272,12 +257,12 @@ public class PowerListActivity extends AppCompatActivity
     // The method that is called when positive button on SetSpellbookNameDialog is clicked
     @Override
     public void onSetPowerListNameDialogPositiveClick(DialogFragment dialog, String powerListName) {
-        mDrawerActionListener.addPowerList(powerListName);
+        myDrawerActionListener.addPowerList(powerListName);
     }
 
     @Override
     public void onSetDailyPowerNameDialogPositiveClick(DialogFragment dialog, String dailyPowerListName) {
-        mDrawerActionListener.addDailyPowerList(dailyPowerListName);
+        myDrawerActionListener.addDailyPowerList(dailyPowerListName);
     }
 
     private class RecyclerDividerDecorator extends RecyclerView.ItemDecoration{

@@ -51,8 +51,6 @@ public class PowerDetailsActivity extends AppCompatActivity
         //NOTE, THIS AND THE THINGS BELOW THIS MIGHT NEED TO BE MOVED TO onResume TO PREVENT CRASHES
         // WHEN RETURNING TO ACTIVITY AND TRYING TO ADD POWER LIST
 
-
-
     }
 
     @Override

@@ -1,6 +1,7 @@
 package tomi.piipposoft.blankspellbook.powerlist;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import java.util.List;
 
 import tomi.piipposoft.blankspellbook.R;
 import tomi.piipposoft.blankspellbook.Utils.Spell;
+import tomi.piipposoft.blankspellbook.powerdetails.PowerDetailsActivity;
 
 /**
  * Created by Domu on 11-Jun-16.
@@ -30,10 +32,13 @@ public class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
 
     private ArrayList<Spell> dataSet;
     private LayoutInflater inflater;
+    private PowerListContract.UserActionListener actionListener;
 
 
-    public PowerListRecyclerAdapter(Context context, List<? extends ParentListItem> spellGroups){
+    public PowerListRecyclerAdapter(Context context, List<? extends ParentListItem> spellGroups,
+                                    PowerListContract.UserActionListener listener){
         super(spellGroups);
+        actionListener = listener;
         inflater = LayoutInflater.from(context);
     }
 
@@ -59,7 +64,9 @@ public class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
     public void onBindChildViewHolder(SpellViewHolder childViewHolder, int position, Object childListItem) {
         Spell spell = (Spell) childListItem;
         childViewHolder.bind(spell);
+
     }
+
 
 
 
@@ -101,8 +108,14 @@ public class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
             childTextView = (TextView) view.findViewById(R.id.recycler_child_text_view);
         }
 
-        public void bind(Spell spell) {
+        public void bind(final Spell spell) {
             childTextView.setText(spell.getName());
+            childTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PowerListRecyclerAdapter.this.actionListener.openPowerDetails(spell.getSpellId(), false);
+                }
+            });
         }
     }
 }

@@ -64,6 +64,9 @@ public class DataSource {
                 s.setGroupName(cursor.getString(
                         cursor.getColumnIndexOrThrow(BlankSpellBookContract.PowerEntry.COLUMN_NAME_GROUP)
                 ));
+                s.setSpellId(cursor.getLong(
+                        cursor.getColumnIndexOrThrow(BlankSpellBookContract.PowerEntry.COLUMN_NAME_POWER_ID)
+                ));
 
                 spells.add(s);
                 cursor.moveToNext();
@@ -71,6 +74,7 @@ public class DataSource {
         }
 
         return spells;
+//        return getDummyData();
     }
 
 
@@ -82,7 +86,9 @@ public class DataSource {
                 .setName("Abi zalim's horrid wilting")
                 .setHitDamage("1d10+CHA")
                 .setAttackRoll("level + INT")
-                .setGroupName("level 8");
+                .setGroupName("level 8")
+                .setSpellId(5);
+
 
         ArrayList<Spell> data = new ArrayList<>();
         data.add(spell);
