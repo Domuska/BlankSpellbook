@@ -31,12 +31,12 @@ import tomi.piipposoft.blankspellbook.Utils.Spell;
  */
 public class DrawerPresenter{
 
+    // TODO: 5.5.2017 removal and re-adding of listeners (spellListReference & dailySpellListReference) should be possible
+
     protected final BlankSpellBookContract.DBHelper mDbHelper;
     protected final DrawerContract.View mDrawerView;
     private SQLiteDatabase mDb;
     private final String TAG = "DrawerPresenter";
-
-
 
     //firebase
     private final String SPELLBOOK_REFERENCE = "spellbook";
@@ -87,7 +87,7 @@ public class DrawerPresenter{
         dailySpellListReference.push().setValue(dailySpellList);
     }
 
-    // TODO: 5.5.2017 change to use firebase
+    // TODO: 5.5.2017 can be removed, firebase implementation is done
     protected void addNewDailyPowerList2(@NonNull String dailyPowerListName){
 
         mDb = this.mDbHelper.getWritableDatabase();
