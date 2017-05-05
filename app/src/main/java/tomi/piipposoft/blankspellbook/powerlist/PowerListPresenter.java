@@ -46,7 +46,7 @@ public class PowerListPresenter extends DrawerPresenter implements
     }
 
     @Override
-    public ArrayList<Spell> getSpellList(Context context, long powerListId) {
+    public ArrayList<Spell> getSpellList(Context context, String powerListId) {
         return DataSource.getSpellsWithSpellBookId(context, powerListId);
     }
 
@@ -68,7 +68,7 @@ public class PowerListPresenter extends DrawerPresenter implements
     }
 
     @Override
-    public void powerListItemClicked(long itemId, String name) {
+    public void powerListItemClicked(String itemId, String name) {
         mDrawerActivityView.openPowerList(itemId, name);
     }
 

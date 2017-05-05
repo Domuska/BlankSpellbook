@@ -24,7 +24,11 @@ public class DataSource {
         return new BlankSpellBookContract.DBHelper(activity.getApplicationContext());
     }
 
-    public static ArrayList<Spell> getSpellsWithSpellBookId(Context context, long id){
+    public static ArrayList<Spell> getSpellsWithSpellBookId(Context context, String id){
+        return new ArrayList<>();
+    }
+
+    public static ArrayList<Spell> getSpellsWithSpellBookId2(Context context, long id){
         Log.d(TAG, "getSpellsWithSpellBookId called with ID " + id);
 
         //handle the dirty SQL things here

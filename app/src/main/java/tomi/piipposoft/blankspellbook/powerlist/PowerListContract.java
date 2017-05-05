@@ -17,7 +17,7 @@ public interface PowerListContract {
     }
 
     interface UserActionListener{
-        ArrayList<Spell> getSpellList(Context context, long powerListId);
+        ArrayList<Spell> getSpellList(Context context, String powerListId);
         void openPowerDetails(long itemId, boolean addingNewPower);
     }
 }

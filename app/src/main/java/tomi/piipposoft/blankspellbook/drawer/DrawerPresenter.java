@@ -117,15 +117,13 @@ public class DrawerPresenter{
         spellListsReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                int i = 0;
                 for (DataSnapshot snapShot : dataSnapshot.getChildren()){
                     SpellList spellList = snapShot.getValue(SpellList.class);
                     Log.d(TAG, "Spell list name: " + spellList.getName());
                     Log.d(TAG, "Spell list id: " + snapShot.getKey());
                     powerLists.add(initializeSpellBookListItem(
                             spellList.getName(),
-                            (long)i));
-                    i++;
+                            snapShot.getKey()));
                 }
                 //tell the drawer view to present the data
                 mDrawerView.showPowerList(powerLists);
@@ -154,7 +152,7 @@ public class DrawerPresenter{
                     Log.d(TAG, "Daily spell list name: " + spellList.getName());
                     dailyPowerLists.add(initializeDailyPowerListItem(
                             spellList.getName(),
-                            (long) i)
+                            snapshot.getKey())
                     );
                     i++;
                 }
@@ -167,34 +165,6 @@ public class DrawerPresenter{
             }
         });
 
-    }
-
-    // TODO: 5.5.2017 tätä metodia ei enää edes kutsuta, voidaan poistaa, tismalleen sama koodi showPowerListsissä
-    private List<IDrawerItem> fetchSpellBookListDataFromDB2(final List<IDrawerItem> powerLists) {
-
-        spellListsReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                int i = 0;
-                for (DataSnapshot snapShot : dataSnapshot.getChildren()){
-                    SpellList spellList = snapShot.getValue(SpellList.class);
-                    Log.d(TAG, "Spell list name: " + spellList.getName());
-                    powerLists.add(initializeSpellBookListItem(
-                            spellList.getName(),
-                            (long)i));
-                    i++;
-                }
-                mDrawerView.showPowerList(powerLists);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "fetchSpellBookListDataFromDB: " + databaseError.toException());
-            }
-        });
-
-        Log.d(TAG, "Returning a list of spell lists, # of items: " + powerLists.size());
-        return powerLists;
     }
 
     /**
@@ -234,10 +204,11 @@ public class DrawerPresenter{
 
         try {
             while (cursor.moveToNext()) {
-                powerLists.add(initializeSpellBookListItem(
+                //commented out since initialize was changed, second parameter used to be Long is now String
+                /*powerLists.add(initializeSpellBookListItem(
                         cursor.getString(cursor.getColumnIndexOrThrow(BlankSpellBookContract.PowerListEntry.COLUMN_NAME_POWER_LIST_NAME)),
                         cursor.getLong(cursor.getColumnIndexOrThrow(BlankSpellBookContract.PowerListEntry._ID))
-                ));
+                ));*/
 
                 Log.d(TAG, "_ID of item found: " + cursor.getLong(cursor.getColumnIndexOrThrow(BlankSpellBookContract.PowerListEntry._ID)));
 
@@ -257,9 +228,10 @@ public class DrawerPresenter{
     }
 
 
-    private PrimaryDrawerItem initializeSpellBookListItem(String itemName, Long itemId) {
+    private PrimaryDrawerItem initializeSpellBookListItem(String itemName, String identifier) {
         return new PrimaryDrawerItem()
-                .withName(itemName);
+                .withName(itemName)
+                .withTag(identifier);
     }
 
     /**
@@ -292,10 +264,11 @@ public class DrawerPresenter{
 
             try {
                 while (cursor.moveToNext()) {
-                    dailyPowerLists.add(initializeDailyPowerListItem(
+                    //commented out since initialize was changed, second parameter used to be Long is now String
+                    /*dailyPowerLists.add(initializeDailyPowerListItem(
                             cursor.getString(cursor.getColumnIndexOrThrow(BlankSpellBookContract.DailyPowerListEntry.COLUMN_NAME_DAILY_POWER_LIST_NAME)),
                             cursor.getLong(cursor.getColumnIndexOrThrow(BlankSpellBookContract.DailyPowerListEntry._ID))
-                    ));
+                    ));*/
                     Log.d(TAG, "_ID of item found: " + cursor.getLong(cursor.getColumnIndexOrThrow(BlankSpellBookContract.DailyPowerListEntry._ID)));
 
                 }
@@ -313,19 +286,10 @@ public class DrawerPresenter{
 
     }
 
-    private static PrimaryDrawerItem initializeDailyPowerListItem(String itemName, final Long itemId) {
-
+    private static PrimaryDrawerItem initializeDailyPowerListItem(String itemName, String identifier) {
         return new PrimaryDrawerItem()
                 .withName(itemName)
-                .withIdentifier(itemId)
-                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                    @Override
-                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        // TODO: 14-Apr-16 handle moving to daily power activity
-                        // TODO: 5.5.2017 update, this place is prolly not the right place for this
-                        return true;
-                    }
-                });
+                .withTag(identifier);
     }
 
 
