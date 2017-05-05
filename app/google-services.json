@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "554885284856",
+    "firebase_url": "https://blank-spellbook.firebaseio.com",
+    "project_id": "blank-spellbook",
+    "storage_bucket": "blank-spellbook.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:554885284856:android:f8872978c069a409",
+        "android_client_info": {
+          "package_name": "tomi.piipposoft.blankspellbook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "554885284856-8s41qfnbin8641v3rbgvf0vkr3mtvvkt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "tomi.piipposoft.blankspellbook",
+            "certificate_hash": "0590f3da8d6c6f7a25b9e20e7d64bdf92030d62c"
+          }
+        },
+        {
+          "client_id": "554885284856-77hfit9bc34n6q2n4vhoa0kk9a4hrrin.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiBXUm6tYDvcMy7YOeFjxRMDx_YHlqEFQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "554885284856-77hfit9bc34n6q2n4vhoa0kk9a4hrrin.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

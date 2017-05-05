@@ -82,8 +82,6 @@ public class DrawerHelper implements
     }
 
     private void createDrawer(Toolbar toolbar) {
-
-
         TAG = "createDrawer, called by " + callerActivity.getLocalClassName();
 
         //Create the drawer itself
@@ -200,7 +198,7 @@ public class DrawerHelper implements
      */
     @Override
     public void showPowerList(List<IDrawerItem> drawerItems) {
-        Log.d(TAG, "showpowerlist called");
+        Log.d(TAG, "showpowerlist called, number of items: " + drawerItems.size());
         populateSpellBooksList(mDrawer, drawerItems);
     }
 
@@ -221,6 +219,7 @@ public class DrawerHelper implements
 
         for (int i = 0; i < drawerItems.size(); i++) {
             final PrimaryDrawerItem item = (PrimaryDrawerItem)drawerItems.get(i);
+            Log.d(TAG, "new item being added to drawer: " + item.getName() + " ID: " + item.getIdentifier());
             item.withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
 
                 @Override
@@ -231,12 +230,10 @@ public class DrawerHelper implements
 //                    i.putExtra(PowerListActivity.EXTRA_POWER_LIST_ID, item.getIdentifier());
 //                    mDrawer.closeDrawer();
 //                    callerActivity.startActivity(i);
-
                     mDrawerListener.powerListClicked(drawerItem);
                     return true;
                 }
             });
-
             drawer.addItem(drawerItems.get(i));
         }
     }

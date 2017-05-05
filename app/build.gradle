@@ -33,4 +33,11 @@ dependencies {
     }
     //for expandable recycler views
     compile 'com.bignerdranch.android:expandablerecyclerview:2.1.1'
+
+    //for firebase
+    compile 'com.google.firebase:firebase-core:10.0.1'
+    compile 'com.google.firebase:firebase-database:10.0.1'
 }
+
+//for firebase
+apply plugin: 'com.google.gms.google-services'

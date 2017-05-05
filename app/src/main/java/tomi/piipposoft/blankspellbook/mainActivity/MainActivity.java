@@ -148,7 +148,6 @@ public class MainActivity extends AppCompatActivity
             public void onDrawerClosed(View view){
                 super.onDrawerClosed(view);
                 getSupportActionBar().setTitle("Blank spellbook");
-
             }
 
             public void onDrawerOpened(View view){
