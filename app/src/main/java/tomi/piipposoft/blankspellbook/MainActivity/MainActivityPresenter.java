@@ -43,7 +43,7 @@ public class MainActivityPresenter extends DrawerPresenter
     }
 
     @Override
-    public void powerListItemClicked(@NonNull long itemId, String name) {
+    public void powerListItemClicked(@NonNull String itemId, String name) {
         mDrawerActivityView.openPowerList(itemId, name);
     }
 

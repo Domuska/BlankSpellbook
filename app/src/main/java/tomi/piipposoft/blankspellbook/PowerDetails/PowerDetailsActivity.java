@@ -99,7 +99,7 @@ public class PowerDetailsActivity extends AppCompatActivity
     public void powerListClicked(IDrawerItem clickedItem) {
         PrimaryDrawerItem item = (PrimaryDrawerItem)clickedItem;
         mDrawerActionListener.powerListItemClicked(
-                item.getIdentifier(),
+                (String)item.getTag(),
                 item.getName().toString());
     }
 
@@ -111,7 +111,7 @@ public class PowerDetailsActivity extends AppCompatActivity
 
     // FROM DRAWER CONTRACT VIEW ACTIVITY INTERFACE
     @Override
-    public void openPowerList(Long powerListId, String name) {
+    public void openPowerList(String powerListId, String name) {
 
         Intent i = new Intent(this, PowerListActivity.class);
         i.putExtra(PowerListActivity.EXTRA_POWER_LIST_ID, powerListId);

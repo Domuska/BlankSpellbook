@@ -54,7 +54,7 @@ public class PowerDetailsPresenter extends DrawerPresenter
     }
 
     @Override
-    public void powerListItemClicked(long itemId, String name) {
+    public void powerListItemClicked(String itemId, String name) {
         mDrawerActivityView.openPowerList(itemId, name);
     }
 

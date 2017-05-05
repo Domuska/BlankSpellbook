@@ -82,8 +82,6 @@ public class DrawerHelper implements
     }
 
     private void createDrawer(Toolbar toolbar) {
-
-
         TAG = "createDrawer, called by " + callerActivity.getLocalClassName();
 
         //Create the drawer itself
@@ -200,7 +198,7 @@ public class DrawerHelper implements
      */
     @Override
     public void showPowerList(List<IDrawerItem> drawerItems) {
-        Log.d(TAG, "showpowerlist called");
+        Log.d(TAG, "showpowerlist called, number of items: " + drawerItems.size());
         populateSpellBooksList(mDrawer, drawerItems);
     }
 
@@ -221,22 +219,18 @@ public class DrawerHelper implements
 
         for (int i = 0; i < drawerItems.size(); i++) {
             final PrimaryDrawerItem item = (PrimaryDrawerItem)drawerItems.get(i);
+            Log.d(TAG, "new item being added to drawer: " + item.getName() +
+                    " ID: " + item.getTag());
+            //add listener to the drawer items
             item.withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
 
                 @Override
                 public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-//                    Intent i = new Intent(callerActivity, PowerListActivity.class);
-//                    Log.d(TAG, "PowerListActivity launching, supplying extra ID: " + item.getIdentifier()
-//                            + " item name: " + item.getName());
-//                    i.putExtra(PowerListActivity.EXTRA_POWER_LIST_ID, item.getIdentifier());
-//                    mDrawer.closeDrawer();
-//                    callerActivity.startActivity(i);
-
+                    //tell the current activity that an item has been clicked
                     mDrawerListener.powerListClicked(drawerItem);
                     return true;
                 }
             });
-
             drawer.addItem(drawerItems.get(i));
         }
     }
@@ -256,14 +250,15 @@ public class DrawerHelper implements
             .withIdentifier(ADD_DAILY_POWER_LIST_FOOTER_IDENTIFIER));
 
         for(int i = 0; i < drawerItems.size(); i++){
-
             final PrimaryDrawerItem item = (PrimaryDrawerItem)drawerItems.get(i);
+            Log.d(TAG, "new item being added to drawer: " + item.getName() +
+                    " ID: " + item.getTag());
+            //add listener to the drawer items
             item.withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                 @Override
                 public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                    //tell the current activity that an item has been clicked
                     mDrawerListener.dailyPowerListClicked(drawerItem);
-//                    Log.d(TAG, "dailyPowerListActivity launching, supplying extra ID: " + item.getIdentifier()
-//                    + " item name: " + item.getName());
                     return true;
                 }
             });

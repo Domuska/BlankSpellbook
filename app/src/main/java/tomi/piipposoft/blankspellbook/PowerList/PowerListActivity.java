@@ -57,7 +57,7 @@ public class PowerListActivity extends AppCompatActivity
     private PowerListContract.UserActionListener myActionListener;
 
     private final String TAG = "SpellBookActivity";
-    private Long powerListId;
+    private String powerListId;
     private String powerListName;
 
     private FloatingActionButton fab;
@@ -75,7 +75,7 @@ public class PowerListActivity extends AppCompatActivity
         setContentView(R.layout.activity_power_list);
 
         Intent thisIntent = getIntent();
-        powerListId = thisIntent.getLongExtra(EXTRA_POWER_LIST_ID, -1);
+        powerListId = thisIntent.getStringExtra(EXTRA_POWER_LIST_ID);
         powerListName = thisIntent.getStringExtra(EXTRA_POWER_LIST_NAME);
         Log.d(TAG, "ID got from extras: " + powerListId + " name got from extras: " + powerListName);
 
@@ -213,7 +213,7 @@ public class PowerListActivity extends AppCompatActivity
     // FROM DRAWER CONTRACT ACTIVITY VIEW INTERFACE
 
     @Override
-    public void openPowerList(Long powerListId, String powerListName) {
+    public void openPowerList(String powerListId, String powerListName) {
         Intent i = new Intent(this, PowerListActivity.class);
         i.putExtra(PowerListActivity.EXTRA_POWER_LIST_ID, powerListId);
         i.putExtra(PowerListActivity.EXTRA_POWER_LIST_NAME, powerListName);
@@ -243,7 +243,7 @@ public class PowerListActivity extends AppCompatActivity
     public void powerListClicked(IDrawerItem clickedItem) {
         PrimaryDrawerItem item = (PrimaryDrawerItem)clickedItem;
         myDrawerActionListener.powerListItemClicked(
-                item.getIdentifier(),
+                (String)item.getTag(),
                 item.getName().toString());
     }
 

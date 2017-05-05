@@ -148,7 +148,6 @@ public class MainActivity extends AppCompatActivity
             public void onDrawerClosed(View view){
                 super.onDrawerClosed(view);
                 getSupportActionBar().setTitle("Blank spellbook");
-
             }
 
             public void onDrawerOpened(View view){
@@ -174,7 +173,7 @@ public class MainActivity extends AppCompatActivity
     // FROM DRAWER CONTRACT VIEWACTIVITY INTERFACE
 
     @Override
-    public void openPowerList(Long powerListId, String powerListName) {
+    public void openPowerList(String powerListId, String powerListName) {
         Intent i = new Intent(this, PowerListActivity.class);
         i.putExtra(PowerListActivity.EXTRA_POWER_LIST_ID, powerListId);
         i.putExtra(PowerListActivity.EXTRA_POWER_LIST_NAME, powerListName);
@@ -206,7 +205,7 @@ public class MainActivity extends AppCompatActivity
     public void powerListClicked(IDrawerItem clickedItem) {
         PrimaryDrawerItem item = (PrimaryDrawerItem)clickedItem;
         mDrawerActionListener.powerListItemClicked(
-                item.getIdentifier(),
+                (String)item.getTag(),
                 item.getName().toString());
     }
 

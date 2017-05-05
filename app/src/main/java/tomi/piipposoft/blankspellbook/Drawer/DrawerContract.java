@@ -25,7 +25,7 @@ public interface DrawerContract {
      * Used by presenters to tell the running activity to start new activites
      */
     interface ViewActivity {
-        void openPowerList(Long powerListId, String name);
+        void openPowerList(String powerListId, String name);
         void openDailyPowerList(Long dailyPowerListId);
     }
 
@@ -39,7 +39,7 @@ public interface DrawerContract {
 
         void drawerOpened();
 
-        void powerListItemClicked(long itemId, String name);
+        void powerListItemClicked(String itemId, String name);
         void dailyPowerListItemClicked(long itemId);
 
         void powerListProfileSelected();
