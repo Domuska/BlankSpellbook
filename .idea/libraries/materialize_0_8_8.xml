@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="materialize-0.8.8">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.mikepenz/materialize/0.8.8/jars/classes.jar!/" />
-      <root url="file://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.mikepenz/materialize/0.8.8/res" />
+      <root url="file://$USER_HOME$/.android/build-cache/32027a32b39aedfa627008c0724e37758a3aa96d/output/res" />
+      <root url="jar://$USER_HOME$/.android/build-cache/32027a32b39aedfa627008c0724e37758a3aa96d/output/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
