@@ -18,7 +18,7 @@ public interface DrawerContract {
     interface View {
         void showDailyPowerList(List<IDrawerItem> drawerItems);
         void showPowerList(List<IDrawerItem> drawerItems);
-
+        void addDrawerItem(IDrawerItem item);
     }
 
     /**

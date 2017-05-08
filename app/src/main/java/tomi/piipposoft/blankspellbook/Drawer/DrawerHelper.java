@@ -202,6 +202,13 @@ public class DrawerHelper implements
         populateSpellBooksList(mDrawer, drawerItems);
     }
 
+    @Override
+    public void addDrawerItem(IDrawerItem item){
+        PrimaryDrawerItem primaryItem = (PrimaryDrawerItem) item;
+        //primaryItem.withOnDrawerItemClickListener(new SpellDrawerItemListener());
+        mDrawer.addItem(primaryItem);
+    }
+
     /**
      * Helper method to populate the drawer spell books side
      *
@@ -216,22 +223,24 @@ public class DrawerHelper implements
                 .withName("Add new spell book")
                 .withIdentifier(ADD_POWER_LIST_FOOTER_IDENTIFIER));
 
-
+        Log.d(TAG, "numer of drawer items being added: " + drawerItems.size());
         for (int i = 0; i < drawerItems.size(); i++) {
             final PrimaryDrawerItem item = (PrimaryDrawerItem)drawerItems.get(i);
             Log.d(TAG, "new item being added to drawer: " + item.getName() +
                     " ID: " + item.getTag());
             //add listener to the drawer items
-            item.withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-
-                @Override
-                public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                    //tell the current activity that an item has been clicked
-                    mDrawerListener.powerListClicked(drawerItem);
-                    return true;
-                }
-            });
+            item.withOnDrawerItemClickListener(new SpellDrawerItemListener());
             drawer.addItem(drawerItems.get(i));
+        }
+    }
+
+    private class SpellDrawerItemListener implements Drawer.OnDrawerItemClickListener{
+
+        @Override
+        public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+            //tell the current activity that an item has been clicked
+            mDrawerListener.powerListClicked(drawerItem);
+            return true;
         }
     }
 
@@ -266,6 +275,8 @@ public class DrawerHelper implements
             drawer.addItem(drawerItems.get(i));
         }
     }
+
+
 
 
 }

@@ -136,9 +136,12 @@ public class MainActivity extends AppCompatActivity
 
         mDrawerHelper = DrawerHelper.getInstance(this, (Toolbar) findViewById(R.id.my_toolbar));
 
+
         mActionlistener = new MainActivityPresenter(DataSource.getDatasource(this), this, mDrawerHelper);
 
-        mDrawerActionListener = (DrawerContract.UserActionListener) mActionlistener;
+        if(mDrawerActionListener == null) {
+            mDrawerActionListener = (DrawerContract.UserActionListener) mActionlistener;
+        }
 
         //add button to toolbar to open the drawer
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerHelper.getDrawerLayout(),

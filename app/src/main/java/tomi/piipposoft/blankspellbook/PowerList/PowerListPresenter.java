@@ -80,6 +80,9 @@ public class PowerListPresenter extends DrawerPresenter implements
     @Override
     public void powerListProfileSelected() {
         this.showPowerLists();
+        if(DrawerPresenter.spellListChildListener == null){
+            this.attachDrawerListener();
+        }
     }
 
     @Override

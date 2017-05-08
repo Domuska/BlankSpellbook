@@ -47,6 +47,10 @@ public class DrawerPresenter{
     private DatabaseReference spellListsReference = database.getReference(SPELL_LISTS_REFERENCE);
     private DatabaseReference dailySpellListReference = database.getReference(DAILY_SPELL_LIST_REFERENCE);
 
+    //use static variables for these since it may be that the app is started
+    //from different activities, all need to know if a listener is already attached
+    protected static ChildEventListener spellListChildListener;
+    protected ChildEventListener dailySpellListChildListener;
 
     public DrawerPresenter(
             @NonNull BlankSpellBookContract.DBHelper dbHelper,
@@ -112,9 +116,9 @@ public class DrawerPresenter{
         //added after the firebase stuff was added, above is old implementation
         // TODO: 5.5.2017 should this maybe be implemented as one-time fetch, instead of listener?
         // https://firebase.google.com/docs/database/android/read-and-write
-        final List<IDrawerItem> powerLists = new ArrayList<IDrawerItem>();
+        final List<IDrawerItem> powerLists = new ArrayList<>();
 
-        spellListsReference.addValueEventListener(new ValueEventListener() {
+        spellListsReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapShot : dataSnapshot.getChildren()){
@@ -126,6 +130,7 @@ public class DrawerPresenter{
                             snapShot.getKey()));
                 }
                 //tell the drawer view to present the data
+                Log.d(TAG, "number of power lists got from DB: " + powerLists.size());
                 mDrawerView.showPowerList(powerLists);
             }
 
@@ -134,6 +139,41 @@ public class DrawerPresenter{
                 Log.w(TAG, "fetchSpellBookListDataFromDB: " + databaseError.toException());
             }
         });
+    }
+
+    protected void attachDrawerListener(){
+        //add a child event listener, update the drawer if children change
+        spellListChildListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                SpellList list = dataSnapshot.getValue(SpellList.class);
+                mDrawerView.addDrawerItem(
+                        initializeSpellBookListItem(
+                                list.getName(), dataSnapshot.getKey())
+                );
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                //do stuff
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                //do stuff
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, databaseError.toException().toString());
+            }
+        };
+
+        spellListsReference.addChildEventListener(spellListChildListener);
     }
 
 
@@ -146,7 +186,6 @@ public class DrawerPresenter{
         dailySpellListReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                int i = 0;
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                     DailySpellList spellList = snapshot.getValue(DailySpellList.class);
                     Log.d(TAG, "Daily spell list name: " + spellList.getName());
@@ -154,7 +193,6 @@ public class DrawerPresenter{
                             spellList.getName(),
                             snapshot.getKey())
                     );
-                    i++;
                 }
                 mDrawerView.showDailyPowerList(dailyPowerLists);
             }

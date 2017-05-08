@@ -55,6 +55,9 @@ public class MainActivityPresenter extends DrawerPresenter
     @Override
     public void powerListProfileSelected() {
         this.showPowerLists();
+        if(DrawerPresenter.spellListChildListener == null) {
+            this.attachDrawerListener();
+        }
     }
 
     @Override
