@@ -50,7 +50,7 @@ public class DrawerPresenter{
     //use static variables for these since it may be that the app is started
     //from different activities, all need to know if a listener is already attached
     protected static ChildEventListener spellListChildListener;
-    protected ChildEventListener dailySpellListChildListener;
+    protected static ChildEventListener dailySpellListChildListener;
 
     public DrawerPresenter(
             @NonNull BlankSpellBookContract.DBHelper dbHelper,
@@ -141,7 +141,7 @@ public class DrawerPresenter{
         });
     }
 
-    protected void attachDrawerListener(){
+    protected void attachSpellListDrawerListener(){
         //add a child event listener, update the drawer if children change
         spellListChildListener = new ChildEventListener() {
             @Override
@@ -160,7 +160,12 @@ public class DrawerPresenter{
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                //do stuff
+                //not the smartest way to do this, we just remove everything and get them again.
+                //for the drawer library we need identifiers to be able to remove items,
+                //so we would need to make a way to generate local UUIDs for items and use that
+                //in here to remove the particular item. Too much work for now.
+                mDrawerView.removeDrawerItems();
+                showPowerLists();
             }
 
             @Override
@@ -183,7 +188,7 @@ public class DrawerPresenter{
         //firebase implementation from this line forward
         final List<IDrawerItem> dailyPowerLists = new ArrayList<>();
 
-        dailySpellListReference.addValueEventListener(new ValueEventListener() {
+        dailySpellListReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
@@ -203,6 +208,45 @@ public class DrawerPresenter{
             }
         });
 
+    }
+
+    protected void attachDailySpellListDrawerListener(){
+        dailySpellListChildListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                DailySpellList list = dataSnapshot.getValue(DailySpellList.class);
+                mDrawerView.addDrawerItem(
+                        initializeDailyPowerListItem(
+                                list.getName(), dataSnapshot.getKey())
+                );
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                //do stuff
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                //not the smartest way to do this, we just remove everything and get them again.
+                //for the drawer library we need identifiers to be able to remove items,
+                //so we would need to make a way to generate local UUIDs for items and use that
+                //in here to remove the particular item. Too much work for now.
+                mDrawerView.removeDrawerItems();
+                showDailyPowerLists();
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, databaseError.toException().toString());
+            }
+        };
+
+        dailySpellListReference.addChildEventListener(dailySpellListChildListener);
     }
 
     /**
@@ -324,7 +368,7 @@ public class DrawerPresenter{
 
     }
 
-    private static PrimaryDrawerItem initializeDailyPowerListItem(String itemName, String identifier) {
+    private PrimaryDrawerItem initializeDailyPowerListItem(String itemName, String identifier) {
         return new PrimaryDrawerItem()
                 .withName(itemName)
                 .withTag(identifier);

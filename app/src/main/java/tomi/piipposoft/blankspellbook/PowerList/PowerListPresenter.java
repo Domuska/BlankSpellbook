@@ -81,12 +81,15 @@ public class PowerListPresenter extends DrawerPresenter implements
     public void powerListProfileSelected() {
         this.showPowerLists();
         if(DrawerPresenter.spellListChildListener == null){
-            this.attachDrawerListener();
+            this.attachSpellListDrawerListener();
         }
     }
 
     @Override
     public void dailyPowerListProfileSelected() {
         this.showDailyPowerLists();
+        if(DrawerPresenter.dailySpellListChildListener == null){
+            this.attachDailySpellListDrawerListener();
+        }
     }
 }

@@ -3,6 +3,8 @@ package tomi.piipposoft.blankspellbook.MainActivity;
 import android.support.annotation.NonNull;
 
 
+import com.mikepenz.materialdrawer.Drawer;
+
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerContract;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerHelper;
@@ -56,13 +58,16 @@ public class MainActivityPresenter extends DrawerPresenter
     public void powerListProfileSelected() {
         this.showPowerLists();
         if(DrawerPresenter.spellListChildListener == null) {
-            this.attachDrawerListener();
+            this.attachSpellListDrawerListener();
         }
     }
 
     @Override
     public void dailyPowerListProfileSelected() {
         this.showDailyPowerLists();
+        if(DrawerPresenter.dailySpellListChildListener == null){
+            this.attachDailySpellListDrawerListener();
+        }
     }
 
 

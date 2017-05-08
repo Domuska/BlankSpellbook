@@ -205,8 +205,13 @@ public class DrawerHelper implements
     @Override
     public void addDrawerItem(IDrawerItem item){
         PrimaryDrawerItem primaryItem = (PrimaryDrawerItem) item;
-        //primaryItem.withOnDrawerItemClickListener(new SpellDrawerItemListener());
+        primaryItem.withOnDrawerItemClickListener(new SpellDrawerItemListener());
         mDrawer.addItem(primaryItem);
+    }
+
+    @Override
+    public void removeDrawerItems(){
+
     }
 
     /**
