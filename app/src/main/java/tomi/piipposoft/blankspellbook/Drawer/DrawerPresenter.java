@@ -147,9 +147,12 @@ public class DrawerPresenter{
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 SpellList list = dataSnapshot.getValue(SpellList.class);
+                String spellListName = dataSnapshot.child("name").getValue(String.class);
+                Log.d(TAG, "spell list name: " + spellListName);
+
                 mDrawerView.addDrawerItem(
                         initializeSpellBookListItem(
-                                list.getName(), dataSnapshot.getKey())
+                                spellListName, dataSnapshot.getKey())
                 );
             }
 

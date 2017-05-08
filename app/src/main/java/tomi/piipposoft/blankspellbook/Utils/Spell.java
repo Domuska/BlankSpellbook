@@ -5,9 +5,20 @@ package tomi.piipposoft.blankspellbook.Utils;
  */
 public class Spell {
 
-    private String name, range, rechargeTime, target, attackRoll,
-            hitDamage, missDamage, playerNotes, groupName;
-    private long spellId, powerListId;
+    private String name;
+    private String range;
+    private String rechargeTime;
+    private String target;
+    private String attackRoll;
+    private String hitDamage;
+    private String missDamage;
+    private String playerNotes;
+    private String groupName;
+    private String spellId;
+
+
+
+    private String spellListId;
 
 
     public String getName() {
@@ -91,22 +102,21 @@ public class Spell {
         return this;
     }
 
-    public long getSpellId() {
+    public String getSpellId() {
         return spellId;
     }
 
-    public Spell setSpellId(long spellId) {
+    public Spell setSpellId(String spellId) {
         this.spellId = spellId;
         return this;
     }
 
-    public long getPowerListId() {
-        return powerListId;
+    public String getSpellListId() {
+        return spellListId;
     }
 
-    public Spell setPowerListId(long powerListId) {
-        this.powerListId = powerListId;
-        return this;
+    public void setSpellListId(String spellListId) {
+        this.spellListId = spellListId;
     }
 
 

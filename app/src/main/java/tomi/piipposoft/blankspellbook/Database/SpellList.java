@@ -1,5 +1,6 @@
 package tomi.piipposoft.blankspellbook.Database;
 
+import java.util.HashMap;
 import java.util.List;
 
 import tomi.piipposoft.blankspellbook.Utils.Spell;
@@ -11,7 +12,8 @@ import tomi.piipposoft.blankspellbook.Utils.Spell;
 public class SpellList {
 
     private String name;
-    private List<Spell> spells;
+    //hashmap containing spell IDs
+    private HashMap<String, Boolean> spells;
 
     public SpellList(){
         // Default constructor required for calls to DataSnapshot.getValue(SpellList.class)
@@ -29,11 +31,11 @@ public class SpellList {
         this.name = name;
     }
 
-    public List<Spell> getSpells() {
+    public HashMap<String, Boolean> getSpells() {
         return spells;
     }
 
-    public void setSpells(List<Spell> spells) {
+    public void setSpells(HashMap<String, Boolean> spells) {
         this.spells = spells;
     }
 

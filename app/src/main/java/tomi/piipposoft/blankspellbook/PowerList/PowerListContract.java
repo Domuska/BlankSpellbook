@@ -12,12 +12,13 @@ import tomi.piipposoft.blankspellbook.Utils.Spell;
 public interface PowerListContract {
 
     interface View{
-        void showPowerDetailsUI(long itemId);
+        void showPowerDetailsUI(String itemId);
         void showNewPowerUI();
+        void addSpellToAdapter(Spell spell);
     }
 
     interface UserActionListener{
-        ArrayList<Spell> getSpellList(Context context, String powerListId);
-        void openPowerDetails(long itemId, boolean addingNewPower);
+        void getSpellList(Context context, String powerListId);
+        void openPowerDetails(String itemId, boolean addingNewPower);
     }
 }

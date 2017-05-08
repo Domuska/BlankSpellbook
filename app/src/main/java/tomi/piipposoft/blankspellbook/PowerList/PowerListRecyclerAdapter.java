@@ -64,7 +64,6 @@ public class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
     public void onBindChildViewHolder(SpellViewHolder childViewHolder, int position, Object childListItem) {
         Spell spell = (Spell) childListItem;
         childViewHolder.bind(spell);
-
     }
 
 

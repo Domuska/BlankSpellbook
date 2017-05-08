@@ -2,8 +2,10 @@ package tomi.piipposoft.blankspellbook.PowerList;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
@@ -23,22 +25,26 @@ public class PowerListPresenter extends DrawerPresenter implements
     PowerListContract.UserActionListener,
         DrawerContract.UserActionListener{
 
+    private static final String TAG = "PowerListPresenter";
     private final PowerListContract.View mPowerListActivity;
     private final DrawerContract.ViewActivity mDrawerActivityView;
 
+    //the old constructor, using SQL database
     public PowerListPresenter(
             @NonNull BlankSpellBookContract.DBHelper dbHelper,
             @NonNull PowerListContract.View powerListActivity,
             @NonNull DrawerHelper drawerHelper){
+        // TODO: 8.5.2017 remove the sql database requirement when FireBase implementation complete
         super(dbHelper, drawerHelper);
         mPowerListActivity = powerListActivity;
         mDrawerActivityView = (DrawerContract.ViewActivity)mPowerListActivity;
     }
 
+
     // FROM POWERLISTCONTRACT
 
     @Override
-    public void openPowerDetails(long itemId, boolean addingNewPower) {
+    public void openPowerDetails(String itemId, boolean addingNewPower) {
         if(!addingNewPower)
             mPowerListActivity.showPowerDetailsUI(itemId);
         else
@@ -46,8 +52,14 @@ public class PowerListPresenter extends DrawerPresenter implements
     }
 
     @Override
-    public ArrayList<Spell> getSpellList(Context context, String powerListId) {
-        return DataSource.getSpellsWithSpellBookId(context, powerListId);
+    public void getSpellList(Context context, String powerListId) {
+        //return DataSource.getSpellsWithSpellBookId(context, powerListId);
+        DataSource.getSpellsWithSpellBookId(this, context, powerListId);
+    }
+
+    public void handleSpellFromDatabase(Spell spell){
+        Log.d(TAG, "New spell! name: " + spell.getName());
+        mPowerListActivity.addSpellToAdapter(spell);
     }
 
     // FROM DRAWER CONTRACT INTERFACE

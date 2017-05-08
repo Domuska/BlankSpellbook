@@ -67,6 +67,7 @@ public class PowerListActivity extends AppCompatActivity
 
     private DrawerHelper mDrawerHelper;
     ArrayList<Spell> spellList;
+    List<SpellGroup> spellGroups;
 
 
     @Override
@@ -85,7 +86,7 @@ public class PowerListActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                myActionListener.openPowerDetails(0, true);
+                myActionListener.openPowerDetails("0", true);
             }
         });
 
@@ -115,32 +116,10 @@ public class PowerListActivity extends AppCompatActivity
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(this);
 
-        spellList = myActionListener.getSpellList(getApplicationContext(), powerListId);
+        //spellList = myActionListener.getSpellList(getApplicationContext(), powerListId);
+        myActionListener.getSpellList(getApplicationContext(), powerListId);
 
-        final List<SpellGroup> spellGroups = new ArrayList<>();
-
-        //ask a spell what group it belongs to
-        //check if the spellgroups has this group already in it
-        //if it does, add the spell to to this group
-        //else create a new spell group with this name and add spell to it and add the group to the spellgroups
-        for(int i = 0; i < spellList.size(); i++){
-            String groupName = spellList.get(i).getGroupName();
-            //extra object allocation, would be good to just use a string or somesuch
-            //to see if the spellgroup is already in the spellgroups list. see spellgroup .equals
-            SpellGroup testableGroup = new SpellGroup(groupName, new Spell());
-
-            if(spellGroups.contains(testableGroup)){
-                Log.d(TAG, "spellgroups has the group " + groupName);
-                Log.d(TAG, "" + spellGroups.get(spellGroups.indexOf(testableGroup)));
-                spellGroups.get(spellGroups.indexOf(testableGroup)).addSpell(spellList.get(i));
-            }
-            else{
-                Log.d(TAG, "spellgroups does not yet have group " + groupName);
-                Spell spell = spellList.get(i);
-                SpellGroup group = new SpellGroup(spell.getGroupName(), spell);
-                spellGroups.add(group);
-            }
-        }
+        spellGroups = new ArrayList<>();
 
         adapter = new PowerListRecyclerAdapter(this, spellGroups, myActionListener);
 
@@ -194,7 +173,7 @@ public class PowerListActivity extends AppCompatActivity
     // FROM POWER LIST CONTRACT INTERFACE
 
     @Override
-    public void showPowerDetailsUI(long itemId) {
+    public void showPowerDetailsUI(String itemId) {
         Intent i = new Intent (this, PowerDetailsActivity.class);
         Log.d(TAG, "setting spell ID as extra: " + itemId);
         i.putExtra(PowerDetailsActivity.EXTRA_POWER_DETAIL_ID, itemId);
@@ -208,6 +187,56 @@ public class PowerListActivity extends AppCompatActivity
         i.putExtra(PowerDetailsActivity.EXTRA_POWER_DETAIL_ID,
                 PowerDetailsActivity.ADD_NEW_POWER_DETAILS);
         startActivity(i);
+    }
+
+    @Override
+    public void addSpellToAdapter(Spell spell) {
+
+        Log.d(TAG, "Got a spell to be added to adapter: " + spell.getName());
+
+        String groupName = spell.getGroupName();
+        //extra object allocation, would be good to just use a string or somesuch
+        //to see if the spellgroup is already in the spellgroups list. see spellgroup .equals
+        SpellGroup testableGroup = new SpellGroup(groupName, new Spell());
+
+        if(spellGroups.contains(testableGroup)){
+            Log.d(TAG, "spellgroups has the group " + groupName);
+            Log.d(TAG, "" + spellGroups.get(spellGroups.indexOf(testableGroup)));
+            spellGroups.get(spellGroups.indexOf(testableGroup)).addSpell(spell);
+        }
+        else{
+            Log.d(TAG, "spellgroups does not yet have group " + groupName);
+            SpellGroup group = new SpellGroup(spell.getGroupName(), spell);
+            spellGroups.add(group);
+        }
+
+        // TODO: 8.5.2017 not really the good way to do this, what if the list is long? FIX! 
+        adapter = new PowerListRecyclerAdapter(this, spellGroups, myActionListener);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(layoutManager);
+
+        //ask a spell what group it belongs to
+        //check if the spellgroups has this group already in it
+        //if it does, add the spell to to this group
+        //else create a new spell group with this name and add spell to it and add the group to the spellgroups
+//        for(int i = 0; i < spellList.size(); i++){
+//            String groupName = spellList.get(i).getGroupName();
+//            extra object allocation, would be good to just use a string or somesuch
+//            to see if the spellgroup is already in the spellgroups list. see spellgroup .equals
+//            SpellGroup testableGroup = new SpellGroup(groupName, new Spell());
+
+//            if(spellGroups.contains(testableGroup)){
+//                Log.d(TAG, "spellgroups has the group " + groupName);
+//                Log.d(TAG, "" + spellGroups.get(spellGroups.indexOf(testableGroup)));
+//                spellGroups.get(spellGroups.indexOf(testableGroup)).addSpell(spellList.get(i));
+//            }
+//            else{
+//                Log.d(TAG, "spellgroups does not yet have group " + groupName);
+//                Spell spell = spellList.get(i);
+//                SpellGroup group = new SpellGroup(spell.getGroupName(), spell);
+//                spellGroups.add(group);
+//            }
+//        }
     }
 
     // FROM DRAWER CONTRACT ACTIVITY VIEW INTERFACE

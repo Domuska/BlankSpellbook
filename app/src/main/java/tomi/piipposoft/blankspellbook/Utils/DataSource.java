@@ -7,26 +7,98 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
+import tomi.piipposoft.blankspellbook.PowerList.PowerListPresenter;
 
 /**
  * Created by Domu on 17-Apr-16.
  */
 public class DataSource {
+    public static final String DB_SPELL_LIST_TREE_NAME = "spell_lists";
+    public static final String DB_SPELL_TREE_NAME = "spells";
     private static final String TAG = "DataSource";
 
 //    SQLiteDatabase myDb = BlankSpellBookContract.DBHelper
 
+    private static FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
 
     public static BlankSpellBookContract.DBHelper getDatasource(Activity activity){
         return new BlankSpellBookContract.DBHelper(activity.getApplicationContext());
     }
 
-    public static ArrayList<Spell> getSpellsWithSpellBookId(Context context, String id){
-        return new ArrayList<>();
+    //passing in the class reference can cause weird errors later
+    // TODO: 8.5.2017 figure out better way to handle the class reference
+    public static void getSpellsWithSpellBookId(final PowerListPresenter presenter, Context context, String id){
+        //get reference to spells/$spell_lists
+        DatabaseReference spellListReference =
+                firebaseDatabase.getReference(DB_SPELL_LIST_TREE_NAME).child(id);
+
+
+        spellListReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<String> spellIds = new ArrayList<>();
+
+                HashMap<String, Boolean> spellsMap = (HashMap<String, Boolean>) dataSnapshot.child("spells").getValue();
+
+                for (Object o : spellsMap.entrySet()) {
+                    Map.Entry pair = (Map.Entry) o;
+                    //the first object in the map is the ID of the spell, cast to string and store
+                    spellIds.add((String) pair.getKey());
+                    Log.d(TAG, "spell id: " + pair.getKey());
+                }
+
+                Log.d(TAG, "spell ids table size: " + spellIds.size());
+                if(spellIds.size() > 0){
+                    getSpellsFromDatabase(spellIds, presenter);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, "Error, " + databaseError.toException().toString());
+            }
+        });
     }
+
+    /**
+     *
+     * @param spellIds array of FireBase spells entry IDs
+     */
+    private static void getSpellsFromDatabase(List<String> spellIds, final PowerListPresenter presenter) {
+
+        for(String id : spellIds) {
+            DatabaseReference spellsReference =
+                    firebaseDatabase.getReference(DB_SPELL_TREE_NAME).child(id);
+            spellsReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    presenter.handleSpellFromDatabase(
+                            dataSnapshot.getValue(Spell.class)
+                    );
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.d(TAG, "error when retrieving spells: " + databaseError.toString());
+                }
+            });
+        }
+    }
+
 
     public static ArrayList<Spell> getSpellsWithSpellBookId2(Context context, long id){
         Log.d(TAG, "getSpellsWithSpellBookId called with ID " + id);
@@ -68,9 +140,9 @@ public class DataSource {
                 s.setGroupName(cursor.getString(
                         cursor.getColumnIndexOrThrow(BlankSpellBookContract.PowerEntry.COLUMN_NAME_GROUP)
                 ));
-                s.setSpellId(cursor.getLong(
+                /*s.setSpellId(cursor.getLong(
                         cursor.getColumnIndexOrThrow(BlankSpellBookContract.PowerEntry.COLUMN_NAME_POWER_ID)
-                ));
+                ));*/
 
                 spells.add(s);
                 cursor.moveToNext();
@@ -90,8 +162,8 @@ public class DataSource {
                 .setName("Abi zalim's horrid wilting")
                 .setHitDamage("1d10+CHA")
                 .setAttackRoll("level + INT")
-                .setGroupName("level 8")
-                .setSpellId(5);
+                .setGroupName("level 8");
+                //.setSpellId("5");
 
 
         ArrayList<Spell> data = new ArrayList<>();
