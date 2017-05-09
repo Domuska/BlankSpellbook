@@ -20,16 +20,17 @@
 
 
     <!-- Strings for spell book's ordinary fields -->
-    <string name="spellbook_name">Name</string>
-    <string name="spellbook_school">School</string>
-    <string name="spellbook_level">Level</string>
-    <string name="spellbook_components">Components</string>
-    <string name="spellbook_castingtime">Casting Time</string>
+    <string name="spellbook_attackroll">Attack roll</string>
+    <string name="spellbook_castingtime">Casting time</string>
+    <string name="spellbook_group">Spell\'s level or group</string>
+    <string name="spellbook_hitdamage">Hit damage</string>
+    <string name="spellbook_missdamage">Miss damage</string>
+    <string name="spellbook_name">Spell name</string>
+    <string name="spellbook_playerNotes">Notes</string>
     <string name="spellbook_range">Range</string>
-    <string name="spellbook_targets">Targets</string>
-    <string name="spellbook_duration">Duration</string>
-    <string name="spellbook_savingthrow">Saving Throw</string>
-    <string name="spellbook_spellresistance">Spell Resistance</string>
+    <string name="spellbook_rechargeTime">Recharge time</string>
+    <string name="spellbook_target">Target</string>
+
 
     <string name="spellbook_0">0</string>
     <string name="spellbook_1">1</string>

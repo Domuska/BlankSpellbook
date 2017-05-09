@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
+import tomi.piipposoft.blankspellbook.PowerDetails.PowerDetailsActivity;
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
 import tomi.piipposoft.blankspellbook.Utils.Spell;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerContract;
@@ -48,11 +49,11 @@ public class PowerListPresenter extends DrawerPresenter implements
     // FROM POWERLISTCONTRACT
 
     @Override
-    public void openPowerDetails(String itemId, boolean addingNewPower) {
-        if(!addingNewPower)
-            mPowerListActivity.showPowerDetailsUI(itemId);
-        else
+    public void openPowerDetails(String itemId) {
+        if(itemId.equals(PowerDetailsActivity.EXTRA_ADD_NEW_POWER_DETAILS))
             mPowerListActivity.showNewPowerUI();
+        else
+            mPowerListActivity.showPowerDetailsUI(itemId);
     }
 
     @Override

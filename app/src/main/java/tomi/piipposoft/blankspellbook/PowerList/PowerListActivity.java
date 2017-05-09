@@ -18,7 +18,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.bignerdranch.expandablerecyclerview.Adapter.ExpandableRecyclerAdapter;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
@@ -86,7 +85,7 @@ public class PowerListActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                myActionListener.openPowerDetails("0", true);
+                myActionListener.openPowerDetails(PowerDetailsActivity.EXTRA_ADD_NEW_POWER_DETAILS);
             }
         });
 
@@ -185,7 +184,7 @@ public class PowerListActivity extends AppCompatActivity
         Intent i = new Intent(this, PowerDetailsActivity.class);
         Log.d(TAG, "opening new power details UI");
         i.putExtra(PowerDetailsActivity.EXTRA_POWER_DETAIL_ID,
-                PowerDetailsActivity.ADD_NEW_POWER_DETAILS);
+                PowerDetailsActivity.EXTRA_ADD_NEW_POWER_DETAILS);
         startActivity(i);
     }
 

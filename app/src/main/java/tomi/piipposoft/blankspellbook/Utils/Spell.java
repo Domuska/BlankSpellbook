@@ -19,6 +19,7 @@ public class Spell {
     private String playerNotes;
     private String groupName;
     private String spellId;
+    private String castingTime;
 
 
 
@@ -121,6 +122,14 @@ public class Spell {
 
     public void setSpellListId(String spellListId) {
         this.spellListId = spellListId;
+    }
+
+    public String getCastingTime() {
+        return castingTime;
+    }
+
+    public void setCastingTime(String castingTime) {
+        this.castingTime = castingTime;
     }
 
     @Override

@@ -26,14 +26,14 @@ public class PowerDetailsActivity extends AppCompatActivity
         PowerDetailsContract.View{
 
     public static final String EXTRA_POWER_DETAIL_ID = "powerDetailId";
-    public static final long ADD_NEW_POWER_DETAILS = -1;
+    public static final String EXTRA_ADD_NEW_POWER_DETAILS = "";
 
     private final String TAG = "PowerDetailsActivity";
     private DrawerHelper mDrawerHelper;
     private DrawerContract.UserActionListener mDrawerActionListener;
     private PowerDetailsContract.UserActionListener mActionListener;
 
-    private long powerId;
+    private String powerId;
 
 
     @Override
@@ -41,16 +41,12 @@ public class PowerDetailsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_power_details);
 
-        powerId = getIntent().getLongExtra(EXTRA_POWER_DETAIL_ID, PowerDetailsActivity.ADD_NEW_POWER_DETAILS);
+        powerId = getIntent().getStringExtra(EXTRA_POWER_DETAIL_ID);
         Log.i(TAG, "onCreate: ID extra gotten " + powerId);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         toolbar.setTitle("Power details activity");
         setSupportActionBar(toolbar);
-
-        //NOTE, THIS AND THE THINGS BELOW THIS MIGHT NEED TO BE MOVED TO onResume TO PREVENT CRASHES
-        // WHEN RETURNING TO ACTIVITY AND TRYING TO ADD POWER LIST
-
     }
 
     @Override

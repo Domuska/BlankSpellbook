@@ -30,12 +30,12 @@ public class PowerDetailsPresenter extends DrawerPresenter
     // FROM PowerDetailsContract
 
     @Override
-    public void showPowerDetails(long powerId) {
-        if(powerId != PowerDetailsActivity.ADD_NEW_POWER_DETAILS){
-            mPowerDetailsView.showFilledForms();
+    public void showPowerDetails(String powerId) {
+        if(powerId.equals(PowerDetailsActivity.EXTRA_ADD_NEW_POWER_DETAILS)){
+            mPowerDetailsView.showEmptyForms();
         }
         else
-            mPowerDetailsView.showEmptyForms();
+            mPowerDetailsView.showFilledForms();
     }
 
     // FROM DRAWERCONTRACT USERACTIONLISTENER

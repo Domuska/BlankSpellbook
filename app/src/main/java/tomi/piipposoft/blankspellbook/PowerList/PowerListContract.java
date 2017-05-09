@@ -41,6 +41,11 @@ public interface PowerListContract {
 
     interface UserActionListener{
         void getSpellList(Context context, String powerListId);
-        void openPowerDetails(String itemId, boolean addingNewPower);
+
+        /**
+         * User is opening the powerDetailsActivity
+         * @param itemId the item that has been clicked, either empty string or a valid FireBase ID
+         */
+        void openPowerDetails(String itemId);
     }
 }

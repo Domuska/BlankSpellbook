@@ -112,7 +112,7 @@ public class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
             childTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    PowerListRecyclerAdapter.this.actionListener.openPowerDetails(spell.getSpellId(), false);
+                    PowerListRecyclerAdapter.this.actionListener.openPowerDetails(spell.getSpellId());
                 }
             });
         }
