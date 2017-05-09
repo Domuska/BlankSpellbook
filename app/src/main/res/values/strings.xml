@@ -20,22 +20,27 @@
 
 
     <!-- Strings for spell book's ordinary fields -->
+    <string name="spellbook_attacktype">Attack type (close quarters, melee attack…)</string>
     <string name="spellbook_attackroll">Attack roll</string>
     <string name="spellbook_castingtime">Casting time</string>
-    <string name="spellbook_group">Spell\'s level or group</string>
-    <string name="spellbook_hitdamage">Hit damage</string>
+    <string name="spellbook_effect">Spell\'s effect</string>
+    <string name="spellbook_group">Spell\'s level or other custom group</string>
+    <string name="spellbook_hitDamageFirst">Damage at first level</string>
+    <string name="spellbook_hitDamageThird">Damage at third level</string>
+    <string name="spellbook_hitDamageFifth">Damage at fifth level</string>
+    <string name="spellbook_hitDamageSeventh">Damage at seventh level</string>
+    <string name="spellbook_hitDamageNinth">Damage at ninth level</string>
+    <string name="spellbook_damageEffect">Spell\'s damage or other effect</string>
     <string name="spellbook_missdamage">Miss damage</string>
     <string name="spellbook_name">Spell name</string>
     <string name="spellbook_playerNotes">Notes</string>
-    <string name="spellbook_range">Range</string>
     <string name="spellbook_rechargeTime">Recharge time</string>
     <string name="spellbook_target">Target</string>
+    <string name="spellbook_trigger">Trigger for the spell or power</string>
+    <string name="spellbook_adventurerFeat">Adventurer level feat</string>
+    <string name="spellbook_championFeat">Champion level feat</string>
+    <string name="spellbook_epicFeat">Epic level feat</string>
 
-
-    <string name="spellbook_0">0</string>
-    <string name="spellbook_1">1</string>
-    <string name="spellbook_2">2</string>
-    <string name="spellbook_3">3</string>
     <string name="title_activity_spell_book">SpellBookActivity</string>
     <string name="title_activity_daily_spells">DailySpellsActivity</string>
 

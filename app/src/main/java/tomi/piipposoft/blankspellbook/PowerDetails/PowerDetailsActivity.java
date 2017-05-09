@@ -1,17 +1,21 @@
 package tomi.piipposoft.blankspellbook.PowerDetails;
 
 import android.content.Intent;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import tomi.piipposoft.blankspellbook.R;
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
+import tomi.piipposoft.blankspellbook.Utils.Spell;
 import tomi.piipposoft.blankspellbook.dialog_fragments.SetDailyPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.dialog_fragments.SetPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerContract;
@@ -34,6 +38,14 @@ public class PowerDetailsActivity extends AppCompatActivity
     private PowerDetailsContract.UserActionListener mActionListener;
 
     private String powerId;
+
+    private TextInputLayout spellNameLayout, attackTypeLayout, rechargeLayout, castingTimeLayout,
+    targetLayout, attackRollLayout, damageEffectLayout, missDamageLayout, adventurerFeatLayout,
+    groupLayout, notesLayout, triggerLayout;
+
+    private TextInputEditText spellNameText, attackTypeText, rechargeText, castingTimeText,
+    targetText, attackRollText, damageEffectText, missDamageText, adventurerFeatText,
+    groupText, notesText, triggerText;
 
 
     @Override
@@ -64,6 +76,9 @@ public class PowerDetailsActivity extends AppCompatActivity
         mDrawerActionListener.powerListProfileSelected();
         mActionListener.showPowerDetails(powerId);
 
+        spellNameLayout = (TextInputLayout)findViewById(R.id.input_layout_spell_name);
+        spellNameText = (TextInputEditText)findViewById(R.id.editText_spellName);
+
     }
 
     // FROM PowerDetailsContract
@@ -74,8 +89,11 @@ public class PowerDetailsActivity extends AppCompatActivity
     }
 
     @Override
-    public void showFilledForms() {
-
+    public void showFilledForms(Spell spell) {
+        if(!spell.getName().equals("")){
+            spellNameLayout.setVisibility(View.VISIBLE);
+            spellNameText.setText(spell.getName());
+        }
     }
 
 

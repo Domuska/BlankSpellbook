@@ -10,8 +10,7 @@ import tomi.piipposoft.blankspellbook.PowerList.SpellGroup;
 public class Spell {
 
     //from database schema
-    private String attackType, attackRoll, castingTime, effect, groupName, hitDamageFirstLevel,
-    hitDamageThirdLevel, hitDamageFifthLevel, hitDamageSeventhLevel, hitDamageNinthLevel, missDamage,
+    private String attackType, attackRoll, castingTime, groupName, hitDamageOrEffect, missDamage,
     name, playerNotes, rechargeTime, spellListId, target, adventurerFeat, championFeat, epicFeat;
 
     //not in database schema, needed still
@@ -94,97 +93,63 @@ public class Spell {
         return spellListId;
     }
 
-    public void setSpellListId(String spellListId) {
+    public Spell setSpellListId(String spellListId) {
         this.spellListId = spellListId;
+        return this;
     }
 
     public String getCastingTime() {
         return castingTime;
     }
 
-    public void setCastingTime(String castingTime) {
+    public Spell setCastingTime(String castingTime) {
         this.castingTime = castingTime;
+        return this;
     }
-
 
     public String getAttackType() {
         return attackType;
     }
 
-    public void setAttackType(String attackType) {
+    public Spell setAttackType(String attackType) {
         this.attackType = attackType;
+        return this;
     }
 
-    public String getEffect() {
-        return effect;
+    public String getHitDamageOrEffect() {
+        return hitDamageOrEffect;
     }
 
-    public void setEffect(String effect) {
-        this.effect = effect;
-    }
-
-    public String getHitDamageFirstLevel() {
-        return hitDamageFirstLevel;
-    }
-
-    public void setHitDamageFirstLevel(String hitDamageFirstLevel) {
-        this.hitDamageFirstLevel = hitDamageFirstLevel;
-    }
-
-    public String getHitDamageThirdLevel() {
-        return hitDamageThirdLevel;
-    }
-
-    public void setHitDamageThirdLevel(String hitDamageThirdLevel) {
-        this.hitDamageThirdLevel = hitDamageThirdLevel;
-    }
-
-    public String getHitDamageFifthLevel() {
-        return hitDamageFifthLevel;
-    }
-
-    public void setHitDamageFifthLevel(String hitDamageFifthLevel) {
-        this.hitDamageFifthLevel = hitDamageFifthLevel;
-    }
-
-    public String getHitDamageSeventhLevel() {
-        return hitDamageSeventhLevel;
-    }
-
-    public void setHitDamageSeventhLevel(String hitDamageSeventhLevel) {
-        this.hitDamageSeventhLevel = hitDamageSeventhLevel;
-    }
-
-    public String getHitDamageNinthLevel() {
-        return hitDamageNinthLevel;
-    }
-
-    public void setHitDamageNinthLevel(String hitDamageNinthLevel) {
-        this.hitDamageNinthLevel = hitDamageNinthLevel;
+    public Spell setHitDamageOrEffect(String hitDamageOrEffect) {
+        this.hitDamageOrEffect = hitDamageOrEffect;
+        return this;
     }
 
     public String getAdventurerFeat() {
         return adventurerFeat;
     }
 
-    public void setAdventurerFeat(String adventurerFeat) {
+    public Spell setAdventurerFeat(String adventurerFeat) {
         this.adventurerFeat = adventurerFeat;
+        return this;
     }
 
     public String getChampionFeat() {
         return championFeat;
     }
 
-    public void setChampionFeat(String championFeat) {
+    public Spell setChampionFeat(String championFeat) {
         this.championFeat = championFeat;
+        return this;
     }
 
     public String getEpicFeat() {
         return epicFeat;
     }
 
-    public void setEpicFeat(String epicFeat) {
+    public Spell setEpicFeat(String epicFeat) {
         this.epicFeat = epicFeat;
+        return this;
     }
 
     @Override

@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
+import tomi.piipposoft.blankspellbook.PowerDetails.PowerDetailsPresenter;
 import tomi.piipposoft.blankspellbook.PowerList.PowerListPresenter;
 
 /**
@@ -119,6 +120,24 @@ public class DataSource {
         });
     }
 
+    public static void getSpellWithId(String spellId) {
+        DatabaseReference spellReference =
+                firebaseDatabase.getReference(DB_SPELL_TREE_NAME).child(spellId);
+
+        spellReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Spell spell = dataSnapshot.getValue(Spell.class);
+                PowerDetailsPresenter.handleSpell(spell);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, "error in getSpellWithId " + databaseError.toString());
+            }
+        });
+    }
+
     /**
      * Get spells from the database with the supplied list of IDs, calls PowerListPresenter's
      * handleSpellFromDatabase when query completed. Each spell is queried for individually.
@@ -207,7 +226,7 @@ public class DataSource {
 
         spell
                 .setName("Abi zalim's horrid wilting")
-                .setHitDamage("1d10+CHA")
+                .setHitDamageOrEffect("1d10+CHA")
                 .setAttackRoll("level + INT")
                 .setGroupName("level 8");
                 //.setSpellId("5");
