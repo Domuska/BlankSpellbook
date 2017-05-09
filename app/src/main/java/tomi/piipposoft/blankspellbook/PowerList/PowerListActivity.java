@@ -190,7 +190,7 @@ public class PowerListActivity extends AppCompatActivity
     }
 
     @Override
-    public void addSpellToAdapter(Spell spell) {
+    public void addSpellToList(Spell spell) {
 
         Log.d(TAG, "Got a spell to be added to adapter: " + spell.getName());
 
@@ -210,12 +210,7 @@ public class PowerListActivity extends AppCompatActivity
             spellGroups.add(group);
             adapter.notifyParentItemInserted(spellGroups.size()-1);
         }
-        //adapter.notifyParentItemInserted(0);
 
-        // TODO: 9.5.2017 not a good solution. Unnecessary actions could lead to sluggish performance.
-        //adapter = new PowerListRecyclerAdapter(this, spellGroups, myActionListener);
-        //recyclerView.setAdapter(adapter);
-        //recyclerView.setLayoutManager(layoutManager);
 
         //ask a spell what group it belongs to
         //check if the spellgroups has this group already in it
@@ -239,6 +234,28 @@ public class PowerListActivity extends AppCompatActivity
 //                spellGroups.add(group);
 //            }
 //        }
+    }
+
+    @Override
+    public void removeSpellFromList(Spell spell) {
+        Log.d(TAG, "starting to remove spell with name " + spell.getName());
+        
+        //sort of unnecessary object creation. Is there a better way?
+        int spellGroupIndex = spellGroups.indexOf(new SpellGroup(spell.getGroupName(), new Spell()));
+        SpellGroup group = spellGroups.get(spellGroupIndex);
+        Log.d(TAG, "spell group index: " + spellGroupIndex + " group name: " + group.getGroupName());
+
+        //SpellGroup.removeSpell returns the index of the child removed
+        int removedChildIndex = group.removeSpell(spell);
+        Log.d(TAG, "removed child's index: " + removedChildIndex);
+        adapter.notifyChildItemRemoved(spellGroupIndex, removedChildIndex);
+        if(group.getListSize() == 0){
+            spellGroups.remove(group);
+            adapter.notifyParentItemRemoved(spellGroupIndex);
+        }
+
+        adapter = new PowerListRecyclerAdapter(this, spellGroups, myActionListener);
+        recyclerView.setAdapter(adapter);
     }
 
     // FROM DRAWER CONTRACT ACTIVITY VIEW INTERFACE

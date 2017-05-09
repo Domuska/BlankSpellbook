@@ -1,5 +1,9 @@
 package tomi.piipposoft.blankspellbook.Utils;
 
+import android.util.Log;
+
+import tomi.piipposoft.blankspellbook.PowerList.SpellGroup;
+
 /**
  * Created by Domu on 12-Jun-16.
  */
@@ -119,5 +123,18 @@ public class Spell {
         this.spellListId = spellListId;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if(o instanceof Spell) {
+            Spell spell = (Spell) o;
+            return spell.getSpellId().equals(this.spellId);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 
 }

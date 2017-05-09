@@ -4,9 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
 import tomi.piipposoft.blankspellbook.Utils.Spell;
@@ -42,7 +39,11 @@ public class PowerListPresenter extends DrawerPresenter implements
 
     public static void handleSpellFromDatabase(Spell spell){
         Log.d(TAG, "New spell! name: " + spell.getName());
-        mPowerListActivity.addSpellToAdapter(spell);
+        mPowerListActivity.addSpellToList(spell);
+    }
+
+    public static void handleSpellDeletion(Spell spell){
+        mPowerListActivity.removeSpellFromList(spell);
     }
 
     // FROM POWERLISTCONTRACT

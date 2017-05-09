@@ -1,6 +1,7 @@
 package tomi.piipposoft.blankspellbook.PowerList;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.bignerdranch.expandablerecyclerview.Model.ParentListItem;
 
@@ -18,6 +19,7 @@ public class SpellGroup implements ParentListItem, Comparable<SpellGroup>{
 
     private List<Spell> spellsList;
     private String groupName;
+    private final String TAG = "SpellGroup";
 
     public SpellGroup(String groupName, List<Spell> spells){
         this.groupName = groupName;
@@ -38,6 +40,16 @@ public class SpellGroup implements ParentListItem, Comparable<SpellGroup>{
         spellsList.add(newSpell);
     }
 
+    public int removeSpell(Spell spell){
+        int spellIndex = spellsList.indexOf(spell);
+        spellsList.remove(spell);
+        return spellIndex;
+    }
+
+    public int getListSize(){
+        return this.spellsList.size();
+    }
+
     @Override
     public boolean isInitiallyExpanded() {
         return false;
@@ -51,7 +63,9 @@ public class SpellGroup implements ParentListItem, Comparable<SpellGroup>{
     @Override
     public boolean equals(Object o) {
 
+
         if(o instanceof String){
+            Log.d(TAG, "comparing with a String: " + o);
             return o.equals(this.groupName);
         }
         if(o instanceof SpellGroup) {

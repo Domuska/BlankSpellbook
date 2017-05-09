@@ -14,7 +14,8 @@ public interface PowerListContract {
     interface View{
         void showPowerDetailsUI(String itemId);
         void showNewPowerUI();
-        void addSpellToAdapter(Spell spell);
+        void addSpellToList(Spell spell);
+        void removeSpellFromList(Spell spell);
     }
 
     interface UserActionListener{

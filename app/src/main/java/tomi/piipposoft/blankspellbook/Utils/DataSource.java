@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.google.firebase.database.ChildEventListener;
@@ -12,13 +11,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
@@ -57,7 +53,7 @@ public class DataSource {
                     Map.Entry pair = (Map.Entry) o;
                     //the first object in the map is the ID of the spell, cast to string and store
                     Log.d(TAG, "spell id: " + pair.getKey());
-                    getSpellsFromDatabase((String) pair.getKey());
+                    getSpellFromDatabase((String) pair.getKey());
                 }
             }
 
@@ -67,7 +63,7 @@ public class DataSource {
             }
         });
     }
-    
+
     public static void addSpellListListener(String id){
         DatabaseReference spellListReference =
                 firebaseDatabase.getReference(DB_SPELL_LIST_TREE_NAME).child(id).child("spells");
@@ -77,7 +73,7 @@ public class DataSource {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 String newSpellId = dataSnapshot.getKey();
                 Log.d(TAG, "a new spell was added with ID : " + newSpellId);;
-                getSpellsFromDatabase(newSpellId);
+                getSpellFromDatabase(newSpellId);
             }
 
             @Override
@@ -90,6 +86,23 @@ public class DataSource {
                 String removedSpellId = dataSnapshot.getKey();
                 Log.d(TAG, "a spell was removed with ID: " + removedSpellId);
 
+                //get the spell's info from database
+                DatabaseReference spellReference =
+                        firebaseDatabase.getReference(DB_SPELL_TREE_NAME).child(removedSpellId);
+
+                spellReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        //get the Spell object from the snapshot, add snapshot's Key as spell's ID
+                        Spell removedSpell = dataSnapshot.getValue(Spell.class).setSpellId(dataSnapshot.getKey());
+                        PowerListPresenter.handleSpellDeletion(removedSpell);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.d(TAG, "Error occurred: " + databaseError.toString());
+                    }
+                });
             }
 
             @Override
@@ -99,7 +112,7 @@ public class DataSource {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.d(TAG, "Error ocurred: " + databaseError.toString());
             }
         });
     }
@@ -109,7 +122,7 @@ public class DataSource {
      * handleSpellFromDatabase when query completed. Each spell is queried for individually.
      * @param spellId array of FireBase spells entry IDs
      */
-    private static void getSpellsFromDatabase(String spellId) {
+    private static void getSpellFromDatabase(String spellId) {
 
         DatabaseReference spellsReference =
                 firebaseDatabase.getReference(DB_SPELL_TREE_NAME).child(spellId);
@@ -118,7 +131,8 @@ public class DataSource {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d(TAG, "onDataChange, spell name: " + dataSnapshot.getValue(Spell.class).getName());
                 PowerListPresenter.handleSpellFromDatabase(
-                        dataSnapshot.getValue(Spell.class)
+                        //get the Spell object from the snapshot, add snapshot's Key as spell's ID
+                        dataSnapshot.getValue(Spell.class).setSpellId(dataSnapshot.getKey())
                 );
             }
 
@@ -127,7 +141,6 @@ public class DataSource {
                 Log.d(TAG, "error when retrieving spells: " + databaseError.toString());
             }
         });
-
     }
 
 
