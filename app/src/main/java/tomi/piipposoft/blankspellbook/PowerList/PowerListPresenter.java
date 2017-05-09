@@ -26,7 +26,7 @@ public class PowerListPresenter extends DrawerPresenter implements
         DrawerContract.UserActionListener{
 
     private static final String TAG = "PowerListPresenter";
-    private final PowerListContract.View mPowerListActivity;
+    private static PowerListContract.View mPowerListActivity;
     private final DrawerContract.ViewActivity mDrawerActivityView;
 
     //the old constructor, using SQL database
@@ -40,6 +40,10 @@ public class PowerListPresenter extends DrawerPresenter implements
         mDrawerActivityView = (DrawerContract.ViewActivity)mPowerListActivity;
     }
 
+    public static void handleSpellFromDatabase(Spell spell){
+        Log.d(TAG, "New spell! name: " + spell.getName());
+        mPowerListActivity.addSpellToAdapter(spell);
+    }
 
     // FROM POWERLISTCONTRACT
 
@@ -53,13 +57,7 @@ public class PowerListPresenter extends DrawerPresenter implements
 
     @Override
     public void getSpellList(Context context, String powerListId) {
-        //return DataSource.getSpellsWithSpellBookId(context, powerListId);
-        DataSource.getSpellsWithSpellBookId(this, context, powerListId);
-    }
-
-    public void handleSpellFromDatabase(Spell spell){
-        Log.d(TAG, "New spell! name: " + spell.getName());
-        mPowerListActivity.addSpellToAdapter(spell);
+        DataSource.addSpellListListener(powerListId);
     }
 
     // FROM DRAWER CONTRACT INTERFACE

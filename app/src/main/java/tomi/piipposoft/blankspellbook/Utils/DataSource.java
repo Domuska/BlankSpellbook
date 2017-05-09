@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,30 +41,23 @@ public class DataSource {
     }
 
     //passing in the class reference can cause weird errors later
-    // TODO: 8.5.2017 figure out better way to handle the class reference
     public static void getSpellsWithSpellBookId(final PowerListPresenter presenter, Context context, String id){
         //get reference to spells/$spell_lists
         DatabaseReference spellListReference =
                 firebaseDatabase.getReference(DB_SPELL_LIST_TREE_NAME).child(id);
 
-
         spellListReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                List<String> spellIds = new ArrayList<>();
 
+                //get a list (map) of all spell IDs that this spell book contains
                 HashMap<String, Boolean> spellsMap = (HashMap<String, Boolean>) dataSnapshot.child("spells").getValue();
 
                 for (Object o : spellsMap.entrySet()) {
                     Map.Entry pair = (Map.Entry) o;
                     //the first object in the map is the ID of the spell, cast to string and store
-                    spellIds.add((String) pair.getKey());
                     Log.d(TAG, "spell id: " + pair.getKey());
-                }
-
-                Log.d(TAG, "spell ids table size: " + spellIds.size());
-                if(spellIds.size() > 0){
-                    getSpellsFromDatabase(spellIds, presenter);
+                    getSpellsFromDatabase((String) pair.getKey());
                 }
             }
 
@@ -73,31 +67,69 @@ public class DataSource {
             }
         });
     }
+    
+    public static void addSpellListListener(String id){
+        DatabaseReference spellListReference =
+                firebaseDatabase.getReference(DB_SPELL_LIST_TREE_NAME).child(id).child("spells");
+
+        spellListReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                String newSpellId = dataSnapshot.getKey();
+                Log.d(TAG, "a new spell was added with ID : " + newSpellId);;
+                getSpellsFromDatabase(newSpellId);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                //do stuff
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                String removedSpellId = dataSnapshot.getKey();
+                Log.d(TAG, "a spell was removed with ID: " + removedSpellId);
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 
     /**
-     *
-     * @param spellIds array of FireBase spells entry IDs
+     * Get spells from the database with the supplied list of IDs, calls PowerListPresenter's
+     * handleSpellFromDatabase when query completed. Each spell is queried for individually.
+     * @param spellId array of FireBase spells entry IDs
      */
-    private static void getSpellsFromDatabase(List<String> spellIds, final PowerListPresenter presenter) {
+    private static void getSpellsFromDatabase(String spellId) {
 
-        for(String id : spellIds) {
-            DatabaseReference spellsReference =
-                    firebaseDatabase.getReference(DB_SPELL_TREE_NAME).child(id);
-            spellsReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    presenter.handleSpellFromDatabase(
-                            dataSnapshot.getValue(Spell.class)
-                    );
-                }
+        DatabaseReference spellsReference =
+                firebaseDatabase.getReference(DB_SPELL_TREE_NAME).child(spellId);
+        spellsReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d(TAG, "onDataChange, spell name: " + dataSnapshot.getValue(Spell.class).getName());
+                PowerListPresenter.handleSpellFromDatabase(
+                        dataSnapshot.getValue(Spell.class)
+                );
+            }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.d(TAG, "error when retrieving spells: " + databaseError.toString());
-                }
-            });
-        }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, "error when retrieving spells: " + databaseError.toString());
+            }
+        });
+
     }
+
 
 
     public static ArrayList<Spell> getSpellsWithSpellBookId2(Context context, long id){

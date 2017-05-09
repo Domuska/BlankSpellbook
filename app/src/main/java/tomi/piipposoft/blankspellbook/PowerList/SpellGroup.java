@@ -1,5 +1,7 @@
 package tomi.piipposoft.blankspellbook.PowerList;
 
+import android.support.annotation.NonNull;
+
 import com.bignerdranch.expandablerecyclerview.Model.ParentListItem;
 
 import java.util.ArrayList;
@@ -12,7 +14,7 @@ import tomi.piipposoft.blankspellbook.Utils.Spell;
 /**
  * Created by Domu on 12-Jun-16.
  */
-public class SpellGroup implements ParentListItem{
+public class SpellGroup implements ParentListItem, Comparable<SpellGroup>{
 
     private List<Spell> spellsList;
     private String groupName;
@@ -62,6 +64,12 @@ public class SpellGroup implements ParentListItem{
     @Override
     public int hashCode() {
         return super.hashCode();
+    }
+
+    //for sorting the spell groups by their name
+    @Override
+    public int compareTo(@NonNull SpellGroup spellGroup) {
+        return groupName.compareToIgnoreCase(spellGroup.getGroupName());
     }
 }
 

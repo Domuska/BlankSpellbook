@@ -208,12 +208,14 @@ public class PowerListActivity extends AppCompatActivity
             Log.d(TAG, "spellgroups does not yet have group " + groupName);
             SpellGroup group = new SpellGroup(spell.getGroupName(), spell);
             spellGroups.add(group);
+            adapter.notifyParentItemInserted(spellGroups.size()-1);
         }
+        //adapter.notifyParentItemInserted(0);
 
-        // TODO: 8.5.2017 not really the good way to do this, what if the list is long? FIX! 
-        adapter = new PowerListRecyclerAdapter(this, spellGroups, myActionListener);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(layoutManager);
+        // TODO: 9.5.2017 not a good solution. Unnecessary actions could lead to sluggish performance.
+        //adapter = new PowerListRecyclerAdapter(this, spellGroups, myActionListener);
+        //recyclerView.setAdapter(adapter);
+        //recyclerView.setLayoutManager(layoutManager);
 
         //ask a spell what group it belongs to
         //check if the spellgroups has this group already in it
