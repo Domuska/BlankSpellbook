@@ -26,7 +26,6 @@ public class PowerListPresenter extends DrawerPresenter implements
     private static PowerListContract.View mPowerListActivity;
     private final DrawerContract.ViewActivity mDrawerActivityView;
 
-    //the old constructor, using SQL database
     public PowerListPresenter(
             @NonNull BlankSpellBookContract.DBHelper dbHelper,
             @NonNull PowerListContract.View powerListActivity,

@@ -31,11 +31,20 @@ public interface DrawerContract {
     }
 
     /**
-     * Used by activities to tell presenter that an item in the list has been clicked
+     * Used by activities to tell presenter that an item has been clicked or should be added
      */
     interface UserActionListener{
 
+        /**
+         * Add a new list of powers (activated by clicking the add new power in the drawer)
+         * @param powerListName
+         */
         void addPowerList(@NonNull String powerListName);
+
+        /**
+         * Add a new list of daily powers (activated by clicking the add new power list in drawer)
+         * @param dailyPowerListName
+         */
         void addDailyPowerList(@NonNull String dailyPowerListName);
 
         void drawerOpened();
@@ -43,7 +52,14 @@ public interface DrawerContract {
         void powerListItemClicked(String itemId, String name);
         void dailyPowerListItemClicked(long itemId);
 
+        /**
+         * The user selected the power lists section of the drawer
+         */
         void powerListProfileSelected();
+
+        /**
+         * the user has selected the daily power lists section of the drawer
+         */
         void dailyPowerListProfileSelected();
 
 

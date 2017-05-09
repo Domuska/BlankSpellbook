@@ -189,9 +189,9 @@ public class PowerListActivity extends AppCompatActivity
         startActivity(i);
     }
 
+
     @Override
     public void addSpellToList(Spell spell) {
-
         Log.d(TAG, "Got a spell to be added to adapter: " + spell.getName());
 
         String groupName = spell.getGroupName();
@@ -210,36 +210,13 @@ public class PowerListActivity extends AppCompatActivity
             spellGroups.add(group);
             adapter.notifyParentItemInserted(spellGroups.size()-1);
         }
-
-
-        //ask a spell what group it belongs to
-        //check if the spellgroups has this group already in it
-        //if it does, add the spell to to this group
-        //else create a new spell group with this name and add spell to it and add the group to the spellgroups
-//        for(int i = 0; i < spellList.size(); i++){
-//            String groupName = spellList.get(i).getGroupName();
-//            extra object allocation, would be good to just use a string or somesuch
-//            to see if the spellgroup is already in the spellgroups list. see spellgroup .equals
-//            SpellGroup testableGroup = new SpellGroup(groupName, new Spell());
-
-//            if(spellGroups.contains(testableGroup)){
-//                Log.d(TAG, "spellgroups has the group " + groupName);
-//                Log.d(TAG, "" + spellGroups.get(spellGroups.indexOf(testableGroup)));
-//                spellGroups.get(spellGroups.indexOf(testableGroup)).addSpell(spellList.get(i));
-//            }
-//            else{
-//                Log.d(TAG, "spellgroups does not yet have group " + groupName);
-//                Spell spell = spellList.get(i);
-//                SpellGroup group = new SpellGroup(spell.getGroupName(), spell);
-//                spellGroups.add(group);
-//            }
-//        }
     }
+
 
     @Override
     public void removeSpellFromList(Spell spell) {
         Log.d(TAG, "starting to remove spell with name " + spell.getName());
-        
+
         //sort of unnecessary object creation. Is there a better way?
         int spellGroupIndex = spellGroups.indexOf(new SpellGroup(spell.getGroupName(), new Spell()));
         SpellGroup group = spellGroups.get(spellGroupIndex);
@@ -259,6 +236,7 @@ public class PowerListActivity extends AppCompatActivity
     }
 
     // FROM DRAWER CONTRACT ACTIVITY VIEW INTERFACE
+
 
     @Override
     public void openPowerList(String powerListId, String powerListName) {

@@ -26,6 +26,7 @@ import tomi.piipposoft.blankspellbook.PowerList.PowerListPresenter;
 public class DataSource {
     public static final String DB_SPELL_LIST_TREE_NAME = "spell_lists";
     public static final String DB_SPELL_TREE_NAME = "spells";
+    public static final String DB_SPELL_LIST_SPELLS_CHILD = "spells";
     private static final String TAG = "DataSource";
 
 //    SQLiteDatabase myDb = BlankSpellBookContract.DBHelper
@@ -47,7 +48,8 @@ public class DataSource {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 //get a list (map) of all spell IDs that this spell book contains
-                HashMap<String, Boolean> spellsMap = (HashMap<String, Boolean>) dataSnapshot.child("spells").getValue();
+                HashMap<String, Boolean> spellsMap =
+                        (HashMap<String, Boolean>) dataSnapshot.child(DB_SPELL_LIST_SPELLS_CHILD).getValue();
 
                 for (Object o : spellsMap.entrySet()) {
                     Map.Entry pair = (Map.Entry) o;
@@ -66,13 +68,13 @@ public class DataSource {
 
     public static void addSpellListListener(String id){
         DatabaseReference spellListReference =
-                firebaseDatabase.getReference(DB_SPELL_LIST_TREE_NAME).child(id).child("spells");
+                firebaseDatabase.getReference(DB_SPELL_LIST_TREE_NAME).child(id).child(DB_SPELL_LIST_SPELLS_CHILD);
 
         spellListReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 String newSpellId = dataSnapshot.getKey();
-                Log.d(TAG, "a new spell was added with ID : " + newSpellId);;
+                Log.d(TAG, "a new spell was added with ID : " + newSpellId);
                 getSpellFromDatabase(newSpellId);
             }
 
