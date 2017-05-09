@@ -35,6 +35,8 @@ captures/
 # Own additions
 /.idea/workspace
 .idea/workspace.xml
+.idea/
+app/app.iml
 
 
 # =========================
