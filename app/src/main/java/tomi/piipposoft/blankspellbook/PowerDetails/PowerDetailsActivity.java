@@ -12,6 +12,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.method.KeyListener;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -53,6 +54,8 @@ public class PowerDetailsActivity extends AppCompatActivity
     targetText, attackRollText, hitDamageEffectText, missDamageText, adventurerFeatText, championFeatText,
     epicFeatText, groupText, notesText, triggerText;
 
+    private FloatingActionButton fab;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +65,57 @@ public class PowerDetailsActivity extends AppCompatActivity
         powerId = getIntent().getStringExtra(EXTRA_POWER_DETAIL_ID);
         Log.i(TAG, "onCreate: ID extra gotten " + powerId);
 
+        fab = (FloatingActionButton)findViewById(R.id.fab);
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         toolbar.setTitle("Power details activity");
         setSupportActionBar(toolbar);
+    }
+
+    private void handleSpellSaving() {
+        Spell spell = new Spell();
+
+        //should these be first set into an object so we dont have to get the text twice?
+        if(fieldHasText(spellNameText))
+            spell.setName(spellNameText.getText().toString());
+        if(fieldHasText(attackTypeText))
+            spell.setAttackType(attackTypeText.getText().toString());
+        if(fieldHasText(rechargeText))
+            spell.setRechargeTime(rechargeText.getText().toString());
+        if(fieldHasText(castingTimeText))
+            spell.setCastingTime(castingTimeText.getText().toString());
+        if(fieldHasText(targetText))
+            spell.setTarget(targetText.getText().toString());
+        if(fieldHasText(attackRollText))
+            spell.setAttackRoll(attackRollText.getText().toString());
+        if(fieldHasText(hitDamageEffectText))
+            spell.setHitDamageOrEffect(hitDamageEffectText.getText().toString());
+        if(fieldHasText(missDamageText))
+            spell.setMissDamage(missDamageText.getText().toString());
+        if(fieldHasText(adventurerFeatText))
+            spell.setAdventurerFeat(adventurerFeatText.getText().toString());
+        if(fieldHasText(championFeatText))
+            spell.setChampionFeat(championFeatText.getText().toString());
+        if(fieldHasText(epicFeatText))
+            spell.setEpicFeat(epicFeatText.getText().toString());
+        if(fieldHasText(groupText))
+            spell.setGroupName(groupText.getText().toString());
+        if(fieldHasText(notesText))
+            spell.setPlayerNotes(notesText.getText().toString());
+        if(fieldHasText(triggerText))
+            spell.setTrigger(triggerText.getText().toString());
+
+        mActionListener.userSavingPower(spell);
+    }
+    //groupText, notesText, triggerText;
+    /**
+     *
+     * @param text TextInputEditText object
+     * @return boolean whether text field has string besides empty string
+     */
+    private boolean fieldHasText(TextInputEditText text){
+        return !text.getText().toString().equals("");
     }
 
     @Override
@@ -82,7 +133,6 @@ public class PowerDetailsActivity extends AppCompatActivity
         mDrawerActionListener.powerListProfileSelected();
         mActionListener.showPowerDetails(powerId);
 
-;
 
     }
 
@@ -90,14 +140,48 @@ public class PowerDetailsActivity extends AppCompatActivity
 
     @Override
     public void showEmptyForms() {
+        findViewById(R.id.input_layout_attackType).setVisibility(View.VISIBLE);
+        findViewById(R.id.input_layout_attackRoll).setVisibility(View.VISIBLE);
+        findViewById(R.id.input_layout_castingTime).setVisibility(View.VISIBLE);
+        findViewById(R.id.input_layout_group).setVisibility(View.VISIBLE);
+        findViewById(R.id.input_layout_damage_effect).setVisibility(View.VISIBLE);
+        findViewById(R.id.input_layout_miss_damage).setVisibility(View.VISIBLE);
+        findViewById(R.id.input_layout_spell_name).setVisibility(View.VISIBLE);
+        findViewById(R.id.input_layout_notes).setVisibility(View.VISIBLE);
+        findViewById(R.id.input_layout_recharge).setVisibility(View.VISIBLE);
+        findViewById(R.id.input_layout_target).setVisibility(View.VISIBLE);
+        findViewById(R.id.input_layout_adventurer_feat).setVisibility(View.VISIBLE);
+        findViewById(R.id.input_layout_champion_feat).setVisibility(View.VISIBLE);
+        findViewById(R.id.input_layout_epic_feat).setVisibility(View.VISIBLE);
+        findViewById(R.id.input_layout_trigger).setVisibility(View.VISIBLE);
 
+        fab.setImageResource(R.drawable.ic_done_black_24dp);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                handleSpellSaving();
+            }
+        });
+        fab.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void showFilledForms(Spell spell) {
 
-        //wonder if this is the smartest way to go about this?
+        fab.setImageResource(R.drawable.ic_mode_edit_black_24dp);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showEditableFields();
+            }
+        });
+        fab.setVisibility(View.VISIBLE);
 
+        // All text fields are invisible if there is not data for them
+        // this should work nicer than hiding ones that don't have data,
+        // network call might take a while to arrive and it would cause UI to jump around
+
+        //wonder if this is the smartest way to go about this? would some switchcase work better?
         if(!spell.getAttackType().equals("")){
             attackTypeLayout = (TextInputLayout)findViewById(R.id.input_layout_attackType);
             attackTypeText = (TextInputEditText)findViewById(R.id.editText_attackType);
@@ -202,8 +286,57 @@ public class PowerDetailsActivity extends AppCompatActivity
             epicFeatText.setKeyListener(null);
         }
 
+        if(!spell.getTrigger().equals("")){
+            triggerLayout = (TextInputLayout)findViewById(R.id.input_layout_trigger);
+            triggerText = (TextInputEditText)findViewById(R.id.editText_trigger);
+            triggerLayout.setVisibility(View.VISIBLE);
+            triggerText.setText(spell.getTrigger());
+            triggerText.setKeyListener(null);
+        }
     }
 
+    @Override
+    public void showEditableFields() {
+
+        fab.setImageResource(R.drawable.ic_done_black_24dp);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO: 10.5.2017 make it so that the spell is not saved as new spell but old one is edited
+                handleSpellSaving();
+            }
+        });
+
+        //set all fields as visible
+        findViewById(R.id.input_layout_attackType).setVisibility(View.VISIBLE);
+        findViewById(R.id.input_layout_attackRoll).setVisibility(View.VISIBLE);
+        findViewById(R.id.input_layout_castingTime).setVisibility(View.VISIBLE);
+        findViewById(R.id.input_layout_group).setVisibility(View.VISIBLE);
+        findViewById(R.id.input_layout_damage_effect).setVisibility(View.VISIBLE);
+        findViewById(R.id.input_layout_miss_damage).setVisibility(View.VISIBLE);
+        findViewById(R.id.input_layout_spell_name).setVisibility(View.VISIBLE);
+        findViewById(R.id.input_layout_notes).setVisibility(View.VISIBLE);
+        findViewById(R.id.input_layout_recharge).setVisibility(View.VISIBLE);
+        findViewById(R.id.input_layout_target).setVisibility(View.VISIBLE);
+        findViewById(R.id.input_layout_adventurer_feat).setVisibility(View.VISIBLE);
+        findViewById(R.id.input_layout_champion_feat).setVisibility(View.VISIBLE);
+        findViewById(R.id.input_layout_epic_feat).setVisibility(View.VISIBLE);
+        findViewById(R.id.input_layout_trigger).setVisibility(View.VISIBLE);
+
+        //set text fields as editable
+        KeyListener newListener = new TextInputEditText(getApplicationContext()).getKeyListener();
+        spellNameText = (TextInputEditText)findViewById(R.id.editText_spellName);
+        spellNameText.setKeyListener(newListener);
+        attackTypeText = (TextInputEditText)findViewById(R.id.editText_attackType);
+        attackTypeText.setKeyListener(newListener);
+        // TODO: 10.5.2017 add the rest of the fields as editable
+
+
+        /*
+             private TextInputEditText spellNameText, attackTypeText, rechargeText, castingTimeText,
+    targetText, attackRollText, hitDamageEffectText, missDamageText, adventurerFeatText, championFeatText,
+    epicFeatText, groupText, notesText, triggerText;*/
+    }
 
     // FROM DRAWER CONTRACT VIEW INTERFACE
 

@@ -32,7 +32,7 @@ import tomi.piipposoft.blankspellbook.Utils.Spell;
 public class DrawerPresenter{
 
     // TODO: 5.5.2017 removal and re-adding of listeners (spellListReference & dailySpellListReference) should be possible
-
+    // TODO: 10.5.2017 database actions should be moved from here to somewhere else. Maybe DataSource? or another class like it?
     protected final BlankSpellBookContract.DBHelper mDbHelper;
     protected final DrawerContract.View mDrawerView;
     private SQLiteDatabase mDb;

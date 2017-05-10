@@ -93,7 +93,6 @@ public class PowerListActivity extends AppCompatActivity
         });
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
-
         if (toolbar != null) {
             toolbar.setTitle(powerListName);
         }

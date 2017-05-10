@@ -45,6 +45,11 @@ public class PowerDetailsPresenter extends DrawerPresenter
         }
     }
 
+    @Override
+    public void userSavingPower(Spell spell) {
+        DataSource.saveSpell(spell);
+    }
+
     // FROM DRAWERCONTRACT USERACTIONLISTENER
     @Override
     public void addPowerList(@NonNull String powerListName) {

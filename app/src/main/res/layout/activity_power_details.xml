@@ -31,6 +31,7 @@
         android:src="@drawable/ic_done_black_24dp"
         android:clickable="true"
         android:layout_margin="@dimen/fab_margin"
+        android:visibility="gone"
         app:layout_behavior="tomi.piipposoft.blankspellbook.PowerDetails.ScrollingFABBehavior"/>
 
 

@@ -39,6 +39,7 @@ public class DataSource {
     }
 
     //passing in the class reference can cause weird errors later
+    //this method not used any more, addSpellListener does what it does
     public static void getSpellsWithSpellBookId(final PowerListPresenter presenter, Context context, String id){
         //get reference to spells/$spell_lists
         DatabaseReference spellListReference =
@@ -136,6 +137,10 @@ public class DataSource {
                 Log.d(TAG, "error in getSpellWithId " + databaseError.toString());
             }
         });
+    }
+
+    public static void saveSpell(Spell spell) {
+        firebaseDatabase.getReference().child(DB_SPELL_TREE_NAME).push().setValue(spell);
     }
 
     /**

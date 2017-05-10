@@ -10,8 +10,21 @@ import tomi.piipposoft.blankspellbook.PowerList.SpellGroup;
 public class Spell {
 
     //from database schema
-    private String attackType, attackRoll, castingTime, groupName, hitDamageOrEffect, missDamage,
-    name, playerNotes, rechargeTime, spellListId, target, adventurerFeat, championFeat, epicFeat;
+    private String attackType;
+    private String attackRoll;
+    private String castingTime;
+    private String groupName;
+    private String hitDamageOrEffect;
+    private String missDamage;
+    private String name;
+    private String playerNotes;
+    private String rechargeTime;
+    private String spellListId;
+    private String target;
+    private String adventurerFeat;
+    private String championFeat;
+    private String epicFeat;
+    private String trigger;
 
     //not in database schema, needed still
     private String spellId;
@@ -150,6 +163,14 @@ public class Spell {
     public Spell setEpicFeat(String epicFeat) {
         this.epicFeat = epicFeat;
         return this;
+    }
+
+    public String getTrigger() {
+        return trigger;
+    }
+
+    public void setTrigger(String trigger) {
+        this.trigger = trigger;
     }
 
     @Override
