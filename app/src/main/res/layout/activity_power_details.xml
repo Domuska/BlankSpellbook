@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:id="@+id/fab"
-        android:src="@mipmap/ic_add_black_48dp"
+        android:src="@drawable/ic_done_black_24dp"
         android:clickable="true"
         android:layout_margin="@dimen/fab_margin"
         app:layout_behavior="tomi.piipposoft.blankspellbook.PowerDetails.ScrollingFABBehavior"/>
@@ -326,6 +326,7 @@
                 android:layout_marginTop="15dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_marginBottom="40dp"
                 android:visibility="gone">
 
 
