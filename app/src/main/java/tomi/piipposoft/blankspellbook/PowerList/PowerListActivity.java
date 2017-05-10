@@ -82,6 +82,9 @@ public class PowerListActivity extends AppCompatActivity
         fab = (FloatingActionButton) findViewById(R.id.fab);
 
 
+        //use new fancy lambda functionality!
+        //fab.setOnClickListener(view -> myActionListener.openPowerDetails(PowerDetailsActivity.EXTRA_ADD_NEW_POWER_DETAILS));
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

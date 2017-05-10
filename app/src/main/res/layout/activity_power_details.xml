@@ -1,271 +1,343 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="tomi.piipposoft.blankspellbook.PowerDetails.PowerDetailsActivity">
+    tools:context="tomi.piipposoft.blankspellbook.PowerDetails.PowerDetailsActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/my_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+    <android.support.design.widget.AppBarLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/my_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:elevation="4dp"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:layout_scrollFlags="scroll|enterAlways"/>
+
+    </android.support.design.widget.AppBarLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
+        android:layout_gravity="end|bottom"
         android:id="@+id/fab"
         android:src="@mipmap/ic_add_black_48dp"
         android:clickable="true"
         android:layout_margin="@dimen/fab_margin"
-        />
+        app:layout_behavior="tomi.piipposoft.blankspellbook.PowerDetails.ScrollingFABBehavior"/>
 
 
-    <!-- Fields from the database schema start here: attackType, attackRoll... -->
-    <!-- spell name -->
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/input_layout_spell_name"
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/my_toolbar"
-        android:layout_marginTop="15dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:visibility="gone">
-        
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/editText_spellName"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/spellbook_name"
-            />
-    </android.support.design.widget.TextInputLayout>
+            android:layout_height="match_parent">
 
-    <!-- attack type -->
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/input_layout_attackType"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/input_layout_spell_name"
-        android:layout_marginTop="15dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp">
+            <!-- Fields from the database schema start here: attackType, attackRoll... -->
+            <!-- spell name -->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_spell_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:visibility="gone">
 
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/editText_attackType"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/spellbook_attacktype"
-            />
-    </android.support.design.widget.TextInputLayout>
-
-    <!-- recharge time-->
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/input_layout_recharge"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/input_layout_attackType"
-        android:layout_marginTop="15dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/editText_spellName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/spellbook_name"
+                    style="@android:style/TextAppearance.Small"
+                    />
+            </android.support.design.widget.TextInputLayout>
 
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/editText_recharge"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/spellbook_rechargeTime"
-            />
-    </android.support.design.widget.TextInputLayout>
 
-    <!-- casting time -->
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/input_layout_castingTime"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/input_layout_recharge"
-        android:layout_marginTop="15dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp">
+            <!-- attack type -->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_attackType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/input_layout_spell_name"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:visibility="gone">
 
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/editText_castingTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/spellbook_castingtime"
-            />
-    </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/editText_attackType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/spellbook_attacktype"
+                    style="@android:style/TextAppearance.Small"
+                    />
+            </android.support.design.widget.TextInputLayout>
 
-    <!-- target -->
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/input_layout_target"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/input_layout_castingTime"
-        android:layout_marginTop="15dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp">
-
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/editText_target"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/spellbook_target"
-            />
-    </android.support.design.widget.TextInputLayout>
-
-    <!-- attack roll -->
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/input_layout_attackRoll"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/input_layout_target"
-        android:layout_marginTop="15dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp">
+            <!-- recharge time-->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_recharge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/input_layout_attackType"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:visibility="gone">
 
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/editText_attackRoll"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/spellbook_attackroll"
-            />
-    </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/editText_recharge"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/spellbook_rechargeTime"
+                    style="@android:style/TextAppearance.Small"
+                    />
+            </android.support.design.widget.TextInputLayout>
 
-    <!-- trigger -->
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/input_layout_trigger"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/input_layout_attackRoll"
-        android:layout_marginTop="15dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp">
-
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/editText_trigger"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/spellbook_trigger"
-            />
-    </android.support.design.widget.TextInputLayout>
-
-    <!--  damage or effect -->
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/input_layout_damage_effect"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/input_layout_trigger"
-        android:layout_marginTop="15dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp">
+            <!-- casting time -->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_castingTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/input_layout_recharge"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:visibility="gone">
 
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/editText_damage_effect"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/spellbook_damageEffect"
-            />
-    </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/editText_castingTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/spellbook_castingtime"
+                    style="@android:style/TextAppearance.Small"
+                    />
+            </android.support.design.widget.TextInputLayout>
 
-    <!-- hit damage 1st lvl  -->
-    <!-- hit damage 3rd lvl  -->
-    <!-- hit damage 5th lvl  -->
-    <!-- hit damage 7th lvl  -->
-    <!-- hit damage 9th lvl  -->
-
-    <!-- miss damage -->
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/input_layout_miss_damage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/input_layout_damage_effect"
-        android:layout_marginTop="15dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp">
+            <!-- target -->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_target"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/input_layout_castingTime"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:visibility="gone">
 
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/editText_miss_damage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/spellbook_missdamage"
-            />
-    </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/editText_target"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/spellbook_target"
+                    style="@android:style/TextAppearance.Small"
+                    />
+            </android.support.design.widget.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/input_layout_adventurer_feat"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/input_layout_miss_damage"
-        android:layout_marginTop="15dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp">
-
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/editText_damage_adventurer_feat"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/spellbook_attackroll"
-            />
-    </android.support.design.widget.TextInputLayout>
-
-    <!-- adventurer feat -->
-    <!-- champion feat -->
-    <!-- epic feat -->
+            <!-- attack roll -->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_attackRoll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/input_layout_target"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:visibility="gone">
 
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/input_layout_group"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/input_layout_adventurer_feat"
-        android:layout_marginTop="15dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/editText_attackRoll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/spellbook_attackroll"
+                    style="@android:style/TextAppearance.Small"
+                    />
+            </android.support.design.widget.TextInputLayout>
+
+            <!-- trigger -->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_trigger"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/input_layout_attackRoll"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:visibility="gone">
 
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/editText_group"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/spellbook_group"
-            />
-    </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/editText_trigger"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/spellbook_trigger"
+                    style="@android:style/TextAppearance.Small"
+                    />
+            </android.support.design.widget.TextInputLayout>
+
+            <!--  damage or effect -->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_damage_effect"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/input_layout_trigger"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:visibility="gone">
 
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/input_layout_notes"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/input_layout_group"
-        android:layout_marginTop="15dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/editText_damage_effect"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/spellbook_damageEffect"
+                    style="@android:style/TextAppearance.Small"
+                    />
+            </android.support.design.widget.TextInputLayout>
+
+            <!-- miss damage -->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_miss_damage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/input_layout_damage_effect"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:visibility="gone">
 
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/editText_notes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/spellbook_castingtime"
-            />
-    </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/editText_miss_damage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/spellbook_missdamage"
+                    style="@android:style/TextAppearance.Small"
+                    />
+            </android.support.design.widget.TextInputLayout>
 
-        
+            <!-- Adventurer feat -->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_adventurer_feat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/input_layout_miss_damage"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:visibility="gone">
 
-</RelativeLayout>
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/editText_adventurer_feat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/spellbook_adventurerFeat"
+                    style="@android:style/TextAppearance.Small"
+                    />
+            </android.support.design.widget.TextInputLayout>
+
+            <!-- champion feat -->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_champion_feat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/input_layout_adventurer_feat"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:visibility="gone">
+
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/editText_champion_feat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/spellbook_championFeat"
+                    style="@android:style/TextAppearance.Small"
+                    />
+            </android.support.design.widget.TextInputLayout>
+
+            <!-- epic feat -->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_epic_feat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/input_layout_champion_feat"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:visibility="gone">
+
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/editText_epic_feat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/spellbook_epicFeat"
+                    style="@android:style/TextAppearance.Small"
+                    />
+            </android.support.design.widget.TextInputLayout>
+
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/input_layout_epic_feat"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:visibility="gone">
+
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/editText_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/spellbook_group"
+                    style="@android:style/TextAppearance.Small"
+                    />
+            </android.support.design.widget.TextInputLayout>
+
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_notes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/input_layout_group"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:visibility="gone">
+
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/editText_notes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/spellbook_playerNotes"
+                    style="@android:style/TextAppearance.Small"
+                    />
+            </android.support.design.widget.TextInputLayout>
+        </RelativeLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+</android.support.design.widget.CoordinatorLayout>
