@@ -129,7 +129,7 @@ public class DataSource {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Spell spell = dataSnapshot.getValue(Spell.class);
-                PowerDetailsPresenter.handleSpell(spell);
+                PowerDetailsPresenter.handleFetchedSpell(spell, dataSnapshot.getKey());
             }
 
             @Override
@@ -141,6 +141,10 @@ public class DataSource {
 
     public static void saveSpell(Spell spell) {
         firebaseDatabase.getReference().child(DB_SPELL_TREE_NAME).push().setValue(spell);
+    }
+
+    public static void updateSpell(Spell spell, String spellId){
+        firebaseDatabase.getReference().child(DB_SPELL_TREE_NAME).child(spellId).setValue(spell);
     }
 
     /**

@@ -18,22 +18,26 @@ public class PowerDetailsPresenter extends DrawerPresenter
 
     private static PowerDetailsContract.View mPowerDetailsView;
     private final DrawerContract.ViewActivity mDrawerActivityView;
+    private static String powerId;
 
     public PowerDetailsPresenter(
             @NonNull BlankSpellBookContract.DBHelper dbHelper,
             @NonNull PowerDetailsContract.View powerDetailsView,
-            @NonNull DrawerHelper drawerHelper){
+            @NonNull DrawerHelper drawerHelper,
+            String spellId){
         super(dbHelper, drawerHelper);
         mPowerDetailsView = powerDetailsView;
         mDrawerActivityView = (DrawerContract.ViewActivity) mPowerDetailsView;
+        powerId = spellId;
     }
 
-    public static void handleSpell(Spell spell) {
-        mPowerDetailsView.showFilledForms(spell);
+    public static void handleFetchedSpell(Spell spell, String id) {
+        powerId = id;
+        mPowerDetailsView.showFilledFields(spell);
     }
 
 
-    // FROM PowerDetailsContract
+    // FROM PowerDetailsContract.UserActionListener
 
     @Override
     public void showPowerDetails(String powerId) {
@@ -48,6 +52,17 @@ public class PowerDetailsPresenter extends DrawerPresenter
     @Override
     public void userSavingPower(Spell spell) {
         DataSource.saveSpell(spell);
+    }
+
+    @Override
+    public void userEditingPower(Spell spell) {
+        mPowerDetailsView.showEditableFields(spell);
+    }
+
+    @Override
+    public void userSavingModifiedPower(Spell spell) {
+        DataSource.updateSpell(spell, powerId);
+        mPowerDetailsView.showFilledFields(spell);
     }
 
     // FROM DRAWERCONTRACT USERACTIONLISTENER

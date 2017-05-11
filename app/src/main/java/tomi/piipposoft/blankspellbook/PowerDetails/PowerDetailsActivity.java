@@ -1,10 +1,6 @@
 package tomi.piipposoft.blankspellbook.PowerDetails;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.TypedArray;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
@@ -13,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.method.KeyListener;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
@@ -44,7 +39,7 @@ public class PowerDetailsActivity extends AppCompatActivity
     private DrawerContract.UserActionListener mDrawerActionListener;
     private PowerDetailsContract.UserActionListener mActionListener;
 
-    private String powerId;
+    private String powerId, spellBookId;
 
     private TextInputLayout spellNameLayout, attackTypeLayout, rechargeLayout, castingTimeLayout,
     targetLayout, attackRollLayout, hitDamageEffectLayout, missDamageLayout, adventurerFeatLayout,
@@ -73,7 +68,7 @@ public class PowerDetailsActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
     }
 
-    private void handleSpellSaving() {
+    private Spell constructSpellFromFields() {
         Spell spell = new Spell();
 
         //should these be first set into an object so we dont have to get the text twice?
@@ -106,9 +101,9 @@ public class PowerDetailsActivity extends AppCompatActivity
         if(fieldHasText(triggerText))
             spell.setTrigger(triggerText.getText().toString());
 
-        mActionListener.userSavingPower(spell);
+        return spell;
     }
-    //groupText, notesText, triggerText;
+
     /**
      *
      * @param text TextInputEditText object
@@ -126,7 +121,8 @@ public class PowerDetailsActivity extends AppCompatActivity
         mActionListener = new PowerDetailsPresenter(
                 DataSource.getDatasource(this),
                 this,
-                DrawerHelper.getInstance(this, (Toolbar)findViewById(R.id.my_toolbar))
+                DrawerHelper.getInstance(this, (Toolbar)findViewById(R.id.my_toolbar)),
+                powerId
         );
 
         mDrawerActionListener = (DrawerContract.UserActionListener)mActionListener;
@@ -159,20 +155,21 @@ public class PowerDetailsActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                handleSpellSaving();
+                mActionListener.userSavingPower(constructSpellFromFields());
             }
         });
         fab.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void showFilledForms(Spell spell) {
+    public void showFilledFields(final Spell spell) {
 
         fab.setImageResource(R.drawable.ic_mode_edit_black_24dp);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showEditableFields();
+                // TODO: 11.5.2017 some animation here to show that we are editing spell
+                mActionListener.userEditingPower(spell);
             }
         });
         fab.setVisibility(View.VISIBLE);
@@ -216,7 +213,7 @@ public class PowerDetailsActivity extends AppCompatActivity
 
         if(!spell.getHitDamageOrEffect().equals("")){
             hitDamageEffectLayout = (TextInputLayout)findViewById(R.id.input_layout_damage_effect);
-            hitDamageEffectText = (TextInputEditText)findViewById(R.id.editText_damage_effect);
+            hitDamageEffectText = (TextInputEditText)findViewById(R.id.editText_hitDamage_effect);
             hitDamageEffectLayout.setVisibility(View.VISIBLE);
             hitDamageEffectText.setText(spell.getHitDamageOrEffect());
             hitDamageEffectText.setKeyListener(null);
@@ -296,18 +293,17 @@ public class PowerDetailsActivity extends AppCompatActivity
     }
 
     @Override
-    public void showEditableFields() {
+    public void showEditableFields(Spell spell) {
 
         fab.setImageResource(R.drawable.ic_done_black_24dp);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: 10.5.2017 make it so that the spell is not saved as new spell but old one is edited
-                handleSpellSaving();
+                mActionListener.userSavingModifiedPower(constructSpellFromFields());
             }
         });
 
-        //set all fields as visible
+        //set all field layouts as visible
         findViewById(R.id.input_layout_attackType).setVisibility(View.VISIBLE);
         findViewById(R.id.input_layout_attackRoll).setVisibility(View.VISIBLE);
         findViewById(R.id.input_layout_castingTime).setVisibility(View.VISIBLE);
@@ -323,20 +319,39 @@ public class PowerDetailsActivity extends AppCompatActivity
         findViewById(R.id.input_layout_epic_feat).setVisibility(View.VISIBLE);
         findViewById(R.id.input_layout_trigger).setVisibility(View.VISIBLE);
 
-        //set text fields as editable
+        //set text fields as editable, save variables since handleSaving needs them to be initialized
         KeyListener newListener = new TextInputEditText(getApplicationContext()).getKeyListener();
         spellNameText = (TextInputEditText)findViewById(R.id.editText_spellName);
         spellNameText.setKeyListener(newListener);
         attackTypeText = (TextInputEditText)findViewById(R.id.editText_attackType);
         attackTypeText.setKeyListener(newListener);
-        // TODO: 10.5.2017 add the rest of the fields as editable
+        rechargeText = (TextInputEditText)findViewById(R.id.editText_recharge);
+        rechargeText.setKeyListener(newListener);
+        castingTimeText = (TextInputEditText)findViewById(R.id.editText_castingTime);
+        castingTimeText.setKeyListener(newListener);
+        targetText = (TextInputEditText)findViewById(R.id.editText_target);
+        targetText.setKeyListener(newListener);
+        attackRollText = (TextInputEditText)findViewById(R.id.editText_attackRoll);
+        attackRollText.setKeyListener(newListener);
+        hitDamageEffectText = (TextInputEditText)findViewById(R.id.editText_hitDamage_effect);
+        hitDamageEffectText.setKeyListener(newListener);
+        missDamageText = (TextInputEditText)findViewById(R.id.editText_miss_damage);
+        missDamageText.setKeyListener(newListener);
+        adventurerFeatText = (TextInputEditText)findViewById(R.id.editText_adventurer_feat);
+        adventurerFeatText.setKeyListener(newListener);
+        championFeatText = (TextInputEditText)findViewById(R.id.editText_champion_feat);
+        championFeatText.setKeyListener(newListener);
+        epicFeatText = (TextInputEditText)findViewById(R.id.editText_epic_feat);
+        epicFeatText.setKeyListener(newListener);
+        groupText = (TextInputEditText)findViewById(R.id.editText_group);
+        groupText.setKeyListener(newListener);
+        notesText = (TextInputEditText)findViewById(R.id.editText_notes);
+        notesText.setKeyListener(newListener);
+        triggerText = (TextInputEditText)findViewById(R.id.editText_trigger);
+        triggerText.setKeyListener(newListener);
 
-
-        /*
-             private TextInputEditText spellNameText, attackTypeText, rechargeText, castingTimeText,
-    targetText, attackRollText, hitDamageEffectText, missDamageText, adventurerFeatText, championFeatText,
-    epicFeatText, groupText, notesText, triggerText;*/
     }
+
 
     // FROM DRAWER CONTRACT VIEW INTERFACE
 

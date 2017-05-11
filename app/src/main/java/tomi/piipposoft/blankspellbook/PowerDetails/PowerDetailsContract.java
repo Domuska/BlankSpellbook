@@ -11,12 +11,14 @@ public interface PowerDetailsContract {
 
     interface View {
         void showEmptyForms();
-        void showFilledForms(Spell spell);
-        void showEditableFields();
+        void showFilledFields(Spell spell);
+        void showEditableFields(Spell spell);
     }
 
     interface UserActionListener{
         void showPowerDetails(String powerId);
         void userSavingPower(Spell spell);
+        void userEditingPower(Spell spell);
+        void userSavingModifiedPower(Spell spell);
     }
 }
