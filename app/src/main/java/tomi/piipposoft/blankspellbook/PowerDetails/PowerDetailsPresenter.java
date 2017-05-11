@@ -19,6 +19,7 @@ public class PowerDetailsPresenter extends DrawerPresenter
     private static PowerDetailsContract.View mPowerDetailsView;
     private final DrawerContract.ViewActivity mDrawerActivityView;
     private static String powerId;
+    private static Spell thisSpell;
 
     public PowerDetailsPresenter(
             @NonNull BlankSpellBookContract.DBHelper dbHelper,
@@ -33,6 +34,7 @@ public class PowerDetailsPresenter extends DrawerPresenter
 
     public static void handleFetchedSpell(Spell spell, String id) {
         powerId = id;
+        thisSpell = spell;
         mPowerDetailsView.showFilledFields(spell);
     }
 
@@ -40,11 +42,13 @@ public class PowerDetailsPresenter extends DrawerPresenter
     // FROM PowerDetailsContract.UserActionListener
 
     @Override
-    public void showPowerDetails(String powerId) {
+    public void showPowerDetails() {
         if(powerId.equals(PowerDetailsActivity.EXTRA_ADD_NEW_POWER_DETAILS)){
             mPowerDetailsView.showEmptyForms();
+            mPowerDetailsView.setCancelAsGoBack(true);
         }
         else{
+            mPowerDetailsView.setCancelAsGoBack(false);
             DataSource.getSpellWithId(powerId);
         }
     }
@@ -63,6 +67,11 @@ public class PowerDetailsPresenter extends DrawerPresenter
     public void userSavingModifiedPower(Spell spell) {
         DataSource.updateSpell(spell, powerId);
         mPowerDetailsView.showFilledFields(spell);
+    }
+
+    @Override
+    public void userCancelingEdits() {
+        mPowerDetailsView.showFilledFields(thisSpell);
     }
 
     // FROM DRAWERCONTRACT USERACTIONLISTENER

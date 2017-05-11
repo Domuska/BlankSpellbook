@@ -13,12 +13,14 @@ public interface PowerDetailsContract {
         void showEmptyForms();
         void showFilledFields(Spell spell);
         void showSpellEditView(Spell spell);
+        void setCancelAsGoBack(boolean b);
     }
 
     interface UserActionListener{
-        void showPowerDetails(String powerId);
+        void showPowerDetails();
         void userSavingPower(Spell spell);
         void userEditingPower(Spell spell);
         void userSavingModifiedPower(Spell spell);
+        void userCancelingEdits();
     }
 }

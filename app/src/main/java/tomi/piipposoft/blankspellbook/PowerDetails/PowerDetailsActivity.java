@@ -45,6 +45,7 @@ public class PowerDetailsActivity extends AppCompatActivity
     private String powerId, spellBookId;
 
     private MenuItem cancelItem;
+    private boolean goBackOnCancelPress = false;
 
     private TextInputLayout spellNameLayout, attackTypeLayout, rechargeLayout, castingTimeLayout,
     targetLayout, attackRollLayout, hitDamageEffectLayout, missDamageLayout, adventurerFeatLayout,
@@ -73,6 +74,7 @@ public class PowerDetailsActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         //add cancel button to toolbar
+        Log.d(TAG, "onCreate called");
     }
 
     @Override
@@ -89,30 +91,31 @@ public class PowerDetailsActivity extends AppCompatActivity
 
         mDrawerActionListener = (DrawerContract.UserActionListener)mActionListener;
         mDrawerActionListener.powerListProfileSelected();
-        mActionListener.showPowerDetails(powerId);
 
-
+        Log.d(TAG, "onResume called");
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //create the cancel item
-        cancelItem = menu.add(
-                Menu.NONE,
-                MENU_ITEM_CANCEL,
-                Menu.NONE,
-                "Cancel");
-        cancelItem.setIcon(R.drawable.ic_cancel_black_24dp);
-        cancelItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+        getMenuInflater().inflate(R.menu.menu_power_details, menu);
+        cancelItem = menu.findItem(R.id.action_cancel);
         cancelItem.setVisible(false);
+
+        //tell action listener to tell us what to show
+        mActionListener.showPowerDetails();
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
-            case MENU_ITEM_CANCEL:
-                Log.d(TAG, "cancel item clicked");
+            case R.id.action_cancel:
+                if(goBackOnCancelPress)
+                    this.finish();
+                else
+                    mActionListener.userCancelingEdits();
                 return true;
             default:
                 return false;
@@ -166,6 +169,12 @@ public class PowerDetailsActivity extends AppCompatActivity
 
     // FROM PowerDetailsContract
 
+
+    @Override
+    public void setCancelAsGoBack(boolean b) {
+        goBackOnCancelPress = b;
+    }
+
     @Override
     public void showEmptyForms() {
         findViewById(R.id.input_layout_attackType).setVisibility(View.VISIBLE);
@@ -192,7 +201,8 @@ public class PowerDetailsActivity extends AppCompatActivity
         });
         fab.setVisibility(View.VISIBLE);
 
-        cancelItem.setVisible(true);
+        if(cancelItem != null)
+            cancelItem.setVisible(true);
 
     }
 
