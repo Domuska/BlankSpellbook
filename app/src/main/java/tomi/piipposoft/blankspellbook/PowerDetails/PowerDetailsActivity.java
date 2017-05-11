@@ -112,10 +112,14 @@ public class PowerDetailsActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
             case R.id.action_cancel:
-                if(goBackOnCancelPress)
+                if(goBackOnCancelPress) {
                     this.finish();
-                else
+                    // TODO: 11.5.2017 add popup asking if edits should be discarded
+                }
+                else{
                     mActionListener.userCancelingEdits();
+                    // TODO: 11.5.2017 add popup asking if edits should be discarded
+                }
                 return true;
             default:
                 return false;
@@ -126,6 +130,7 @@ public class PowerDetailsActivity extends AppCompatActivity
         Spell spell = new Spell();
 
         //should these be first set into an object so we dont have to get the text twice?
+        spellNameText = (TextInputEditText)findViewById(R.id.editText_spellName);
         if(fieldHasText(spellNameText))
             spell.setName(spellNameText.getText().toString());
         if(fieldHasText(attackTypeText))
@@ -192,6 +197,22 @@ public class PowerDetailsActivity extends AppCompatActivity
         findViewById(R.id.input_layout_epic_feat).setVisibility(View.VISIBLE);
         findViewById(R.id.input_layout_trigger).setVisibility(View.VISIBLE);
 
+
+        triggerText = (TextInputEditText)findViewById(R.id.editText_trigger);
+        epicFeatText = (TextInputEditText)findViewById(R.id.editText_epic_feat);
+        championFeatText = (TextInputEditText)findViewById(R.id.editText_champion_feat);
+        adventurerFeatText = (TextInputEditText)findViewById(R.id.editText_adventurer_feat);
+        targetText = (TextInputEditText)findViewById(R.id.editText_target);
+        rechargeText = (TextInputEditText)findViewById(R.id.editText_recharge);
+        notesText = (TextInputEditText)findViewById(R.id.editText_notes);
+        spellNameText = (TextInputEditText)findViewById(R.id.editText_spellName);
+        missDamageText = (TextInputEditText)findViewById(R.id.editText_miss_damage);
+        hitDamageEffectText = (TextInputEditText)findViewById(R.id.editText_hitDamage_effect);
+        groupText = (TextInputEditText)findViewById(R.id.editText_group);
+        castingTimeText = (TextInputEditText)findViewById(R.id.editText_castingTime);
+        attackRollText = (TextInputEditText)findViewById(R.id.editText_attackRoll);
+        attackTypeText = (TextInputEditText)findViewById(R.id.editText_attackType);
+
         fab.setImageResource(R.drawable.ic_done_black_24dp);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -232,6 +253,7 @@ public class PowerDetailsActivity extends AppCompatActivity
             attackTypeLayout.setVisibility(View.VISIBLE);
             attackTypeText.setText(spell.getAttackType());
             attackTypeText.setKeyListener(null);
+            Log.d(TAG, "spell attack type: " + spell.getAttackType());
         }
 
         if(!spell.getAttackRoll().equals("")){
@@ -240,6 +262,7 @@ public class PowerDetailsActivity extends AppCompatActivity
             attackRollLayout.setVisibility(View.VISIBLE);
             attackRollText.setText(spell.getAttackRoll());
             attackRollText.setKeyListener(null);
+            Log.d(TAG, "spell attack roll: " + spell.getAttackRoll());
         }
 
         if(!spell.getCastingTime().equals("")){

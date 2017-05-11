@@ -140,11 +140,42 @@ public class DataSource {
     }
 
     public static void saveSpell(Spell spell) {
-        firebaseDatabase.getReference().child(DB_SPELL_TREE_NAME).push().setValue(spell);
+        DatabaseReference spellReference = firebaseDatabase.getReference().child(DB_SPELL_TREE_NAME);
+        String id = spellReference.push().getKey();
+        spellReference.child(id).setValue(spell);
+
+        spellReference.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Spell savedSpell = dataSnapshot.getValue(Spell.class);
+                PowerDetailsPresenter.handleFetchedSpell(savedSpell, dataSnapshot.getKey());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, "Erro at fetching newly saved spell " + databaseError.toString());
+            }
+        });
+
     }
 
     public static void updateSpell(Spell spell, String spellId){
-        firebaseDatabase.getReference().child(DB_SPELL_TREE_NAME).child(spellId).setValue(spell);
+        DatabaseReference spellReference = firebaseDatabase.getReference().child(DB_SPELL_TREE_NAME).child(spellId);
+        spellReference.setValue(spell);
+
+        spellReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Spell modifiedSpell = dataSnapshot.getValue(Spell.class);
+                PowerDetailsPresenter.handleFetchedSpell(modifiedSpell, dataSnapshot.getKey());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, "Error when fetching modified spell " + databaseError.toString());
+            }
+        });
+
     }
 
     /**
