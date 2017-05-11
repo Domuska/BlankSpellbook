@@ -12,7 +12,7 @@ public interface PowerDetailsContract {
     interface View {
         void showEmptyForms();
         void showFilledFields(Spell spell);
-        void showEditableFields(Spell spell);
+        void showSpellEditView(Spell spell);
     }
 
     interface UserActionListener{

@@ -8,6 +8,7 @@
     <string name="close_drawer_info">Close navigation drawer</string>
     <string name="button_spellbook">SPELLBOOK</string>
     <string name="button_dailyspells">DAILY SPELLS</string>
+    <string name="action_cancel">CANCEL</string>
 
 
     <!-- Strings for alert dialogs -->

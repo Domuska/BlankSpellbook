@@ -123,8 +123,6 @@ public class DrawerHelper implements
                 })
                 .build();
 
-
-
     }
 
     public DrawerLayout getDrawerLayout(){
@@ -179,7 +177,10 @@ public class DrawerHelper implements
                 .withCloseOnClick(false)
                 .build();
 
+
     }
+
+
 
     public void closeDrawer(){
         mDrawer.closeDrawer();
@@ -212,6 +213,37 @@ public class DrawerHelper implements
     @Override
     public void removeDrawerItems(){
 
+    }
+
+    @Override
+    public void lockDrawer() {
+        //this doesn't seem to work for some reason
+        mDrawer.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+    }
+
+    @Override
+    public void unlockDrawer() {
+        //this doesnt seem to work for some reason
+        mDrawer.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+    }
+
+    // TODO: 11.5.2017 this method should not stay here. This is just for testing if we could lock the nav drawer
+    public static void lockDrawerAndChangeIcon(){
+        //this doesn't seem to work. If you do this, the toolbar button will change,
+        //but the drawer isn't locked nor is the on click event changed. Icon changes though!
+        //http://stackoverflow.com/questions/33479575/changing-navigation-drawer-hamburger-icon
+
+        mDrawer.getActionBarDrawerToggle().setDrawerIndicatorEnabled(false);
+        mDrawer.getActionBarDrawerToggle().setHomeAsUpIndicator(R.drawable.ic_done_black_24dp);
+
+        mDrawer.getActionBarDrawerToggle().setToolbarNavigationClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "now we should be cancelling editing!");
+            }
+        });
+
+        mDrawer.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
     }
 
     /**

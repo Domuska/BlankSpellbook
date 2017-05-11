@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.method.KeyListener;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
@@ -35,11 +37,14 @@ public class PowerDetailsActivity extends AppCompatActivity
     public static final String EXTRA_ADD_NEW_POWER_DETAILS = "";
 
     private final String TAG = "PowerDetailsActivity";
+    private final int MENU_ITEM_CANCEL = 1;
     private DrawerHelper mDrawerHelper;
     private DrawerContract.UserActionListener mDrawerActionListener;
     private PowerDetailsContract.UserActionListener mActionListener;
 
     private String powerId, spellBookId;
+
+    private MenuItem cancelItem;
 
     private TextInputLayout spellNameLayout, attackTypeLayout, rechargeLayout, castingTimeLayout,
     targetLayout, attackRollLayout, hitDamageEffectLayout, missDamageLayout, adventurerFeatLayout,
@@ -64,8 +69,54 @@ public class PowerDetailsActivity extends AppCompatActivity
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        toolbar.setTitle("Power details activity");
+        toolbar.setTitle("Details");
         setSupportActionBar(toolbar);
+
+        //add cancel button to toolbar
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        mDrawerHelper = DrawerHelper.getInstance(this, (Toolbar)findViewById(R.id.my_toolbar));
+        mActionListener = new PowerDetailsPresenter(
+                DataSource.getDatasource(this),
+                this,
+                DrawerHelper.getInstance(this, (Toolbar)findViewById(R.id.my_toolbar)),
+                powerId
+        );
+
+        mDrawerActionListener = (DrawerContract.UserActionListener)mActionListener;
+        mDrawerActionListener.powerListProfileSelected();
+        mActionListener.showPowerDetails(powerId);
+
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //create the cancel item
+        cancelItem = menu.add(
+                Menu.NONE,
+                MENU_ITEM_CANCEL,
+                Menu.NONE,
+                "Cancel");
+        cancelItem.setIcon(R.drawable.ic_cancel_black_24dp);
+        cancelItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        cancelItem.setVisible(false);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case MENU_ITEM_CANCEL:
+                Log.d(TAG, "cancel item clicked");
+                return true;
+            default:
+                return false;
+        }
     }
 
     private Spell constructSpellFromFields() {
@@ -113,25 +164,6 @@ public class PowerDetailsActivity extends AppCompatActivity
         return !text.getText().toString().equals("");
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        mDrawerHelper = DrawerHelper.getInstance(this, (Toolbar)findViewById(R.id.my_toolbar));
-        mActionListener = new PowerDetailsPresenter(
-                DataSource.getDatasource(this),
-                this,
-                DrawerHelper.getInstance(this, (Toolbar)findViewById(R.id.my_toolbar)),
-                powerId
-        );
-
-        mDrawerActionListener = (DrawerContract.UserActionListener)mActionListener;
-        mDrawerActionListener.powerListProfileSelected();
-        mActionListener.showPowerDetails(powerId);
-
-
-    }
-
     // FROM PowerDetailsContract
 
     @Override
@@ -159,6 +191,9 @@ public class PowerDetailsActivity extends AppCompatActivity
             }
         });
         fab.setVisibility(View.VISIBLE);
+
+        cancelItem.setVisible(true);
+
     }
 
     @Override
@@ -173,6 +208,8 @@ public class PowerDetailsActivity extends AppCompatActivity
             }
         });
         fab.setVisibility(View.VISIBLE);
+
+        cancelItem.setVisible(false);
 
         // All text fields are invisible if there is not data for them
         // this should work nicer than hiding ones that don't have data,
@@ -293,7 +330,7 @@ public class PowerDetailsActivity extends AppCompatActivity
     }
 
     @Override
-    public void showEditableFields(Spell spell) {
+    public void showSpellEditView(Spell spell) {
 
         fab.setImageResource(R.drawable.ic_done_black_24dp);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -302,6 +339,8 @@ public class PowerDetailsActivity extends AppCompatActivity
                 mActionListener.userSavingModifiedPower(constructSpellFromFields());
             }
         });
+
+        cancelItem.setVisible(true);
 
         //set all field layouts as visible
         findViewById(R.id.input_layout_attackType).setVisibility(View.VISIBLE);

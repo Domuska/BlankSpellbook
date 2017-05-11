@@ -56,7 +56,7 @@ public class PowerDetailsPresenter extends DrawerPresenter
 
     @Override
     public void userEditingPower(Spell spell) {
-        mPowerDetailsView.showEditableFields(spell);
+        mPowerDetailsView.showSpellEditView(spell);
     }
 
     @Override
@@ -105,5 +105,4 @@ public class PowerDetailsPresenter extends DrawerPresenter
             this.attachDailySpellListDrawerListener();
         }
     }
-
 }

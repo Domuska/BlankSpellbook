@@ -66,8 +66,6 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        //TODO add a navigation drawer to this activity to list power lists and daily power lists
-
         dailySpellsButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -109,8 +107,6 @@ public class MainActivity extends AppCompatActivity
         }
 
         switch(id){
-
-
             case R.id.action_settings:
                 return true;
 

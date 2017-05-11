@@ -20,6 +20,8 @@ public interface DrawerContract {
         void showPowerList(List<IDrawerItem> drawerItems);
         void addDrawerItem(IDrawerItem item);
         void removeDrawerItems();
+        void lockDrawer();
+        void unlockDrawer();
     }
 
     /**
@@ -61,8 +63,6 @@ public interface DrawerContract {
          * the user has selected the daily power lists section of the drawer
          */
         void dailyPowerListProfileSelected();
-
-
 
     }
 }

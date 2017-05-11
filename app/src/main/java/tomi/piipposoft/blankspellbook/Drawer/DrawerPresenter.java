@@ -252,6 +252,14 @@ public class DrawerPresenter{
         dailySpellListReference.addChildEventListener(dailySpellListChildListener);
     }
 
+    protected void drawerLockAndClose(){
+        mDrawerView.lockDrawer();
+    }
+
+    protected void drawerUnlock(){
+        mDrawerView.unlockDrawer();
+    }
+
     /**
      * Helper method for fetching data for the power list drawer side
      */
