@@ -33,39 +33,41 @@ public class PowerDetailsPresenter extends DrawerPresenter
     }
 
     public static void handleFetchedSpell(Spell spell, String id) {
-        powerId = id;
-        thisSpell = spell;
+        if(spell != null) {
+            powerId = id;
+            thisSpell = spell;
 
-        //check that spell has at least empty string in all fields
-        if (spell.getAttackType() == null)
-            spell.setAttackType("");
-        if(spell.getAttackRoll() == null)
-            spell.setAttackRoll("");
-        if(spell.getCastingTime() == null)
-            spell.setCastingTime("");
-        if(spell.getGroupName() == null)
-            spell.setGroupName("");
-        if(spell.getHitDamageOrEffect() == null)
-            spell.setHitDamageOrEffect("");
-        if(spell.getMissDamage() == null)
-            spell.setMissDamage("");
-        if(spell.getName() == null)
-            spell.setName("");
-        if(spell.getPlayerNotes() == null)
-            spell.setPlayerNotes("");
-        if(spell.getRechargeTime() == null)
-            spell.setRechargeTime("");
-        if(spell.getTarget() == null)
-            spell.setTarget("");
-        if(spell.getAdventurerFeat() == null)
-            spell.setAdventurerFeat("");
-        if(spell.getChampionFeat() == null)
-            spell.setChampionFeat("");
-        if(spell.getEpicFeat() == null)
-            spell.setEpicFeat("");
-        if(spell.getTrigger() == null)
-            spell.setTrigger("");
-        mPowerDetailsView.showFilledFields(spell);
+            //check that spell has at least empty string in all fields
+            if (spell.getAttackType() == null)
+                spell.setAttackType("");
+            if (spell.getAttackRoll() == null)
+                spell.setAttackRoll("");
+            if (spell.getCastingTime() == null)
+                spell.setCastingTime("");
+            if (spell.getGroupName() == null)
+                spell.setGroupName("");
+            if (spell.getHitDamageOrEffect() == null)
+                spell.setHitDamageOrEffect("");
+            if (spell.getMissDamage() == null)
+                spell.setMissDamage("");
+            if (spell.getName() == null)
+                spell.setName("");
+            if (spell.getPlayerNotes() == null)
+                spell.setPlayerNotes("");
+            if (spell.getRechargeTime() == null)
+                spell.setRechargeTime("");
+            if (spell.getTarget() == null)
+                spell.setTarget("");
+            if (spell.getAdventurerFeat() == null)
+                spell.setAdventurerFeat("");
+            if (spell.getChampionFeat() == null)
+                spell.setChampionFeat("");
+            if (spell.getEpicFeat() == null)
+                spell.setEpicFeat("");
+            if (spell.getTrigger() == null)
+                spell.setTrigger("");
+            mPowerDetailsView.showFilledFields(spell);
+        }
     }
 
 
@@ -86,7 +88,8 @@ public class PowerDetailsPresenter extends DrawerPresenter
     @Override
     public void userSavingPower(Spell spell) {
         DataSource.saveSpell(spell);
-        mPowerDetailsView.hideNonUsedFields(spell);
+        mPowerDetailsView.hideUnUsedFields(spell);
+        mPowerDetailsView.setCancelAsGoBack(false);
         //after this we wait for db to send us the just-saved spell until we show it to the user
     }
 
@@ -98,12 +101,13 @@ public class PowerDetailsPresenter extends DrawerPresenter
     @Override
     public void userSavingModifiedPower(Spell spell) {
         DataSource.updateSpell(spell, powerId);
-        mPowerDetailsView.hideNonUsedFields(spell);
+        mPowerDetailsView.hideUnUsedFields(spell);
     }
 
     @Override
     public void userCancelingEdits() {
         mPowerDetailsView.showFilledFields(thisSpell);
+        mPowerDetailsView.hideUnUsedFields(thisSpell);
     }
 
     // FROM DRAWERCONTRACT USERACTIONLISTENER

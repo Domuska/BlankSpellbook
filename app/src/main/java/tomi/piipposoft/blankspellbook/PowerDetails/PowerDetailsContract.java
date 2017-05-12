@@ -14,7 +14,7 @@ public interface PowerDetailsContract {
         void showFilledFields(Spell spell);
         void showSpellEditView(Spell spell);
         void setCancelAsGoBack(boolean b);
-        void hideNonUsedFields(Spell spell);
+        void hideUnUsedFields(Spell spell);
     }
 
     interface UserActionListener{

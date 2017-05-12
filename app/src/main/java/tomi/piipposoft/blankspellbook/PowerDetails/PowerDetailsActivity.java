@@ -430,7 +430,7 @@ public class PowerDetailsActivity extends AppCompatActivity
     }
 
     @Override
-    public void hideNonUsedFields(Spell spell) {
+    public void hideUnUsedFields(Spell spell) {
         if(spell.getAttackType() == null || "".equals(spell.getAttackType()))
             findViewById(R.id.input_layout_attackType).setVisibility(View.GONE);
         if(spell.getAttackRoll() == null || "".equals(spell.getAttackRoll()))
