@@ -1,10 +1,12 @@
 package tomi.piipposoft.blankspellbook.PowerDetails;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -95,18 +97,12 @@ public class PowerDetailsActivity extends AppCompatActivity
 
         fab = (FloatingActionButton)findViewById(R.id.fab);
         fabCancel = (FloatingActionButton)findViewById(R.id.fabLeft);
-        
+
         fabCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(goBackOnCancelPress) {
-                    PowerDetailsActivity.this.finish();
-                    // TODO: 11.5.2017 add popup asking if edits should be discarded
-                }
-                else{
-                    mActionListener.userCancelingEdits();
-                    // TODO: 11.5.2017 add popup asking if edits should be discarded
-                }
+                mActionListener.userPressingCancelButton(constructSpellFromFields());
+                //showDiscardChangesDialog();
             }
         });
 
@@ -144,10 +140,15 @@ public class PowerDetailsActivity extends AppCompatActivity
                     // TODO: 11.5.2017 add popup asking if edits should be discarded
                 }
                 return true;
+
+            case R.id.action_add_to_powerlist:
+                Log.d(TAG, "pressed the add to power list button!");
             default:
                 return false;
         }
     }
+
+
 
     private Spell constructSpellFromFields() {
         Spell spell = new Spell();
@@ -192,15 +193,44 @@ public class PowerDetailsActivity extends AppCompatActivity
      * @return boolean whether text field has string besides empty string
      */
     private boolean fieldHasText(TextInputEditText text){
-        return !text.getText().toString().equals("");
+
+        return text != null && !"".equals(text.getText().toString());
+        //return !text.getText().toString().equals("");
+    }
+
+    private void handleCancelButton(){
+        if(goBackOnCancelPress)
+            PowerDetailsActivity.this.finish();
+        else
+            mActionListener.userCancelingEdits();
     }
 
     // FROM PowerDetailsContract
 
+    @Override
+    public void showDiscardChangesDialog(){
+        new AlertDialog.Builder(PowerDetailsActivity.this)
+                .setMessage(getString(R.string.spell_details_discard_changes))
+                .setPositiveButton(getString(R.string.action_yes)
+                        , new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                handleCancelButton();
+                            }
+                        })
+                .setNegativeButton(getString(R.string.action_no), null)
+                .show();
+    }
 
     @Override
     public void setCancelAsGoBack(boolean b) {
         goBackOnCancelPress = b;
+    }
+
+    @Override
+    public void cancelEdits() {
+        handleCancelButton();
     }
 
     @Override

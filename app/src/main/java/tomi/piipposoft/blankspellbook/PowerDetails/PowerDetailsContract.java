@@ -15,6 +15,8 @@ public interface PowerDetailsContract {
         void showSpellEditView(Spell spell);
         void setCancelAsGoBack(boolean b);
         void hideUnUsedFields(Spell spell);
+        void showDiscardChangesDialog();
+        void cancelEdits();
     }
 
     interface UserActionListener{
@@ -23,5 +25,6 @@ public interface PowerDetailsContract {
         void userEditingPower(Spell spell);
         void userSavingModifiedPower(Spell spell);
         void userCancelingEdits();
+        void userPressingCancelButton(Spell spell);
     }
 }

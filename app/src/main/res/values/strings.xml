@@ -8,8 +8,11 @@
     <string name="close_drawer_info">Close navigation drawer</string>
     <string name="button_spellbook">SPELLBOOK</string>
     <string name="button_dailyspells">DAILY SPELLS</string>
+    <string name="action_yes">Yes</string>
+    <string name="action_no">No</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_add_to_powerlist">Add to list of powers</string>
+    <string name="spell_details_discard_changes">Do you want to discard changes?</string>
 
 
     <!-- Strings for alert dialogs -->

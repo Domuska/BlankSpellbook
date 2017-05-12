@@ -3,6 +3,7 @@ package tomi.piipposoft.blankspellbook.Utils;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import tomi.piipposoft.blankspellbook.PowerList.SpellGroup;
@@ -176,13 +177,56 @@ public class Spell {
         this.trigger = trigger;
     }
 
+    /**
+     * Returns all the fields (shown in UI, ID not included) held by the object, order of fields is not guaranteed
+     * @return array of strings containing the fields of the POJO
+     */
+    private String[] getFields(){
+        if (this.getAttackType() == null)
+            this.setAttackType("");
+        if (this.getAttackRoll() == null)
+            this.setAttackRoll("");
+        if (this.getCastingTime() == null)
+            this.setCastingTime("");
+        if (this.getGroupName() == null)
+            this.setGroupName("");
+        if (this.getHitDamageOrEffect() == null)
+            this.setHitDamageOrEffect("");
+        if (this.getMissDamage() == null)
+            this.setMissDamage("");
+        if (this.getName() == null)
+            this.setName("");
+        if (this.getPlayerNotes() == null)
+            this.setPlayerNotes("");
+        if (this.getRechargeTime() == null)
+            this.setRechargeTime("");
+        if (this.getTarget() == null)
+            this.setTarget("");
+        if (this.getAdventurerFeat() == null)
+            this.setAdventurerFeat("");
+        if (this.getChampionFeat() == null)
+            this.setChampionFeat("");
+        if (this.getEpicFeat() == null)
+            this.setEpicFeat("");
+        if (this.getTrigger() == null)
+            this.setTrigger("");
+        return new String[]{attackType, attackRoll,
+                castingTime, groupName, hitDamageOrEffect, missDamage, name, playerNotes,
+                rechargeTime, target, adventurerFeat, championFeat, epicFeat, trigger};
+    }
+
     @Override
     public boolean equals(Object o) {
+        boolean areEqual = false;
         if(o instanceof Spell) {
+            String myFields[] = this.getFields();
             Spell spell = (Spell) o;
-            return spell.getSpellId().equals(this.spellId);
+            String objectFields[] = spell.getFields();
+
+            if(Arrays.equals(myFields, objectFields))
+               areEqual = true;
         }
-        return false;
+        return areEqual;
     }
 
     @Override

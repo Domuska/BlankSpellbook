@@ -33,6 +33,7 @@ public class PowerDetailsPresenter extends DrawerPresenter
         mDrawerActivityView = (DrawerContract.ViewActivity) mPowerDetailsView;
         powerId = spellId;
         this.powerListId = powerLIstId;
+        thisSpell = new Spell();
     }
 
     public static void handleFetchedSpell(Spell spell, String id) {
@@ -90,6 +91,7 @@ public class PowerDetailsPresenter extends DrawerPresenter
 
     @Override
     public void userSavingPower(Spell spell) {
+// TODO: 12.5.2017 should disable the edit buttons and such until spell saved to DB, otherwise could encounter weird things
         DataSource.saveSpell(spell, powerListId);
         mPowerDetailsView.hideUnUsedFields(spell);
         mPowerDetailsView.setCancelAsGoBack(false);
@@ -111,6 +113,14 @@ public class PowerDetailsPresenter extends DrawerPresenter
     public void userCancelingEdits() {
         mPowerDetailsView.showFilledFields(thisSpell);
         mPowerDetailsView.hideUnUsedFields(thisSpell);
+    }
+
+    @Override
+    public void userPressingCancelButton(Spell spell) {
+        if(thisSpell.equals(spell))
+            mPowerDetailsView.cancelEdits();
+        else
+            mPowerDetailsView.showDiscardChangesDialog();
     }
 
     // FROM DRAWERCONTRACT USERACTIONLISTENER
