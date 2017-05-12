@@ -10,10 +10,11 @@ import tomi.piipposoft.blankspellbook.Utils.Spell;
 public interface PowerDetailsContract {
 
     interface View {
-        void showEmptyForms();
+        void showEmptyFields();
         void showFilledFields(Spell spell);
         void showSpellEditView(Spell spell);
         void setCancelAsGoBack(boolean b);
+        void hideNonUsedFields(Spell spell);
     }
 
     interface UserActionListener{

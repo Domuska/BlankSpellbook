@@ -74,7 +74,7 @@ public class PowerDetailsPresenter extends DrawerPresenter
     @Override
     public void showPowerDetails() {
         if(powerId.equals(PowerDetailsActivity.EXTRA_ADD_NEW_POWER_DETAILS)){
-            mPowerDetailsView.showEmptyForms();
+            mPowerDetailsView.showEmptyFields();
             mPowerDetailsView.setCancelAsGoBack(true);
         }
         else{
@@ -86,7 +86,7 @@ public class PowerDetailsPresenter extends DrawerPresenter
     @Override
     public void userSavingPower(Spell spell) {
         DataSource.saveSpell(spell);
-        // TODO: 11.5.2017 hide the fields that are not in the newly saved spell 
+        mPowerDetailsView.hideNonUsedFields(spell);
         //after this we wait for db to send us the just-saved spell until we show it to the user
     }
 
@@ -98,6 +98,7 @@ public class PowerDetailsPresenter extends DrawerPresenter
     @Override
     public void userSavingModifiedPower(Spell spell) {
         DataSource.updateSpell(spell, powerId);
+        mPowerDetailsView.hideNonUsedFields(spell);
     }
 
     @Override

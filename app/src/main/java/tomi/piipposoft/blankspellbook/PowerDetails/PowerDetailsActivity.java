@@ -17,6 +17,9 @@ import android.view.View;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import tomi.piipposoft.blankspellbook.R;
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
 import tomi.piipposoft.blankspellbook.Utils.Spell;
@@ -181,7 +184,9 @@ public class PowerDetailsActivity extends AppCompatActivity
     }
 
     @Override
-    public void showEmptyForms() {
+    public void showEmptyFields() {
+
+        Log.d(TAG, "showing empty fields...");
         findViewById(R.id.input_layout_attackType).setVisibility(View.VISIBLE);
         findViewById(R.id.input_layout_attackRoll).setVisibility(View.VISIBLE);
         findViewById(R.id.input_layout_castingTime).setVisibility(View.VISIBLE);
@@ -424,6 +429,37 @@ public class PowerDetailsActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public void hideNonUsedFields(Spell spell) {
+        if(spell.getAttackType() == null || "".equals(spell.getAttackType()))
+            findViewById(R.id.input_layout_attackType).setVisibility(View.GONE);
+        if(spell.getAttackRoll() == null || "".equals(spell.getAttackRoll()))
+            findViewById(R.id.input_layout_attackRoll).setVisibility(View.GONE);
+        if(spell.getCastingTime() == null || "".equals(spell.getCastingTime()))
+            findViewById(R.id.input_layout_castingTime).setVisibility(View.GONE);
+        if(spell.getGroupName() == null || "".equals(spell.getGroupName()))
+            findViewById(R.id.input_layout_group).setVisibility(View.GONE);
+        if(spell.getHitDamageOrEffect() == null || "".equals(spell.getHitDamageOrEffect()))
+            findViewById(R.id.input_layout_damage_effect).setVisibility(View.GONE);
+        if(spell.getMissDamage() == null || "".equals(spell.getMissDamage()))
+            findViewById(R.id.input_layout_miss_damage).setVisibility(View.GONE);
+        if(spell.getName() == null || "".equals(spell.getName()))
+            findViewById(R.id.input_layout_spell_name).setVisibility(View.GONE);
+        if(spell.getPlayerNotes() == null || "".equals(spell.getPlayerNotes()))
+            findViewById(R.id.input_layout_notes).setVisibility(View.GONE);
+        if(spell.getRechargeTime() == null || "".equals(spell.getRechargeTime()))
+            findViewById(R.id.input_layout_recharge).setVisibility(View.GONE);
+        if(spell.getTarget() == null || "".equals(spell.getTarget()))
+            findViewById(R.id.input_layout_target).setVisibility(View.GONE);
+        if(spell.getAdventurerFeat() == null || "".equals(spell.getAdventurerFeat()))
+            findViewById(R.id.input_layout_adventurer_feat).setVisibility(View.GONE);
+        if(spell.getChampionFeat() == null || "".equals(spell.getChampionFeat()))
+            findViewById(R.id.input_layout_champion_feat).setVisibility(View.GONE);
+        if(spell.getEpicFeat() == null || "".equals(spell.getEpicFeat()))
+            findViewById(R.id.input_layout_epic_feat).setVisibility(View.GONE);
+        if(spell.getTrigger() == null || "".equals(spell.getTrigger()))
+            findViewById(R.id.input_layout_trigger).setVisibility(View.GONE);
+    }
 
     // FROM DRAWER CONTRACT VIEW INTERFACE
 

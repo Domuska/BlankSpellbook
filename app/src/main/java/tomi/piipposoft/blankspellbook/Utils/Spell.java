@@ -2,6 +2,9 @@ package tomi.piipposoft.blankspellbook.Utils;
 
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import tomi.piipposoft.blankspellbook.PowerList.SpellGroup;
 
 /**
