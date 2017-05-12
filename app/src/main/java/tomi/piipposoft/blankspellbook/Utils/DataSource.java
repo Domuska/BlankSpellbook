@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -68,9 +69,11 @@ public class DataSource {
         });
     }
 
+
     public static void addSpellListListener(String id){
         DatabaseReference spellListReference =
                 firebaseDatabase.getReference(DB_SPELL_LIST_TREE_NAME).child(id).child(DB_SPELL_LIST_SPELLS_CHILD);
+
 
         spellListReference.addChildEventListener(new ChildEventListener() {
             @Override
@@ -139,12 +142,41 @@ public class DataSource {
         });
     }
 
-    public static void saveSpell(Spell spell) {
+    /**
+     * Take a Spell object and save it to database
+     * @param spell An initialized spell object
+     * @param powerListId Power list to which this spell is to be added, can be null
+     */
+    public static void saveSpell(Spell spell, String powerListId) {
         DatabaseReference spellReference = firebaseDatabase.getReference().child(DB_SPELL_TREE_NAME);
-        String id = spellReference.push().getKey();
-        spellReference.child(id).setValue(spell);
+        String spellId = spellReference.push().getKey();
 
-        spellReference.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+        //for saving $spell_id - true to spell_lists/$spellId/spells/$spellId
+        Map<String, Object> childUpdates = new HashMap<>();
+
+        //if spellList id not null, add it to the tables that are to be updated as well
+        if(powerListId != null && !powerListId.isEmpty()){
+            //add new child to spell_lists/$spell_id/spells/
+            childUpdates.put(DB_SPELL_LIST_TREE_NAME
+                    + "/"
+                    + powerListId
+                    + "/"
+                    + DB_SPELL_LIST_SPELLS_CHILD
+                    + "/"
+                    + spellId, true);
+        }
+
+        //use Jackson Objectmapper to create map of the Spell object
+        Map<String, Object> spellValues = new ObjectMapper().convertValue(spell, Map.class);
+        //store the new spell to spells/$spell_id/, ID gotten with push() above
+        childUpdates.put(DB_SPELL_TREE_NAME
+                + "/"
+                + spellId
+                + "/", spellValues);
+        FirebaseDatabase.getInstance().getReference().updateChildren(childUpdates);
+
+        //add a listener to the newly added spell
+        spellReference.child(spellId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Spell savedSpell = dataSnapshot.getValue(Spell.class);
@@ -183,18 +215,24 @@ public class DataSource {
      * handleSpellFromDatabase when query completed. Each spell is queried for individually.
      * @param spellId array of FireBase spells entry IDs
      */
-    private static void getSpellFromDatabase(String spellId) {
+    private static void getSpellFromDatabase(final String spellId) {
 
         DatabaseReference spellsReference =
                 firebaseDatabase.getReference(DB_SPELL_TREE_NAME).child(spellId);
         spellsReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(TAG, "onDataChange, spell name: " + dataSnapshot.getValue(Spell.class).getName());
-                PowerListPresenter.handleSpellFromDatabase(
-                        //get the Spell object from the snapshot, add snapshot's Key as spell's ID
-                        dataSnapshot.getValue(Spell.class).setSpellId(dataSnapshot.getKey())
-                );
+
+                Spell spell = dataSnapshot.getValue(Spell.class);
+                if(spell != null) {
+                    Log.d(TAG, "onDataChange, spell name: " + dataSnapshot.getValue(Spell.class).getName());
+                    PowerListPresenter.handleSpellFromDatabase(
+                            //Add snapshot's key as spell's ID, use the returned Spell as parameter
+                            spell.setSpellId(dataSnapshot.getKey())
+                    );
+                }
+                else
+                    Log.d(TAG, "Error retrieving spell, spell with ID " + spellId + " not in DB");
             }
 
             @Override

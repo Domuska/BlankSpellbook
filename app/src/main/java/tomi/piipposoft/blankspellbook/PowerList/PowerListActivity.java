@@ -158,7 +158,6 @@ public class PowerListActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -178,6 +177,8 @@ public class PowerListActivity extends AppCompatActivity
         Intent i = new Intent (this, PowerDetailsActivity.class);
         Log.d(TAG, "setting spell ID as extra: " + itemId);
         i.putExtra(PowerDetailsActivity.EXTRA_POWER_DETAIL_ID, itemId);
+        i.putExtra(PowerDetailsActivity.EXTRA_POWER_LIST_ID,
+                powerListId);
         startActivity(i);
     }
 
@@ -187,6 +188,8 @@ public class PowerListActivity extends AppCompatActivity
         Log.d(TAG, "opening new power details UI");
         i.putExtra(PowerDetailsActivity.EXTRA_POWER_DETAIL_ID,
                 PowerDetailsActivity.EXTRA_ADD_NEW_POWER_DETAILS);
+        i.putExtra(PowerDetailsActivity.EXTRA_POWER_LIST_ID,
+                powerListId);
         startActivity(i);
     }
 

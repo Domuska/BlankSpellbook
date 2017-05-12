@@ -38,6 +38,7 @@ public class PowerDetailsActivity extends AppCompatActivity
 
     public static final String EXTRA_POWER_DETAIL_ID = "powerDetailId";
     public static final String EXTRA_ADD_NEW_POWER_DETAILS = "";
+    public static final String EXTRA_POWER_LIST_ID = "powerListId";
 
     private final String TAG = "PowerDetailsActivity";
     private final int MENU_ITEM_CANCEL = 1;
@@ -66,11 +67,7 @@ public class PowerDetailsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_power_details);
 
-        powerId = getIntent().getStringExtra(EXTRA_POWER_DETAIL_ID);
-        Log.i(TAG, "onCreate: ID extra gotten " + powerId);
-
         fab = (FloatingActionButton)findViewById(R.id.fab);
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         toolbar.setTitle("Details");
@@ -84,13 +81,22 @@ public class PowerDetailsActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
 
+        powerId = getIntent().getStringExtra(EXTRA_POWER_DETAIL_ID);
+        Log.i(TAG, "onResume: power ID extra got: " + powerId);
+        String powerListId = getIntent().getStringExtra(EXTRA_POWER_LIST_ID);
+        Log.d(TAG, "onResume: power list id got: " + powerListId);
+
         mDrawerHelper = DrawerHelper.getInstance(this, (Toolbar)findViewById(R.id.my_toolbar));
         mActionListener = new PowerDetailsPresenter(
                 DataSource.getDatasource(this),
                 this,
                 DrawerHelper.getInstance(this, (Toolbar)findViewById(R.id.my_toolbar)),
-                powerId
+                powerId,
+                powerListId
         );
+
+
+
 
         mDrawerActionListener = (DrawerContract.UserActionListener)mActionListener;
         mDrawerActionListener.powerListProfileSelected();

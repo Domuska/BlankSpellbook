@@ -19,17 +19,20 @@ public class PowerDetailsPresenter extends DrawerPresenter
     private static PowerDetailsContract.View mPowerDetailsView;
     private final DrawerContract.ViewActivity mDrawerActivityView;
     private static String powerId;
+    private String powerListId;
     private static Spell thisSpell;
 
     public PowerDetailsPresenter(
             @NonNull BlankSpellBookContract.DBHelper dbHelper,
             @NonNull PowerDetailsContract.View powerDetailsView,
             @NonNull DrawerHelper drawerHelper,
-            String spellId){
+            String spellId,
+            String powerLIstId){
         super(dbHelper, drawerHelper);
         mPowerDetailsView = powerDetailsView;
         mDrawerActivityView = (DrawerContract.ViewActivity) mPowerDetailsView;
         powerId = spellId;
+        this.powerListId = powerLIstId;
     }
 
     public static void handleFetchedSpell(Spell spell, String id) {
@@ -87,7 +90,7 @@ public class PowerDetailsPresenter extends DrawerPresenter
 
     @Override
     public void userSavingPower(Spell spell) {
-        DataSource.saveSpell(spell);
+        DataSource.saveSpell(spell, powerListId);
         mPowerDetailsView.hideUnUsedFields(spell);
         mPowerDetailsView.setCancelAsGoBack(false);
         //after this we wait for db to send us the just-saved spell until we show it to the user
