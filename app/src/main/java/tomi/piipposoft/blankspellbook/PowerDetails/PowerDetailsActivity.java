@@ -59,15 +59,13 @@ public class PowerDetailsActivity extends AppCompatActivity
     targetText, attackRollText, hitDamageEffectText, missDamageText, adventurerFeatText, championFeatText,
     epicFeatText, groupText, notesText, triggerText;
 
-    private FloatingActionButton fab;
+    private FloatingActionButton fab, fabCancel;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_power_details);
-
-        fab = (FloatingActionButton)findViewById(R.id.fab);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         toolbar.setTitle("Details");
@@ -95,6 +93,22 @@ public class PowerDetailsActivity extends AppCompatActivity
                 powerListId
         );
 
+        fab = (FloatingActionButton)findViewById(R.id.fab);
+        fabCancel = (FloatingActionButton)findViewById(R.id.fabLeft);
+        
+        fabCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(goBackOnCancelPress) {
+                    PowerDetailsActivity.this.finish();
+                    // TODO: 11.5.2017 add popup asking if edits should be discarded
+                }
+                else{
+                    mActionListener.userCancelingEdits();
+                    // TODO: 11.5.2017 add popup asking if edits should be discarded
+                }
+            }
+        });
 
 
 
@@ -233,8 +247,9 @@ public class PowerDetailsActivity extends AppCompatActivity
         });
         fab.setVisibility(View.VISIBLE);
 
-        if(cancelItem != null)
-            cancelItem.setVisible(true);
+        //if(cancelItem != null)
+        //    cancelItem.setVisible(true);
+        fabCancel.setVisibility(View.VISIBLE);
 
     }
 
@@ -251,7 +266,8 @@ public class PowerDetailsActivity extends AppCompatActivity
         });
         fab.setVisibility(View.VISIBLE);
 
-        cancelItem.setVisible(false);
+        //cancelItem.setVisible(false);
+        fabCancel.setVisibility(View.GONE);
 
         // All text fields are invisible if there is not data for them
         // this should work nicer than hiding ones that don't have data,
@@ -384,7 +400,8 @@ public class PowerDetailsActivity extends AppCompatActivity
             }
         });
 
-        cancelItem.setVisible(true);
+        //cancelItem.setVisible(true);
+        fabCancel.setVisibility(View.VISIBLE);
 
         //set all field layouts as visible
         findViewById(R.id.input_layout_attackType).setVisibility(View.VISIBLE);

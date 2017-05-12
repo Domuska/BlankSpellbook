@@ -34,6 +34,17 @@
         android:visibility="gone"
         app:layout_behavior="tomi.piipposoft.blankspellbook.PowerDetails.ScrollingFABBehavior"/>
 
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|bottom"
+        android:id="@+id/fabLeft"
+        android:src="@drawable/ic_clear_black_24dp"
+        android:clickable="true"
+        android:layout_margin="@dimen/fab_margin"
+        android:visibility="gone"
+        app:layout_behavior="tomi.piipposoft.blankspellbook.PowerDetails.ScrollingFABBehavior"/>
+
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
