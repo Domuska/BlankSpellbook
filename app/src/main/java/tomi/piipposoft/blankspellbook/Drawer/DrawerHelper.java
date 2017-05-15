@@ -142,8 +142,6 @@ public class DrawerHelper implements
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
 
                         if (drawerItem.getIdentifier() == ADD_POWER_LIST_FOOTER_IDENTIFIER) {
-
-
                             try {
                                 DialogFragment dialog = new SetPowerListNameDialog();
                                 dialog.show(callerActivity.getSupportFragmentManager(), "SetSpellBookNameDialogFragment");
@@ -153,9 +151,7 @@ public class DrawerHelper implements
                                     http://stackoverflow.com/questions/7575921/illegalstateexception-can-not-perform-this-action-after-onsaveinstancestate-wit */
                                 Log.d(TAG, "error while opening SetSpellbookNameDialog");
                                 e.printStackTrace();
-
                             }
-
                         }
                         else if (drawerItem.getIdentifier() == ADD_DAILY_POWER_LIST_FOOTER_IDENTIFIER){
 
@@ -170,14 +166,11 @@ public class DrawerHelper implements
                                 e.printStackTrace();
                             }
                         }
-
                         return false;
                     }
                 })
                 .withCloseOnClick(false)
                 .build();
-
-
     }
 
 
@@ -190,17 +183,16 @@ public class DrawerHelper implements
      * From drawerContract
      */
     @Override
-    public void showDailyPowerList(List<IDrawerItem> drawerItems) {
-        populateDailyPowersList(mDrawer, drawerItems);
+    public void showDailyPowerList() {
+        populateDailyPowersList(mDrawer);
     }
 
     /**
      * From drawerContract
      */
     @Override
-    public void showPowerList(List<IDrawerItem> drawerItems) {
-        Log.d(TAG, "showpowerlist called, number of items: " + drawerItems.size());
-        populateSpellBooksList(mDrawer, drawerItems);
+    public void showPowerList() {
+        populateSpellBooksList(mDrawer);
     }
 
     @Override
@@ -211,7 +203,7 @@ public class DrawerHelper implements
     }
 
     @Override
-    public void removeDrawerItems(){
+    public void removeDrawerItem(String itemId){
 
     }
 
@@ -251,7 +243,7 @@ public class DrawerHelper implements
      *
      * @param drawer
      */
-    private void populateSpellBooksList(Drawer drawer, List<IDrawerItem> drawerItems){
+    private void populateSpellBooksList(Drawer drawer){
 
         drawer.removeAllItems();
         drawer.removeAllStickyFooterItems();
@@ -260,6 +252,7 @@ public class DrawerHelper implements
                 .withName("Add new spell book")
                 .withIdentifier(ADD_POWER_LIST_FOOTER_IDENTIFIER));
 
+        /*
         Log.d(TAG, "numer of drawer items being added: " + drawerItems.size());
         for (int i = 0; i < drawerItems.size(); i++) {
             final PrimaryDrawerItem item = (PrimaryDrawerItem)drawerItems.get(i);
@@ -269,6 +262,7 @@ public class DrawerHelper implements
             item.withOnDrawerItemClickListener(new SpellDrawerItemListener());
             drawer.addItem(drawerItems.get(i));
         }
+        */
     }
 
     private class SpellDrawerItemListener implements Drawer.OnDrawerItemClickListener{
@@ -286,7 +280,7 @@ public class DrawerHelper implements
      *
      * @param drawer
      */
-    private void populateDailyPowersList(Drawer drawer, List<IDrawerItem> drawerItems){
+    private void populateDailyPowersList(Drawer drawer){
 
         drawer.removeAllItems();
         drawer.removeAllStickyFooterItems();
@@ -295,6 +289,7 @@ public class DrawerHelper implements
             .withName("Add new daily power list")
             .withIdentifier(ADD_DAILY_POWER_LIST_FOOTER_IDENTIFIER));
 
+        /*
         for(int i = 0; i < drawerItems.size(); i++){
             final PrimaryDrawerItem item = (PrimaryDrawerItem)drawerItems.get(i);
             Log.d(TAG, "new item being added to drawer: " + item.getName() +
@@ -311,9 +306,6 @@ public class DrawerHelper implements
 
             drawer.addItem(drawerItems.get(i));
         }
+        */
     }
-
-
-
-
 }

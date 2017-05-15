@@ -19,6 +19,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
+import tomi.piipposoft.blankspellbook.Database.DailySpellList;
+import tomi.piipposoft.blankspellbook.Database.SpellList;
+import tomi.piipposoft.blankspellbook.Drawer.DrawerPresenter;
 import tomi.piipposoft.blankspellbook.PowerDetails.PowerDetailsPresenter;
 import tomi.piipposoft.blankspellbook.PowerList.PowerListPresenter;
 
@@ -29,6 +32,8 @@ public class DataSource {
     public static final String DB_SPELL_LIST_TREE_NAME = "spell_lists";
     public static final String DB_SPELL_TREE_NAME = "spells";
     public static final String DB_SPELL_LIST_SPELLS_CHILD = "spells";
+    public static final String DB_POWER_LISTS_REFERENCE = "spell_lists";
+    public static final String DB_DAILY_POWER_LIST_REFERENCE = "daily_power_lists";
     private static final String TAG = "DataSource";
 
 //    SQLiteDatabase myDb = BlankSpellBookContract.DBHelper
@@ -242,7 +247,100 @@ public class DataSource {
         });
     }
 
+    public static void setDatabasePersistance() {
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+    }
 
+    public static ChildEventListener attachPowerListDrawerListener(){
+        //add a child event listener, update the drawer if children change
+        ChildEventListener spellListChildListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                String spellListName = dataSnapshot.child("name").getValue(String.class);
+                Log.d(TAG, "spell list name: " + spellListName);
+                //add a new power list item to the drawer
+                DrawerPresenter.handlePowerList(spellListName, dataSnapshot.getKey());
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                //do stuff
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                Log.d(TAG, "item removed: " + dataSnapshot.child("name") + " " + dataSnapshot.getKey());
+                String spellListName = dataSnapshot.child("name").getValue(String.class);
+                DrawerPresenter.handleRemovedItem(spellListName, dataSnapshot.getKey());
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, databaseError.toString());
+            }
+        };
+
+        //spellListsReference.addChildEventListener(powerListChildListener);
+        firebaseDatabase.getReference(DB_POWER_LISTS_REFERENCE).addChildEventListener(spellListChildListener);
+        return spellListChildListener;
+    }
+
+    public static ChildEventListener attachDailyPowerListDrawerListener() {
+        ChildEventListener dailyPowerListChildListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                DailySpellList list = dataSnapshot.getValue(DailySpellList.class);
+                //add a new daily power list item to the drawer
+                DrawerPresenter.handleDailyPowerList(list.getName(), dataSnapshot.getKey());
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                //do stuff
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                String spellListName = dataSnapshot.child("name").getValue(String.class);
+                DrawerPresenter.handleRemovedItem(spellListName, dataSnapshot.getKey());
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, databaseError.toException().toString());
+            }
+        };
+
+        firebaseDatabase.getReference(DB_DAILY_POWER_LIST_REFERENCE)
+                .addChildEventListener(dailyPowerListChildListener);
+        return dailyPowerListChildListener;
+    }
+
+    public static void removePowerListChildListener(ChildEventListener spellListChildListener) {
+        firebaseDatabase.getReference(DB_POWER_LISTS_REFERENCE).removeEventListener(spellListChildListener);
+    }
+
+    public static void removeDailyPowerListChildListener(ChildEventListener spellListChildListener) {
+        firebaseDatabase.getReference(DB_DAILY_POWER_LIST_REFERENCE).removeEventListener(spellListChildListener);
+    }
+
+    public static void addNewDailyPowerList(String dailyPowerListName) {
+        DailySpellList dailySpellList = new DailySpellList(dailyPowerListName);
+        firebaseDatabase.getReference(DB_DAILY_POWER_LIST_REFERENCE).push().setValue(dailySpellList);
+    }
+
+    public static void addNewPowerList(String powerListName) {
+        SpellList spellList = new SpellList(powerListName);
+        firebaseDatabase.getReference(DB_POWER_LISTS_REFERENCE).push().setValue(spellList);
+    }
 
     public static ArrayList<Spell> getSpellsWithSpellBookId2(Context context, long id){
         Log.d(TAG, "getSpellsWithSpellBookId called with ID " + id);
@@ -330,5 +428,4 @@ public class DataSource {
         }
         return data;
     }
-
 }

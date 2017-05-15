@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
-
+        DataSource.setDatabasePersistance();
     }
 
     @Override
@@ -131,8 +131,6 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
 
         mDrawerHelper = DrawerHelper.getInstance(this, (Toolbar) findViewById(R.id.my_toolbar));
-
-
         mActionlistener = new MainActivityPresenter(DataSource.getDatasource(this), this, mDrawerHelper);
 
         if(mDrawerActionListener == null) {

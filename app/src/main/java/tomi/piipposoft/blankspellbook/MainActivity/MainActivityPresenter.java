@@ -9,6 +9,7 @@ import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerContract;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerHelper;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerPresenter;
+import tomi.piipposoft.blankspellbook.Utils.DataSource;
 
 /**
  * Created by Domu on 17-Apr-16.
@@ -56,18 +57,15 @@ public class MainActivityPresenter extends DrawerPresenter
 
     @Override
     public void powerListProfileSelected() {
-        this.showPowerLists();
-        if(DrawerPresenter.spellListChildListener == null) {
-            this.attachSpellListDrawerListener();
-        }
+        showPowerLists();
+        /*if(DrawerPresenter.powerListChildListener == null) {
+            DataSource.attachPowerListDrawerListener();
+        }*/
     }
 
     @Override
     public void dailyPowerListProfileSelected() {
         this.showDailyPowerLists();
-        if(DrawerPresenter.dailySpellListChildListener == null){
-            this.attachDailySpellListDrawerListener();
-        }
     }
 
 

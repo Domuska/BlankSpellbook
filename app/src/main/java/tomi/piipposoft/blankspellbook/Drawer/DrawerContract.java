@@ -16,10 +16,10 @@ public interface DrawerContract {
      * Used by presenters to tell the drawer to show a list of items
      */
     interface View {
-        void showDailyPowerList(List<IDrawerItem> drawerItems);
-        void showPowerList(List<IDrawerItem> drawerItems);
+        void showDailyPowerList();
+        void showPowerList();
         void addDrawerItem(IDrawerItem item);
-        void removeDrawerItems();
+        void removeDrawerItem(String itemId);
         void lockDrawer();
         void unlockDrawer();
     }
