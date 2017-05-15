@@ -2,6 +2,7 @@ package tomi.piipposoft.blankspellbook.MainActivity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.PersistableBundle;
 import android.support.design.widget.FloatingActionButton;
 
 import android.support.v4.app.DialogFragment;
@@ -9,6 +10,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,6 +40,9 @@ public class MainActivity extends AppCompatActivity
         SetDailyPowerListNameDialog.NoticeDialogListener,
         DrawerContract.ViewActivity{
 
+    private final String DATABASE_PERSISTANCE_SET_KEY = "databasePersistanceSet";
+    private final String TAG = "MainActivity";
+
     private Button spellBookButton, dailySpellsButton;
     private FloatingActionButton fab;
     private Activity thisActivity;
@@ -48,12 +53,18 @@ public class MainActivity extends AppCompatActivity
 
     private DrawerHelper mDrawerHelper;
 
+    private boolean databasePersistanceSet = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
         thisActivity = this;
+
+        if(savedInstanceState != null) {
+            databasePersistanceSet = savedInstanceState.getBoolean(DATABASE_PERSISTANCE_SET_KEY);
+        }
 
         spellBookButton = (Button) findViewById(R.id.button_Spellbook);
         dailySpellsButton = (Button) findViewById(R.id.button_dailySpells);
@@ -80,7 +91,6 @@ public class MainActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
-        DataSource.setDatabasePersistance();
     }
 
     @Override
@@ -118,17 +128,20 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-
-
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(DATABASE_PERSISTANCE_SET_KEY, databasePersistanceSet);
         super.onSaveInstanceState(outState);
-
     }
 
     @Override
     public void onResume(){
         super.onResume();
+
+        if(!databasePersistanceSet){
+            DataSource.setDatabasePersistance();
+            databasePersistanceSet = true;
+        }
 
         mDrawerHelper = DrawerHelper.getInstance(this, (Toolbar) findViewById(R.id.my_toolbar));
         mActionlistener = new MainActivityPresenter(DataSource.getDatasource(this), this, mDrawerHelper);
@@ -161,8 +174,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-
     }
+
 
     //FROM MAIN ACTIVITY CONTRACT INTERFACE
 
