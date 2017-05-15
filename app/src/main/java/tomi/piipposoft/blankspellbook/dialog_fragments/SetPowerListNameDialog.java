@@ -62,9 +62,7 @@ public class SetPowerListNameDialog extends DialogFragment {
                 .setPositiveButton(R.string.createspellbook_create, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
                         mListener.onSetPowerListNameDialogPositiveClick(SetPowerListNameDialog.this, dialogEditText.getText().toString());
-
                     }
                 })
                 .setNegativeButton(R.string.createspellbook_cancel, new DialogInterface.OnClickListener() {
