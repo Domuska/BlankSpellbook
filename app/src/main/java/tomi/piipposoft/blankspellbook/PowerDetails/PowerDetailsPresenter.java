@@ -150,10 +150,7 @@ public class PowerDetailsPresenter extends DrawerPresenter
 
     @Override
     public void powerListProfileSelected() {
-        this.showPowerLists();
-        /*if(DrawerPresenter.powerListChildListener == null){
-            DataSource.attachPowerListDrawerListener();
-        }*/
+        showPowerLists();
     }
 
     @Override
