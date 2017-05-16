@@ -3,27 +3,26 @@ package tomi.piipposoft.blankspellbook.PowerDetails;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.provider.MediaStore;
+import android.graphics.drawable.StateListDrawable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
-
-import java.util.ArrayList;
-import java.util.List;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import tomi.piipposoft.blankspellbook.R;
-import tomi.piipposoft.blankspellbook.Utils.GenericPowerList;
-import tomi.piipposoft.blankspellbook.dialog_fragments.SetPowerListNameDialog;
 
 /**
  * Created by OMISTAJA on 15.5.2017.
@@ -85,10 +84,6 @@ public class AddToPowerListDialog extends DialogFragment {
         }
     }
 
-    private static void setSelectedItem(int selection){
-        selectedItem = selection;
-    }
-
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -99,29 +94,18 @@ public class AddToPowerListDialog extends DialogFragment {
         dailyPowerListNames = bundle.getStringArray("dailyPowerListNames");
         dailyPowerListIds = bundle.getStringArray("dailyPowerListIds");
 
-        final int itemSelected = -1;
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_add_to_power_list, null);
 
-        ListView listView = (ListView) view.findViewById(R.id.listview);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                getActivity(),
-                android.R.layout.simple_list_item_1,
-                android.R.id.text1,
-                powerListNames);
-
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // TODO: 15.5.2017 need to add highlight color to the selected item 
-                AddToPowerListDialog.setSelectedItem(position);
-                view.setSelected(true);
-            }
-        });
+        // TODO: 16.5.2017 works like this, but maybe just use a recyclerview? 
+        RadioGroup radioGroup = (RadioGroup) view.findViewById(R.id.radioGroup_powerLists);
+        for(String powerListName : powerListNames){
+            RadioButton button = new RadioButton(getContext());
+            button.setText(powerListName);
+            radioGroup.addView(button);
+        }
 
         final RadioButton powerListButton = (RadioButton) view.findViewById(R.id.radio_power_list);
         powerListButton.setChecked(true);
@@ -150,9 +134,6 @@ public class AddToPowerListDialog extends DialogFragment {
                         AddToPowerListDialog.this.getDialog().cancel();
                     }
                 });
-
-
         return builder.create();
-
     }
 }
