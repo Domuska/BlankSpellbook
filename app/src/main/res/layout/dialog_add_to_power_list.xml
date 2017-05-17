@@ -4,6 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
+
     <RadioGroup
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,18 +21,14 @@
             android:text="@string/radio_button_daily_power_list"/>
     </RadioGroup>
 
-    <!-- <ListView
+     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/listview"
+        android:id="@+id/recyclerview_add_to_power_list"
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"/> -->
-    <RadioGroup
-        android:id="@+id/radioGroup_powerLists"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"/>
+        android:layout_marginRight="20dp"/>
+
 
 </LinearLayout>
