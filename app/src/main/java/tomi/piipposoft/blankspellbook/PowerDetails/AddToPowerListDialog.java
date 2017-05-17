@@ -22,11 +22,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import tomi.piipposoft.blankspellbook.R;
@@ -42,15 +44,18 @@ public class AddToPowerListDialog extends DialogFragment {
     private String[] dailyPowerListNames;
     private String[] dailyPowerListIds;
     private final String TAG = "AddToPowerListDialog";
-    private static int selectedItem;
 
-    private FragmentTabHost tabHost;
+
+    private enum Selected {POWER_LISTS, DAILY_POWER_LISTS}
+    Selected selectedList = Selected.POWER_LISTS;
+    ArrayList<String> selectedListIds = new ArrayList<>();
+
 
     /* The activity that creates an instance of this dialog fragment must
      * implement this interface in order to receive event callbacks.
      * Each method passes the DialogFragment in case the host needs to query it. */
     public interface NoticeDialogListener{
-        void onAddToListPositiveClick(DialogFragment dialog, String listId);
+        void onAddToListPositiveClick(DialogFragment dialog, ArrayList<String> listId);
     }
 
     // Use this instance of the interface to deliver action events
@@ -109,16 +114,35 @@ public class AddToPowerListDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.dialog_add_to_power_list, null);
 
         //create the recyclerview where power lists and daily power lists are shown
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_add_to_power_list);
+        final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_add_to_power_list);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(manager);
 
-        AddToPowerListAdapter adapter = new AddToPowerListAdapter(powerListNames);
+        final AddToPowerListAdapter adapter =
+                new AddToPowerListAdapter(powerListNames, dailyPowerListNames);
         recyclerView.setAdapter(adapter);
 
         final RadioButton powerListButton = (RadioButton) view.findViewById(R.id.radio_power_list);
         powerListButton.setChecked(true);
+        powerListButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedList = Selected.POWER_LISTS;
+                //just empty the array since the checkboxes are removed too
+                selectedListIds.clear();
+                adapter.notifyDataSetChanged();
+            }
+        });
+
         final RadioButton dailyPowerListButton = (RadioButton) view.findViewById(R.id.radio_daily_power_list);
+        dailyPowerListButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedList = Selected.DAILY_POWER_LISTS;
+                selectedListIds.clear();
+                adapter.notifyDataSetChanged();
+            }
+        });
 
         builder.setTitle(R.string.add_to_list_dialog_title)
                 .setView(view)
@@ -126,15 +150,15 @@ public class AddToPowerListDialog extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String listId;
-                        Log.d(TAG, "which at onClick: " + selectedItem);
-                        if(powerListButton.isChecked()){
+                        Log.d(TAG, "which at onClick: " );
+                        /*if(powerListButton.isChecked()){
                             listId = powerListIds[selectedItem];
                         }
                         else
-                            listId = dailyPowerListIds[selectedItem];
+                            listId = dailyPowerListIds[selectedItem];*/
 
                         mListener.onAddToListPositiveClick(
-                                AddToPowerListDialog.this, listId);
+                                AddToPowerListDialog.this, selectedListIds);
                     }
                 })
                 .setNegativeButton(R.string.action_cancel, new DialogInterface.OnClickListener() {
@@ -146,10 +170,33 @@ public class AddToPowerListDialog extends DialogFragment {
         return builder.create();
     }
 
+    private void addSelectedItem(int elementPosition){
+        Log.d(TAG, "adding item at position: " + elementPosition);
+        if(selectedList == Selected.POWER_LISTS) {
+            Log.d(TAG, "adding item with ID from selected lists: " + powerListIds[elementPosition]);
+            selectedListIds.add(powerListIds[elementPosition]);
+        }
+        else {
+            Log.d(TAG, "adding item with ID from selected lists: " + dailyPowerListIds[elementPosition]);
+            selectedListIds.add(dailyPowerListIds[elementPosition]);
+        }
+    }
+
+    private void removeSelectedItem(int elementPosition){
+        if(selectedList == Selected.POWER_LISTS)
+            selectedListIds.remove(powerListIds[elementPosition]);
+        else
+            selectedListIds.remove(dailyPowerListIds[elementPosition]);
+    }
+
+
+    /**
+     * Adapter for the recyclerview shown in this fragment
+     */
     private class AddToPowerListAdapter extends
             RecyclerView.Adapter<AddToPowerListAdapter.ViewHolder>{
 
-        private String[] dataset;
+        private String[] powerListNames, dailyPowerListNames;
 
         class ViewHolder extends RecyclerView.ViewHolder{
             private CheckBox checkBox;
@@ -159,13 +206,33 @@ public class AddToPowerListDialog extends DialogFragment {
             }
         }
 
-        private AddToPowerListAdapter(String[] dataset){
-            this.dataset = dataset;
+        private AddToPowerListAdapter(String[] powerListNames, String[] dailyPowerListNames){
+            this.powerListNames = powerListNames;
+            this.dailyPowerListNames = dailyPowerListNames;
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.checkBox.setText(dataset[position]);
+        public void onBindViewHolder(final ViewHolder holder, int position) {
+            //set the checkboxes unchecked here, otherwise when changing
+            //the dataset the recycled checkboxes occasionally stay checked
+            final int checkBoxPosition = holder.getAdapterPosition();
+
+            if(selectedList == Selected.POWER_LISTS)
+                holder.checkBox.setText(powerListNames[position]);
+            else
+                holder.checkBox.setText(dailyPowerListNames[position]);
+
+            holder.checkBox.setChecked(false);
+
+            holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if(isChecked)
+                        addSelectedItem(checkBoxPosition);
+                    else
+                        removeSelectedItem(checkBoxPosition);
+                }
+            });
         }
 
         @Override
@@ -178,7 +245,10 @@ public class AddToPowerListDialog extends DialogFragment {
 
         @Override
         public int getItemCount() {
-            return dataset.length;
+            if(selectedList == Selected.POWER_LISTS)
+                return powerListNames.length;
+            else
+                return dailyPowerListNames.length;
         }
     }
 }

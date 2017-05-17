@@ -143,9 +143,13 @@ public class PowerDetailsActivity extends AppCompatActivity
 
                 // TODO: 15.5.2017 change so that here we call PowerDetailsContract method to bring presenter into the loop
                 // TODO: 15.5.2017 and get the real database data
-                String[] list1 = {"seppo", "ismo", "asko", "mursu", "heppu", "joppa", "test11", "test2"};
-                String[] list2 = {"1", "2", "3", "4", "5", "6", "7", "8"};
-                DialogFragment fragment = AddToPowerListDialog.newInstance(list1, list2, null, null);
+                String[] list1 = {"seppo", "ismo", "asko", "mursu", "heppu", "joppa", "test11", "test2",
+                    "test3", "test3", "test3", "test3", "test3", "test3", "test3", "test3"};
+                String[] list2 = {"1", "2", "3", "4", "5", "6", "7", "8", "8", "8", "8", "8",
+                        "8", "8", "8", "8"};
+                String[] list3 = {"sepon tämänpäiväiset", "suuren big bad evil guyn dailyt"};
+                String[] list4 = {"123", "3312"};
+                DialogFragment fragment = AddToPowerListDialog.newInstance(list1, list2, list3, list4);
                 fragment.show(ft, "addToPowerListDialog");
             default:
                 return false;
@@ -576,8 +580,11 @@ public class PowerDetailsActivity extends AppCompatActivity
 
 
     @Override
-    public void onAddToListPositiveClick(DialogFragment dialog, String listId) {
-        Log.d(TAG, "ok button in add to power list fragment clicked: " + listId);
+    public void onAddToListPositiveClick(DialogFragment dialog, ArrayList<String> listIds) {
+        for(int i = 0; i < listIds.size(); i++){
+            Log.d(TAG, "got selected item id: " + listIds.get(i));
+        }
+        //Log.d(TAG, "ok button in add to power list fragment clicked: " + listIds);
         // TODO: 15.5.2017 call PowerDetailsPresenter method to save the spell id to spell lists list of spells
     }
 }
