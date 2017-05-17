@@ -35,10 +35,21 @@ import tomi.piipposoft.blankspellbook.R;
 
 /**
  * Created by OMISTAJA on 15.5.2017.
+ * Used for displaying the popup in PowerDetailsActivity when user wants
+ * to add a power to another list of powers or a list of daily powers
+ *
+ * Works as a state machine, controlled by enumerated selectedList.
  */
 
 public class AddToPowerListDialog extends DialogFragment {
 
+    // the lists are used to populate the recyclerview's checkboxes
+    // and to know the ID of the elements we get
+    // the lists should be ordered so that
+    // in the entry in 1st index of powerListIds is the ID of the
+    // power list named in powerListNames
+    // same goes for the daily power lists
+    // could be done with a map but left like this for now
     private String[] powerListNames;
     private String[] powerListIds;
     private String[] dailyPowerListNames;
@@ -48,7 +59,7 @@ public class AddToPowerListDialog extends DialogFragment {
 
     private enum Selected {POWER_LISTS, DAILY_POWER_LISTS}
     Selected selectedList = Selected.POWER_LISTS;
-    ArrayList<String> selectedListIds = new ArrayList<>();
+    final ArrayList<String> selectedListIds = new ArrayList<>();
 
 
     /* The activity that creates an instance of this dialog fragment must
@@ -127,9 +138,8 @@ public class AddToPowerListDialog extends DialogFragment {
         powerListButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectedList = Selected.POWER_LISTS;
-                //just empty the array since the checkboxes are removed too
-                selectedListIds.clear();
+                setState(Selected.POWER_LISTS);
+                //notify the adapter so the list of items is refreshed
                 adapter.notifyDataSetChanged();
             }
         });
@@ -138,8 +148,8 @@ public class AddToPowerListDialog extends DialogFragment {
         dailyPowerListButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectedList = Selected.DAILY_POWER_LISTS;
-                selectedListIds.clear();
+                setState(Selected.DAILY_POWER_LISTS);
+                //notify the adapter so the list of items is refreshed
                 adapter.notifyDataSetChanged();
             }
         });
@@ -149,14 +159,6 @@ public class AddToPowerListDialog extends DialogFragment {
                 .setPositiveButton(R.string.action_ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String listId;
-                        Log.d(TAG, "which at onClick: " );
-                        /*if(powerListButton.isChecked()){
-                            listId = powerListIds[selectedItem];
-                        }
-                        else
-                            listId = dailyPowerListIds[selectedItem];*/
-
                         mListener.onAddToListPositiveClick(
                                 AddToPowerListDialog.this, selectedListIds);
                     }
@@ -170,6 +172,10 @@ public class AddToPowerListDialog extends DialogFragment {
         return builder.create();
     }
 
+    /**
+     * Add an element to the selectedListIds
+     * * @param elementPosition position in powerListIds or dailyPowerListIds of the element that is to be added
+     */
     private void addSelectedItem(int elementPosition){
         Log.d(TAG, "adding item at position: " + elementPosition);
         if(selectedList == Selected.POWER_LISTS) {
@@ -182,11 +188,25 @@ public class AddToPowerListDialog extends DialogFragment {
         }
     }
 
+    /**
+     * Remove an element from the list of selected list ids
+     * @param elementPosition position in powerListIds or dailyPowerListIds of the element that is to be removed
+     */
     private void removeSelectedItem(int elementPosition){
         if(selectedList == Selected.POWER_LISTS)
             selectedListIds.remove(powerListIds[elementPosition]);
         else
             selectedListIds.remove(dailyPowerListIds[elementPosition]);
+    }
+
+    /**
+     * Used to control the state of the recycler's items
+     * @param selected the state that has been selected, see Selected enum
+     */
+    private void setState(Selected selected){
+        this.selectedList = selected;
+        //empty the list since we are not saving which items were selected previously
+        selectedListIds.clear();
     }
 
 
