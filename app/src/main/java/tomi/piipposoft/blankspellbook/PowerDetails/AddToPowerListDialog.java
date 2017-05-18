@@ -58,6 +58,8 @@ public class AddToPowerListDialog extends DialogFragment {
     private String[] dailyPowerListIds;
     private final String TAG = "AddToPowerListDialog";
 
+    private AddToPowerListAdapter adapter;
+
 
     private enum Selected {POWER_LISTS, DAILY_POWER_LISTS}
     Selected selectedList = Selected.POWER_LISTS;
@@ -75,24 +77,22 @@ public class AddToPowerListDialog extends DialogFragment {
     AddToPowerListDialog.NoticeDialogListener mListener;
 
     // could maybe pass in parcelable or somesuch, this is easier for now though
-    public static AddToPowerListDialog newInstance(String[] powerListNames,
-                                                   String[] powerListIds,
-                                                   String[] dailyPowerListNames,
-                                                   String[] dailyPowerListIds){
+    public static AddToPowerListDialog newInstance(){
 
         AddToPowerListDialog dialog = new AddToPowerListDialog();
         //supply the arguments
         Bundle args = new Bundle();
-        args.putStringArray("powerListNames", powerListNames);
+        /*args.putStringArray("powerListNames", powerListNames);
         args.putStringArray("powerListIds", powerListIds);
         args.putStringArray("dailyPowerListNames", dailyPowerListNames);
-        args.putStringArray("dailyPowerListIds", dailyPowerListIds);
+        args.putStringArray("dailyPowerListIds", dailyPowerListIds);*/
         dialog.setArguments(args);
         return dialog;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate called");
         super.onCreate(savedInstanceState);
     }
 
@@ -114,12 +114,18 @@ public class AddToPowerListDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
+        Log.d(TAG, "onCreateDialog called");
         Bundle bundle = getArguments();
-        powerListNames = bundle.getStringArray("powerListNames");
-        powerListIds = bundle.getStringArray("powerListIds");
-        dailyPowerListNames = bundle.getStringArray("dailyPowerListNames");
-        dailyPowerListIds = bundle.getStringArray("dailyPowerListIds");
+
+        //we can't know if setPowerListData has been called yet, can be a slow network call...
+        if(powerListNames == null)
+            powerListNames = new String[0];
+        if(powerListIds == null)
+            powerListIds = new String[0];
+        if(dailyPowerListNames == null)
+            dailyPowerListNames = new String[0];
+        if(dailyPowerListIds == null)
+            dailyPowerListIds = new String[0];
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -139,8 +145,9 @@ public class AddToPowerListDialog extends DialogFragment {
         );
         recyclerView.addItemDecoration(divider);
 
-        final AddToPowerListAdapter adapter =
-                new AddToPowerListAdapter(powerListNames, dailyPowerListNames);
+
+        adapter = new AddToPowerListAdapter(powerListNames, dailyPowerListNames);
+
         recyclerView.setAdapter(adapter);
 
         final RadioButton powerListButton = (RadioButton) view.findViewById(R.id.radio_power_list);
@@ -150,7 +157,7 @@ public class AddToPowerListDialog extends DialogFragment {
             public void onClick(View v) {
                 setState(Selected.POWER_LISTS);
                 //notify the adapter so the list of items is refreshed
-                adapter.notifyDataSetChanged();
+                AddToPowerListDialog.this.adapter.notifyDataSetChanged();
             }
         });
 
@@ -180,6 +187,28 @@ public class AddToPowerListDialog extends DialogFragment {
                     }
                 });
         return builder.create();
+    }
+
+    public void setPowerListData(String[] powerListNames,
+                                 String[] powerListIds){
+        this.powerListNames = powerListNames;
+        this.powerListIds = powerListIds;
+        Log.d(TAG, "setting power list data, # of elements: " + powerListNames.length);
+        if(adapter != null)
+            adapter.notifyDataSetChanged();
+        else
+            Log.d(TAG, "setPowerListData: adapter is null");
+    }
+
+    public void setDailyPowerListData(String[] dailyPowerListNames,
+                                      String[] dailyPowerListIds){
+        this.dailyPowerListNames = dailyPowerListNames;
+        this.dailyPowerListIds = dailyPowerListIds;
+        Log.d(TAG, "setting power list data, # of elements: " + dailyPowerListNames.length);
+        if(adapter != null)
+            adapter.notifyDataSetChanged();
+        else
+            Log.d(TAG, "setDailyPowerListData: adapter is null");
     }
 
     /**
@@ -251,6 +280,7 @@ public class AddToPowerListDialog extends DialogFragment {
         private AddToPowerListAdapter(String[] powerListNames, String[] dailyPowerListNames){
             this.powerListNames = powerListNames;
             this.dailyPowerListNames = dailyPowerListNames;
+            Log.d(TAG, "number of power list names got into adapter:" + powerListNames.length);
         }
 
         @Override
@@ -343,9 +373,13 @@ public class AddToPowerListDialog extends DialogFragment {
         @Override
         public int getItemCount() {
             if(selectedList == Selected.POWER_LISTS)
-                return powerListNames.length;
+                if(powerListNames!= null)
+                    return powerListNames.length;
             else
-                return dailyPowerListNames.length;
+                if(dailyPowerListNames != null)
+                    return dailyPowerListNames.length;
+
+            return 0;
         }
     }
 }

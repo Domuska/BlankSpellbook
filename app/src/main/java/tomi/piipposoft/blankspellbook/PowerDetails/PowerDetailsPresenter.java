@@ -1,5 +1,6 @@
 package tomi.piipposoft.blankspellbook.PowerDetails;
 
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
@@ -156,5 +157,29 @@ public class PowerDetailsPresenter extends DrawerPresenter
     @Override
     public void dailyPowerListProfileSelected() {
         this.showDailyPowerLists();
+    }
+
+    @Override
+    public void userPressingAddToLists() {
+        mPowerDetailsView.showAddToListsFragment();
+        //get data from DB
+        String[] list1 = {"seppo", "ismo", "asko", "mursu", "heppu", "joppa", "test11", "test2",
+                "test3", "test3", "test3", "test3", "test3", "test3", "test3", "test3"};
+        String[] list2 = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
+                "13", "14", "15", "16"};
+        String[] list3 = {"sepon tämänpäiväiset", "suuren big bad evil guyn dailyt"};
+        String[] list4 = {"123", "3312"};
+
+        DataSource.getPowerLists();
+        DataSource.getDailyPowerLists();
+        //mPowerDetailsView.addPowerListsToFragment(list1, list2, list3, list4);
+    }
+
+    public static void handleFetchedPowerLists(String[] names, String[] ids) {
+        mPowerDetailsView.addPowerListsToFragment(names, ids);
+    }
+
+    public static void handleFetchedDailyPowerLists(String[] names, String[] ids) {
+        mPowerDetailsView.addDailyPowerListsToFragment(names, ids);
     }
 }

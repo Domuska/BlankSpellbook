@@ -22,7 +22,6 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import tomi.piipposoft.blankspellbook.R;
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
@@ -65,6 +64,8 @@ public class PowerDetailsActivity extends AppCompatActivity
     epicFeatText, groupText, notesText, triggerText;
 
     private FloatingActionButton fab, fabCancel;
+
+    private AddToPowerListDialog addToPowerListDialogFragment;
 
 
     @Override
@@ -133,8 +134,9 @@ public class PowerDetailsActivity extends AppCompatActivity
         switch(item.getItemId()){
             case R.id.action_add_to_powerlist:
                 Log.d(TAG, "pressed the add to power list button!");
+                mActionListener.userPressingAddToLists();
 
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                /*FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 Fragment prev = getSupportFragmentManager().findFragmentByTag("addToPowerListDialog");
                 if (prev != null) {
                     ft.remove(prev);
@@ -149,8 +151,9 @@ public class PowerDetailsActivity extends AppCompatActivity
                         "13", "14", "15", "16"};
                 String[] list3 = {"sepon tämänpäiväiset", "suuren big bad evil guyn dailyt"};
                 String[] list4 = {"123", "3312"};
-                DialogFragment fragment = AddToPowerListDialog.newInstance(list1, list2, list3, list4);
-                fragment.show(ft, "addToPowerListDialog");
+                AddToPowerListDialog addToPowerListDialogFragment = AddToPowerListDialog.newInstance();
+                addToPowerListDialogFragment.show(ft, "addToPowerListDialog");*/
+                //addToPowerListDialogFragment.setPowerListData(list1, list2, list3, list4);
             default:
                 return false;
         }
@@ -214,6 +217,29 @@ public class PowerDetailsActivity extends AppCompatActivity
     }
 
     // FROM PowerDetailsContract
+
+
+    @Override
+    public void showAddToListsFragment() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("addToPowerListDialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+        addToPowerListDialogFragment = AddToPowerListDialog.newInstance();
+        addToPowerListDialogFragment.show(ft, "addToPowerListDialog");
+    }
+
+    @Override
+    public void addPowerListsToFragment(String[] powerListNames, String[] powerListIds) {
+        addToPowerListDialogFragment.setPowerListData(powerListNames, powerListIds);
+    }
+
+    @Override
+    public void addDailyPowerListsToFragment(String[] dailyPowerListNames, String[] dailyPowerListIds) {
+        addToPowerListDialogFragment.setDailyPowerListData(dailyPowerListNames, dailyPowerListIds);
+    }
 
     @Override
     public void showDiscardChangesDialog(){
@@ -584,7 +610,7 @@ public class PowerDetailsActivity extends AppCompatActivity
         for(int i = 0; i < listIds.size(); i++){
             Log.d(TAG, "got selected item id: " + listIds.get(i));
         }
-        //Log.d(TAG, "ok button in add to power list fragment clicked: " + listIds);
+        //Log.d(TAG, "ok button in add to power list addToPowerListDialogFragment clicked: " + listIds);
         // TODO: 15.5.2017 call PowerDetailsPresenter method to save the spell id to spell lists list of spells
     }
 }

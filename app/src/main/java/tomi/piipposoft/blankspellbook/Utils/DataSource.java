@@ -34,6 +34,7 @@ public class DataSource {
     public static final String DB_SPELL_LIST_SPELLS_CHILD = "spells";
     public static final String DB_POWER_LISTS_REFERENCE = "spell_lists";
     public static final String DB_DAILY_POWER_LIST_REFERENCE = "daily_power_lists";
+    public static final String DB_SPELL_LIST_NAME_CHILD = "name";
     private static final String TAG = "DataSource";
 
 //    SQLiteDatabase myDb = BlankSpellBookContract.DBHelper
@@ -315,7 +316,7 @@ public class DataSource {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.d(TAG, databaseError.toException().toString());
+                Log.d(TAG, databaseError.toString());
             }
         };
 
@@ -340,6 +341,54 @@ public class DataSource {
     public static void addNewPowerList(String powerListName) {
         SpellList spellList = new SpellList(powerListName);
         firebaseDatabase.getReference(DB_POWER_LISTS_REFERENCE).push().setValue(spellList);
+    }
+
+    public static void getPowerLists(){
+        firebaseDatabase.getReference(DB_POWER_LISTS_REFERENCE)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.d(TAG, "# of children in getPowerLists: " + dataSnapshot.getChildrenCount());
+                        String[] names = new String[(int)dataSnapshot.getChildrenCount()];
+                        String[] ids = new String[(int)dataSnapshot.getChildrenCount()];
+                        int i = 0;
+                        for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                            ids[i] = snapshot.getKey();
+                            names[i] = snapshot.child(DB_SPELL_LIST_NAME_CHILD).getValue(String.class);
+                            i++;
+                        }
+                        PowerDetailsPresenter.handleFetchedPowerLists(names, ids);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.d(TAG, "something went wrong fetching power lists" + databaseError.toString());
+                    }
+                });
+    }
+
+    public static void getDailyPowerLists(){
+        firebaseDatabase.getReference(DB_DAILY_POWER_LIST_REFERENCE)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.d(TAG, "# of children in getDailyPowerLists: " + dataSnapshot.getChildrenCount());
+                        String[] names = new String[(int)dataSnapshot.getChildrenCount()];
+                        String[] ids = new String[(int)dataSnapshot.getChildrenCount()];
+                        int i = 0;
+                        for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                            ids[i] = snapshot.getKey();
+                            names[i] = snapshot.child(DB_SPELL_LIST_NAME_CHILD).getValue(String.class);
+                            i++;
+                        }
+                        PowerDetailsPresenter.handleFetchedDailyPowerLists(names, ids);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.d(TAG, "something went wrong fetching daily power lists" + databaseError.toString());
+                    }
+                });
     }
 
     public static ArrayList<Spell> getSpellsWithSpellBookId2(Context context, long id){
@@ -394,6 +443,7 @@ public class DataSource {
         return spells;
 //        return getDummyData();
     }
+
 
 
 

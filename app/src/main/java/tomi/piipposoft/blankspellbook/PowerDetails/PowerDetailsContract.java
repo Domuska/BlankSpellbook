@@ -17,6 +17,9 @@ public interface PowerDetailsContract {
         void hideUnUsedFields(Spell spell);
         void showDiscardChangesDialog();
         void cancelEdits();
+        void showAddToListsFragment();
+        void addPowerListsToFragment(String[] powerListNames, String[] powerListIds);
+        void addDailyPowerListsToFragment(String[] dailyPowerListNames, String[] dailyPowerListIds);
     }
 
     interface UserActionListener{
@@ -26,5 +29,6 @@ public interface PowerDetailsContract {
         void userSavingModifiedPower(Spell spell);
         void userCancelingEdits();
         void userPressingCancelButton(Spell spell);
+        void userPressingAddToLists();
     }
 }
