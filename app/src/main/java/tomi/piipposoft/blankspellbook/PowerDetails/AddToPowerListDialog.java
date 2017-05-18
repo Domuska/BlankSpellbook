@@ -13,9 +13,11 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,17 +41,17 @@ import tomi.piipposoft.blankspellbook.R;
  * to add a power to another list of powers or a list of daily powers
  *
  * Works as a state machine, controlled by enumerated selectedList.
+ *
+ * The RecyclerView uses 4 arrays of Strings as data, one set of arrays for
+ * Power Lists and one for Daily Power Lists. The arrays contain in order the names
+ * of the lists and the IDs of those corresponding lists.
+ *
+ * If these are not in order, the returned selected IDs will not be correct.
  */
 
 public class AddToPowerListDialog extends DialogFragment {
 
-    // the lists are used to populate the recyclerview's checkboxes
-    // and to know the ID of the elements we get
-    // the lists should be ordered so that
-    // in the entry in 1st index of powerListIds is the ID of the
-    // power list named in powerListNames
-    // same goes for the daily power lists
-    // could be done with a map but left like this for now
+    //could maybe rather use maps rather than two arrays
     private String[] powerListNames;
     private String[] powerListIds;
     private String[] dailyPowerListNames;
@@ -126,8 +128,16 @@ public class AddToPowerListDialog extends DialogFragment {
 
         //create the recyclerview where power lists and daily power lists are shown
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_add_to_power_list);
-        RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity());
+        LinearLayoutManager manager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(manager);
+
+
+        //add divider between elements
+        DividerItemDecoration divider = new DividerItemDecoration(
+                recyclerView.getContext(),
+                manager.getOrientation()
+        );
+        recyclerView.addItemDecoration(divider);
 
         final AddToPowerListAdapter adapter =
                 new AddToPowerListAdapter(powerListNames, dailyPowerListNames);
@@ -177,7 +187,7 @@ public class AddToPowerListDialog extends DialogFragment {
      * * @param elementPosition position in powerListIds or dailyPowerListIds of the element that is to be added
      */
     private void addSelectedItem(int elementPosition){
-        Log.d(TAG, "adding item at position: " + elementPosition);
+        //Log.d(TAG, "adding item at position: " + elementPosition);
         if(selectedList == Selected.POWER_LISTS) {
             Log.d(TAG, "adding item with ID from selected lists: " + powerListIds[elementPosition]);
             selectedListIds.add(powerListIds[elementPosition]);
@@ -193,10 +203,15 @@ public class AddToPowerListDialog extends DialogFragment {
      * @param elementPosition position in powerListIds or dailyPowerListIds of the element that is to be removed
      */
     private void removeSelectedItem(int elementPosition){
-        if(selectedList == Selected.POWER_LISTS)
+
+        if(selectedList == Selected.POWER_LISTS) {
+            Log.d(TAG, "removing item with ID from selected lists: " + powerListIds[elementPosition]);
             selectedListIds.remove(powerListIds[elementPosition]);
-        else
+        }
+        else {
+            Log.d(TAG, "removing item with ID from selected lists: " + powerListIds[elementPosition]);
             selectedListIds.remove(dailyPowerListIds[elementPosition]);
+        }
     }
 
     /**
@@ -217,12 +232,19 @@ public class AddToPowerListDialog extends DialogFragment {
             RecyclerView.Adapter<AddToPowerListAdapter.ViewHolder>{
 
         private String[] powerListNames, dailyPowerListNames;
+        //http://stackoverflow.com/questions/29983848/how-to-highlight-the-selected-item-of-recycler-view
+        private SparseBooleanArray mySelectedItems;
 
         class ViewHolder extends RecyclerView.ViewHolder{
             private CheckBox checkBox;
+            private TextView textView;
+            private View recyclerRowBackground;
             private ViewHolder(View view){
                 super(view);
                 checkBox = (CheckBox)view.findViewById(R.id.myCheckBox);
+                textView = (TextView)view.findViewById(R.id.recycler_row_textview);
+                recyclerRowBackground = view;
+                mySelectedItems = new SparseBooleanArray();
             }
         }
 
@@ -237,6 +259,8 @@ public class AddToPowerListDialog extends DialogFragment {
             //the dataset the recycled checkboxes occasionally stay checked
             final int checkBoxPosition = holder.getAdapterPosition();
 
+
+            //stuff for the checkbox in rows
             if(selectedList == Selected.POWER_LISTS)
                 holder.checkBox.setText(powerListNames[position]);
             else
@@ -251,6 +275,59 @@ public class AddToPowerListDialog extends DialogFragment {
                         addSelectedItem(checkBoxPosition);
                     else
                         removeSelectedItem(checkBoxPosition);
+                }
+            });
+
+
+            if(selectedList == Selected.POWER_LISTS) {
+                //get the name for the element from powerListNames
+                holder.textView.setText(powerListNames[position]);
+
+                //set the background color if the item is selected
+                if(selectedListIds.contains(powerListIds[checkBoxPosition]))
+                    holder.recyclerRowBackground.setSelected(true);
+                else
+                    holder.recyclerRowBackground.setSelected(false);
+            }
+            else {
+                //get the name for the element from dailyPowerListNames
+                holder.textView.setText(dailyPowerListNames[position]);
+                //set the background color if the item is selected
+                if(selectedListIds.contains(dailyPowerListIds[checkBoxPosition]))
+                    holder.recyclerRowBackground.setSelected(true);
+                else
+                    holder.recyclerRowBackground.setSelected(false);
+            }
+
+
+            holder.recyclerRowBackground.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d(TAG, "recycler's textview clicked");
+                    if(selectedList == Selected.POWER_LISTS){
+                        if(selectedListIds.contains(powerListIds[checkBoxPosition])){
+                            //mySelectedItems.delete(checkBoxPosition);
+                            holder.recyclerRowBackground.setSelected(false);
+                            removeSelectedItem(checkBoxPosition);
+                        }
+                        else{
+                            //mySelectedItems.put(checkBoxPosition, true);
+                            holder.recyclerRowBackground.setSelected(true);
+                            addSelectedItem(checkBoxPosition);
+                        }
+                    }
+                    else{
+                        if(selectedListIds.contains(dailyPowerListIds[checkBoxPosition])){
+                            //this element's ID is already in the list of selected items, removing...
+                            holder.recyclerRowBackground.setSelected(false);
+                            removeSelectedItem(checkBoxPosition);
+                        }
+                        else{
+                            //this element is not selected, adding to selected items...
+                            holder.recyclerRowBackground.setSelected(true);
+                            addSelectedItem(checkBoxPosition);
+                        }
+                    }
                 }
             });
         }

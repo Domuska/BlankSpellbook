@@ -145,8 +145,8 @@ public class PowerDetailsActivity extends AppCompatActivity
                 // TODO: 15.5.2017 and get the real database data
                 String[] list1 = {"seppo", "ismo", "asko", "mursu", "heppu", "joppa", "test11", "test2",
                     "test3", "test3", "test3", "test3", "test3", "test3", "test3", "test3"};
-                String[] list2 = {"1", "2", "3", "4", "5", "6", "7", "8", "8", "8", "8", "8",
-                        "8", "8", "8", "8"};
+                String[] list2 = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
+                        "13", "14", "15", "16"};
                 String[] list3 = {"sepon tämänpäiväiset", "suuren big bad evil guyn dailyt"};
                 String[] list4 = {"123", "3312"};
                 DialogFragment fragment = AddToPowerListDialog.newInstance(list1, list2, list3, list4);
