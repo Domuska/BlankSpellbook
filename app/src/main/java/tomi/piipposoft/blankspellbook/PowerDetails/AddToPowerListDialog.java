@@ -146,7 +146,7 @@ public class AddToPowerListDialog extends DialogFragment {
         recyclerView.addItemDecoration(divider);
 
 
-        adapter = new AddToPowerListAdapter(powerListNames, dailyPowerListNames);
+        adapter = new AddToPowerListAdapter();
 
         recyclerView.setAdapter(adapter);
 
@@ -167,7 +167,7 @@ public class AddToPowerListDialog extends DialogFragment {
             public void onClick(View v) {
                 setState(Selected.DAILY_POWER_LISTS);
                 //notify the adapter so the list of items is refreshed
-                adapter.notifyDataSetChanged();
+                AddToPowerListDialog.this.adapter.notifyDataSetChanged();
             }
         });
 
@@ -193,6 +193,7 @@ public class AddToPowerListDialog extends DialogFragment {
                                  String[] powerListIds){
         this.powerListNames = powerListNames;
         this.powerListIds = powerListIds;
+
         Log.d(TAG, "setting power list data, # of elements: " + powerListNames.length);
         if(adapter != null)
             adapter.notifyDataSetChanged();
@@ -204,9 +205,11 @@ public class AddToPowerListDialog extends DialogFragment {
                                       String[] dailyPowerListIds){
         this.dailyPowerListNames = dailyPowerListNames;
         this.dailyPowerListIds = dailyPowerListIds;
-        Log.d(TAG, "setting power list data, # of elements: " + dailyPowerListNames.length);
-        if(adapter != null)
+        Log.d(TAG, "setting daily power list data, # of elements: " + dailyPowerListNames.length);
+        if(adapter != null) {
+            Log.d(TAG, "adapter not null, notifying...");
             adapter.notifyDataSetChanged();
+        }
         else
             Log.d(TAG, "setDailyPowerListData: adapter is null");
     }
@@ -256,13 +259,13 @@ public class AddToPowerListDialog extends DialogFragment {
 
     /**
      * Adapter for the recyclerview shown in this fragment
+     * Handles highlighting elements as they are clicked to display they are selected
+     * credit to
+     * http://stackoverflow.com/questions/29983848/how-to-highlight-the-selected-item-of-recycler-view
      */
     private class AddToPowerListAdapter extends
             RecyclerView.Adapter<AddToPowerListAdapter.ViewHolder>{
 
-        private String[] powerListNames, dailyPowerListNames;
-        //http://stackoverflow.com/questions/29983848/how-to-highlight-the-selected-item-of-recycler-view
-        private SparseBooleanArray mySelectedItems;
 
         class ViewHolder extends RecyclerView.ViewHolder{
             private CheckBox checkBox;
@@ -273,14 +276,10 @@ public class AddToPowerListDialog extends DialogFragment {
                 checkBox = (CheckBox)view.findViewById(R.id.myCheckBox);
                 textView = (TextView)view.findViewById(R.id.recycler_row_textview);
                 recyclerRowBackground = view;
-                mySelectedItems = new SparseBooleanArray();
             }
         }
 
-        private AddToPowerListAdapter(String[] powerListNames, String[] dailyPowerListNames){
-            this.powerListNames = powerListNames;
-            this.dailyPowerListNames = dailyPowerListNames;
-            Log.d(TAG, "number of power list names got into adapter:" + powerListNames.length);
+        private AddToPowerListAdapter(){
         }
 
         @Override
@@ -289,8 +288,8 @@ public class AddToPowerListDialog extends DialogFragment {
             //the dataset the recycled checkboxes occasionally stay checked
             final int checkBoxPosition = holder.getAdapterPosition();
 
-
             //stuff for the checkbox in rows
+            // TODO: 19.5.2017 to be removed if the list highlighting is better
             if(selectedList == Selected.POWER_LISTS)
                 holder.checkBox.setText(powerListNames[position]);
             else
@@ -328,7 +327,6 @@ public class AddToPowerListDialog extends DialogFragment {
                 else
                     holder.recyclerRowBackground.setSelected(false);
             }
-
 
             holder.recyclerRowBackground.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -372,12 +370,15 @@ public class AddToPowerListDialog extends DialogFragment {
 
         @Override
         public int getItemCount() {
-            if(selectedList == Selected.POWER_LISTS)
-                if(powerListNames!= null)
+            if(selectedList == Selected.POWER_LISTS) {
+                if (powerListNames != null)
                     return powerListNames.length;
-            else
-                if(dailyPowerListNames != null)
+            }
+            if(selectedList == Selected.DAILY_POWER_LISTS) {
+                if(dailyPowerListNames != null) {
                     return dailyPowerListNames.length;
+                }
+            }
 
             return 0;
         }

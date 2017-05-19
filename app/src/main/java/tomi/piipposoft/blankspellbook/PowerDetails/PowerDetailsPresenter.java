@@ -163,22 +163,27 @@ public class PowerDetailsPresenter extends DrawerPresenter
     public void userPressingAddToLists() {
         mPowerDetailsView.showAddToListsFragment();
         //get data from DB
-        String[] list1 = {"seppo", "ismo", "asko", "mursu", "heppu", "joppa", "test11", "test2",
-                "test3", "test3", "test3", "test3", "test3", "test3", "test3", "test3"};
-        String[] list2 = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
-                "13", "14", "15", "16"};
-        String[] list3 = {"sepon tämänpäiväiset", "suuren big bad evil guyn dailyt"};
-        String[] list4 = {"123", "3312"};
-
         DataSource.getPowerLists();
+        //String[] list1 = {"akuankka", "iinesankka"};
+        //String[] list2 = {"1", "2"};
+        //mPowerDetailsView.addDailyPowerListsToFragment(list1, list2);
         DataSource.getDailyPowerLists();
-        //mPowerDetailsView.addPowerListsToFragment(list1, list2, list3, list4);
     }
 
+    /**
+     * Called to inform that there is new data for power list displaying
+     * @param names Array containing the names of the power lists
+     * @param ids Array containing the IDs of the power lists, same order names argument
+     */
     public static void handleFetchedPowerLists(String[] names, String[] ids) {
         mPowerDetailsView.addPowerListsToFragment(names, ids);
     }
 
+    /**
+     * Called to inform that there is new data for daily power lists
+     * @param names Array containing the names of the daily power lists
+     * @param ids Array containing the IDs of the daily power lists, same order as names argument
+     */
     public static void handleFetchedDailyPowerLists(String[] names, String[] ids) {
         mPowerDetailsView.addDailyPowerListsToFragment(names, ids);
     }
