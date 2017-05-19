@@ -53,7 +53,6 @@ public class PowerDetailsActivity extends AppCompatActivity
 
     private String powerId, spellBookId;
 
-    private MenuItem cancelItem;
     private boolean goBackOnCancelPress = false;
     private boolean editingSpell = false;
 
@@ -69,6 +68,8 @@ public class PowerDetailsActivity extends AppCompatActivity
 
     private AddToPowerListDialog addToPowerListDialogFragment;
 
+    private Bundle savedState;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +79,7 @@ public class PowerDetailsActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         toolbar.setTitle("Details");
         setSupportActionBar(toolbar);
+        savedState = savedInstanceState;
 
         //add cancel button to toolbar
         Log.d(TAG, "onCreate called");
@@ -114,19 +116,21 @@ public class PowerDetailsActivity extends AppCompatActivity
         mDrawerActionListener = (DrawerContract.UserActionListener)mActionListener;
         mDrawerActionListener.powerListProfileSelected();
 
+        if(savedState == null)
+            mActionListener.showPowerDetails(false);
+        else {
+            mActionListener.showPowerDetails(savedState.getBoolean("userEditingPower"));
+        }
+
         Log.d(TAG, "onResume called");
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //create the cancel item
-
         getMenuInflater().inflate(R.menu.menu_power_details, menu);
-        cancelItem = menu.findItem(R.id.action_cancel);
-        cancelItem.setVisible(false);
 
         //tell action listener to tell us what to show
-        mActionListener.showPowerDetails();
+        //mActionListener.showPowerDetails();
         return true;
     }
 
@@ -151,6 +155,14 @@ public class PowerDetailsActivity extends AppCompatActivity
         return super.onKeyDown(keyCode, event);
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        //save if user is editing a power
+        outState.putBoolean("userEditingPower", editingSpell);
+        super.onSaveInstanceState(outState);
+    }
+
+    // TODO: 19.5.2017 this method should maybe just return an array, let presenter handle spell construction
     private Spell constructSpellFromFields() {
         Spell spell = new Spell();
 
@@ -454,6 +466,7 @@ public class PowerDetailsActivity extends AppCompatActivity
     public void showSpellEditView(Spell spell) {
 
         editingSpell = true;
+        //fab.setVisibility(View.VISIBLE);
         fab.setImageResource(R.drawable.ic_done_black_24dp);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

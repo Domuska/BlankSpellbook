@@ -1,5 +1,7 @@
 package tomi.piipposoft.blankspellbook.PowerDetails;
 
+import android.support.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +26,7 @@ public interface PowerDetailsContract {
     }
 
     interface UserActionListener{
-        void showPowerDetails();
+        void showPowerDetails(boolean wasUserEditingSpell);
         void userSavingPower(Spell spell);
         void userEditingPower(Spell spell);
         void userSavingModifiedPower(Spell spell);

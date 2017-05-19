@@ -1,7 +1,7 @@
 package tomi.piipposoft.blankspellbook.PowerDetails;
 
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -19,11 +19,15 @@ public class PowerDetailsPresenter extends DrawerPresenter
         implements PowerDetailsContract.UserActionListener,
         DrawerContract.UserActionListener{
 
+    private static final String TAG = "PowerDetailsPresenter";
     private static PowerDetailsContract.View mPowerDetailsView;
     private final DrawerContract.ViewActivity mDrawerActivityView;
     private static String powerId;
     private String powerListId;
-    private static Spell thisSpell;
+    private static Spell thisPower;
+
+    //used when activity gets savedInstanceState bundle, user might have been editing a power
+    private static boolean wasUserEditingPower = false;
 
     public PowerDetailsPresenter(
             @NonNull BlankSpellBookContract.DBHelper dbHelper,
@@ -36,13 +40,13 @@ public class PowerDetailsPresenter extends DrawerPresenter
         mDrawerActivityView = (DrawerContract.ViewActivity) mPowerDetailsView;
         powerId = spellId;
         this.powerListId = powerLIstId;
-        thisSpell = new Spell();
+        thisPower = new Spell();
     }
 
     public static void handleFetchedSpell(Spell spell, String id) {
         if(spell != null) {
             powerId = id;
-            thisSpell = spell;
+            thisPower = spell;
 
             //check that spell has at least empty string in all fields
             if (spell.getAttackType() == null)
@@ -73,7 +77,17 @@ public class PowerDetailsPresenter extends DrawerPresenter
                 spell.setEpicFeat("");
             if (spell.getTrigger() == null)
                 spell.setTrigger("");
-            mPowerDetailsView.showFilledFields(spell);
+
+            // TODO: 19.5.2017 figure out what is wrong with this
+            //this doesn't work quite properly, something breaks if the
+            //spell edit view is shown here, disabling for now
+            //how to reproduce: go to spell details, start editing, rotate screen,
+            //accept edits button is not visible. If it is set to visible (in showEditSpellView),
+            //the fields will stop disappearing after OK is hit.
+            //if(wasUserEditingPower)
+            //    mPowerDetailsView.showSpellEditView(spell);
+            //else
+                mPowerDetailsView.showFilledFields(spell);
         }
     }
 
@@ -81,12 +95,12 @@ public class PowerDetailsPresenter extends DrawerPresenter
     // FROM PowerDetailsContract.UserActionListener
 
     @Override
-    public void showPowerDetails() {
-        if(powerId.equals(PowerDetailsActivity.EXTRA_ADD_NEW_POWER_DETAILS)){
+    public void showPowerDetails(boolean wasUserEditingPower) {
+        this.wasUserEditingPower = wasUserEditingPower;
+        if (powerId.equals(PowerDetailsActivity.EXTRA_ADD_NEW_POWER_DETAILS)) {
             mPowerDetailsView.showEmptyFields();
             mPowerDetailsView.setCancelAsGoBack(true);
-        }
-        else{
+        } else {
             mPowerDetailsView.setCancelAsGoBack(false);
             DataSource.getSpellWithId(powerId);
         }
@@ -114,13 +128,13 @@ public class PowerDetailsPresenter extends DrawerPresenter
 
     @Override
     public void userCancelingEdits() {
-        mPowerDetailsView.showFilledFields(thisSpell);
-        mPowerDetailsView.hideUnUsedFields(thisSpell);
+        mPowerDetailsView.showFilledFields(thisPower);
+        mPowerDetailsView.hideUnUsedFields(thisPower);
     }
 
     @Override
     public void userPressingCancelButton(Spell spell) {
-        if(thisSpell.equals(spell))
+        if(thisPower.equals(spell))
             mPowerDetailsView.cancelEdits();
         else
             mPowerDetailsView.showDiscardChangesDialog();
@@ -166,9 +180,6 @@ public class PowerDetailsPresenter extends DrawerPresenter
         mPowerDetailsView.showAddToListsFragment();
         //get data from DB
         DataSource.getPowerLists();
-        //String[] list1 = {"akuankka", "iinesankka"};
-        //String[] list2 = {"1", "2"};
-        //mPowerDetailsView.addDailyPowerListsToFragment(list1, list2);
         DataSource.getDailyPowerLists();
     }
 

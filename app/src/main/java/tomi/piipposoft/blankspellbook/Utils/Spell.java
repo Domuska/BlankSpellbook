@@ -1,12 +1,7 @@
 package tomi.piipposoft.blankspellbook.Utils;
 
-import android.util.Log;
-
-import java.util.ArrayList;
+import java.lang.reflect.Field;
 import java.util.Arrays;
-import java.util.List;
-
-import tomi.piipposoft.blankspellbook.PowerList.SpellGroup;
 
 /**
  * Created by Domu on 12-Jun-16.
@@ -181,7 +176,7 @@ public class Spell {
      * Returns all the fields (shown in UI, ID not included) held by the object, order of fields is not guaranteed
      * @return array of strings containing the fields of the POJO
      */
-    private String[] getFields(){
+    private String[] getVisibleFields(){
         if (this.getAttackType() == null)
             this.setAttackType("");
         if (this.getAttackRoll() == null)
@@ -218,11 +213,10 @@ public class Spell {
     @Override
     public boolean equals(Object o) {
         boolean areEqual = false;
-        if(o instanceof Spell) {
-            String myFields[] = this.getFields();
+        if(o != null && o instanceof Spell) {
+            String myFields[] = this.getVisibleFields();
             Spell spell = (Spell) o;
-            String objectFields[] = spell.getFields();
-
+            String objectFields[] = spell.getVisibleFields();
             if(Arrays.equals(myFields, objectFields))
                areEqual = true;
         }
