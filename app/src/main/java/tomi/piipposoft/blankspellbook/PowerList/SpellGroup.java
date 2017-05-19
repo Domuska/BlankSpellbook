@@ -64,11 +64,11 @@ public class SpellGroup implements ParentListItem, Comparable<SpellGroup>{
     public boolean equals(Object o) {
 
 
-        if(o instanceof String){
+        if(o!= null && o instanceof String){
             Log.d(TAG, "comparing with a String: " + o);
             return o.equals(this.groupName);
         }
-        if(o instanceof SpellGroup) {
+        if(o!= null && o instanceof SpellGroup) {
             SpellGroup group = (SpellGroup) o;
             return group.getGroupName().equals(this.groupName);
         }

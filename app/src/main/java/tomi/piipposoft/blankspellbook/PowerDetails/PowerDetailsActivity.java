@@ -108,7 +108,6 @@ public class PowerDetailsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 mActionListener.userPressingCancelButton(constructSpellFromFields());
-                //showDiscardChangesDialog();
             }
         });
 
@@ -205,6 +204,7 @@ public class PowerDetailsActivity extends AppCompatActivity
      *  after this we should be back in the view where spell's fields are displayed in non-edit mode
      */
     private void handleCancelButton(){
+        editingSpell = false;
         if(goBackOnCancelPress)
             PowerDetailsActivity.this.finish();
         else
