@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.method.KeyListener;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -54,6 +55,7 @@ public class PowerDetailsActivity extends AppCompatActivity
 
     private MenuItem cancelItem;
     private boolean goBackOnCancelPress = false;
+    private boolean editingSpell = false;
 
     private TextInputLayout spellNameLayout, attackTypeLayout, rechargeLayout, castingTimeLayout,
     targetLayout, attackRollLayout, hitDamageEffectLayout, missDamageLayout, adventurerFeatLayout,
@@ -135,31 +137,20 @@ public class PowerDetailsActivity extends AppCompatActivity
             case R.id.action_add_to_powerlist:
                 Log.d(TAG, "pressed the add to power list button!");
                 mActionListener.userPressingAddToLists();
-
-                /*FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                Fragment prev = getSupportFragmentManager().findFragmentByTag("addToPowerListDialog");
-                if (prev != null) {
-                    ft.remove(prev);
-                }
-                ft.addToBackStack(null);
-
-                // TODO: 15.5.2017 change so that here we call PowerDetailsContract method to bring presenter into the loop
-                // TODO: 15.5.2017 and get the real database data
-                String[] list1 = {"seppo", "ismo", "asko", "mursu", "heppu", "joppa", "test11", "test2",
-                    "test3", "test3", "test3", "test3", "test3", "test3", "test3", "test3"};
-                String[] list2 = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
-                        "13", "14", "15", "16"};
-                String[] list3 = {"sepon tämänpäiväiset", "suuren big bad evil guyn dailyt"};
-                String[] list4 = {"123", "3312"};
-                AddToPowerListDialog addToPowerListDialogFragment = AddToPowerListDialog.newInstance();
-                addToPowerListDialogFragment.show(ft, "addToPowerListDialog");*/
-                //addToPowerListDialogFragment.setPowerListData(list1, list2, list3, list4);
             default:
                 return false;
         }
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK && editingSpell) {
+            mActionListener.userPressingCancelButton(constructSpellFromFields());
+            return true;
+        }
 
+        return super.onKeyDown(keyCode, event);
+    }
 
     private Spell constructSpellFromFields() {
         Spell spell = new Spell();
@@ -209,6 +200,10 @@ public class PowerDetailsActivity extends AppCompatActivity
         //return !text.getText().toString().equals("");
     }
 
+    /**
+     *  Called when user has indicated they want to discard the edits they have made in the edit view,
+     *  after this we should be back in the view where spell's fields are displayed in non-edit mode
+     */
     private void handleCancelButton(){
         if(goBackOnCancelPress)
             PowerDetailsActivity.this.finish();
@@ -216,8 +211,8 @@ public class PowerDetailsActivity extends AppCompatActivity
             mActionListener.userCancelingEdits();
     }
 
-    // FROM PowerDetailsContract
 
+    ////// FROM PowerDetailsContract
 
     @Override
     public void showAddToListsFragment() {
@@ -270,6 +265,7 @@ public class PowerDetailsActivity extends AppCompatActivity
     @Override
     public void showEmptyFields() {
 
+        editingSpell = true;
         Log.d(TAG, "showing empty fields...");
         findViewById(R.id.input_layout_attackType).setVisibility(View.VISIBLE);
         findViewById(R.id.input_layout_attackRoll).setVisibility(View.VISIBLE);
@@ -307,6 +303,7 @@ public class PowerDetailsActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 mActionListener.userSavingPower(constructSpellFromFields());
+                editingSpell = false;
             }
         });
         fab.setVisibility(View.VISIBLE);
@@ -456,11 +453,13 @@ public class PowerDetailsActivity extends AppCompatActivity
     @Override
     public void showSpellEditView(Spell spell) {
 
+        editingSpell = true;
         fab.setImageResource(R.drawable.ic_done_black_24dp);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mActionListener.userSavingModifiedPower(constructSpellFromFields());
+                editingSpell = false;
             }
         });
 
@@ -475,6 +474,7 @@ public class PowerDetailsActivity extends AppCompatActivity
         findViewById(R.id.input_layout_damage_effect).setVisibility(View.VISIBLE);
         findViewById(R.id.input_layout_miss_damage).setVisibility(View.VISIBLE);
         findViewById(R.id.input_layout_spell_name).setVisibility(View.VISIBLE);
+        //findViewById(R.id.input_layout_spell_name).setClickable(true);
         findViewById(R.id.input_layout_notes).setVisibility(View.VISIBLE);
         findViewById(R.id.input_layout_recharge).setVisibility(View.VISIBLE);
         findViewById(R.id.input_layout_target).setVisibility(View.VISIBLE);
@@ -518,34 +518,62 @@ public class PowerDetailsActivity extends AppCompatActivity
 
     @Override
     public void hideUnUsedFields(Spell spell) {
-        if(spell.getAttackType() == null || "".equals(spell.getAttackType()))
+        if(spell.getAttackType() == null || "".equals(spell.getAttackType())) {
             findViewById(R.id.input_layout_attackType).setVisibility(View.GONE);
-        if(spell.getAttackRoll() == null || "".equals(spell.getAttackRoll()))
+            ((TextInputEditText)findViewById(R.id.editText_attackType)).setText("");
+        }
+        if(spell.getAttackRoll() == null || "".equals(spell.getAttackRoll())) {
             findViewById(R.id.input_layout_attackRoll).setVisibility(View.GONE);
-        if(spell.getCastingTime() == null || "".equals(spell.getCastingTime()))
+            ((TextInputEditText)findViewById(R.id.editText_attackRoll)).setText("");
+        }
+        if(spell.getCastingTime() == null || "".equals(spell.getCastingTime())) {
             findViewById(R.id.input_layout_castingTime).setVisibility(View.GONE);
-        if(spell.getGroupName() == null || "".equals(spell.getGroupName()))
+            ((TextInputEditText)findViewById(R.id.editText_castingTime)).setText("");
+        }
+        if(spell.getGroupName() == null || "".equals(spell.getGroupName())) {
             findViewById(R.id.input_layout_group).setVisibility(View.GONE);
-        if(spell.getHitDamageOrEffect() == null || "".equals(spell.getHitDamageOrEffect()))
+            ((TextInputEditText)findViewById(R.id.editText_group)).setText("");
+        }
+        if(spell.getHitDamageOrEffect() == null || "".equals(spell.getHitDamageOrEffect())) {
             findViewById(R.id.input_layout_damage_effect).setVisibility(View.GONE);
-        if(spell.getMissDamage() == null || "".equals(spell.getMissDamage()))
+            ((TextInputEditText)findViewById(R.id.editText_hitDamage_effect)).setText("");
+        }
+        if(spell.getMissDamage() == null || "".equals(spell.getMissDamage())) {
             findViewById(R.id.input_layout_miss_damage).setVisibility(View.GONE);
-        if(spell.getName() == null || "".equals(spell.getName()))
+            ((TextInputEditText)findViewById(R.id.editText_miss_damage)).setText("");
+        }
+        if(spell.getName() == null || "".equals(spell.getName())) {
             findViewById(R.id.input_layout_spell_name).setVisibility(View.GONE);
-        if(spell.getPlayerNotes() == null || "".equals(spell.getPlayerNotes()))
+            ((TextInputEditText)findViewById(R.id.editText_spellName)).setText("");
+        }
+        if(spell.getPlayerNotes() == null || "".equals(spell.getPlayerNotes())) {
             findViewById(R.id.input_layout_notes).setVisibility(View.GONE);
-        if(spell.getRechargeTime() == null || "".equals(spell.getRechargeTime()))
+            ((TextInputEditText)findViewById(R.id.editText_notes)).setText("");
+        }
+        if(spell.getRechargeTime() == null || "".equals(spell.getRechargeTime())) {
             findViewById(R.id.input_layout_recharge).setVisibility(View.GONE);
-        if(spell.getTarget() == null || "".equals(spell.getTarget()))
+            ((TextInputEditText)findViewById(R.id.editText_recharge)).setText("");
+        }
+        if(spell.getTarget() == null || "".equals(spell.getTarget())) {
             findViewById(R.id.input_layout_target).setVisibility(View.GONE);
-        if(spell.getAdventurerFeat() == null || "".equals(spell.getAdventurerFeat()))
+            ((TextInputEditText)findViewById(R.id.editText_target)).setText("");
+        }
+        if(spell.getAdventurerFeat() == null || "".equals(spell.getAdventurerFeat())) {
             findViewById(R.id.input_layout_adventurer_feat).setVisibility(View.GONE);
-        if(spell.getChampionFeat() == null || "".equals(spell.getChampionFeat()))
+            ((TextInputEditText)findViewById(R.id.editText_adventurer_feat)).setText("");
+        }
+        if(spell.getChampionFeat() == null || "".equals(spell.getChampionFeat())) {
             findViewById(R.id.input_layout_champion_feat).setVisibility(View.GONE);
-        if(spell.getEpicFeat() == null || "".equals(spell.getEpicFeat()))
+            ((TextInputEditText)findViewById(R.id.editText_champion_feat)).setText("");
+        }
+        if(spell.getEpicFeat() == null || "".equals(spell.getEpicFeat())) {
             findViewById(R.id.input_layout_epic_feat).setVisibility(View.GONE);
-        if(spell.getTrigger() == null || "".equals(spell.getTrigger()))
+            ((TextInputEditText)findViewById(R.id.editText_epic_feat)).setText("");
+        }
+        if(spell.getTrigger() == null || "".equals(spell.getTrigger())) {
             findViewById(R.id.input_layout_trigger).setVisibility(View.GONE);
+            ((TextInputEditText)findViewById(R.id.editText_trigger)).setText("");
+        }
     }
 
     // FROM DRAWER CONTRACT VIEW INTERFACE
