@@ -1,5 +1,6 @@
 package tomi.piipposoft.blankspellbook.PowerDetails;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import tomi.piipposoft.blankspellbook.Utils.Spell;
@@ -30,5 +31,6 @@ public interface PowerDetailsContract {
         void userCancelingEdits();
         void userPressingCancelButton(Spell spell);
         void userPressingAddToLists();
+        void userAddingPowerToLists(ArrayList<String> listIds, boolean addingToPowerList);
     }
 }

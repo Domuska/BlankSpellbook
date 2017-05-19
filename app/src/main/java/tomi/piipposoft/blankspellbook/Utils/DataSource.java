@@ -31,10 +31,12 @@ import tomi.piipposoft.blankspellbook.PowerList.PowerListPresenter;
 public class DataSource {
     public static final String DB_SPELL_LIST_TREE_NAME = "spell_lists";
     public static final String DB_SPELL_TREE_NAME = "spells";
-    public static final String DB_SPELL_LIST_SPELLS_CHILD = "spells";
+    public static final String DB_SPELL_LIST_CHILD_SPELLS = "spells";
     public static final String DB_POWER_LISTS_REFERENCE = "spell_lists";
-    public static final String DB_DAILY_POWER_LIST_REFERENCE = "daily_power_lists";
-    public static final String DB_SPELL_LIST_NAME_CHILD = "name";
+    public static final String DB_DAILY_POWER_LIST_NAME = "daily_power_lists";
+    public static final String DB_SPELL_LIST_CHILD_NAME = "name";
+    public static final String DB_DAILY_POWER_LIST_CHILD_SPELLS = "spells";
+    public static final String DB_DAILY_POWER_LIST_CHILD_NAME = "name";
     private static final String TAG = "DataSource";
 
 //    SQLiteDatabase myDb = BlankSpellBookContract.DBHelper
@@ -58,7 +60,7 @@ public class DataSource {
 
                 //get a list (map) of all spell IDs that this spell book contains
                 HashMap<String, Boolean> spellsMap =
-                        (HashMap<String, Boolean>) dataSnapshot.child(DB_SPELL_LIST_SPELLS_CHILD).getValue();
+                        (HashMap<String, Boolean>) dataSnapshot.child(DB_SPELL_LIST_CHILD_SPELLS).getValue();
 
                 for (Object o : spellsMap.entrySet()) {
                     Map.Entry pair = (Map.Entry) o;
@@ -78,7 +80,7 @@ public class DataSource {
 
     public static void addSpellListListener(String id){
         DatabaseReference spellListReference =
-                firebaseDatabase.getReference(DB_SPELL_LIST_TREE_NAME).child(id).child(DB_SPELL_LIST_SPELLS_CHILD);
+                firebaseDatabase.getReference(DB_SPELL_LIST_TREE_NAME).child(id).child(DB_SPELL_LIST_CHILD_SPELLS);
 
 
         spellListReference.addChildEventListener(new ChildEventListener() {
@@ -167,7 +169,7 @@ public class DataSource {
                     + "/"
                     + powerListId
                     + "/"
-                    + DB_SPELL_LIST_SPELLS_CHILD
+                    + DB_SPELL_LIST_CHILD_SPELLS
                     + "/"
                     + spellId, true);
         }
@@ -270,8 +272,8 @@ public class DataSource {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Log.d(TAG, "item removed: " + dataSnapshot.child("name") + " " + dataSnapshot.getKey());
-                String spellListName = dataSnapshot.child("name").getValue(String.class);
+                Log.d(TAG, "item removed: " + dataSnapshot.child(DB_SPELL_LIST_CHILD_NAME) + " " + dataSnapshot.getKey());
+                String spellListName = dataSnapshot.child(DB_SPELL_LIST_CHILD_NAME).getValue(String.class);
                 DrawerPresenter.handleRemovedItem(spellListName, dataSnapshot.getKey());
             }
 
@@ -294,9 +296,9 @@ public class DataSource {
         ChildEventListener dailyPowerListChildListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                DailySpellList list = dataSnapshot.getValue(DailySpellList.class);
+                String name = dataSnapshot.child(DB_DAILY_POWER_LIST_CHILD_NAME).getValue(String.class);
                 //add a new daily power list item to the drawer
-                DrawerPresenter.handleDailyPowerList(list.getName(), dataSnapshot.getKey());
+                DrawerPresenter.handleDailyPowerList(name, dataSnapshot.getKey());
             }
 
             @Override
@@ -320,7 +322,7 @@ public class DataSource {
             }
         };
 
-        firebaseDatabase.getReference(DB_DAILY_POWER_LIST_REFERENCE)
+        firebaseDatabase.getReference(DB_DAILY_POWER_LIST_NAME)
                 .addChildEventListener(dailyPowerListChildListener);
         return dailyPowerListChildListener;
     }
@@ -330,12 +332,12 @@ public class DataSource {
     }
 
     public static void removeDailyPowerListChildListener(ChildEventListener spellListChildListener) {
-        firebaseDatabase.getReference(DB_DAILY_POWER_LIST_REFERENCE).removeEventListener(spellListChildListener);
+        firebaseDatabase.getReference(DB_DAILY_POWER_LIST_NAME).removeEventListener(spellListChildListener);
     }
 
     public static void addNewDailyPowerList(String dailyPowerListName) {
         DailySpellList dailySpellList = new DailySpellList(dailyPowerListName);
-        firebaseDatabase.getReference(DB_DAILY_POWER_LIST_REFERENCE).push().setValue(dailySpellList);
+        firebaseDatabase.getReference(DB_DAILY_POWER_LIST_NAME).push().setValue(dailySpellList);
     }
 
     public static void addNewPowerList(String powerListName) {
@@ -354,7 +356,7 @@ public class DataSource {
                         int i = 0;
                         for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                             ids[i] = snapshot.getKey();
-                            names[i] = snapshot.child(DB_SPELL_LIST_NAME_CHILD).getValue(String.class);
+                            names[i] = snapshot.child(DB_SPELL_LIST_CHILD_NAME).getValue(String.class);
                             i++;
                         }
                         PowerDetailsPresenter.handleFetchedPowerLists(names, ids);
@@ -368,7 +370,7 @@ public class DataSource {
     }
 
     public static void getDailyPowerLists(){
-        firebaseDatabase.getReference(DB_DAILY_POWER_LIST_REFERENCE)
+        firebaseDatabase.getReference(DB_DAILY_POWER_LIST_NAME)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -378,7 +380,7 @@ public class DataSource {
                         int i = 0;
                         for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                             ids[i] = snapshot.getKey();
-                            names[i] = snapshot.child(DB_SPELL_LIST_NAME_CHILD).getValue(String.class);
+                            names[i] = snapshot.child(DB_SPELL_LIST_CHILD_NAME).getValue(String.class);
                             i++;
                         }
                         PowerDetailsPresenter.handleFetchedDailyPowerLists(names, ids);
@@ -389,6 +391,23 @@ public class DataSource {
                         Log.d(TAG, "something went wrong fetching daily power lists" + databaseError.toString());
                     }
                 });
+    }
+
+
+    public static void addSpellToPowerLists(ArrayList<String> listIds, String spellId) {
+        for(String id : listIds) {
+            DatabaseReference ref =
+                    firebaseDatabase.getReference(DB_SPELL_LIST_TREE_NAME).child(id).child(DB_SPELL_LIST_CHILD_SPELLS);
+            ref.child(spellId).setValue(true);
+        }
+    }
+
+    public static void addSpellToDailyPowerLists(ArrayList<String> listIds, String spellId) {
+        for(String id : listIds) {
+            DatabaseReference ref =
+                    firebaseDatabase.getReference(DB_DAILY_POWER_LIST_NAME).child(id).child(DB_DAILY_POWER_LIST_CHILD_SPELLS);
+            ref.child(spellId).setValue(true);
+        }
     }
 
     public static ArrayList<Spell> getSpellsWithSpellBookId2(Context context, long id){
@@ -478,4 +497,5 @@ public class DataSource {
         }
         return data;
     }
+
 }

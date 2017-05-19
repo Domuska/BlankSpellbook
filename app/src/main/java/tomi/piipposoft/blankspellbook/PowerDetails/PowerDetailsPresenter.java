@@ -3,6 +3,8 @@ package tomi.piipposoft.blankspellbook.PowerDetails;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 
+import java.util.ArrayList;
+
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerContract;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerHelper;
@@ -186,5 +188,13 @@ public class PowerDetailsPresenter extends DrawerPresenter
      */
     public static void handleFetchedDailyPowerLists(String[] names, String[] ids) {
         mPowerDetailsView.addDailyPowerListsToFragment(names, ids);
+    }
+
+    @Override
+    public void userAddingPowerToLists(ArrayList<String> listIds, boolean addingToPowerList) {
+        if(addingToPowerList)
+            DataSource.addSpellToPowerLists(listIds, powerId);
+        else
+            DataSource.addSpellToDailyPowerLists(listIds, powerId);
     }
 }

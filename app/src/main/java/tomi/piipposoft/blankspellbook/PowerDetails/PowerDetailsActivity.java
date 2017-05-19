@@ -606,11 +606,13 @@ public class PowerDetailsActivity extends AppCompatActivity
 
 
     @Override
-    public void onAddToListPositiveClick(DialogFragment dialog, ArrayList<String> listIds) {
+    public void onAddToListPositiveClick(DialogFragment dialog, ArrayList<String> listIds, boolean addingToPowerLists) {
         for(int i = 0; i < listIds.size(); i++){
             Log.d(TAG, "got selected item id: " + listIds.get(i));
         }
-        //Log.d(TAG, "ok button in add to power list addToPowerListDialogFragment clicked: " + listIds);
-        // TODO: 15.5.2017 call PowerDetailsPresenter method to save the spell id to spell lists list of spells
+
+        if(listIds.size() != 0){
+            mActionListener.userAddingPowerToLists(listIds, addingToPowerLists);
+        }
     }
 }

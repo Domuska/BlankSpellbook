@@ -70,7 +70,13 @@ public class AddToPowerListDialog extends DialogFragment {
      * implement this interface in order to receive event callbacks.
      * Each method passes the DialogFragment in case the host needs to query it. */
     public interface NoticeDialogListener{
-        void onAddToListPositiveClick(DialogFragment dialog, ArrayList<String> listId);
+        /**
+         * Called when the OK button in the dialog is clicked
+         * @param dialog the dialog itself for future referencing
+         * @param listId the list containing the IDs of the powers that user has selected
+         * @param addingToPowerLists boolean telling if we are adding to power lists or daily power lists
+         */
+        void onAddToListPositiveClick(DialogFragment dialog, ArrayList<String> listId, boolean addingToPowerLists);
     }
 
     // Use this instance of the interface to deliver action events
@@ -176,8 +182,13 @@ public class AddToPowerListDialog extends DialogFragment {
                 .setPositiveButton(R.string.action_ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        //set if we are adding the power to power lists or daily power lists
+                        boolean addingToPowerList = false;
+                        if(selectedList == Selected.POWER_LISTS)
+                            addingToPowerList = true;
+
                         mListener.onAddToListPositiveClick(
-                                AddToPowerListDialog.this, selectedListIds);
+                                AddToPowerListDialog.this, selectedListIds, addingToPowerList);
                     }
                 })
                 .setNegativeButton(R.string.action_cancel, new DialogInterface.OnClickListener() {
