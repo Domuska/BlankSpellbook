@@ -110,7 +110,7 @@ public class PowerDetailsActivity extends AppCompatActivity
         fabCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mActionListener.userPressingCancelButton(constructSpellFromFields());
+                mActionListener.userPressingCancelButton(constructDataFromFields());
             }
         });
 
@@ -149,7 +149,7 @@ public class PowerDetailsActivity extends AppCompatActivity
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK && editingSpell) {
-            mActionListener.userPressingCancelButton(constructSpellFromFields());
+            mActionListener.userPressingCancelButton(constructDataFromFields());
             return true;
         }
 
@@ -163,7 +163,7 @@ public class PowerDetailsActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
     }
 
-    private ArrayMap<String, String> constructSpellFromFields(){
+    private ArrayMap<String, String> constructDataFromFields(){
 
         ArrayMap<String, String> map = new ArrayMap<>();
 
@@ -315,7 +315,7 @@ public class PowerDetailsActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mActionListener.userSavingPower(constructSpellFromFields());
+                mActionListener.userSavingPower(constructDataFromFields());
                 editingSpell = false;
             }
         });
@@ -474,7 +474,7 @@ public class PowerDetailsActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mActionListener.userSavingModifiedPower(constructSpellFromFields());
+                mActionListener.userSavingModifiedPower(constructDataFromFields());
                 editingSpell = false;
             }
         });
@@ -500,7 +500,7 @@ public class PowerDetailsActivity extends AppCompatActivity
         findViewById(R.id.input_layout_epic_feat).setVisibility(View.VISIBLE);
         findViewById(R.id.input_layout_trigger).setVisibility(View.VISIBLE);
 
-        //set text fields as editable, save variables since constructSpellFromFields needs them to be initialized
+        //set text fields as editable, save variables since constructDataFromFields needs them to be initialized
         KeyListener newListener = new TextInputEditText(getApplicationContext()).getKeyListener();
         spellNameText = (TextInputEditText)findViewById(R.id.editText_spellName);
         spellNameText.setKeyListener(newListener);

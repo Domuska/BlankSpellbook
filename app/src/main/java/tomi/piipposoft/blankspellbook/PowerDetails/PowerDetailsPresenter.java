@@ -217,39 +217,47 @@ public class PowerDetailsPresenter extends DrawerPresenter
             DataSource.addSpellToDailyPowerLists(listIds, powerId);
     }
 
+    /**
+     * Used for constructing a spell object
+     * @param powerData ArrayMap containing fields for the Spell to be constructed, handles null values
+     * @return Spell object initialized with the data, will always return a spell even if all fields null
+     */
     private Spell constructPowerFromFields(ArrayMap<String, String> powerData){
 
         Spell spell = new Spell();
-        if(powerData.containsKey(PowerDetailsContract.name))
-            spell.setName(powerData.get(PowerDetailsContract.name));
-        if(powerData.containsKey(PowerDetailsContract.attackType))
-            spell.setAttackType(powerData.get(PowerDetailsContract.attackType));
-        if(powerData.containsKey(PowerDetailsContract.recharge))
-            spell.setRechargeTime(powerData.get(PowerDetailsContract.recharge));
-        if(powerData.containsKey(PowerDetailsContract.castingTime))
-            spell.setCastingTime(powerData.get(PowerDetailsContract.castingTime));
-        if(powerData.containsKey(PowerDetailsContract.target))
-            spell.setTarget(powerData.get(PowerDetailsContract.target));
-        if(powerData.containsKey(PowerDetailsContract.attackRoll))
-            spell.setAttackRoll(powerData.get(PowerDetailsContract.attackRoll));
-        if(powerData.containsKey(PowerDetailsContract.hitDamageOrEffect))
-            spell.setHitDamageOrEffect(powerData.get(PowerDetailsContract.hitDamageOrEffect));
-        if(powerData.containsKey(PowerDetailsContract.missDamage))
-            spell.setMissDamage(powerData.get(PowerDetailsContract.missDamage));
-        if(powerData.containsKey(PowerDetailsContract.adventurerFeat))
-            spell.setMissDamage(powerData.get(PowerDetailsContract.adventurerFeat));
-        if(powerData.containsKey(PowerDetailsContract.adventurerFeat))
-            spell.setAdventurerFeat(powerData.get(PowerDetailsContract.adventurerFeat));
-        if(powerData.containsKey(PowerDetailsContract.championFeat))
-            spell.setChampionFeat(powerData.get(PowerDetailsContract.championFeat));
-        if(powerData.containsKey(PowerDetailsContract.epicFeat))
-            spell.setEpicFeat(powerData.get(PowerDetailsContract.epicFeat));
-        if(powerData.containsKey(PowerDetailsContract.groupName))
-            spell.setGroupName(powerData.get(PowerDetailsContract.groupName));
-        if(powerData.containsKey(PowerDetailsContract.playerNotes))
-            spell.setPlayerNotes(powerData.get(PowerDetailsContract.playerNotes));
-        if(powerData.containsKey(PowerDetailsContract.trigger))
-            spell.setTrigger(powerData.get(PowerDetailsContract.trigger));
+
+        if(powerData != null) {
+            if (powerData.containsKey(PowerDetailsContract.name))
+                spell.setName(powerData.get(PowerDetailsContract.name));
+            if (powerData.containsKey(PowerDetailsContract.attackType))
+                spell.setAttackType(powerData.get(PowerDetailsContract.attackType));
+            if (powerData.containsKey(PowerDetailsContract.recharge))
+                spell.setRechargeTime(powerData.get(PowerDetailsContract.recharge));
+            if (powerData.containsKey(PowerDetailsContract.castingTime))
+                spell.setCastingTime(powerData.get(PowerDetailsContract.castingTime));
+            if (powerData.containsKey(PowerDetailsContract.target))
+                spell.setTarget(powerData.get(PowerDetailsContract.target));
+            if (powerData.containsKey(PowerDetailsContract.attackRoll))
+                spell.setAttackRoll(powerData.get(PowerDetailsContract.attackRoll));
+            if (powerData.containsKey(PowerDetailsContract.hitDamageOrEffect))
+                spell.setHitDamageOrEffect(powerData.get(PowerDetailsContract.hitDamageOrEffect));
+            if (powerData.containsKey(PowerDetailsContract.missDamage))
+                spell.setMissDamage(powerData.get(PowerDetailsContract.missDamage));
+            if (powerData.containsKey(PowerDetailsContract.adventurerFeat))
+                spell.setMissDamage(powerData.get(PowerDetailsContract.adventurerFeat));
+            if (powerData.containsKey(PowerDetailsContract.adventurerFeat))
+                spell.setAdventurerFeat(powerData.get(PowerDetailsContract.adventurerFeat));
+            if (powerData.containsKey(PowerDetailsContract.championFeat))
+                spell.setChampionFeat(powerData.get(PowerDetailsContract.championFeat));
+            if (powerData.containsKey(PowerDetailsContract.epicFeat))
+                spell.setEpicFeat(powerData.get(PowerDetailsContract.epicFeat));
+            if (powerData.containsKey(PowerDetailsContract.groupName))
+                spell.setGroupName(powerData.get(PowerDetailsContract.groupName));
+            if (powerData.containsKey(PowerDetailsContract.playerNotes))
+                spell.setPlayerNotes(powerData.get(PowerDetailsContract.playerNotes));
+            if (powerData.containsKey(PowerDetailsContract.trigger))
+                spell.setTrigger(powerData.get(PowerDetailsContract.trigger));
+        }
 
         return spell;
     }
