@@ -3,6 +3,8 @@
     https://developer.android.com/guide/topics/resources/drawable-resource.html#StateList -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- was used when the SpellDetailsActivity's AddToPowerListDialog displayed
+    only selectable rows instead of checkboxes -->
     <!-- Color when the row is selected -->
     <item android:drawable="@color/my_color_app_accent_lighter"
         android:state_pressed="false"

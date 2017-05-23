@@ -84,15 +84,7 @@ public class AddToPowerListDialog extends DialogFragment {
 
     // could maybe pass in parcelable or somesuch, this is easier for now though
     public static AddToPowerListDialog newInstance(){
-
         AddToPowerListDialog dialog = new AddToPowerListDialog();
-        //supply the arguments
-        Bundle args = new Bundle();
-        /*args.putStringArray("powerListNames", powerListNames);
-        args.putStringArray("powerListIds", powerListIds);
-        args.putStringArray("dailyPowerListNames", dailyPowerListNames);
-        args.putStringArray("dailyPowerListIds", dailyPowerListIds);*/
-        dialog.setArguments(args);
         return dialog;
     }
 
@@ -121,7 +113,6 @@ public class AddToPowerListDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.d(TAG, "onCreateDialog called");
-        Bundle bundle = getArguments();
 
         //we can't know if setPowerListData has been called yet, can be a slow network call...
         if(powerListNames == null)
@@ -145,11 +136,11 @@ public class AddToPowerListDialog extends DialogFragment {
 
 
         //add divider between elements
-        DividerItemDecoration divider = new DividerItemDecoration(
+        /*DividerItemDecoration divider = new DividerItemDecoration(
                 recyclerView.getContext(),
                 manager.getOrientation()
         );
-        recyclerView.addItemDecoration(divider);
+        recyclerView.addItemDecoration(divider);*/
 
 
         adapter = new AddToPowerListAdapter();
@@ -285,6 +276,8 @@ public class AddToPowerListDialog extends DialogFragment {
             private ViewHolder(View view){
                 super(view);
                 checkBox = (CheckBox)view.findViewById(R.id.myCheckBox);
+                //was used when the recycler rows were clickable
+                // TODO: 23.5.2017 remove in time
                 textView = (TextView)view.findViewById(R.id.recycler_row_textview);
                 recyclerRowBackground = view;
             }
@@ -342,6 +335,18 @@ public class AddToPowerListDialog extends DialogFragment {
             holder.recyclerRowBackground.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if(holder.checkBox.isChecked())
+                        holder.checkBox.setChecked(false);
+                    else
+                        holder.checkBox.setChecked(true);
+                }
+            });
+
+            //implementation where there's no checkboxes, the rows are just clickable
+            //see also decorator above in onCreateDialog
+            /*holder.recyclerRowBackground.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
                     Log.d(TAG, "recycler's textview clicked");
                     if(selectedList == Selected.POWER_LISTS){
                         if(selectedListIds.contains(powerListIds[checkBoxPosition])){
@@ -368,7 +373,7 @@ public class AddToPowerListDialog extends DialogFragment {
                         }
                     }
                 }
-            });
+            });*/
         }
 
         @Override
