@@ -219,7 +219,7 @@ public class DataSource {
     }
 
     /**
-     * Get spells from the database with the supplied list of IDs, calls PowerListPresenter's
+     * Get spells from the database with the supplied ID, calls PowerListPresenter's
      * handleSpellFromDatabase when query completed. Each spell is queried for individually.
      * @param spellId array of FireBase spells entry IDs
      */

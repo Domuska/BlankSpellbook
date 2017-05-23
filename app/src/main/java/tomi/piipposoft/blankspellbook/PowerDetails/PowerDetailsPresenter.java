@@ -43,6 +43,11 @@ public class PowerDetailsPresenter extends DrawerPresenter
         thisPower = new Spell();
     }
 
+    /**
+     * Fills in blank fields of the spell and tells view to show it
+     * @param spell a spell object
+     * @param id ID of the spell object
+     */
     public static void handleFetchedSpell(Spell spell, String id) {
         if(spell != null) {
             powerId = id;
@@ -78,16 +83,15 @@ public class PowerDetailsPresenter extends DrawerPresenter
             if (spell.getTrigger() == null)
                 spell.setTrigger("");
 
-            // TODO: 19.5.2017 figure out what is wrong with this
-            //this doesn't work quite properly, something breaks if the
-            //spell edit view is shown here, disabling for now
-            //how to reproduce: go to spell details, start editing, rotate screen,
-            //accept edits button is not visible. If it is set to visible (in showEditSpellView),
-            //the fields will stop disappearing after OK is hit.
-            //if(wasUserEditingPower)
-            //    mPowerDetailsView.showSpellEditView(spell);
-            //else
+            if(wasUserEditingPower) {
+                mPowerDetailsView.showSpellEditView(spell);
+                // since we have handled this situation already, set as false,
+                // this method is called again after edits have been done and power saved to DB)
+                wasUserEditingPower = false;
+            }
+            else
                 mPowerDetailsView.showFilledFields(spell);
+
         }
     }
 
@@ -95,8 +99,8 @@ public class PowerDetailsPresenter extends DrawerPresenter
     // FROM PowerDetailsContract.UserActionListener
 
     @Override
-    public void showPowerDetails(boolean wasUserEditingPower) {
-        this.wasUserEditingPower = wasUserEditingPower;
+    public void showPowerDetails(boolean wasUserEditing) {
+        wasUserEditingPower = wasUserEditing;
         if (powerId.equals(PowerDetailsActivity.EXTRA_ADD_NEW_POWER_DETAILS)) {
             mPowerDetailsView.showEmptyFields();
             mPowerDetailsView.setCancelAsGoBack(true);

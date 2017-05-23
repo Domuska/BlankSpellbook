@@ -329,6 +329,8 @@ public class PowerDetailsActivity extends AppCompatActivity
     @Override
     public void showFilledFields(final Spell spell) {
 
+        Log.d(TAG, "starting method call showFilledFields");
+
         fab.setImageResource(R.drawable.ic_mode_edit_black_24dp);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -352,6 +354,7 @@ public class PowerDetailsActivity extends AppCompatActivity
             attackTypeText = (TextInputEditText)findViewById(R.id.editText_attackType);
             attackTypeLayout.setVisibility(View.VISIBLE);
             attackTypeText.setText(spell.getAttackType());
+            //set keylistener as null so we have elements that can't be edited, this is re-set in edit view
             attackTypeText.setKeyListener(null);
             Log.d(TAG, "spell attack type: " + spell.getAttackType());
         }
@@ -365,7 +368,7 @@ public class PowerDetailsActivity extends AppCompatActivity
             Log.d(TAG, "spell attack roll: " + spell.getAttackRoll());
         }
 
-        if(!spell.getCastingTime().equals("")){
+        if(!"".equals(spell.getCastingTime())){
             castingTimeLayout = (TextInputLayout)findViewById(R.id.input_layout_castingTime);
             castingTimeText = (TextInputEditText)findViewById(R.id.editText_castingTime);
             castingTimeLayout.setVisibility(View.VISIBLE);
@@ -466,7 +469,6 @@ public class PowerDetailsActivity extends AppCompatActivity
     public void showSpellEditView(Spell spell) {
 
         editingSpell = true;
-        //fab.setVisibility(View.VISIBLE);
         fab.setImageResource(R.drawable.ic_done_black_24dp);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -475,6 +477,7 @@ public class PowerDetailsActivity extends AppCompatActivity
                 editingSpell = false;
             }
         });
+        fab.setVisibility(View.VISIBLE);
 
         //cancelItem.setVisible(true);
         fabCancel.setVisibility(View.VISIBLE);
@@ -496,7 +499,7 @@ public class PowerDetailsActivity extends AppCompatActivity
         findViewById(R.id.input_layout_epic_feat).setVisibility(View.VISIBLE);
         findViewById(R.id.input_layout_trigger).setVisibility(View.VISIBLE);
 
-        //set text fields as editable, save variables since handleSaving needs them to be initialized
+        //set text fields as editable, save variables since constructSpellFromFields needs them to be initialized
         KeyListener newListener = new TextInputEditText(getApplicationContext()).getKeyListener();
         spellNameText = (TextInputEditText)findViewById(R.id.editText_spellName);
         spellNameText.setKeyListener(newListener);
@@ -531,6 +534,8 @@ public class PowerDetailsActivity extends AppCompatActivity
 
     @Override
     public void hideUnUsedFields(Spell spell) {
+
+
         if(spell.getAttackType() == null || "".equals(spell.getAttackType())) {
             findViewById(R.id.input_layout_attackType).setVisibility(View.GONE);
             ((TextInputEditText)findViewById(R.id.editText_attackType)).setText("");
