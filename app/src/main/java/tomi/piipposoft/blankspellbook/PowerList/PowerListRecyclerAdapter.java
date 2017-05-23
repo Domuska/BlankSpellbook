@@ -111,6 +111,7 @@ public class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
 
         public void bind(final Spell spell) {
             childTextView.setText(spell.getName());
+            //set the onClickListener on the row so user doesn't have to aim to the text
             recyclerRowBackground.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
