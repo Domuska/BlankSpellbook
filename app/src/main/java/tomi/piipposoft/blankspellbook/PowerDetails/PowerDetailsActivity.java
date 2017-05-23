@@ -123,6 +123,14 @@ public class PowerDetailsActivity extends AppCompatActivity
         else {
             mActionListener.showPowerDetails(savedState.getBoolean("userEditingPower"));
         }
+        
+        //check if there is addToPowerList fragment visible, if so let presenter handle this
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("addToPowerListDialog");
+        if(prev != null){
+            Log.d(TAG, "we have addToPowerListDialog fragment in onResume");
+            addToPowerListDialogFragment = (AddToPowerListDialog) prev;
+            mActionListener.activityResumingWithFragment();
+        }
 
         Log.d(TAG, "onResume called");
     }

@@ -53,5 +53,11 @@ public interface PowerDetailsContract {
         void userPressingCancelButton(ArrayMap<String, String> powerData);
         void userPressingAddToLists();
         void userAddingPowerToLists(ArrayList<String> listIds, boolean addingToPowerList);
+
+        /**
+         * Handle AddToPowerListDialog re-creation in onresume, should re-populate
+         * the list in the dialog
+         */
+        void activityResumingWithFragment();
     }
 }

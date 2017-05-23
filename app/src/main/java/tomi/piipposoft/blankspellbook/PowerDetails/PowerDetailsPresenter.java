@@ -223,6 +223,12 @@ public class PowerDetailsPresenter extends DrawerPresenter
             DataSource.addSpellToDailyPowerLists(listIds, powerId);
     }
 
+    @Override
+    public void activityResumingWithFragment() {
+        DataSource.getPowerLists();
+        DataSource.getDailyPowerLists();
+    }
+
     /**
      * Used for constructing a spell object
      * @param powerData ArrayMap containing fields for the Spell to be constructed, handles null values
