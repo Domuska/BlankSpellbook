@@ -108,7 +108,8 @@ public class PowerListActivity extends AppCompatActivity
         myActionListener = new PowerListPresenter(
                 DataSource.getDatasource(this),
                 this,
-                DrawerHelper.getInstance(this, (Toolbar) findViewById(R.id.my_toolbar)));
+                DrawerHelper.getInstance(this, (Toolbar) findViewById(R.id.my_toolbar)),
+                powerListId);
 
         myDrawerActionListener = (DrawerContract.UserActionListener) myActionListener;
         myDrawerActionListener.powerListProfileSelected();
@@ -116,11 +117,10 @@ public class PowerListActivity extends AppCompatActivity
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(this);
 
-        //spellList = myActionListener.getSpellList(getApplicationContext(), powerListId);
+        //initialize the drawer with the spell list
         myActionListener.getSpellList(getApplicationContext(), powerListId);
 
         spellGroups = new ArrayList<>();
-
         adapter = new PowerListRecyclerAdapter(this, spellGroups, myActionListener);
 
 //        adapter.setExpandCollapseListener(new ExpandableRecyclerAdapter.ExpandCollapseListener() {
@@ -166,6 +166,12 @@ public class PowerListActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onPause() {
+
+        super.onPause();
     }
 
 

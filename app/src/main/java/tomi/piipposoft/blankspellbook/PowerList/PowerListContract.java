@@ -40,6 +40,11 @@ public interface PowerListContract {
     }
 
     interface UserActionListener{
+        /**
+         * Get presenter to display the list of spells
+         * @param context
+         * @param powerListId ID of the power list
+         */
         void getSpellList(Context context, String powerListId);
 
         /**
@@ -47,5 +52,10 @@ public interface PowerListContract {
          * @param itemId the item that has been clicked, either empty string or a valid FireBase ID
          */
         void openPowerDetails(String itemId);
+
+        /**
+         * Activity is pausing, tell presenter to do necessary actions
+         */
+        void activityPausing();
     }
 }

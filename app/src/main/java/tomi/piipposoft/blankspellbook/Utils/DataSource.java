@@ -78,12 +78,16 @@ public class DataSource {
     }
 
 
-    public static void addSpellListListener(String id){
+    /**
+     * Add a new ChildEventListener to a spell list in DB
+     * @param id ID of the spell list which to listen to
+     * @return the child event listener
+     */
+    public static ChildEventListener addPowerListPowerListener(String id){
         DatabaseReference spellListReference =
                 firebaseDatabase.getReference(DB_SPELL_LIST_TREE_NAME).child(id).child(DB_SPELL_LIST_CHILD_SPELLS);
 
-
-        spellListReference.addChildEventListener(new ChildEventListener() {
+        ChildEventListener listener = spellListReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 String newSpellId = dataSnapshot.getKey();
@@ -130,6 +134,8 @@ public class DataSource {
                 Log.d(TAG, "Error ocurred: " + databaseError.toString());
             }
         });
+
+        return listener;
     }
 
     public static void getSpellWithId(String spellId) {
@@ -333,6 +339,10 @@ public class DataSource {
 
     public static void removeDailyPowerListChildListener(ChildEventListener spellListChildListener) {
         firebaseDatabase.getReference(DB_DAILY_POWER_LIST_NAME).removeEventListener(spellListChildListener);
+    }
+
+    public static void removePowerListPowerListener(ChildEventListener listener, String id){
+        firebaseDatabase.getReference(DB_SPELL_LIST_TREE_NAME).child(id).removeEventListener(listener);
     }
 
     public static void addNewDailyPowerList(String dailyPowerListName) {

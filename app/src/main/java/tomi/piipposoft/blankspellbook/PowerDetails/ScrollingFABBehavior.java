@@ -39,7 +39,6 @@ public class ScrollingFABBehavior extends CoordinatorLayout.Behavior<FloatingAct
 
     @Override
     public boolean onDependentViewChanged(CoordinatorLayout parent, FloatingActionButton fab, View dependency) {
-        Log.d(TAG, "entering onDependentViewChanged");
         if (dependency instanceof AppBarLayout) {
             CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
             int fabBottomMargin = lp.bottomMargin;

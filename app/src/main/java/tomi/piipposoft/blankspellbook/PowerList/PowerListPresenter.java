@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.firebase.database.ChildEventListener;
+
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
 import tomi.piipposoft.blankspellbook.PowerDetails.PowerDetailsActivity;
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
@@ -26,15 +28,19 @@ public class PowerListPresenter extends DrawerPresenter implements
     private static final String TAG = "PowerListPresenter";
     private static PowerListContract.View mPowerListActivity;
     private final DrawerContract.ViewActivity mDrawerActivityView;
+    private ChildEventListener spellListListener;
+    private String powerListId;
 
     public PowerListPresenter(
             @NonNull BlankSpellBookContract.DBHelper dbHelper,
             @NonNull PowerListContract.View powerListActivity,
-            @NonNull DrawerHelper drawerHelper){
+            @NonNull DrawerHelper drawerHelper,
+            @NonNull String powerListId){
         // TODO: 8.5.2017 remove the sql database requirement when FireBase implementation complete
         super(dbHelper, drawerHelper);
         mPowerListActivity = powerListActivity;
         mDrawerActivityView = (DrawerContract.ViewActivity)mPowerListActivity;
+        this.powerListId = powerListId;
     }
 
     public static void handleSpellFromDatabase(Spell spell){
@@ -58,7 +64,12 @@ public class PowerListPresenter extends DrawerPresenter implements
 
     @Override
     public void getSpellList(Context context, String powerListId) {
-        DataSource.addSpellListListener(powerListId);
+        spellListListener = DataSource.addPowerListPowerListener(powerListId);
+    }
+
+    @Override
+    public void activityPausing() {
+        DataSource.removePowerListPowerListener(spellListListener, powerListId);
     }
 
     // FROM DRAWER CONTRACT INTERFACE
@@ -90,7 +101,7 @@ public class PowerListPresenter extends DrawerPresenter implements
 
     @Override
     public void powerListProfileSelected() {
-        this.showPowerLists();
+        showPowerLists();
         /*if(DrawerPresenter.powerListChildListener == null){
             DataSource.attachPowerListDrawerListener();
         }*/

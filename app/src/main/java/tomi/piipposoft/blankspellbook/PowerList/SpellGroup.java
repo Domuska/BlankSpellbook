@@ -70,7 +70,8 @@ public class SpellGroup implements ParentListItem, Comparable<SpellGroup>{
         }
         if(o!= null && o instanceof SpellGroup) {
             SpellGroup group = (SpellGroup) o;
-            return group.getGroupName().equals(this.groupName);
+            if(group.getGroupName() != null)
+                return group.getGroupName().equals(this.groupName);
         }
         return false;
     }
