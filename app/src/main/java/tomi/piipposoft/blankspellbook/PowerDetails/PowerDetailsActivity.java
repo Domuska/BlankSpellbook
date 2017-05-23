@@ -123,7 +123,7 @@ public class PowerDetailsActivity extends AppCompatActivity
         else {
             mActionListener.showPowerDetails(savedState.getBoolean("userEditingPower"));
         }
-        
+
         //check if there is addToPowerList fragment visible, if so let presenter handle this
         Fragment prev = getSupportFragmentManager().findFragmentByTag("addToPowerListDialog");
         if(prev != null){
@@ -173,7 +173,6 @@ public class PowerDetailsActivity extends AppCompatActivity
     }
 
     private ArrayMap<String, String> constructDataFromFields(){
-
         ArrayMap<String, String> map = new ArrayMap<>();
 
         spellNameText = (TextInputEditText)findViewById(R.id.editText_spellName);
@@ -208,9 +207,6 @@ public class PowerDetailsActivity extends AppCompatActivity
 
         return map;
     }
-
-    // TODO: 19.5.2017 this method should maybe just return an array, let presenter handle spell construction
-
 
     /**
      * Check if a textView has text
@@ -330,10 +326,7 @@ public class PowerDetailsActivity extends AppCompatActivity
         });
         fab.setVisibility(View.VISIBLE);
 
-        //if(cancelItem != null)
-        //    cancelItem.setVisible(true);
         fabCancel.setVisibility(View.VISIBLE);
-
     }
 
     @Override

@@ -101,15 +101,17 @@ public class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
     public class SpellViewHolder extends ChildViewHolder{
 
         public TextView childTextView;
+        public View recyclerRowBackground;
 
         public SpellViewHolder(View view){
             super(view);
+            recyclerRowBackground = view;
             childTextView = (TextView) view.findViewById(R.id.recycler_child_text_view);
         }
 
         public void bind(final Spell spell) {
             childTextView.setText(spell.getName());
-            childTextView.setOnClickListener(new View.OnClickListener() {
+            recyclerRowBackground.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     PowerListRecyclerAdapter.this.actionListener.openPowerDetails(spell.getSpellId());
