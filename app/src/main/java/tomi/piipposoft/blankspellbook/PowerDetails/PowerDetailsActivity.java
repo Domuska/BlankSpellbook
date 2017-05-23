@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.util.ArrayMap;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -162,53 +163,53 @@ public class PowerDetailsActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
     }
 
-    // TODO: 19.5.2017 this method should maybe just return an array, let presenter handle spell construction
-    private Spell constructSpellFromFields() {
-        Spell spell = new Spell();
+    private ArrayMap<String, String> constructSpellFromFields(){
 
-        //should these be first set into an object so we dont have to get the text twice?
+        ArrayMap<String, String> map = new ArrayMap<>();
+
         spellNameText = (TextInputEditText)findViewById(R.id.editText_spellName);
         if(fieldHasText(spellNameText))
-            spell.setName(spellNameText.getText().toString());
+            map.put(PowerDetailsContract.name, spellNameText.getText().toString());
         if(fieldHasText(attackTypeText))
-            spell.setAttackType(attackTypeText.getText().toString());
+            map.put(PowerDetailsContract.attackType, attackTypeText.getText().toString());
         if(fieldHasText(rechargeText))
-            spell.setRechargeTime(rechargeText.getText().toString());
+            map.put(PowerDetailsContract.recharge, rechargeText.getText().toString());
         if(fieldHasText(castingTimeText))
-            spell.setCastingTime(castingTimeText.getText().toString());
+            map.put(PowerDetailsContract.castingTime, castingTimeText.getText().toString());
         if(fieldHasText(targetText))
-            spell.setTarget(targetText.getText().toString());
+            map.put(PowerDetailsContract.target, targetText.getText().toString());
         if(fieldHasText(attackRollText))
-            spell.setAttackRoll(attackRollText.getText().toString());
+            map.put(PowerDetailsContract.attackRoll, attackRollText.getText().toString());
         if(fieldHasText(hitDamageEffectText))
-            spell.setHitDamageOrEffect(hitDamageEffectText.getText().toString());
+            map.put(PowerDetailsContract.hitDamageOrEffect, hitDamageEffectText.getText().toString());
         if(fieldHasText(missDamageText))
-            spell.setMissDamage(missDamageText.getText().toString());
+            map.put(PowerDetailsContract.missDamage, missDamageText.getText().toString());
         if(fieldHasText(adventurerFeatText))
-            spell.setAdventurerFeat(adventurerFeatText.getText().toString());
+            map.put(PowerDetailsContract.adventurerFeat, adventurerFeatText.getText().toString());
         if(fieldHasText(championFeatText))
-            spell.setChampionFeat(championFeatText.getText().toString());
+            map.put(PowerDetailsContract.championFeat, championFeatText.getText().toString());
         if(fieldHasText(epicFeatText))
-            spell.setEpicFeat(epicFeatText.getText().toString());
+            map.put(PowerDetailsContract.epicFeat, epicFeatText.getText().toString());
         if(fieldHasText(groupText))
-            spell.setGroupName(groupText.getText().toString());
+            map.put(PowerDetailsContract.groupName, groupText.getText().toString());
         if(fieldHasText(notesText))
-            spell.setPlayerNotes(notesText.getText().toString());
+            map.put(PowerDetailsContract.playerNotes, notesText.getText().toString());
         if(fieldHasText(triggerText))
-            spell.setTrigger(triggerText.getText().toString());
+            map.put(PowerDetailsContract.trigger, triggerText.getText().toString());
 
-        return spell;
+        return map;
     }
 
+    // TODO: 19.5.2017 this method should maybe just return an array, let presenter handle spell construction
+
+
     /**
-     *
+     * Check if a textView has text
      * @param text TextInputEditText object
      * @return boolean whether text field has string besides empty string
      */
     private boolean fieldHasText(TextInputEditText text){
-
         return text != null && !"".equals(text.getText().toString());
-        //return !text.getText().toString().equals("");
     }
 
     /**
@@ -534,7 +535,6 @@ public class PowerDetailsActivity extends AppCompatActivity
 
     @Override
     public void hideUnUsedFields(Spell spell) {
-
 
         if(spell.getAttackType() == null || "".equals(spell.getAttackType())) {
             findViewById(R.id.input_layout_attackType).setVisibility(View.GONE);

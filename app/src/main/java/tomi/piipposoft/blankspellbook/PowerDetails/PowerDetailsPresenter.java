@@ -1,8 +1,10 @@
 package tomi.piipposoft.blankspellbook.PowerDetails;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.ArrayMap;
 import android.util.Log;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
@@ -111,8 +113,9 @@ public class PowerDetailsPresenter extends DrawerPresenter
     }
 
     @Override
-    public void userSavingPower(Spell spell) {
+    public void userSavingPower(ArrayMap<String, String> powerData) {
 // TODO: 12.5.2017 should disable the edit buttons and such until spell saved to DB, otherwise could encounter weird things
+        Spell spell = constructPowerFromFields(powerData);
         DataSource.saveSpell(spell, powerListId);
         mPowerDetailsView.hideUnUsedFields(spell);
         mPowerDetailsView.setCancelAsGoBack(false);
@@ -125,7 +128,8 @@ public class PowerDetailsPresenter extends DrawerPresenter
     }
 
     @Override
-    public void userSavingModifiedPower(Spell spell) {
+    public void userSavingModifiedPower(ArrayMap<String, String> powerData) {
+        Spell spell = constructPowerFromFields(powerData);
         DataSource.updateSpell(spell, powerId);
         mPowerDetailsView.hideUnUsedFields(spell);
     }
@@ -137,8 +141,8 @@ public class PowerDetailsPresenter extends DrawerPresenter
     }
 
     @Override
-    public void userPressingCancelButton(Spell spell) {
-        if(thisPower.equals(spell))
+    public void userPressingCancelButton(ArrayMap<String, String> powerData) {
+        if(thisPower.equals(constructPowerFromFields(powerData)))
             mPowerDetailsView.cancelEdits();
         else
             mPowerDetailsView.showDiscardChangesDialog();
@@ -211,5 +215,42 @@ public class PowerDetailsPresenter extends DrawerPresenter
             DataSource.addSpellToPowerLists(listIds, powerId);
         else
             DataSource.addSpellToDailyPowerLists(listIds, powerId);
+    }
+
+    private Spell constructPowerFromFields(ArrayMap<String, String> powerData){
+
+        Spell spell = new Spell();
+        if(powerData.containsKey(PowerDetailsContract.name))
+            spell.setName(powerData.get(PowerDetailsContract.name));
+        if(powerData.containsKey(PowerDetailsContract.attackType))
+            spell.setAttackType(powerData.get(PowerDetailsContract.attackType));
+        if(powerData.containsKey(PowerDetailsContract.recharge))
+            spell.setRechargeTime(powerData.get(PowerDetailsContract.recharge));
+        if(powerData.containsKey(PowerDetailsContract.castingTime))
+            spell.setCastingTime(powerData.get(PowerDetailsContract.castingTime));
+        if(powerData.containsKey(PowerDetailsContract.target))
+            spell.setTarget(powerData.get(PowerDetailsContract.target));
+        if(powerData.containsKey(PowerDetailsContract.attackRoll))
+            spell.setAttackRoll(powerData.get(PowerDetailsContract.attackRoll));
+        if(powerData.containsKey(PowerDetailsContract.hitDamageOrEffect))
+            spell.setHitDamageOrEffect(powerData.get(PowerDetailsContract.hitDamageOrEffect));
+        if(powerData.containsKey(PowerDetailsContract.missDamage))
+            spell.setMissDamage(powerData.get(PowerDetailsContract.missDamage));
+        if(powerData.containsKey(PowerDetailsContract.adventurerFeat))
+            spell.setMissDamage(powerData.get(PowerDetailsContract.adventurerFeat));
+        if(powerData.containsKey(PowerDetailsContract.adventurerFeat))
+            spell.setAdventurerFeat(powerData.get(PowerDetailsContract.adventurerFeat));
+        if(powerData.containsKey(PowerDetailsContract.championFeat))
+            spell.setChampionFeat(powerData.get(PowerDetailsContract.championFeat));
+        if(powerData.containsKey(PowerDetailsContract.epicFeat))
+            spell.setEpicFeat(powerData.get(PowerDetailsContract.epicFeat));
+        if(powerData.containsKey(PowerDetailsContract.groupName))
+            spell.setGroupName(powerData.get(PowerDetailsContract.groupName));
+        if(powerData.containsKey(PowerDetailsContract.playerNotes))
+            spell.setPlayerNotes(powerData.get(PowerDetailsContract.playerNotes));
+        if(powerData.containsKey(PowerDetailsContract.trigger))
+            spell.setTrigger(powerData.get(PowerDetailsContract.trigger));
+
+        return spell;
     }
 }
