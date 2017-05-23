@@ -13,6 +13,7 @@
     <string name="action_cancel">Cancel</string>
     <string name="action_add_to_powerlist">Add to list of powers</string>
     <string name="spell_details_discard_changes">Do you want to discard changes?</string>
+    <string name="spell_group_not_grouped">Not grouped</string>
 
 
     <!-- Strings for alert dialogs -->

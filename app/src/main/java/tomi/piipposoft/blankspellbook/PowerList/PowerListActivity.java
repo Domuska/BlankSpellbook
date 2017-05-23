@@ -204,20 +204,33 @@ public class PowerListActivity extends AppCompatActivity
         Log.d(TAG, "Got a spell to be added to adapter: " + spell.getName());
 
         String groupName = spell.getGroupName();
-        //extra object allocation, would be good to just use a string or somesuch
-        //to see if the spellgroup is already in the spellgroups list. see spellgroup .equals
-        SpellGroup testableGroup = new SpellGroup(groupName, new Spell());
 
-        if(spellGroups.contains(testableGroup)){
-            Log.d(TAG, "spellgroups has the group " + groupName);
-            Log.d(TAG, "" + spellGroups.get(spellGroups.indexOf(testableGroup)));
-            spellGroups.get(spellGroups.indexOf(testableGroup)).addSpell(spell);
+        if(groupName!= null) {
+            //extra object allocation, would be good to just use a string or somesuch
+            //to see if the spellgroup is already in the spellgroups list. see spellgroup .equals
+            SpellGroup testableGroup = new SpellGroup(groupName, new Spell());
+
+            if (spellGroups.contains(testableGroup)) {
+                Log.d(TAG, "spellgroups has the group " + groupName);
+                Log.d(TAG, "" + spellGroups.get(spellGroups.indexOf(testableGroup)));
+                spellGroups.get(spellGroups.indexOf(testableGroup)).addSpell(spell);
+            } else {
+                Log.d(TAG, "spellgroups does not yet have group " + groupName);
+                SpellGroup group = new SpellGroup(spell.getGroupName(), spell);
+                spellGroups.add(group);
+                adapter.notifyParentItemInserted(spellGroups.size() - 1);
+            }
         }
+        //if spell has no group, add it to "ungrouped" group
         else{
-            Log.d(TAG, "spellgroups does not yet have group " + groupName);
-            SpellGroup group = new SpellGroup(spell.getGroupName(), spell);
-            spellGroups.add(group);
-            adapter.notifyParentItemInserted(spellGroups.size()-1);
+            SpellGroup emptyGroup = new SpellGroup(
+                    getString(R.string.spell_group_not_grouped), spell);
+            if(!spellGroups.contains(emptyGroup)){
+                spellGroups.add(emptyGroup);
+                adapter.notifyParentItemInserted(spellGroups.size() -1);
+            }
+            else
+                spellGroups.get(spellGroups.indexOf(emptyGroup)).addSpell(spell);
         }
     }
 
