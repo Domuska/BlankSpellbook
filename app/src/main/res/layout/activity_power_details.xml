@@ -5,7 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="tomi.piipposoft.blankspellbook.PowerDetails.PowerDetailsActivity"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/coordinatorLayout">
 
     <android.support.design.widget.AppBarLayout
         android:layout_height="wrap_content"

@@ -1,5 +1,6 @@
 package tomi.piipposoft.blankspellbook.PowerDetails;
 
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.content.DialogInterface;
@@ -592,6 +593,15 @@ public class PowerDetailsActivity extends AppCompatActivity
             findViewById(R.id.input_layout_trigger).setVisibility(View.GONE);
             ((TextInputEditText)findViewById(R.id.editText_trigger)).setText("");
         }
+    }
+
+    @Override
+    public void showErrorSavingEmptyFields() {
+        Snackbar.make(
+            findViewById(R.id.coordinatorLayout),
+            R.string.error_empty_fields,
+            Snackbar.LENGTH_SHORT)
+        .show();
     }
 
     // FROM DRAWER CONTRACT VIEW INTERFACE

@@ -114,12 +114,18 @@ public class PowerDetailsPresenter extends DrawerPresenter
 
     @Override
     public void userSavingPower(ArrayMap<String, String> powerData) {
-// TODO: 12.5.2017 should disable the edit buttons and such until spell saved to DB, otherwise could encounter weird things
-        Spell spell = constructPowerFromFields(powerData);
-        DataSource.saveSpell(spell, powerListId);
-        mPowerDetailsView.hideUnUsedFields(spell);
-        mPowerDetailsView.setCancelAsGoBack(false);
-        //after this we wait for db to send us the just-saved spell until we show it to the user
+
+        if(powerData.isEmpty()) {
+            mPowerDetailsView.showErrorSavingEmptyFields();
+        }
+        else{
+            // TODO: 12.5.2017 should disable the edit buttons and such until spell saved to DB, otherwise could encounter weird things
+            Spell spell = constructPowerFromFields(powerData);
+            DataSource.saveSpell(spell, powerListId);
+            mPowerDetailsView.hideUnUsedFields(spell);
+            mPowerDetailsView.setCancelAsGoBack(false);
+            //after this we wait for db to send us the just-saved spell until we show it to the user
+        }
     }
 
     @Override
@@ -220,7 +226,7 @@ public class PowerDetailsPresenter extends DrawerPresenter
     /**
      * Used for constructing a spell object
      * @param powerData ArrayMap containing fields for the Spell to be constructed, handles null values
-     * @return Spell object initialized with the data, will always return a spell even if all fields null
+     * @return Spell object initialized with the data,
      */
     private Spell constructPowerFromFields(ArrayMap<String, String> powerData){
 

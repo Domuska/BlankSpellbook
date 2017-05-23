@@ -39,6 +39,7 @@ public interface PowerDetailsContract {
         void showAddToListsFragment();
         void addPowerListsToFragment(String[] powerListNames, String[] powerListIds);
         void addDailyPowerListsToFragment(String[] dailyPowerListNames, String[] dailyPowerListIds);
+        void showErrorSavingEmptyFields();
     }
 
     interface UserActionListener{
