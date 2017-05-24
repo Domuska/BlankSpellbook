@@ -10,7 +10,11 @@
         android:state_pressed="false"
         android:state_selected="true" />
 
+    <item android:drawable="@color/my_color_app_accent_lighter"
+        android:state_pressed="true"
+        android:state_selected="true" />
+
     <!-- Standard background color -->
-    <item android:drawable="@android:color/white"
+    <item android:drawable="@color/my_color_colorBackground"
         android:state_selected="false" />
 </selector>

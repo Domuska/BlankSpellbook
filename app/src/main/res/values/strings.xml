@@ -59,6 +59,9 @@
     <string name="error_empty_fields">Add something to the fields before saving</string>
 
 
+    <!-- Strings for spell list activity -->
+    <string name="spellList_menu_deleteButton">Delete powers from list</string>
+
     <!-- Licenses, credits... -->
     <string name="add_to_list_source">https://icons8.com/web-app/8274/Add-List</string>
 

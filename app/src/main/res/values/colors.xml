@@ -2,4 +2,5 @@
 <resources>
     <color name="secondary_text_material_light">#87000000</color>
     <color name="my_color_app_accent_lighter">@color/md_teal_100</color>
+    <color name="my_color_colorBackground">@color/md_grey_50</color>
 </resources>

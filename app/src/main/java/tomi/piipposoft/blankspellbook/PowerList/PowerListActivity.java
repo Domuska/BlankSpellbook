@@ -103,13 +103,16 @@ public class PowerListActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
 
+
         mDrawerHelper = DrawerHelper.getInstance(this, (Toolbar)findViewById(R.id.my_toolbar));
         //initialize listeners
+
         myActionListener = new PowerListPresenter(
                 DataSource.getDatasource(this),
                 this,
                 DrawerHelper.getInstance(this, (Toolbar) findViewById(R.id.my_toolbar)),
                 powerListId);
+
 
         myDrawerActionListener = (DrawerContract.UserActionListener) myActionListener;
         myDrawerActionListener.powerListProfileSelected();
@@ -120,7 +123,9 @@ public class PowerListActivity extends AppCompatActivity
         //initialize the drawer with the spell list
         myActionListener.getSpellList(getApplicationContext(), powerListId);
 
+
         spellGroups = new ArrayList<>();
+
         adapter = new PowerListRecyclerAdapter(this, spellGroups, myActionListener);
 
 //        adapter.setExpandCollapseListener(new ExpandableRecyclerAdapter.ExpandCollapseListener() {
@@ -146,7 +151,7 @@ public class PowerListActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_spell_book, menu);
+        getMenuInflater().inflate(R.menu.menu_power_list, menu);
         return true;
     }
 
@@ -157,8 +162,12 @@ public class PowerListActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
+        if(id == R.id.action_settings) {
             return true;
+        }
+        if(id == R.id.deleteButton){
+            Log.d(TAG, "delete menu button clicked");
+            myActionListener.userPressingDeleteButton(PowerListRecyclerAdapter.getSelectedSpells());
         }
         return super.onOptionsItemSelected(item);
     }
@@ -170,7 +179,7 @@ public class PowerListActivity extends AppCompatActivity
 
     @Override
     protected void onPause() {
-
+        myActionListener.activityPausing();
         super.onPause();
     }
 

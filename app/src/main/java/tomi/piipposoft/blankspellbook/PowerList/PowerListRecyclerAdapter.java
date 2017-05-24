@@ -1,7 +1,8 @@
 package tomi.piipposoft.blankspellbook.PowerList;
 
 import android.content.Context;
-import android.content.Intent;
+import android.support.v4.util.ArrayMap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,6 @@ import java.util.List;
 
 import tomi.piipposoft.blankspellbook.R;
 import tomi.piipposoft.blankspellbook.Utils.Spell;
-import tomi.piipposoft.blankspellbook.PowerDetails.PowerDetailsActivity;
 
 /**
  * Created by Domu on 11-Jun-16.
@@ -27,30 +27,37 @@ import tomi.piipposoft.blankspellbook.PowerDetails.PowerDetailsActivity;
  * Has parent and child ViewHolders, when parent is clicked it is expanded
  * and child is brought below parent
  */
-public class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
+class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
         <PowerListRecyclerAdapter.SpellGroupViewHolder, PowerListRecyclerAdapter.SpellViewHolder>{
 
     private ArrayList<Spell> dataSet;
     private LayoutInflater inflater;
     private PowerListContract.UserActionListener actionListener;
 
+    //map for keeping track which spells have been selected by user
+    private static ArrayList<Spell> isSpellSelected = new ArrayList<>();
 
-    public PowerListRecyclerAdapter(Context context, List<? extends ParentListItem> spellGroups,
+
+    PowerListRecyclerAdapter(Context context, List<? extends ParentListItem> spellGroups,
                                     PowerListContract.UserActionListener listener){
         super(spellGroups);
         actionListener = listener;
         inflater = LayoutInflater.from(context);
     }
 
+    static ArrayList<Spell> getSelectedSpells(){
+        return isSpellSelected;
+    }
+
     @Override
     public SpellGroupViewHolder onCreateParentViewHolder(ViewGroup parentViewGroup) {
-        View spellGroupView = inflater.inflate(R.layout.spell_book_recycler_parent_row, parentViewGroup, false);
+        View spellGroupView = inflater.inflate(R.layout.power_list_list_parent_row, parentViewGroup, false);
         return new SpellGroupViewHolder(spellGroupView);
     }
 
     @Override
     public SpellViewHolder onCreateChildViewHolder(ViewGroup childViewGroup) {
-        View spellView = inflater.inflate(R.layout.spell_book_recycler_child_row, childViewGroup, false);
+        View spellView = inflater.inflate(R.layout.power_list_list_child_row, childViewGroup, false);
         return new SpellViewHolder(spellView);
     }
 
@@ -61,27 +68,45 @@ public class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
     }
 
     @Override
-    public void onBindChildViewHolder(SpellViewHolder childViewHolder, int position, Object childListItem) {
-        Spell spell = (Spell) childListItem;
+    public void onBindChildViewHolder(final SpellViewHolder childViewHolder, int position, Object childListItem) {
+        final Spell spell = (Spell) childListItem;
         childViewHolder.bind(spell);
+
+
+        childViewHolder.recyclerRowBackground.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if(childViewHolder.recyclerRowBackground.isSelected()) {
+                    childViewHolder.recyclerRowBackground.setSelected(false);
+                    //remove the selected item from map of selected items
+                    isSpellSelected.remove(spell);
+                }
+                else {
+                    childViewHolder.recyclerRowBackground.setSelected(true);
+                    //add item to map of selected items
+                    isSpellSelected.add(spell);
+                }
+                return true;
+            }
+        });
     }
 
 
 
 
     // ADAPTERS
-    public class SpellGroupViewHolder extends ParentViewHolder {
+    class SpellGroupViewHolder extends ParentViewHolder {
 
-        public TextView parentTextView;
-        public ImageButton parentDropDownArrow;
+        TextView parentTextView;
+        ImageButton parentDropDownArrow;
 
-        public SpellGroupViewHolder(View view){
+        SpellGroupViewHolder(View view){
             super(view);
             parentTextView = (TextView) view.findViewById(R.id.recycler_parent_text_view);
             parentDropDownArrow = (ImageButton) view.findViewById(R.id.recycler_parent_expand_arrow);
         }
 
-        public void bind(SpellGroup spellGroup){
+        void bind(SpellGroup spellGroup){
             parentTextView.setText(spellGroup.getGroupName());
         }
 
@@ -98,18 +123,18 @@ public class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
         }
     }
 
-    public class SpellViewHolder extends ChildViewHolder{
+    class SpellViewHolder extends ChildViewHolder{
 
-        public TextView childTextView;
-        public View recyclerRowBackground;
+        TextView childTextView;
+        View recyclerRowBackground;
 
-        public SpellViewHolder(View view){
+        SpellViewHolder(View view){
             super(view);
             recyclerRowBackground = view;
             childTextView = (TextView) view.findViewById(R.id.recycler_child_text_view);
         }
 
-        public void bind(final Spell spell) {
+        void bind(final Spell spell) {
             childTextView.setText(spell.getName());
             //set the onClickListener on the row so user doesn't have to aim to the text
             recyclerRowBackground.setOnClickListener(new View.OnClickListener() {
@@ -118,6 +143,16 @@ public class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
                     PowerListRecyclerAdapter.this.actionListener.openPowerDetails(spell.getSpellId());
                 }
             });
+
+            //if the item is in map of selected items, add set it as selected
+            if(isSpellSelected.contains(spell)) {
+                recyclerRowBackground.setSelected(true);
+                Log.d("PowerListAdapter", "spell " + spell.getName() +  " should be selected");
+            }
+            else{
+                recyclerRowBackground.setSelected(false);
+                Log.d("PowerListAdapter", "spell " + spell.getName() + " should not be selected");
+            }
         }
     }
 }

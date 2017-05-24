@@ -1,6 +1,7 @@
 package tomi.piipposoft.blankspellbook.PowerList;
 
 import android.content.Context;
+import android.support.v4.util.ArrayMap;
 
 import java.util.ArrayList;
 
@@ -57,5 +58,10 @@ public interface PowerListContract {
          * Activity is pausing, tell presenter to do necessary actions
          */
         void activityPausing();
+
+        /**
+         * User is pressing delete button to delete selected powers
+         */
+        void userPressingDeleteButton(ArrayList<Spell> deletablePowers);
     }
 }

@@ -2,6 +2,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".powerlist.PowerListActivity">
+
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" app:showAsAction="never" />
+
+    <item android:id="@+id/deleteButton"
+        android:title="@string/spellList_menu_deleteButton"
+        android:icon="@drawable/ic_clear_black_24dp"
+        app:showAsAction="ifRoom"
+        android:orderInCategory="1"/>
 </menu>
