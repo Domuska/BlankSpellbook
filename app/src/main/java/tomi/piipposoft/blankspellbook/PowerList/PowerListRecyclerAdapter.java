@@ -72,24 +72,53 @@ class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
         final Spell spell = (Spell) childListItem;
         childViewHolder.bind(spell);
 
+        //onClickListener for when the row is not "selected": start new activity
+        final View.OnClickListener startActivityOnClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PowerListRecyclerAdapter.this.actionListener.openPowerDetails(spell.getSpellId());
+            }
+        };
 
-        childViewHolder.recyclerRowBackground.setOnLongClickListener(new View.OnLongClickListener() {
+        //onClickListener when the row is "selected": unselect the row
+        final View.OnClickListener selectedClickListener = new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                childViewHolder.recyclerRowBackground.setSelected(false);
+                isSpellSelected.remove(spell);
+                //since row is not now selected, return the default onClickListener
+                childViewHolder.recyclerRowBackground.setOnClickListener(startActivityOnClickListener);
+            }
+        };
+
+        //onLongClickListener: select or unselect the row
+        View.OnLongClickListener unSelectedLongClickListener = new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 if(childViewHolder.recyclerRowBackground.isSelected()) {
+                    //item already selected, set unselected
                     childViewHolder.recyclerRowBackground.setSelected(false);
                     //remove the selected item from map of selected items
                     isSpellSelected.remove(spell);
                 }
                 else {
+                    //item not selected, set selected
                     childViewHolder.recyclerRowBackground.setSelected(true);
                     //add item to map of selected items
                     isSpellSelected.add(spell);
+                    //since row is now selected, set the click listener which removes the selection
+                    childViewHolder.recyclerRowBackground.setOnClickListener(selectedClickListener);
+
                 }
                 return true;
             }
-        });
+        };
+
+        //set the onClickListener on the row so user doesn't have to aim to the text
+        childViewHolder.recyclerRowBackground.setOnClickListener(startActivityOnClickListener);
+        childViewHolder.recyclerRowBackground.setOnLongClickListener(unSelectedLongClickListener);
     }
+
 
 
 
@@ -136,13 +165,6 @@ class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
 
         void bind(final Spell spell) {
             childTextView.setText(spell.getName());
-            //set the onClickListener on the row so user doesn't have to aim to the text
-            recyclerRowBackground.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    PowerListRecyclerAdapter.this.actionListener.openPowerDetails(spell.getSpellId());
-                }
-            });
 
             //if the item is in map of selected items, add set it as selected
             if(isSpellSelected.contains(spell)) {
