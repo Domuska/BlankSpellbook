@@ -213,13 +213,20 @@ public class PowerListActivity extends AppCompatActivity
             if (spellGroups.contains(testableGroup)) {
                 Log.d(TAG, "spellgroups has the group " + groupName);
                 Log.d(TAG, "" + spellGroups.get(spellGroups.indexOf(testableGroup)));
+                //add the spell to the group
                 spellGroups.get(spellGroups.indexOf(testableGroup)).addSpell(spell);
+                //inform adapter that there is a change under the parent node
+                adapter.notifyChildItemInserted(
+                        spellGroups.indexOf(testableGroup),
+                        spellGroups.get(spellGroups.indexOf(testableGroup)).getListSize()-1
+                );
             } else {
                 Log.d(TAG, "spellgroups does not yet have group " + groupName);
                 SpellGroup group = new SpellGroup(spell.getGroupName(), spell);
                 spellGroups.add(group);
                 adapter.notifyParentItemInserted(spellGroups.size() - 1);
             }
+
         }
         //if spell has no group, add it to "ungrouped" group
         else{
@@ -227,10 +234,17 @@ public class PowerListActivity extends AppCompatActivity
                     getString(R.string.spell_group_not_grouped), spell);
             if(!spellGroups.contains(emptyGroup)){
                 spellGroups.add(emptyGroup);
+                //notify adapter that there is a new group
                 adapter.notifyParentItemInserted(spellGroups.size() -1);
             }
-            else
+            else {
                 spellGroups.get(spellGroups.indexOf(emptyGroup)).addSpell(spell);
+                //notify adapter there is new child in the "ungrouped" group
+                adapter.notifyChildItemInserted(
+                        spellGroups.indexOf(emptyGroup),
+                        spellGroups.get(spellGroups.indexOf(emptyGroup)).getListSize()-1
+                );
+            }
         }
     }
 
@@ -238,10 +252,24 @@ public class PowerListActivity extends AppCompatActivity
     @Override
     public void removeSpellFromList(Spell spell) {
         Log.d(TAG, "starting to remove spell with name " + spell.getName());
+        Log.d(TAG, "spell's group:" + spell.getGroupName());
 
-        //sort of unnecessary object creation. Is there a better way?
-        int spellGroupIndex = spellGroups.indexOf(new SpellGroup(spell.getGroupName(), new Spell()));
+        int spellGroupIndex;
+        //make sure spell has group name
+        if(spell.getGroupName() != null && !"".equals(spell.getGroupName())) {
+            Log.d(TAG, "spell grouped");
+            //sort of unnecessary object creation. Is there a better way?
+            //get index of the spell group the deletable spell is part of
+            spellGroupIndex = spellGroups.indexOf(new SpellGroup(spell.getGroupName(), new Spell()));
+        }
+        else{
+            //the spell is not in a group named by user, so it is in un grouped "group"
+            Log.d(TAG, "spell not grouped");
+            spellGroupIndex = spellGroups.indexOf(new SpellGroup(
+                    getString(R.string.spell_group_not_grouped), spell));
+        }
         SpellGroup group = spellGroups.get(spellGroupIndex);
+
         Log.d(TAG, "spell group index: " + spellGroupIndex + " group name: " + group.getGroupName());
 
         //SpellGroup.removeSpell returns the index of the child removed
@@ -252,9 +280,8 @@ public class PowerListActivity extends AppCompatActivity
             spellGroups.remove(group);
             adapter.notifyParentItemRemoved(spellGroupIndex);
         }
-
-        adapter = new PowerListRecyclerAdapter(this, spellGroups, myActionListener);
-        recyclerView.setAdapter(adapter);
+        //adapter = new PowerListRecyclerAdapter(this, spellGroups, myActionListener);
+        //recyclerView.setAdapter(adapter);
     }
 
     // FROM DRAWER CONTRACT ACTIVITY VIEW INTERFACE
