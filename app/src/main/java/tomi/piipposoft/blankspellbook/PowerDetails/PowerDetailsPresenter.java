@@ -2,9 +2,7 @@ package tomi.piipposoft.blankspellbook.PowerDetails;
 
 import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
-import android.util.Log;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
@@ -93,8 +91,12 @@ public class PowerDetailsPresenter extends DrawerPresenter
             }
             else
                 mPowerDetailsView.showFilledFields(spell);
-
         }
+    }
+
+    public static void handleFetchedSpellGroups(String[] powerGroups){
+        if(powerGroups != null)
+            mPowerDetailsView.populatePowerGroupSuggestions(powerGroups);
     }
 
 
@@ -110,6 +112,9 @@ public class PowerDetailsPresenter extends DrawerPresenter
             mPowerDetailsView.setCancelAsGoBack(false);
             DataSource.getSpellWithId(powerId);
         }
+
+        //get data for the group name's autofill feature
+        DataSource.getPowerGroupsWithListId(powerListId);
     }
 
     @Override
@@ -121,7 +126,7 @@ public class PowerDetailsPresenter extends DrawerPresenter
         else{
             // TODO: 12.5.2017 should disable the edit buttons and such until spell saved to DB, otherwise could encounter weird things
             Spell spell = constructPowerFromFields(powerData);
-            DataSource.saveSpell(spell, powerListId);
+            DataSource.saveSpellAndAddListener(spell, powerListId);
             mPowerDetailsView.hideUnUsedFields(spell);
             mPowerDetailsView.setCancelAsGoBack(false);
             //after this we wait for db to send us the just-saved spell until we show it to the user

@@ -40,6 +40,12 @@ public interface PowerDetailsContract {
         void addPowerListsToFragment(String[] powerListNames, String[] powerListIds);
         void addDailyPowerListsToFragment(String[] dailyPowerListNames, String[] dailyPowerListIds);
         void showErrorSavingEmptyFields();
+
+        /**
+         * Used for passing in the groups that are in the power list this power belongs to
+         * @param powerGroups the group names
+         */
+        void populatePowerGroupSuggestions(String[] powerGroups);
     }
 
     interface UserActionListener{

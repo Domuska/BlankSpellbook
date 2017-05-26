@@ -18,11 +18,13 @@
         </activity>
         <activity
             android:name=".PowerList.PowerListActivity"
-            android:label="@string/title_activity_spell_book"></activity>
+            android:label="@string/title_activity_spell_book" />
         <activity
             android:name=".dailypowerlist.DailyPowerListActivity"
-            android:label="@string/title_activity_daily_spells"></activity>
-        <activity android:name=".PowerDetails.PowerDetailsActivity"></activity>
+            android:label="@string/title_activity_daily_spells" />
+        <activity
+            android:name=".PowerDetails.PowerDetailsActivity"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

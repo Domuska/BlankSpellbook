@@ -37,6 +37,9 @@ public class DataSource {
     public static final String DB_SPELL_LIST_CHILD_NAME = "name";
     public static final String DB_DAILY_POWER_LIST_CHILD_SPELLS = "spells";
     public static final String DB_DAILY_POWER_LIST_CHILD_NAME = "name";
+    public static final String DB_SPELL_GROUPS_TREE_NAME = "spell_groups";
+
+
     private static final String TAG = "DataSource";
 
 //    SQLiteDatabase myDb = BlankSpellBookContract.DBHelper
@@ -165,7 +168,7 @@ public class DataSource {
      * @param spell An initialized spell object
      * @param powerListId Power list to which this spell is to be added, can be null
      */
-    public static void saveSpell(Spell spell, String powerListId) {
+    public static void saveSpellAndAddListener(Spell spell, String powerListId) {
         DatabaseReference spellReference = firebaseDatabase.getReference().child(DB_SPELL_TREE_NAME);
         String spellId = spellReference.push().getKey();
 
@@ -182,6 +185,16 @@ public class DataSource {
                     + DB_SPELL_LIST_CHILD_SPELLS
                     + "/"
                     + spellId, true);
+
+            //add the spell_groups entry as well if spell is set to a group
+            if(!"".equals(spell.getGroupName())){
+                childUpdates.put(
+                        DB_SPELL_GROUPS_TREE_NAME
+                        + "/"
+                        + powerListId
+                        + "/"
+                        + spell.getGroupName(), true);
+            }
         }
 
         //use Jackson Objectmapper to create map of the Spell object
@@ -443,6 +456,37 @@ public class DataSource {
         }
     }
 
+    /**
+     * Get the power/spell groups inside a power list
+     * @param powerListId ID of the power list
+     */
+    public static void getPowerGroupsWithListId(String powerListId) {
+        firebaseDatabase
+                .getReference(DB_SPELL_GROUPS_TREE_NAME)
+                .child(powerListId)
+                .addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                String[] groups = new String[(int)dataSnapshot.getChildrenCount()];
+                                int i = 0;
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    groups[i] = snapshot.getKey();
+                                    Log.d(TAG, "adding power group '" + groups[i] + "' to array");
+                                    i++;
+                                }
+                                PowerDetailsPresenter.handleFetchedSpellGroups(groups);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.d(TAG, "something went wrong at getPowerGroupsWithListId:"
+                                            + databaseError.toString());
+                            }
+                        }
+                );
+    }
+
     public static ArrayList<Spell> getSpellsWithSpellBookId2(Context context, long id){
         Log.d(TAG, "getSpellsWithSpellBookId called with ID " + id);
 
@@ -529,5 +573,6 @@ public class DataSource {
         }
         return data;
     }
+
 
 }

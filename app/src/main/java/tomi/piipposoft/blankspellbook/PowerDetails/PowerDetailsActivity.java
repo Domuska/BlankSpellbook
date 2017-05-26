@@ -20,11 +20,15 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import tomi.piipposoft.blankspellbook.R;
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
@@ -64,7 +68,9 @@ public class PowerDetailsActivity extends AppCompatActivity
 
     private TextInputEditText spellNameText, attackTypeText, rechargeText, castingTimeText,
     targetText, attackRollText, hitDamageEffectText, missDamageText, adventurerFeatText, championFeatText,
-    epicFeatText, groupText, notesText, triggerText;
+    epicFeatText, notesText, triggerText;
+
+    private AutoCompleteTextView groupText;
 
     private FloatingActionButton fab, fabCancel;
 
@@ -131,6 +137,8 @@ public class PowerDetailsActivity extends AppCompatActivity
             addToPowerListDialogFragment = (AddToPowerListDialog) prev;
             mActionListener.activityResumingWithFragment();
         }
+
+
 
         Log.d(TAG, "onResume called");
     }
@@ -213,7 +221,7 @@ public class PowerDetailsActivity extends AppCompatActivity
      * @param text TextInputEditText object
      * @return boolean whether text field has string besides empty string
      */
-    private boolean fieldHasText(TextInputEditText text){
+    private boolean fieldHasText(EditText text){
         return text != null && !"".equals(text.getText().toString());
     }
 
@@ -311,7 +319,7 @@ public class PowerDetailsActivity extends AppCompatActivity
         spellNameText = (TextInputEditText)findViewById(R.id.editText_spellName);
         missDamageText = (TextInputEditText)findViewById(R.id.editText_miss_damage);
         hitDamageEffectText = (TextInputEditText)findViewById(R.id.editText_hitDamage_effect);
-        groupText = (TextInputEditText)findViewById(R.id.editText_group);
+        groupText = (AutoCompleteTextView) findViewById(R.id.editText_group);
         castingTimeText = (TextInputEditText)findViewById(R.id.editText_castingTime);
         attackRollText = (TextInputEditText)findViewById(R.id.editText_attackRoll);
         attackTypeText = (TextInputEditText)findViewById(R.id.editText_attackType);
@@ -381,10 +389,12 @@ public class PowerDetailsActivity extends AppCompatActivity
 
         if(!spell.getGroupName().equals("")){
             groupLayout = (TextInputLayout)findViewById(R.id.input_layout_group);
-            groupText = (TextInputEditText)findViewById(R.id.editText_group);
+            groupText = (AutoCompleteTextView) findViewById(R.id.editText_group);
             groupLayout.setVisibility(View.VISIBLE);
             groupText.setText(spell.getGroupName());
             groupText.setKeyListener(null);
+            //hide the dropdown menu, if user has focus on it it will pop visible
+            groupText.dismissDropDown();
         }
 
         if(!spell.getHitDamageOrEffect().equals("")){
@@ -526,7 +536,7 @@ public class PowerDetailsActivity extends AppCompatActivity
         championFeatText.setKeyListener(newListener);
         epicFeatText = (TextInputEditText)findViewById(R.id.editText_epic_feat);
         epicFeatText.setKeyListener(newListener);
-        groupText = (TextInputEditText)findViewById(R.id.editText_group);
+        groupText = (AutoCompleteTextView) findViewById(R.id.editText_group);
         groupText.setKeyListener(newListener);
         notesText = (TextInputEditText)findViewById(R.id.editText_notes);
         notesText.setKeyListener(newListener);
@@ -552,7 +562,7 @@ public class PowerDetailsActivity extends AppCompatActivity
         }
         if(spell.getGroupName() == null || "".equals(spell.getGroupName())) {
             findViewById(R.id.input_layout_group).setVisibility(View.GONE);
-            ((TextInputEditText)findViewById(R.id.editText_group)).setText("");
+            ((AutoCompleteTextView)findViewById(R.id.editText_group)).setText("");
         }
         if(spell.getHitDamageOrEffect() == null || "".equals(spell.getHitDamageOrEffect())) {
             findViewById(R.id.input_layout_damage_effect).setVisibility(View.GONE);
@@ -603,6 +613,20 @@ public class PowerDetailsActivity extends AppCompatActivity
             R.string.error_empty_fields,
             Snackbar.LENGTH_SHORT)
         .show();
+    }
+
+    @Override
+    public void populatePowerGroupSuggestions(String[] powerGroups) {
+        //create the adapter with the group names
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_dropdown_item_1line,
+                powerGroups);
+
+        if(groupText == null)
+            groupText = (AutoCompleteTextView) findViewById(R.id.editText_group);
+        //set adapter for the text view
+        groupText.setAdapter(adapter);
     }
 
     // FROM DRAWER CONTRACT VIEW INTERFACE
