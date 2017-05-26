@@ -6,6 +6,8 @@ import android.os.PersistableBundle;
 import android.support.design.widget.FloatingActionButton;
 
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -66,26 +68,22 @@ public class MainActivity extends AppCompatActivity
             databasePersistanceSet = savedInstanceState.getBoolean(DATABASE_PERSISTANCE_SET_KEY);
         }
 
-        spellBookButton = (Button) findViewById(R.id.button_Spellbook);
-        dailySpellsButton = (Button) findViewById(R.id.button_dailySpells);
+        SpellsFragment spellsFragment = new SpellsFragment();
+        Bundle args = new Bundle();
+        args.putString("key", "hello world");
+        spellsFragment.setArguments(args);
 
-        spellBookButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(thisActivity, PowerListActivity.class);
-                startActivity(i);
-            }
-        });
+        SpellsFragment spellListFragment = new SpellsFragment();
+        Bundle args2 = new Bundle();
+        args2.putString("key", "hei maailma 2!");
+        spellListFragment.setArguments(args2);
 
-        dailySpellsButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(thisActivity, DailyPowerListActivity.class);
-                startActivity(i);
-            }
-
-        });
+        MainActivityPagerAdapter adapter =
+                new MainActivityPagerAdapter(getSupportFragmentManager(),
+                                            spellsFragment,
+                                            spellListFragment);
+        ViewPager pager = (ViewPager) findViewById(R.id.pager);
+        pager.setAdapter(adapter);
 
         //set the support library's toolbar as application toolbar
 
@@ -143,6 +141,11 @@ public class MainActivity extends AppCompatActivity
             databasePersistanceSet = true;
         }
 
+        //viewPager
+
+
+
+        //nav drawer
         mDrawerHelper = DrawerHelper.getInstance(this, (Toolbar) findViewById(R.id.my_toolbar));
         mActionlistener = new MainActivityPresenter(DataSource.getDatasource(this), this, mDrawerHelper);
 
