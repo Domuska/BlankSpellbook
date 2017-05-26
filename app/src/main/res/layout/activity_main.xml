@@ -25,11 +25,45 @@
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-        <FrameLayout
-            android:id="@+id/fragment_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            >
 
+
+            <Button
+                android:id="@+id/button_dailySpells"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="20dp"
+                android:text="@string/button_dailyspells"/>
+
+            <Button
+                android:id="@+id/button_Spellbook"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/button_dailySpells"
+                android:layout_toEndOf="@+id/button_dailySpells"
+                android:text="@string/button_spellbook"/>
+
+
+
+        </LinearLayout>
+
+
+
+        <Button
+            android:id="@+id/drawer_addSpellBookButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linearLayout1"
+            android:text="add spell book"
+            android:layout_centerHorizontal="true" />
 
 
 
