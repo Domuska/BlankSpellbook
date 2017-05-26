@@ -6,6 +6,9 @@ import android.os.PersistableBundle;
 import android.support.design.widget.FloatingActionButton;
 
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +22,7 @@ import android.widget.Button;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
+import tomi.piipposoft.blankspellbook.MainActivity.dummy.DummyContent;
 import tomi.piipposoft.blankspellbook.R;
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
 import tomi.piipposoft.blankspellbook.dailypowerlist.DailyPowerListActivity;
@@ -38,7 +42,8 @@ public class MainActivity extends AppCompatActivity
         DrawerHelper.DrawerListener,
         SetPowerListNameDialog.NoticeDialogListener,
         SetDailyPowerListNameDialog.NoticeDialogListener,
-        DrawerContract.ViewActivity{
+        DrawerContract.ViewActivity,
+        SpellFragment.OnListFragmentInteractionListener{
 
     private final String DATABASE_PERSISTANCE_SET_KEY = "databasePersistanceSet";
     private final String TAG = "MainActivity";
@@ -65,27 +70,6 @@ public class MainActivity extends AppCompatActivity
         if(savedInstanceState != null) {
             databasePersistanceSet = savedInstanceState.getBoolean(DATABASE_PERSISTANCE_SET_KEY);
         }
-
-        spellBookButton = (Button) findViewById(R.id.button_Spellbook);
-        dailySpellsButton = (Button) findViewById(R.id.button_dailySpells);
-
-        spellBookButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(thisActivity, PowerListActivity.class);
-                startActivity(i);
-            }
-        });
-
-        dailySpellsButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(thisActivity, DailyPowerListActivity.class);
-                startActivity(i);
-            }
-
-        });
 
         //set the support library's toolbar as application toolbar
 
@@ -143,6 +127,17 @@ public class MainActivity extends AppCompatActivity
             databasePersistanceSet = true;
         }
 
+        //fragment things
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+        Fragment spellFragment = SpellFragment.newInstance(1);
+        transaction.add(R.id.fragment_container, spellFragment);
+        transaction.commit();
+
+
+        //drawer things
         mDrawerHelper = DrawerHelper.getInstance(this, (Toolbar) findViewById(R.id.my_toolbar));
         mActionlistener = new MainActivityPresenter(DataSource.getDatasource(this), this, mDrawerHelper);
 
@@ -174,6 +169,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+    }
+
+
+    //FRAGMENT INTERFACES
+
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+        Log.d(TAG, "something happened? " + item.toString());
     }
 
 
