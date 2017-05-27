@@ -9,10 +9,11 @@
 
     <!-- the layout that has is the "main screen" of the activity, see
      http://developer.android.com/training/implementing-navigation/nav-drawer.html#OpenClose -->
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/main_content_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         >
 
         <!-- Support library toolbar as the topmost element -->
@@ -25,15 +26,13 @@
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-
+        <!-- ViewPager for displaying the swipable fragments -->
         <android.support.v4.view.ViewPager
             android:id="@+id/pager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="?attr/actionBarSize"/>
+            android:layout_height="match_parent" />
 
-
-    </RelativeLayout>
+    </LinearLayout>
 
 
     

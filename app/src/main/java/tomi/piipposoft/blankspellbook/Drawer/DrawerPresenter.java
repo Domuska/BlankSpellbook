@@ -5,19 +5,16 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.support.annotation.NonNull;
+import android.support.v4.util.ArrayMap;
 import android.util.Log;
 
 import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import java.util.List;
 
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
-import tomi.piipposoft.blankspellbook.Database.DailySpellList;
-import tomi.piipposoft.blankspellbook.Database.SpellList;
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
 
 /**
@@ -51,8 +48,13 @@ public class DrawerPresenter{
         dailyPowerListChildListener = null;
     }
 
-    public static void handlePowerList(String spellListName, String spellListId){
-        mDrawerView.addDrawerItem(initializeSpellBookListItem(spellListName, spellListId));
+    /**
+     * Called by a data source to tell there is a new power list to be displayed
+     * @param powerListName The name of the power list
+     * @param powerListId The ID of the power list
+     */
+    public static void handlePowerList(String powerListName, String powerListId){
+        mDrawerView.addDrawerItem(initializeSpellBookListItem(powerListName, powerListId));
     }
 
     public static void handleRemovedItem(String powerListName, String powerListId){
@@ -76,10 +78,19 @@ public class DrawerPresenter{
         showPowerLists();
     }
 
+    /**
+     * Called by a data source to tell there is a new power list to be displayed
+     * @param dailyPowerListName Name of the daily power list
+     * @param dailyPowerListId ID of the daily power list
+     */
     public static void handleDailyPowerList(String dailyPowerListName, String dailyPowerListId){
         mDrawerView.addDrawerItem(initializeDailyPowerListItem(dailyPowerListName, dailyPowerListId));
     }
 
+    /**
+     * Handle saving a new power list to the DB, should be called by subclasses only
+     * @param powerListName Name of the newly added power list
+     */
     protected void addNewPowerList(@NonNull String powerListName){
         DataSource.addNewPowerList(powerListName);
     }
@@ -104,6 +115,10 @@ public class DrawerPresenter{
         //mDrawerView.showPowerList(fetchSpellBookListDataFromDB(new ArrayList<IDrawerItem>()));
     }
 
+    /**
+     * Handle saving a new daily power list to the DB, should be called by subclasses only
+     * @param dailyPowerListName Name of the newly added daily power list
+     */
     protected void addNewDailyPowerList(@NonNull String dailyPowerListName){
         DataSource.addNewDailyPowerList(dailyPowerListName);
     }
@@ -129,7 +144,7 @@ public class DrawerPresenter{
 
     protected static void showPowerLists(){
         if(powerListChildListener == null) {
-            powerListChildListener = DataSource.attachPowerListDrawerListener();
+            powerListChildListener = DataSource.attachDrawerPowerListListener(DataSource.DRAWERPRESENTER);
         }
         mDrawerView.showPowerList();
         //remove the listener to the daily power list so it will be re-initialized later
@@ -141,10 +156,10 @@ public class DrawerPresenter{
 
 
     protected void showDailyPowerLists(){
-        //DataSource.attachDailyPowerListDrawerListener();
-        //attachDailyPowerListDrawerListener();
+        //DataSource.attachDrawerDailyPowerListListener();
+        //attachDrawerDailyPowerListListener();
         if(dailyPowerListChildListener == null)
-            dailyPowerListChildListener = DataSource.attachDailyPowerListDrawerListener();
+            dailyPowerListChildListener = DataSource.attachDrawerDailyPowerListListener(DataSource.DRAWERPRESENTER);
         mDrawerView.showDailyPowerList();
 
         //remove listener to power lists side so it is re-initialized later

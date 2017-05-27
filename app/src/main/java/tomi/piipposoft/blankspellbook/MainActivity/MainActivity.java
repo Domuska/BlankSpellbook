@@ -2,11 +2,9 @@ package tomi.piipposoft.blankspellbook.MainActivity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.PersistableBundle;
 import android.support.design.widget.FloatingActionButton;
 
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -23,7 +21,6 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import tomi.piipposoft.blankspellbook.R;
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
-import tomi.piipposoft.blankspellbook.dailypowerlist.DailyPowerListActivity;
 import tomi.piipposoft.blankspellbook.dialog_fragments.SetDailyPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.dialog_fragments.SetPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerContract;
@@ -53,6 +50,9 @@ public class MainActivity extends AppCompatActivity
     private DrawerContract.UserActionListener mDrawerActionListener;
 
 
+    PowersFragment powersFragment;
+    PowerListsFragment powerListFragment;
+
     private DrawerHelper mDrawerHelper;
 
     private boolean databasePersistanceSet = false;
@@ -68,20 +68,22 @@ public class MainActivity extends AppCompatActivity
             databasePersistanceSet = savedInstanceState.getBoolean(DATABASE_PERSISTANCE_SET_KEY);
         }
 
-        SpellsFragment spellsFragment = new SpellsFragment();
-        Bundle args = new Bundle();
-        args.putString("key", "hello world");
-        spellsFragment.setArguments(args);
-
-        SpellsFragment spellListFragment = new SpellsFragment();
+        powerListFragment = new PowerListsFragment();
         Bundle args2 = new Bundle();
         args2.putString("key", "hei maailma 2!");
-        spellListFragment.setArguments(args2);
+        powerListFragment.setArguments(args2);
+
+        powersFragment = new PowersFragment();
+        Bundle args = new Bundle();
+        args.putString("key", "hello world");
+        powersFragment.setArguments(args);
+
 
         MainActivityPagerAdapter adapter =
-                new MainActivityPagerAdapter(getSupportFragmentManager(),
-                                            spellsFragment,
-                                            spellListFragment);
+                new MainActivityPagerAdapter(
+                        getSupportFragmentManager(),
+                        powersFragment,
+                        powerListFragment);
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(adapter);
 
@@ -89,47 +91,6 @@ public class MainActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        /*if (id == R.id.action_settings) {
-            return true;
-        }*/
-
-        if(mDrawerToggle.onOptionsItemSelected(item)){
-            return true;
-        }
-
-        switch(id){
-            case R.id.action_settings:
-                return true;
-
-            case R.id.action_about:
-                return true;
-
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean(DATABASE_PERSISTANCE_SET_KEY, databasePersistanceSet);
-        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -141,9 +102,14 @@ public class MainActivity extends AppCompatActivity
             databasePersistanceSet = true;
         }
 
+        mActionlistener = new MainActivityPresenter(
+                DataSource.getDatasource(this),
+                this,
+                DrawerHelper.getInstance(this, (Toolbar)findViewById(R.id.my_toolbar)
+                ));
+
         //viewPager
-
-
+        mActionlistener.resumeActivity();
 
         //nav drawer
         mDrawerHelper = DrawerHelper.getInstance(this, (Toolbar) findViewById(R.id.my_toolbar));
@@ -175,12 +141,62 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        /*if (id == R.id.action_settings) {
+            return true;
+        }*/
+
+        if(mDrawerToggle.onOptionsItemSelected(item)){
+            return true;
+        }
+
+        switch(id){
+            case R.id.action_settings:
+                return true;
+
+            case R.id.action_about:
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(DATABASE_PERSISTANCE_SET_KEY, databasePersistanceSet);
+        super.onSaveInstanceState(outState);
+    }
+
+
+    @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
     }
 
 
     //FROM MAIN ACTIVITY CONTRACT INTERFACE
+
+    @Override
+    public void addPowerListData(String name, String id) {
+        powerListFragment.handleNewPowerList(name, id);
+    }
+
+    @Override
+    public void addDailyPowerListData(String name, String id) {
+    }
 
 
     // FROM DRAWER CONTRACT VIEWACTIVITY INTERFACE

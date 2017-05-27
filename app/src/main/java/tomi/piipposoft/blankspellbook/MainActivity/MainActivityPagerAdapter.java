@@ -3,7 +3,7 @@ package tomi.piipposoft.blankspellbook.MainActivity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
 
 /**
  * Created by OMISTAJA on 26.5.2017.
@@ -11,7 +11,8 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 public class MainActivityPagerAdapter extends FragmentPagerAdapter{
 
-    Fragment spellsFragment, spellListFragment;
+    private Fragment spellsFragment, spellListFragment;
+    public static final String TAG = "MainActiviPagerAdapter";
 
     public MainActivityPagerAdapter(FragmentManager manager,
                                     Fragment spellsFragment, Fragment spellListFragment){
@@ -27,10 +28,16 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
 
     @Override
     public Fragment getItem(int position) {
-        if(position == 1)
-            return spellsFragment;
-        else
-            return spellListFragment;
+        switch(position){
+            case 1:
+                return spellListFragment;
+            case 2:
+                return spellsFragment;
+            default:
+                Log.d(TAG,"Unknown value in getItem: " + position + ". Returning spellsFragment");
+                return spellsFragment;
+
+        }
     }
 
     @Override

@@ -22,6 +22,7 @@ import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
 import tomi.piipposoft.blankspellbook.Database.DailySpellList;
 import tomi.piipposoft.blankspellbook.Database.SpellList;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerPresenter;
+import tomi.piipposoft.blankspellbook.MainActivity.MainActivityPresenter;
 import tomi.piipposoft.blankspellbook.PowerDetails.PowerDetailsPresenter;
 import tomi.piipposoft.blankspellbook.PowerList.PowerListPresenter;
 
@@ -39,6 +40,9 @@ public class DataSource {
     public static final String DB_DAILY_POWER_LIST_CHILD_NAME = "name";
     public static final String DB_SPELL_GROUPS_TREE_NAME = "spell_groups";
 
+
+    public static final int DRAWERPRESENTER = 1;
+    public static final int MAINACTIVITYPRESENTER = 2;
 
     private static final String TAG = "DataSource";
 
@@ -287,7 +291,7 @@ public class DataSource {
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
     }
 
-    public static ChildEventListener attachPowerListDrawerListener(){
+    public static ChildEventListener attachDrawerPowerListListener(final int presenterCalling){
         //add a child event listener, update the drawer if children change
         ChildEventListener spellListChildListener = new ChildEventListener() {
             @Override
@@ -295,7 +299,13 @@ public class DataSource {
                 String spellListName = dataSnapshot.child("name").getValue(String.class);
                 Log.d(TAG, "spell list name: " + spellListName);
                 //add a new power list item to the drawer
-                DrawerPresenter.handlePowerList(spellListName, dataSnapshot.getKey());
+                if(presenterCalling == DRAWERPRESENTER)
+                    DrawerPresenter.handlePowerList(spellListName, dataSnapshot.getKey());
+                else if(presenterCalling == MAINACTIVITYPRESENTER)
+                    MainActivityPresenter.handleNewPowerList(spellListName, dataSnapshot.getKey());
+                else {
+                    Log.d(TAG, "Unknown entity calling attachDrawerPowerListListener");
+                }
             }
 
             @Override
@@ -320,18 +330,24 @@ public class DataSource {
             }
         };
 
-        //spellListsReference.addChildEventListener(powerListChildListener);
+        // listen for: spell_lists/
         firebaseDatabase.getReference(DB_POWER_LISTS_REFERENCE).addChildEventListener(spellListChildListener);
         return spellListChildListener;
     }
 
-    public static ChildEventListener attachDailyPowerListDrawerListener() {
+    public static ChildEventListener attachDrawerDailyPowerListListener(final int presenterCalling) {
         ChildEventListener dailyPowerListChildListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 String name = dataSnapshot.child(DB_DAILY_POWER_LIST_CHILD_NAME).getValue(String.class);
                 //add a new daily power list item to the drawer
-                DrawerPresenter.handleDailyPowerList(name, dataSnapshot.getKey());
+                if(presenterCalling == DRAWERPRESENTER)
+                    DrawerPresenter.handleDailyPowerList(name, dataSnapshot.getKey());
+                else if(presenterCalling == MAINACTIVITYPRESENTER)
+                    MainActivityPresenter.handleNewDailyPowerList(name, dataSnapshot.getKey());
+                else {
+                    Log.d(TAG, "Unknown entity calling attachDrawerPowerListListener");
+                }
             }
 
             @Override

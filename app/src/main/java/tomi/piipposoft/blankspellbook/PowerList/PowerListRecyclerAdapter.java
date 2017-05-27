@@ -169,11 +169,11 @@ class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
             //if the item is in map of selected items, add set it as selected
             if(isSpellSelected.contains(spell)) {
                 recyclerRowBackground.setSelected(true);
-                Log.d("PowerListAdapter", "spell " + spell.getName() +  " should be selected");
+                Log.d("PowerListsAdapter", "spell " + spell.getName() +  " should be selected");
             }
             else{
                 recyclerRowBackground.setSelected(false);
-                Log.d("PowerListAdapter", "spell " + spell.getName() + " should not be selected");
+                Log.d("PowerListsAdapter", "spell " + spell.getName() + " should not be selected");
             }
         }
     }

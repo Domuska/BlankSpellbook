@@ -2,6 +2,8 @@ package tomi.piipposoft.blankspellbook.MainActivity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,10 +16,11 @@ import tomi.piipposoft.blankspellbook.R;
  * Created by OMISTAJA on 26.5.2017.
  */
 
-public class SpellsFragment extends Fragment {
+public class PowersFragment extends Fragment {
     public static final String ARG_OBJECT = "object";
 
-    private final String TAG = "SpellsFragment";
+    private final String TAG = "PowersFragment";
+
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -25,10 +28,15 @@ public class SpellsFragment extends Fragment {
         // The last two arguments ensure LayoutParams are inflated
         // properly.
         View rootView = inflater.inflate(
-                R.layout.fragment_main_activity_spells, container, false);
+                R.layout.fragment_main_activity_powers, container, false);
+
         Bundle args = getArguments();
         Log.d(TAG, "got args: " + args.getString("key"));
+
+
+
         ((TextView) rootView.findViewById(R.id.textfield)).setText("hei maailma!");
         return rootView;
     }
+
 }
