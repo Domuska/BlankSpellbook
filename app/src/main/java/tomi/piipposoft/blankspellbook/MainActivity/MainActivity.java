@@ -68,18 +68,6 @@ public class MainActivity extends AppCompatActivity
             databasePersistanceSet = savedInstanceState.getBoolean(DATABASE_PERSISTANCE_SET_KEY);
         }
 
-        powerListFragment = new PowerListsFragment();
-        powersFragment = new PowersFragment();
-
-
-        MainActivityPagerAdapter adapter =
-                new MainActivityPagerAdapter(
-                        getSupportFragmentManager(),
-                        powerListFragment,
-                        powersFragment);
-        ViewPager pager = (ViewPager) findViewById(R.id.pager);
-        pager.setAdapter(adapter);
-
 
         //set the support library's toolbar as application toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
@@ -95,15 +83,18 @@ public class MainActivity extends AppCompatActivity
             databasePersistanceSet = true;
         }
 
-        /*mActionlistener = new MainActivityPresenter(
-                DataSource.getDatasource(this),
-                this,
-                DrawerHelper.getInstance(this, (Toolbar)findViewById(R.id.my_toolbar)
-                ));
-                */
+        //create the fragments and the adapter for FragmentPager
+        powerListFragment = new PowerListsFragment();
+        powersFragment = new PowersFragment();
 
+        MainActivityPagerAdapter adapter =
+                new MainActivityPagerAdapter(
+                        getSupportFragmentManager(),
+                        powerListFragment,
+                        powersFragment);
 
-
+        ViewPager pager = (ViewPager) findViewById(R.id.pager);
+        pager.setAdapter(adapter);
 
         //nav drawer
         mDrawerHelper = DrawerHelper.getInstance(this, (Toolbar) findViewById(R.id.my_toolbar));
@@ -113,6 +104,7 @@ public class MainActivity extends AppCompatActivity
                 this);
 
         mActionlistener.resumeActivity();
+
 
         if(mDrawerActionListener == null) {
             mDrawerActionListener = (DrawerContract.UserActionListener) mActionlistener;

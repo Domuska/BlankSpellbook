@@ -51,7 +51,9 @@ public class MainActivityPresenter extends DrawerPresenter
 
     @Override
     public void resumeActivity() {
+        //attach the listener so they can be added to the fragments, list or whatever
         powerListListener = DataSource.attachPowerListListener(DataSource.MAINACTIVITYPRESENTER);
+        // TODO: 29.5.2017 if listener is already set, get the values so we get the data again if phone is rotated
     }
 
     @Override
