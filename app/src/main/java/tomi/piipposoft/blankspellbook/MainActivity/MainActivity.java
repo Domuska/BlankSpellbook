@@ -69,26 +69,19 @@ public class MainActivity extends AppCompatActivity
         }
 
         powerListFragment = new PowerListsFragment();
-        Bundle args2 = new Bundle();
-        args2.putString("key", "hei maailma 2!");
-        powerListFragment.setArguments(args2);
-
         powersFragment = new PowersFragment();
-        Bundle args = new Bundle();
-        args.putString("key", "hello world");
-        powersFragment.setArguments(args);
 
 
         MainActivityPagerAdapter adapter =
                 new MainActivityPagerAdapter(
                         getSupportFragmentManager(),
-                        powersFragment,
-                        powerListFragment);
+                        powerListFragment,
+                        powersFragment);
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(adapter);
 
-        //set the support library's toolbar as application toolbar
 
+        //set the support library's toolbar as application toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
     }

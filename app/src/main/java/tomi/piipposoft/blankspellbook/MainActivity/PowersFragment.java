@@ -30,8 +30,8 @@ public class PowersFragment extends Fragment {
         View rootView = inflater.inflate(
                 R.layout.fragment_main_activity_powers, container, false);
 
-        Bundle args = getArguments();
-        Log.d(TAG, "got args: " + args.getString("key"));
+        //Bundle args = getArguments();
+        //Log.d(TAG, "got args: " + args.getString("key"));
 
 
 

@@ -291,6 +291,11 @@ public class DataSource {
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
     }
 
+    /**
+     * Attach a listener to the spell_lists portion of database to get informed of child changes
+     * @param presenterCalling The code of the listener, use either DataSource.DRAWERPRESENTER or DataSource.MAINACTIVITYPRESENTER
+     * @return the listner that was attached, so this listener can be detached later
+     */
     public static ChildEventListener attachDrawerPowerListListener(final int presenterCalling){
         //add a child event listener, update the drawer if children change
         ChildEventListener spellListChildListener = new ChildEventListener() {
@@ -335,6 +340,11 @@ public class DataSource {
         return spellListChildListener;
     }
 
+    /**
+     * Attach a listener to the daily_power_lists portion of database to get informed of child changes
+     * @param presenterCalling The code of the listener, use either DataSource.DRAWERPRESENTER or DataSource.MAINACTIVITYPRESENTER
+     * @return the listner that was attached, so this listener can be detached later
+     */
     public static ChildEventListener attachDrawerDailyPowerListListener(final int presenterCalling) {
         ChildEventListener dailyPowerListChildListener = new ChildEventListener() {
             @Override

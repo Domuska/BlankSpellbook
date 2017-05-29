@@ -11,5 +11,5 @@
         <item name="android:textColorPrimary">@color/primary_dark_material_dark</item>
         <item name="android:textColorSecondary">@color/secondary_text_material_light</item>
     </style>
-
+    
 </resources>

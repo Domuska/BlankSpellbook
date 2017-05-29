@@ -36,7 +36,6 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
             default:
                 Log.d(TAG,"Unknown value in getItem: " + position + ". Returning spellsFragment");
                 return spellsFragment;
-
         }
     }
 
