@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.support.annotation.NonNull;
-import android.support.v4.util.ArrayMap;
 import android.util.Log;
 
 import com.google.firebase.database.ChildEventListener;
@@ -144,7 +143,7 @@ public class DrawerPresenter{
 
     protected static void showPowerLists(){
         if(powerListChildListener == null) {
-            powerListChildListener = DataSource.attachDrawerPowerListListener(DataSource.DRAWERPRESENTER);
+            powerListChildListener = DataSource.attachPowerListListener(DataSource.DRAWERPRESENTER);
         }
         mDrawerView.showPowerList();
         //remove the listener to the daily power list so it will be re-initialized later
@@ -156,10 +155,10 @@ public class DrawerPresenter{
 
 
     protected void showDailyPowerLists(){
-        //DataSource.attachDrawerDailyPowerListListener();
-        //attachDrawerDailyPowerListListener();
+        //DataSource.attachDailyPowerListListener();
+        //attachDailyPowerListListener();
         if(dailyPowerListChildListener == null)
-            dailyPowerListChildListener = DataSource.attachDrawerDailyPowerListListener(DataSource.DRAWERPRESENTER);
+            dailyPowerListChildListener = DataSource.attachDailyPowerListListener(DataSource.DRAWERPRESENTER);
         mDrawerView.showDailyPowerList();
 
         //remove listener to power lists side so it is re-initialized later

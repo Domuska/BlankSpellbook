@@ -1,12 +1,10 @@
 package tomi.piipposoft.blankspellbook.MainActivity;
 
 import android.support.annotation.NonNull;
-import android.support.v4.util.ArrayMap;
 import android.util.Log;
 
 
 import com.google.firebase.database.ChildEventListener;
-import com.mikepenz.materialdrawer.Drawer;
 
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerContract;
@@ -46,7 +44,7 @@ public class MainActivityPresenter extends DrawerPresenter
 
     @Override
     public void resumeActivity() {
-        DataSource.attachDrawerPowerListListener(DataSource.MAINACTIVITYPRESENTER);
+        DataSource.attachPowerListListener(DataSource.MAINACTIVITYPRESENTER);
     }
 
     public static void handleNewPowerList(String name, String id){
@@ -57,6 +55,14 @@ public class MainActivityPresenter extends DrawerPresenter
     public static void handleNewDailyPowerList(String name, String id){
         Log.d(TAG, "should be handling power list now....:" + name);
         mMainActivityView.addDailyPowerListData(name, id);
+    }
+
+    public static void handleRemovedDailyPowerList(String dailyPowerListName, String id) {
+        mMainActivityView.removeDailyPowerListData(dailyPowerListName, id);
+    }
+
+    public static void handleRemovedPowerList(String powerListName, String id) {
+        mMainActivityView.removePowerListData(powerListName, id);
     }
 
 
@@ -89,7 +95,7 @@ public class MainActivityPresenter extends DrawerPresenter
     public void powerListProfileSelected() {
         showPowerLists();
         /*if(DrawerPresenter.powerListChildListener == null) {
-            DataSource.attachDrawerPowerListListener();
+            DataSource.attachPowerListListener();
         }*/
     }
 
@@ -97,6 +103,5 @@ public class MainActivityPresenter extends DrawerPresenter
     public void dailyPowerListProfileSelected() {
         this.showDailyPowerLists();
     }
-
 
 }

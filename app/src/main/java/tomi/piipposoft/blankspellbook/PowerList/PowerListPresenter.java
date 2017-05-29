@@ -134,7 +134,7 @@ public class PowerListPresenter extends DrawerPresenter implements
     public void powerListProfileSelected() {
         showPowerLists();
         /*if(DrawerPresenter.powerListChildListener == null){
-            DataSource.attachDrawerPowerListListener();
+            DataSource.attachPowerListListener();
         }*/
     }
 

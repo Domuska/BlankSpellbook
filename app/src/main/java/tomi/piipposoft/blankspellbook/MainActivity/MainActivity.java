@@ -189,8 +189,18 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void addDailyPowerListData(String name, String id) {
+        // TODO: 29.5.2017 do stuff
     }
 
+    @Override
+    public void removePowerListData(String powerListName, String id) {
+        powerListFragment.removePowerList(powerListName, id);
+    }
+
+    @Override
+    public void removeDailyPowerListData(String dailyPowerListName, String key) {
+        // TODO: 29.5.2017 do stuff
+    }
 
     // FROM DRAWER CONTRACT VIEWACTIVITY INTERFACE
 

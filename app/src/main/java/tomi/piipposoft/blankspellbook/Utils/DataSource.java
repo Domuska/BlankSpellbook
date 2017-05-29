@@ -296,7 +296,7 @@ public class DataSource {
      * @param presenterCalling The code of the listener, use either DataSource.DRAWERPRESENTER or DataSource.MAINACTIVITYPRESENTER
      * @return the listner that was attached, so this listener can be detached later
      */
-    public static ChildEventListener attachDrawerPowerListListener(final int presenterCalling){
+    public static ChildEventListener attachPowerListListener(final int presenterCalling){
         //add a child event listener, update the drawer if children change
         ChildEventListener spellListChildListener = new ChildEventListener() {
             @Override
@@ -309,7 +309,7 @@ public class DataSource {
                 else if(presenterCalling == MAINACTIVITYPRESENTER)
                     MainActivityPresenter.handleNewPowerList(spellListName, dataSnapshot.getKey());
                 else {
-                    Log.d(TAG, "Unknown entity calling attachDrawerPowerListListener");
+                    Log.d(TAG, "Unknown entity calling attachPowerListListener");
                 }
             }
 
@@ -322,7 +322,11 @@ public class DataSource {
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 Log.d(TAG, "item removed: " + dataSnapshot.child(DB_SPELL_LIST_CHILD_NAME) + " " + dataSnapshot.getKey());
                 String spellListName = dataSnapshot.child(DB_SPELL_LIST_CHILD_NAME).getValue(String.class);
-                DrawerPresenter.handleRemovedItem(spellListName, dataSnapshot.getKey());
+
+                if(presenterCalling == DRAWERPRESENTER)
+                    DrawerPresenter.handleRemovedItem(spellListName, dataSnapshot.getKey());
+                else if(presenterCalling == MAINACTIVITYPRESENTER)
+                    MainActivityPresenter.handleRemovedPowerList(spellListName, dataSnapshot.getKey());
             }
 
             @Override
@@ -345,7 +349,7 @@ public class DataSource {
      * @param presenterCalling The code of the listener, use either DataSource.DRAWERPRESENTER or DataSource.MAINACTIVITYPRESENTER
      * @return the listner that was attached, so this listener can be detached later
      */
-    public static ChildEventListener attachDrawerDailyPowerListListener(final int presenterCalling) {
+    public static ChildEventListener attachDailyPowerListListener(final int presenterCalling) {
         ChildEventListener dailyPowerListChildListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -356,7 +360,7 @@ public class DataSource {
                 else if(presenterCalling == MAINACTIVITYPRESENTER)
                     MainActivityPresenter.handleNewDailyPowerList(name, dataSnapshot.getKey());
                 else {
-                    Log.d(TAG, "Unknown entity calling attachDrawerPowerListListener");
+                    Log.d(TAG, "Unknown entity calling attachPowerListListener");
                 }
             }
 
@@ -368,7 +372,10 @@ public class DataSource {
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 String spellListName = dataSnapshot.child("name").getValue(String.class);
-                DrawerPresenter.handleRemovedItem(spellListName, dataSnapshot.getKey());
+                if(presenterCalling == DRAWERPRESENTER)
+                    DrawerPresenter.handleRemovedItem(spellListName, dataSnapshot.getKey());
+                else if(presenterCalling == MAINACTIVITYPRESENTER)
+                    MainActivityPresenter.handleRemovedDailyPowerList(spellListName, dataSnapshot.getKey());
             }
 
             @Override

@@ -8,13 +8,15 @@ import android.support.v4.util.ArrayMap;
  */
 public interface MainActivityContract {
 
+
     interface View{
         void addPowerListData(String name, String id);
         void addDailyPowerListData(String name, String id);
+        void removePowerListData(String powerListName, String id);
+        void removeDailyPowerListData(String dailyPowerListName, String id);
     }
 
     interface UserActionListener{
-
         void resumeActivity();
     }
 }

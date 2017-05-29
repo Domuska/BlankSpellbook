@@ -107,6 +107,14 @@ public class PowerListsFragment extends Fragment {
         adapter.notifyItemInserted(listNames.size()-1);
     }
 
+    public void removePowerList(String powerListName, String id) {
+        //save the index so we can notify adapter
+        int nameIndex = listNames.indexOf(powerListName);
+        listNames.remove(powerListName);
+        listIds.remove(id);
+        adapter.notifyItemRemoved(nameIndex);
+    }
+
     /**
      * Adapter for the RecyclerView showing the power lists
      */
