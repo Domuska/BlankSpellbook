@@ -95,18 +95,24 @@ public class MainActivity extends AppCompatActivity
             databasePersistanceSet = true;
         }
 
-        mActionlistener = new MainActivityPresenter(
+        /*mActionlistener = new MainActivityPresenter(
                 DataSource.getDatasource(this),
                 this,
                 DrawerHelper.getInstance(this, (Toolbar)findViewById(R.id.my_toolbar)
                 ));
+                */
 
-        //viewPager
-        mActionlistener.resumeActivity();
+
+
 
         //nav drawer
         mDrawerHelper = DrawerHelper.getInstance(this, (Toolbar) findViewById(R.id.my_toolbar));
-        mActionlistener = new MainActivityPresenter(DataSource.getDatasource(this), this, mDrawerHelper);
+        mActionlistener = MainActivityPresenter.getInstance(
+                DataSource.getDatasource(this),
+                mDrawerHelper,
+                this);
+
+        mActionlistener.resumeActivity();
 
         if(mDrawerActionListener == null) {
             mDrawerActionListener = (DrawerContract.UserActionListener) mActionlistener;
@@ -131,6 +137,13 @@ public class MainActivity extends AppCompatActivity
 
         // Make the drawer initialize itself
         mDrawerActionListener.powerListProfileSelected();
+    }
+
+    @Override
+    protected void onPause() {
+        mActionlistener.pauseActivity();
+        powerListFragment.removeAllLists();
+        super.onPause();
     }
 
     @Override

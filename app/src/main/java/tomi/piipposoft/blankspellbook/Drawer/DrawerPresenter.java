@@ -40,9 +40,9 @@ public class DrawerPresenter{
         mDbHelper = dbHelper;
         mDrawerView = drawerView;
         if(powerListChildListener != null)
-            DataSource.removePowerListChildListener(powerListChildListener);
+            DataSource.removePowerListListener(powerListChildListener);
         if(dailyPowerListChildListener != null)
-            DataSource.removeDailyPowerListChildListener(dailyPowerListChildListener);
+            DataSource.removeDailyPowerListListener(dailyPowerListChildListener);
         powerListChildListener = null;
         dailyPowerListChildListener = null;
     }
@@ -67,11 +67,11 @@ public class DrawerPresenter{
         Silly drawer library.
          */
         if(powerListChildListener != null) {
-            DataSource.removePowerListChildListener(powerListChildListener);
+            DataSource.removePowerListListener(powerListChildListener);
             powerListChildListener = null;
         }
         if(dailyPowerListChildListener != null){
-            DataSource.removeDailyPowerListChildListener(dailyPowerListChildListener);
+            DataSource.removeDailyPowerListListener(dailyPowerListChildListener);
             dailyPowerListChildListener = null;
         }
         showPowerLists();
@@ -141,29 +141,45 @@ public class DrawerPresenter{
     }
 
 
+    /**
+     * Show the Power Lists in the drawer, will attach a listener to the power lists
+     * portion of database, or will fetch the power lists if listener is already attached
+     */
     protected static void showPowerLists(){
+        //attach listener to the DB
         if(powerListChildListener == null) {
             powerListChildListener = DataSource.attachPowerListListener(DataSource.DRAWERPRESENTER);
         }
+        //we have a listener, we just need to get the data again (when an activity is resumed)
+        //should this data be cached at onPause rather? Would make it more difficult to synch though
+        else{
+            DataSource.getPowerLists(DataSource.DRAWERPRESENTER);
+        }
+
         mDrawerView.showPowerList();
-        //remove the listener to the daily power list so it will be re-initialized later
+        //remove the DAILY POWER LIST listener, wer're not interested in thsoe now
         if(dailyPowerListChildListener != null){
-            DataSource.removeDailyPowerListChildListener(dailyPowerListChildListener);
+            DataSource.removeDailyPowerListListener(dailyPowerListChildListener);
             dailyPowerListChildListener = null;
         }
     }
 
 
+    /**
+     * Show the daily power lists in the drawer, will attach a listener to the daily power lists
+     * portion of database, or will fetch the power lists if listener is already attached
+     */
     protected void showDailyPowerLists(){
-        //DataSource.attachDailyPowerListListener();
-        //attachDailyPowerListListener();
         if(dailyPowerListChildListener == null)
             dailyPowerListChildListener = DataSource.attachDailyPowerListListener(DataSource.DRAWERPRESENTER);
+        else
+            DataSource.getDailyPowerLists(DataSource.DRAWERPRESENTER);
+
         mDrawerView.showDailyPowerList();
 
-        //remove listener to power lists side so it is re-initialized later
+        //remove the POWER LIST listener, we're not interested in those for now
         if(powerListChildListener != null){
-            DataSource.removePowerListChildListener(powerListChildListener);
+            DataSource.removePowerListListener(powerListChildListener);
             powerListChildListener = null;
         }
     }

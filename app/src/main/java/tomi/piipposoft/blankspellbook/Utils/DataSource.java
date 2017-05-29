@@ -43,6 +43,7 @@ public class DataSource {
 
     public static final int DRAWERPRESENTER = 1;
     public static final int MAINACTIVITYPRESENTER = 2;
+    public static final int POWERDETAILSPRESENTER = 3;
 
     private static final String TAG = "DataSource";
 
@@ -297,7 +298,7 @@ public class DataSource {
      * @return the listner that was attached, so this listener can be detached later
      */
     public static ChildEventListener attachPowerListListener(final int presenterCalling){
-        //add a child event listener, update the drawer if children change
+        //first create the childEventListener
         ChildEventListener spellListChildListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -309,7 +310,11 @@ public class DataSource {
                 else if(presenterCalling == MAINACTIVITYPRESENTER)
                     MainActivityPresenter.handleNewPowerList(spellListName, dataSnapshot.getKey());
                 else {
-                    Log.d(TAG, "Unknown entity calling attachPowerListListener");
+                    throw new RuntimeException(
+                            "Unhandled parameter at "
+                                    + DataSource.class.getName()
+                                    + ".attachPowerListListener"
+                                    + "use either DataSource.DRAWERPRESENTER or DataSource.MAINACTIVITYPRESENTER");
                 }
             }
 
@@ -339,7 +344,7 @@ public class DataSource {
             }
         };
 
-        // listen for: spell_lists/
+        //attach the listener to "spell_lists/" and return it
         firebaseDatabase.getReference(DB_POWER_LISTS_REFERENCE).addChildEventListener(spellListChildListener);
         return spellListChildListener;
     }
@@ -360,7 +365,11 @@ public class DataSource {
                 else if(presenterCalling == MAINACTIVITYPRESENTER)
                     MainActivityPresenter.handleNewDailyPowerList(name, dataSnapshot.getKey());
                 else {
-                    Log.d(TAG, "Unknown entity calling attachPowerListListener");
+                    throw new RuntimeException(
+                            "Unhandled parameter at "
+                                    + DataSource.class.getName()
+                                    + ".attachDailyPowerListListener"
+                                    + "use either DataSource.DRAWERPRESENTER or DataSource.MAINACTIVITYPRESENTER");
                 }
             }
 
@@ -393,14 +402,11 @@ public class DataSource {
         return dailyPowerListChildListener;
     }
 
-    public static void removePowerListChildListener(ChildEventListener spellListChildListener) {
-        firebaseDatabase.getReference(DB_POWER_LISTS_REFERENCE)
-                .removeEventListener(spellListChildListener);
-        //DatabaseReference spellListReference =
-        //        firebaseDatabase.getReference(DB_SPELL_LIST_TREE_NAME).child(id).child(DB_SPELL_LIST_CHILD_SPELLS);
+    public static void removePowerListListener(ChildEventListener spellListChildListener) {
+        firebaseDatabase.getReference(DB_POWER_LISTS_REFERENCE).removeEventListener(spellListChildListener);
     }
 
-    public static void removeDailyPowerListChildListener(ChildEventListener spellListChildListener) {
+    public static void removeDailyPowerListListener(ChildEventListener spellListChildListener) {
         firebaseDatabase.getReference(DB_DAILY_POWER_LIST_NAME).removeEventListener(spellListChildListener);
     }
 
@@ -424,21 +430,45 @@ public class DataSource {
         firebaseDatabase.getReference(DB_POWER_LISTS_REFERENCE).push().setValue(spellList);
     }
 
-    public static void getPowerLists(){
+    /**
+     * Get all of the power lists just once, don't attach a listener
+     * @param presenterCalling code for which presenter is calling, use either DataSource.DRAWERPRESENTER or DataSource.POWERDETAILSPRESENTER
+     */
+    public static void getPowerLists(final int presenterCalling){
         firebaseDatabase.getReference(DB_POWER_LISTS_REFERENCE)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Log.d(TAG, "# of children in getPowerLists: " + dataSnapshot.getChildrenCount());
-                        String[] names = new String[(int)dataSnapshot.getChildrenCount()];
-                        String[] ids = new String[(int)dataSnapshot.getChildrenCount()];
-                        int i = 0;
-                        for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                            ids[i] = snapshot.getKey();
-                            names[i] = snapshot.child(DB_SPELL_LIST_CHILD_NAME).getValue(String.class);
-                            i++;
+                        //give power details presenter the data as two arrays
+                        if(presenterCalling == DataSource.POWERDETAILSPRESENTER) {
+                            String[] names = new String[(int)dataSnapshot.getChildrenCount()];
+                            String[] ids = new String[(int)dataSnapshot.getChildrenCount()];
+                            int i = 0;
+                            for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                ids[i] = snapshot.getKey();
+                                names[i] = snapshot.child(DB_SPELL_LIST_CHILD_NAME).getValue(String.class);
+                                i++;
+                            }
+
+                            PowerDetailsPresenter.handleFetchedPowerLists(names, ids);
                         }
-                        PowerDetailsPresenter.handleFetchedPowerLists(names, ids);
+                        //give drawer data as single entries one at a time
+                        else if(presenterCalling == DataSource.DRAWERPRESENTER){
+                            for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                DrawerPresenter.handlePowerList(
+                                        snapshot.child(DB_SPELL_LIST_CHILD_NAME).getValue(String.class),
+                                        dataSnapshot.getKey());
+                            }
+                        }
+                        //the caller gave wrong kind of code, throw error to get user to yell at developer
+                        else{
+                            throw new RuntimeException(
+                                    "Unhandled parameter at "
+                                            + DataSource.class.getName()
+                                            + ".getPowerLists"
+                                            + "use either DataSource.DRAWERPRESENTER or DataSource.POWERDETAILSPRESENTER");
+                        }
+
                     }
 
                     @Override
@@ -448,21 +478,38 @@ public class DataSource {
                 });
     }
 
-    public static void getDailyPowerLists(){
+    public static void getDailyPowerLists(final int presenterCalling){
         firebaseDatabase.getReference(DB_DAILY_POWER_LIST_NAME)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Log.d(TAG, "# of children in getDailyPowerLists: " + dataSnapshot.getChildrenCount());
-                        String[] names = new String[(int)dataSnapshot.getChildrenCount()];
-                        String[] ids = new String[(int)dataSnapshot.getChildrenCount()];
-                        int i = 0;
-                        for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                            ids[i] = snapshot.getKey();
-                            names[i] = snapshot.child(DB_SPELL_LIST_CHILD_NAME).getValue(String.class);
-                            i++;
+
+                        if (presenterCalling == DataSource.POWERDETAILSPRESENTER) {
+                            String[] names = new String[(int)dataSnapshot.getChildrenCount()];
+                            String[] ids = new String[(int)dataSnapshot.getChildrenCount()];
+                            int i = 0;
+                            for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                ids[i] = snapshot.getKey();
+                                names[i] = snapshot.child(DB_SPELL_LIST_CHILD_NAME).getValue(String.class);
+                                i++;
+                            }
+                            PowerDetailsPresenter.handleFetchedDailyPowerLists(names, ids);
+                        } else if(presenterCalling == DataSource.DRAWERPRESENTER){
+                            for(DataSnapshot snapshot: dataSnapshot.getChildren()){
+                                DrawerPresenter.handleDailyPowerList(
+                                        snapshot.child(DB_DAILY_POWER_LIST_CHILD_NAME).getValue(String.class),
+                                        snapshot.getKey());
+                            }
                         }
-                        PowerDetailsPresenter.handleFetchedDailyPowerLists(names, ids);
+                        else{
+                            throw new RuntimeException(
+                                    "Unhandled parameter at "
+                                            + DataSource.class.getName()
+                                            + ".getPowerLists,"
+                                            + " use either DataSource.DRAWERPRESENTER"
+                                            + " or DataSource.POWERDETAILSPRESENTER");
+                        }
                     }
 
                     @Override

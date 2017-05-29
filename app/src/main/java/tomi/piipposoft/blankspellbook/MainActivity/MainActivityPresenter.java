@@ -24,10 +24,10 @@ public class MainActivityPresenter extends DrawerPresenter
 
     private static final String TAG = "MainActivityPresenter";
 
-    private ChildEventListener powerListListener;
+    private static MainActivityPresenter thisInstance;
+    private static ChildEventListener powerListListener;
 
-
-    public MainActivityPresenter(
+    private MainActivityPresenter(
             @NonNull BlankSpellBookContract.DBHelper dbHelper,
             @NonNull MainActivityContract.View mainActivityView,
             @NonNull DrawerHelper drawerHelper){
@@ -36,24 +36,36 @@ public class MainActivityPresenter extends DrawerPresenter
         mDrawerActivityView = (DrawerContract.ViewActivity)mMainActivityView;
     }
 
-    // TODO: 27.5.2017 could make this class have static getter. In it, if instance is null create new one
-    // TODO: 27.5.2017 if the isntance not null, add the activity to the instance and return old one
-    // TODO: 27.5.2017 this way we would not have to re-initialize DB listeners again and might have data cached already
+
+    static MainActivityPresenter getInstance(@NonNull BlankSpellBookContract.DBHelper dbHelper,
+                                             @NonNull DrawerHelper drawerHelper,
+                                             @NonNull MainActivityContract.View mainActivityView){
+        if(thisInstance == null) {
+            Log.d(TAG, "no existing instance, creating new");
+            thisInstance = new MainActivityPresenter(dbHelper, mainActivityView, drawerHelper);
+        }
+        return thisInstance;
+    }
 
     // FROM MAINACTIVITYCONTRACT
 
     @Override
     public void resumeActivity() {
-        DataSource.attachPowerListListener(DataSource.MAINACTIVITYPRESENTER);
+        powerListListener = DataSource.attachPowerListListener(DataSource.MAINACTIVITYPRESENTER);
+    }
+
+    @Override
+    public void pauseActivity() {
+        //remove the listeners to prevent leaks
+        Log.d(TAG, "in pauseActivity");
+        DataSource.removePowerListListener(powerListListener);
     }
 
     public static void handleNewPowerList(String name, String id){
-        Log.d(TAG, "should be handling power list now....:" + name);
         mMainActivityView.addPowerListData(name, id);
     }
 
     public static void handleNewDailyPowerList(String name, String id){
-        Log.d(TAG, "should be handling power list now....:" + name);
         mMainActivityView.addDailyPowerListData(name, id);
     }
 
@@ -94,9 +106,6 @@ public class MainActivityPresenter extends DrawerPresenter
     @Override
     public void powerListProfileSelected() {
         showPowerLists();
-        /*if(DrawerPresenter.powerListChildListener == null) {
-            DataSource.attachPowerListListener();
-        }*/
     }
 
     @Override

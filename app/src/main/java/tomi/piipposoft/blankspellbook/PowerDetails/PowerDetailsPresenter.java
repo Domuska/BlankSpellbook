@@ -198,8 +198,8 @@ public class PowerDetailsPresenter extends DrawerPresenter
     public void userPressingAddToLists() {
         mPowerDetailsView.showAddToListsFragment();
         //get data from DB
-        DataSource.getPowerLists();
-        DataSource.getDailyPowerLists();
+        DataSource.getPowerLists(DataSource.POWERDETAILSPRESENTER);
+        DataSource.getDailyPowerLists(DataSource.POWERDETAILSPRESENTER);
     }
 
     /**
@@ -230,8 +230,8 @@ public class PowerDetailsPresenter extends DrawerPresenter
 
     @Override
     public void activityResumingWithFragment() {
-        DataSource.getPowerLists();
-        DataSource.getDailyPowerLists();
+        DataSource.getPowerLists(DataSource.POWERDETAILSPRESENTER);
+        DataSource.getDailyPowerLists(6);
     }
 
     /**

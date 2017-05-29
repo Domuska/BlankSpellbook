@@ -115,6 +115,11 @@ public class PowerListsFragment extends Fragment {
         adapter.notifyItemRemoved(nameIndex);
     }
 
+    public void removeAllLists() {
+        listNames = new ArrayList<>();
+        listIds = new ArrayList<>();
+    }
+
     /**
      * Adapter for the RecyclerView showing the power lists
      */
