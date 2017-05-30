@@ -1,10 +1,9 @@
 package tomi.piipposoft.blankspellbook.MainActivity;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
 
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -43,8 +42,6 @@ public class MainActivity extends AppCompatActivity
     private final String TAG = "MainActivity";
 
     private Button spellBookButton, dailySpellsButton;
-    private FloatingActionButton fab;
-    private Activity thisActivity;
     private ActionBarDrawerToggle mDrawerToggle;
     private MainActivityContract.UserActionListener mActionlistener;
     private DrawerContract.UserActionListener mDrawerActionListener;
@@ -52,6 +49,9 @@ public class MainActivity extends AppCompatActivity
 
     PowersFragment powersFragment;
     PowerListsFragment powerListFragment;
+    private FragmentManager fragmentManager;
+    private MainActivityPagerAdapter pagerAdapter;
+    private ViewPager viewPager;
 
     private DrawerHelper mDrawerHelper;
 
@@ -62,39 +62,34 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-        thisActivity = this;
 
         if(savedInstanceState != null) {
             databasePersistanceSet = savedInstanceState.getBoolean(DATABASE_PERSISTANCE_SET_KEY);
         }
-
 
         //set the support library's toolbar as application toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
     }
 
+
     @Override
     public void onResume(){
         super.onResume();
+        Log.d(TAG, "onResume");
 
         if(!databasePersistanceSet){
             DataSource.setDatabasePersistance();
             databasePersistanceSet = true;
         }
 
-        //create the fragments and the adapter for FragmentPager
-        powerListFragment = new PowerListsFragment();
-        powersFragment = new PowersFragment();
 
-        MainActivityPagerAdapter adapter =
-                new MainActivityPagerAdapter(
-                        getSupportFragmentManager(),
-                        powerListFragment,
-                        powersFragment);
+        pagerAdapter = new MainActivityPagerAdapter(getSupportFragmentManager());
 
-        ViewPager pager = (ViewPager) findViewById(R.id.pager);
-        pager.setAdapter(adapter);
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager.setAdapter(pagerAdapter);
+
+
 
         //nav drawer
         mDrawerHelper = DrawerHelper.getInstance(this, (Toolbar) findViewById(R.id.my_toolbar));
@@ -102,8 +97,6 @@ public class MainActivity extends AppCompatActivity
                 DataSource.getDatasource(this),
                 mDrawerHelper,
                 this);
-
-        mActionlistener.resumeActivity();
 
 
         if(mDrawerActionListener == null) {
@@ -129,12 +122,13 @@ public class MainActivity extends AppCompatActivity
 
         // Make the drawer initialize itself
         mDrawerActionListener.powerListProfileSelected();
+        mActionlistener.resumeActivity();
     }
 
     @Override
     protected void onPause() {
         mActionlistener.pauseActivity();
-        powerListFragment.removeAllLists();
+        pagerAdapter.removePowerListsFromFragment();
         super.onPause();
     }
 
@@ -189,7 +183,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void addPowerListData(String name, String id) {
-        powerListFragment.handleNewPowerList(name, id);
+        pagerAdapter.addPowerListToFragment(name, id);
     }
 
     @Override
@@ -206,6 +200,7 @@ public class MainActivity extends AppCompatActivity
     public void removeDailyPowerListData(String dailyPowerListName, String key) {
         // TODO: 29.5.2017 do stuff
     }
+
 
     // FROM DRAWER CONTRACT VIEWACTIVITY INTERFACE
 

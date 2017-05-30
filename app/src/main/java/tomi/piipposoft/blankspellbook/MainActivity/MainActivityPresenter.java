@@ -44,6 +44,10 @@ public class MainActivityPresenter extends DrawerPresenter
             Log.d(TAG, "no existing instance, creating new");
             thisInstance = new MainActivityPresenter(dbHelper, mainActivityView, drawerHelper);
         }
+        else {
+            Log.d(TAG, "thisInstance not null, setting mainActivityView");
+            mMainActivityView = mainActivityView;
+        }
         return thisInstance;
     }
 
@@ -51,9 +55,14 @@ public class MainActivityPresenter extends DrawerPresenter
 
     @Override
     public void resumeActivity() {
-        //attach the listener so they can be added to the fragments, list or whatever
-        powerListListener = DataSource.attachPowerListListener(DataSource.MAINACTIVITYPRESENTER);
-        // TODO: 29.5.2017 if listener is already set, get the values so we get the data again if phone is rotated
+        //attach the listener to get callbacks of the data being changed
+        if(powerListListener == null)
+            powerListListener = DataSource.attachPowerListListener(DataSource.MAINACTIVITYPRESENTER);
+        else {
+            Log.d(TAG, "resumeActivity: powerListListener is not null");
+            DataSource.getPowerLists(DataSource.MAINACTIVITYPRESENTER);
+        }
+
     }
 
     @Override
@@ -64,6 +73,7 @@ public class MainActivityPresenter extends DrawerPresenter
     }
 
     public static void handleNewPowerList(String name, String id){
+        Log.d(TAG, "handleNewPowerList: " + name);
         mMainActivityView.addPowerListData(name, id);
     }
 

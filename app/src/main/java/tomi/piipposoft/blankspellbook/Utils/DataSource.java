@@ -432,7 +432,7 @@ public class DataSource {
 
     /**
      * Get all of the power lists just once, don't attach a listener
-     * @param presenterCalling code for which presenter is calling, use either DataSource.DRAWERPRESENTER or DataSource.POWERDETAILSPRESENTER
+     * @param presenterCalling code for which presenter is calling, use either DataSource.DRAWERPRESENTER, DataSource.POWERDETAILSPRESENTER or DataSource.MAINACTIVITYPRESENTER
      */
     public static void getPowerLists(final int presenterCalling){
         firebaseDatabase.getReference(DB_POWER_LISTS_REFERENCE)
@@ -440,33 +440,44 @@ public class DataSource {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         //give power details presenter the data as two arrays
-                        if(presenterCalling == DataSource.POWERDETAILSPRESENTER) {
-                            String[] names = new String[(int)dataSnapshot.getChildrenCount()];
-                            String[] ids = new String[(int)dataSnapshot.getChildrenCount()];
-                            int i = 0;
-                            for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                                ids[i] = snapshot.getKey();
-                                names[i] = snapshot.child(DB_SPELL_LIST_CHILD_NAME).getValue(String.class);
-                                i++;
-                            }
+                        switch(presenterCalling){
+                            case DataSource.POWERDETAILSPRESENTER:
+                                String[] names = new String[(int)dataSnapshot.getChildrenCount()];
+                                String[] ids = new String[(int)dataSnapshot.getChildrenCount()];
+                                int i = 0;
+                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                    ids[i] = snapshot.getKey();
+                                    names[i] = snapshot.child(DB_SPELL_LIST_CHILD_NAME).getValue(String.class);
+                                    i++;
+                                }
+                                PowerDetailsPresenter.handleFetchedPowerLists(names, ids);
+                                break;
 
-                            PowerDetailsPresenter.handleFetchedPowerLists(names, ids);
-                        }
-                        //give drawer data as single entries one at a time
-                        else if(presenterCalling == DataSource.DRAWERPRESENTER){
-                            for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                                DrawerPresenter.handlePowerList(
-                                        snapshot.child(DB_SPELL_LIST_CHILD_NAME).getValue(String.class),
-                                        dataSnapshot.getKey());
-                            }
-                        }
-                        //the caller gave wrong kind of code, throw error to get user to yell at developer
-                        else{
-                            throw new RuntimeException(
-                                    "Unhandled parameter at "
-                                            + DataSource.class.getName()
-                                            + ".getPowerLists"
-                                            + "use either DataSource.DRAWERPRESENTER or DataSource.POWERDETAILSPRESENTER");
+                            case DataSource.DRAWERPRESENTER:
+                                //give the children one by one to the drawer presenter
+                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                    DrawerPresenter.handlePowerList(
+                                            snapshot.child(DB_SPELL_LIST_CHILD_NAME).getValue(String.class),
+                                            dataSnapshot.getKey());
+                                }
+                                break;
+
+                            case DataSource.MAINACTIVITYPRESENTER:
+                                //give the children one by one to MainActivityPresenter
+                                for(DataSnapshot snapshot: dataSnapshot.getChildren()){
+                                    MainActivityPresenter.handleNewPowerList(
+                                            snapshot.child(DB_DAILY_POWER_LIST_CHILD_NAME).getValue(String.class),
+                                            snapshot.getKey()
+                                    );
+                                }
+                                break;
+
+                            default:
+                                throw new RuntimeException(
+                                        "Unhandled parameter at "
+                                                + DataSource.class.getName()
+                                                + ".getPowerLists"
+                                                + "use either DataSource.DRAWERPRESENTER or DataSource.POWERDETAILSPRESENTER");
                         }
 
                     }
