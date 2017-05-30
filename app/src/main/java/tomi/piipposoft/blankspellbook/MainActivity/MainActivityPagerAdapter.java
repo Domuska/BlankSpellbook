@@ -6,6 +6,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+
 /**
  * Created by OMISTAJA on 26.5.2017.
  *
@@ -74,11 +76,11 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
     }
 
 
-    void addPowerListToFragment(String name, String id){
+    void addPowerListToFragment(String name, String id, ArrayList<String> groupNames){
         Log.d(TAG, "in addPowerListToFragment");
         if(powerListsFragment != null){
             Log.d(TAG, "powerListsFragment not null");
-            powerListsFragment.handleNewPowerList(name, id);
+            powerListsFragment.handleNewPowerList(name, id, groupNames);
         }
     }
 

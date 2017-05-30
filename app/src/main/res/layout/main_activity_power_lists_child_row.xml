@@ -38,14 +38,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/black"
-            android:text="Test1" />
+            />
 
         <TextView
             android:id="@+id/textSecondaryGray"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/darker_gray"
-            android:text="Test1" />
+            />
 
 
     </LinearLayout>

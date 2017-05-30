@@ -38,6 +38,9 @@ public class PowerListsFragment extends Fragment {
     private ArrayList<String> listNames = new ArrayList<>();
     private ArrayList<String> listIds = new ArrayList<>();
 
+    //map that has pairs: ID - list of groups this list has
+    private ArrayMap<String, ArrayList<String>> listPowerGroups = new ArrayMap<>();
+
     View rootView;
 
     @Override
@@ -68,9 +71,12 @@ public class PowerListsFragment extends Fragment {
 
     }
 
-    public void handleNewPowerList(String name, String id){
+    public void handleNewPowerList(String name, String id, ArrayList<String> groupNames){
         listNames.add(name);
         listIds.add(id);
+        //only add the group to the map if there are groups under the spell list
+        if(groupNames.size() > 0)
+            listPowerGroups.put(id, groupNames);
         //notify adapter that new item inserted
         adapter.notifyItemInserted(listNames.size()-1);
     }
@@ -145,6 +151,21 @@ public class PowerListsFragment extends Fragment {
             // - get element from your dataset at this position
             // - replace the contents of the view with that element
             holder.textViewPrimary.setText(listNames.get(position));
+            String id = listIds.get(position);
+
+            //the map might not have entry with this ID, that means there's no groups under the spell list
+            if (listPowerGroups.containsKey(id)) {
+                String grpName1 = listPowerGroups.get(id).get(0);
+                String grpName2 = listPowerGroups.get(id).get(1);
+                if(!"".equals(grpName1))
+                    holder.textViewSecondary.setText(grpName1);
+                if(!"".equals(grpName2))
+                    holder.textViewTertiary.setText(grpName2);
+            }
+            else{
+                holder.textViewSecondary.setVisibility(View.INVISIBLE);
+                holder.textViewTertiary.setVisibility(View.INVISIBLE);
+            }
         }
 
         // Return the size of your dataset (invoked by the layout manager)

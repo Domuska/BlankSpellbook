@@ -12,10 +12,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
@@ -307,8 +309,11 @@ public class DataSource {
                 //add a new power list item to the drawer
                 if(presenterCalling == DRAWERPRESENTER)
                     DrawerPresenter.handlePowerList(spellListName, dataSnapshot.getKey());
-                else if(presenterCalling == MAINACTIVITYPRESENTER)
-                    MainActivityPresenter.handleNewPowerList(spellListName, dataSnapshot.getKey());
+                else if(presenterCalling == MAINACTIVITYPRESENTER) {
+                    //MainActivityPresenter.handleNewPowerList(spellListName, dataSnapshot.getKey());
+                    //now add a listener to the spell_groups so we get the group names too
+                    addSpellGroupListener(spellListName, dataSnapshot.getKey());
+                }
                 else {
                     throw new RuntimeException(
                             "Unhandled parameter at "
@@ -347,6 +352,32 @@ public class DataSource {
         //attach the listener to "spell_lists/" and return it
         firebaseDatabase.getReference(DB_POWER_LISTS_REFERENCE).addChildEventListener(spellListChildListener);
         return spellListChildListener;
+    }
+
+    //used for adding a listener to the spell_groups
+    //spellListName and key are passed in so these can be given to MainActivityPresenter in the callback
+    private static void addSpellGroupListener(final String spellListName, final String spellListId) {
+
+        firebaseDatabase
+                .getReference(DB_SPELL_GROUPS_TREE_NAME)
+                .child(spellListId)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        ArrayList<String> groupNames = new ArrayList<>();
+
+                        for (DataSnapshot snapshot :
+                                dataSnapshot.getChildren()) {
+                            groupNames.add(snapshot.getKey());
+                        }
+                        MainActivityPresenter.handleNewPowerList(spellListName, spellListId, groupNames);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
     }
 
     /**
@@ -465,10 +496,10 @@ public class DataSource {
                             case DataSource.MAINACTIVITYPRESENTER:
                                 //give the children one by one to MainActivityPresenter
                                 for(DataSnapshot snapshot: dataSnapshot.getChildren()){
-                                    MainActivityPresenter.handleNewPowerList(
+                                    //call addSpellGroupListener so we also get the spell group names for MainActivityPresenter
+                                    addSpellGroupListener(
                                             snapshot.child(DB_DAILY_POWER_LIST_CHILD_NAME).getValue(String.class),
-                                            snapshot.getKey()
-                                    );
+                                            snapshot.getKey());
                                 }
                                 break;
 

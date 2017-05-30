@@ -18,6 +18,8 @@ import android.widget.Button;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
+import java.util.ArrayList;
+
 import tomi.piipposoft.blankspellbook.R;
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
 import tomi.piipposoft.blankspellbook.dialog_fragments.SetDailyPowerListNameDialog;
@@ -182,12 +184,12 @@ public class MainActivity extends AppCompatActivity
     //FROM MAIN ACTIVITY CONTRACT INTERFACE
 
     @Override
-    public void addPowerListData(String name, String id) {
-        pagerAdapter.addPowerListToFragment(name, id);
+    public void addPowerListData(String name, String id, ArrayList<String> groupNames) {
+        pagerAdapter.addPowerListToFragment(name, id, groupNames);
     }
 
     @Override
-    public void addDailyPowerListData(String name, String id) {
+    public void addDailyPowerListData(String name, String id, ArrayList<String> groupNames) {
         // TODO: 29.5.2017 do stuff
     }
 
@@ -197,7 +199,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void removeDailyPowerListData(String dailyPowerListName, String key) {
+    public void removeDailyPowerListData(String dailyPowerListName, String id) {
         // TODO: 29.5.2017 do stuff
     }
 
