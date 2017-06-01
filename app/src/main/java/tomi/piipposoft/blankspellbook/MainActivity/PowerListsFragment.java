@@ -1,6 +1,5 @@
 package tomi.piipposoft.blankspellbook.MainActivity;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -9,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.ArrayMap;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -19,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import tomi.piipposoft.blankspellbook.R;
 
@@ -104,18 +101,22 @@ public class PowerListsFragment extends Fragment {
         // Complex data items may need more than one view per item, and
         // you provide access to all the views for a data item in a view holder
         class ViewHolder extends RecyclerView.ViewHolder {
-            // each data item is just a string in this case
+
             TextView textViewPrimary, textViewSecondary, textViewTertiary;
+            View splotchView;
+            //CardView cardView;
 
             ViewHolder(View  v) {
                 super(v);
-                textViewPrimary = (TextView) v.findViewById(R.id.textPrimary);
-                textViewSecondary = (TextView) v.findViewById(R.id.textSecondaryBlack);
-                textViewTertiary = (TextView) v.findViewById(R.id.textSecondaryGray);
+                textViewPrimary = (TextView) v.findViewById(R.id.powerListName_textView);
+                textViewSecondary = (TextView) v.findViewById(R.id.groupName1_textView);
+                textViewTertiary = (TextView) v.findViewById(R.id.groupName2_textView);
+                splotchView = v.findViewById(R.id.splotchView);
+                //cardView = (CardView) v.findViewById(R.id.cardView);
             }
         }
 
-        // Provide a suitable constructor (depends on the kind of dataset)
+
         PowerListsAdapter() {
             //empty constructor, no local variables
         }
@@ -129,18 +130,8 @@ public class PowerListsFragment extends Fragment {
                     .inflate(R.layout.main_activity_power_lists_child_row, parent, false);
             // set the view's size, margins, paddings and layout parameters
 
-            //v.setBackgroundColor(getRandomColor());
+            //v.setBackgroundColor(getRandomColorFromString());
 
-            //get the drawable and give it a random color
-            Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.recycler_child_circle);
-            drawable.setColorFilter(getRandomColor(), PorterDuff.Mode.SRC_IN);
-
-            //set background for the splotch, seems like this really has to be done like this
-            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-                v.findViewById(R.id.splotchView).setBackground(drawable);
-            } else {
-                v.findViewById(R.id.splotchView).setBackgroundDrawable(drawable);
-            }
 
             return new ViewHolder(v);
         }
@@ -150,22 +141,41 @@ public class PowerListsFragment extends Fragment {
         public void onBindViewHolder(ViewHolder holder, int position) {
             // - get element from your dataset at this position
             // - replace the contents of the view with that element
-            holder.textViewPrimary.setText(listNames.get(position));
+            String groupName = listNames.get(position);
+            holder.textViewPrimary.setText(groupName);
             String id = listIds.get(position);
 
             //the map might not have entry with this ID, that means there's no groups under the spell list
             if (listPowerGroups.containsKey(id)) {
+                //add the group name to the first text view
                 String grpName1 = listPowerGroups.get(id).get(0);
-                String grpName2 = listPowerGroups.get(id).get(1);
                 if(!"".equals(grpName1))
                     holder.textViewSecondary.setText(grpName1);
-                if(!"".equals(grpName2))
-                    holder.textViewTertiary.setText(grpName2);
+
+                //if the list has also second group, add second one too
+                if(listPowerGroups.get(id).size() > 1) {
+                    String grpName2 = listPowerGroups.get(id).get(1);
+                    if (!"".equals(grpName2))
+                        holder.textViewTertiary.setText(grpName2);
+                }
             }
             else{
                 holder.textViewSecondary.setVisibility(View.INVISIBLE);
                 holder.textViewTertiary.setVisibility(View.INVISIBLE);
             }
+
+            //get the drawable and give it a random color
+            Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.recycler_child_rectangle);
+            drawable.setColorFilter(getRandomColorFromString(groupName), PorterDuff.Mode.SRC_IN);
+
+            //set background for the splotch, seems like this really has to be done like this
+            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                holder.splotchView.setBackground(drawable);
+            } else {
+                holder.splotchView.setBackgroundDrawable(drawable);
+            }
+
+            //holder.cardView.setCardBackgroundColor(getRandomColorFromString());
         }
 
         // Return the size of your dataset (invoked by the layout manager)
@@ -175,18 +185,49 @@ public class PowerListsFragment extends Fragment {
         }
     }
 
-    private int getRandomColor(){
-        //might me nice if we would generate the color based on a string somehow to always get same color
+    private int getRandomColorFromString(String name){
+
+        String color = String.format("#%X", name.hashCode());
+        Log.d(TAG, "name in hex:" + color);
+        int red = Integer.valueOf( color.substring( 1, 3 ), 16 );
+        int green = Integer.valueOf( color.substring( 3, 5 ), 16 );
+        int blue = Integer.valueOf( color.substring( 5, 7 ), 16 );
+        Log.d(TAG, "red: " + red + " green:" + green +  " blue: " + blue);
+
+
         //https://stackoverflow.com/questions/43044/algorithm-to-randomly-generate-an-aesthetically-pleasing-color-palette
-        Random random = new Random();
+        //generate first a random color
+        //should we define ranges to avoid certain colours?
+        /*Random random = new Random();
         int red = random.nextInt(256);
         int green = random.nextInt(256);
-        int blue = random.nextInt(256);
+        int blue = random.nextInt(256);*/
 
         //use some color to mix the random color to get a tint, here lightBlue is used
-        red = (red + 173) / 2;
+        /*red = (red + 173) / 2;
         green = (green + 216) / 2;
-        blue = (blue + 230) / 2;
+        blue = (blue + 230) / 2;*/
+
+        //orangeRed
+        /*red = (red + 255) / 2;
+        green = (green + 69) / 2;
+        blue = (blue + 0) / 2;*/
+
+        //light orange
+        /*red = (red + 255) / 2;
+        green = (green + 106) / 2;
+        blue = (blue + 50) / 2;*/
+
+        //white: get just pastel colors at random
+        red = (red + 255) / 2;
+        green = (green + 255) / 2;
+        blue = (blue + 255) / 2;
+
+        //green
+        /*red = (red + 153) / 2;
+        green = (green + 204) / 2;
+        blue = (blue + 153) / 2;*/
+
 
         return Color.rgb(red, green, blue);
     }
