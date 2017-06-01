@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="secondary_text_material_light">#87000000</color>
+    <color name="my_color_app_accent_lightest">@color/md_teal_50</color>
     <color name="my_color_app_accent_lighter">@color/md_teal_100</color>
     <color name="my_color_colorBackground">@color/md_grey_50</color>
     <color name="my_color_dark_gray">#737373</color>

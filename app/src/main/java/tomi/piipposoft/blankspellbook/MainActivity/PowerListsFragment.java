@@ -104,7 +104,6 @@ public class PowerListsFragment extends Fragment {
 
             TextView textViewPrimary, textViewSecondary, textViewTertiary;
             View splotchView;
-            //CardView cardView;
 
             ViewHolder(View  v) {
                 super(v);
@@ -112,10 +111,8 @@ public class PowerListsFragment extends Fragment {
                 textViewSecondary = (TextView) v.findViewById(R.id.groupName1_textView);
                 textViewTertiary = (TextView) v.findViewById(R.id.groupName2_textView);
                 splotchView = v.findViewById(R.id.splotchView);
-                //cardView = (CardView) v.findViewById(R.id.cardView);
             }
         }
-
 
         PowerListsAdapter() {
             //empty constructor, no local variables
@@ -128,11 +125,6 @@ public class PowerListsFragment extends Fragment {
             // create a new view
             View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.main_activity_power_lists_child_row, parent, false);
-            // set the view's size, margins, paddings and layout parameters
-
-            //v.setBackgroundColor(getRandomColorFromString());
-
-
             return new ViewHolder(v);
         }
 
@@ -169,13 +161,13 @@ public class PowerListsFragment extends Fragment {
             drawable.setColorFilter(getRandomColorFromString(groupName), PorterDuff.Mode.SRC_IN);
 
             //set background for the splotch, seems like this really has to be done like this
-            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 holder.splotchView.setBackground(drawable);
-            } else {
+            }
+            else {
+                //we can call this since only on ancient devices we get here, those still have this method
                 holder.splotchView.setBackgroundDrawable(drawable);
             }
-
-            //holder.cardView.setCardBackgroundColor(getRandomColorFromString());
         }
 
         // Return the size of your dataset (invoked by the layout manager)
@@ -194,9 +186,16 @@ public class PowerListsFragment extends Fragment {
         int blue = Integer.valueOf( color.substring( 5, 7 ), 16 );
         Log.d(TAG, "red: " + red + " green:" + green +  " blue: " + blue);
 
+        //tint the random color with white to get pastel colors
+        red = (red + 255) / 2;
+        green = (green + 255) / 2;
+        blue = (blue + 255) / 2;
+
+        return Color.rgb(red, green, blue);
+
 
         //https://stackoverflow.com/questions/43044/algorithm-to-randomly-generate-an-aesthetically-pleasing-color-palette
-        //generate first a random color
+        //generate a random color
         //should we define ranges to avoid certain colours?
         /*Random random = new Random();
         int red = random.nextInt(256);
@@ -218,17 +217,9 @@ public class PowerListsFragment extends Fragment {
         green = (green + 106) / 2;
         blue = (blue + 50) / 2;*/
 
-        //white: get just pastel colors at random
-        red = (red + 255) / 2;
-        green = (green + 255) / 2;
-        blue = (blue + 255) / 2;
-
         //green
         /*red = (red + 153) / 2;
         green = (green + 204) / 2;
         blue = (blue + 153) / 2;*/
-
-
-        return Color.rgb(red, green, blue);
     }
 }

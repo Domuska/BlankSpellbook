@@ -19,7 +19,7 @@
         card_view:contentPaddingRight="5dp"
         card_view:contentPaddingBottom="5dp"
         card_view:contentPaddingTop="5dp"
-        card_view:cardBackgroundColor="@color/md_teal_50"
+        card_view:cardBackgroundColor="@color/my_color_app_accent_lightest"
         >
 
         <!-- Layout holding the color splotch -->
@@ -31,8 +31,7 @@
             <View
                 android:id="@+id/splotchView"
                 android:layout_width="15dp"
-                android:layout_height="match_parent"
-                android:background="@drawable/recycler_child_rectangle"/>
+                android:layout_height="match_parent"/>
 
         </LinearLayout>
 
