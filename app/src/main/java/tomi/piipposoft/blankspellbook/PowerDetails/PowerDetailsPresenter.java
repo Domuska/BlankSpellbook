@@ -142,7 +142,7 @@ public class PowerDetailsPresenter extends DrawerPresenter
     @Override
     public void userSavingModifiedPower(ArrayMap<String, String> powerData) {
         Spell spell = constructPowerFromFields(powerData);
-        if(spell.getGroupName().equals(thisPower.getGroupName()))
+        if(spell.getGroupName() != null && spell.getGroupName().equals(thisPower.getGroupName()))
             DataSource.updateSpell(spell, powerId, false, null, null);
         else
             DataSource.updateSpell(spell, powerId, true, thisPower.getGroupName(), powerListId);

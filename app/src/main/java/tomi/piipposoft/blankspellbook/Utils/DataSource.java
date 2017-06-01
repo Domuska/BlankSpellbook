@@ -231,14 +231,16 @@ public class DataSource {
                     + oldGroupName
                     + "/"
                     + spellId, null);
-            //add the spell to the new group
-            childUpdates.put(DB_SPELL_GROUPS_TREE_NAME
-                    + "/"
-                    + powerListId
-                    + "/"
-                    + spell.getGroupName()
-                    + "/"
-                    + spellId, true);
+            //add the spell to the new group if new name is not null
+            if (spell.getGroupName() != null) {
+                childUpdates.put(DB_SPELL_GROUPS_TREE_NAME
+                        + "/"
+                        + powerListId
+                        + "/"
+                        + spell.getGroupName()
+                        + "/"
+                        + spellId, true);
+            }
         }
 
         FirebaseDatabase.getInstance().getReference().updateChildren(childUpdates);
