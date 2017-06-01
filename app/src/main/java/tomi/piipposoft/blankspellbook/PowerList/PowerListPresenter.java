@@ -93,7 +93,7 @@ public class PowerListPresenter extends DrawerPresenter implements
 
     @Override
     public void userPressingDeleteButton(ArrayList<Spell> deletablePowers) {
-        Log.d(TAG, "spells that should be selected:");
+        Log.d(TAG, "spells that should be selected for deletion:");
 
         String[] deletablePowerIds = new String[deletablePowers.size()];
         for (int i = 0; i < deletablePowerIds.length; i++) {

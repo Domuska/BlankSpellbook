@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,12 +14,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
@@ -33,7 +33,6 @@ import tomi.piipposoft.blankspellbook.PowerList.PowerListPresenter;
  */
 public class DataSource {
     public static final String DB_SPELL_LIST_TREE_NAME = "spell_lists";
-    public static final String DB_SPELL_TREE_NAME = "spells";
     public static final String DB_SPELL_LIST_CHILD_SPELLS = "spells";
     public static final String DB_POWER_LISTS_REFERENCE = "spell_lists";
     public static final String DB_DAILY_POWER_LIST_NAME = "daily_power_lists";
@@ -42,6 +41,8 @@ public class DataSource {
     public static final String DB_DAILY_POWER_LIST_CHILD_NAME = "name";
     public static final String DB_SPELL_GROUPS_TREE_NAME = "spell_groups";
 
+    public static final String DB_SPELL_TREE_NAME = "spells";
+    public static final String DB_SPELLS_CHILD_GROUP_NAME = "groupName";
 
     public static final int DRAWERPRESENTER = 1;
     public static final int MAINACTIVITYPRESENTER = 2;
@@ -176,45 +177,16 @@ public class DataSource {
      * @param powerListId Power list to which this spell is to be added, can be null
      */
     public static void saveSpellAndAddListener(Spell spell, String powerListId) {
+
         DatabaseReference spellReference = firebaseDatabase.getReference().child(DB_SPELL_TREE_NAME);
-        String spellId = spellReference.push().getKey();
+        String powerId = spellReference.push().getKey();
 
-        //for saving $spell_id - true to spell_lists/$spellId/spells/$spellId
-        Map<String, Object> childUpdates = new HashMap<>();
+        Map<String, Object> childUpdates = getSaveSpellChildUpdates(spell, powerListId, powerId);
 
-        //if spellList id not null, add it to the tables that are to be updated as well
-        if(powerListId != null && !powerListId.isEmpty()){
-            //add new child to spell_lists/$spell_id/spells/
-            childUpdates.put(DB_SPELL_LIST_TREE_NAME
-                    + "/"
-                    + powerListId
-                    + "/"
-                    + DB_SPELL_LIST_CHILD_SPELLS
-                    + "/"
-                    + spellId, true);
-
-            //add the spell_groups entry as well if spell is set to a group
-            if(!"".equals(spell.getGroupName())){
-                childUpdates.put(
-                        DB_SPELL_GROUPS_TREE_NAME
-                        + "/"
-                        + powerListId
-                        + "/"
-                        + spell.getGroupName(), true);
-            }
-        }
-
-        //use Jackson Objectmapper to create map of the Spell object
-        Map<String, Object> spellValues = new ObjectMapper().convertValue(spell, Map.class);
-        //store the new spell to spells/$spell_id/, ID gotten with push() above
-        childUpdates.put(DB_SPELL_TREE_NAME
-                + "/"
-                + spellId
-                + "/", spellValues);
         FirebaseDatabase.getInstance().getReference().updateChildren(childUpdates);
 
         //add a listener to the newly added spell
-        spellReference.child(spellId).addListenerForSingleValueEvent(new ValueEventListener() {
+        spellReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Spell savedSpell = dataSnapshot.getValue(Spell.class);
@@ -223,15 +195,53 @@ public class DataSource {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.d(TAG, "Erro at fetching newly saved spell " + databaseError.toString());
+                Log.d(TAG, "Error at fetching newly saved spell " + databaseError.toString());
             }
         });
 
     }
 
-    public static void updateSpell(Spell spell, String spellId){
+    /**
+     *
+     * @param spell The spell that is to be updated
+     * @param spellId The ID of the spell,
+     * @param groupNameUpdated If the name of the spell group was updated or not
+     * @param powerListId The spell list which this particular spell belongs to
+     */
+    public static void updateSpell(@NonNull Spell spell, @NonNull String spellId,
+                                   @NonNull boolean groupNameUpdated, @Nullable String oldGroupName,
+                                   @Nullable String powerListId){
         DatabaseReference spellReference = firebaseDatabase.getReference().child(DB_SPELL_TREE_NAME).child(spellId);
-        spellReference.setValue(spell);
+        //spellReference.setValue(spell);
+
+        Map<String, Object> childUpdates = new HashMap<>();
+
+        //update the old spell
+        childUpdates.put(DB_SPELL_TREE_NAME
+                + "/"
+                + spellId, spell);
+
+        //update also the spell_groups/id/groupName/ if group name has been updated
+        if(groupNameUpdated){
+            //remove the spell from the old group
+            childUpdates.put(DB_SPELL_GROUPS_TREE_NAME
+                    + "/"
+                    + powerListId
+                    + "/"
+                    + oldGroupName
+                    + "/"
+                    + spellId, null);
+            //add the spell to the new group
+            childUpdates.put(DB_SPELL_GROUPS_TREE_NAME
+                    + "/"
+                    + powerListId
+                    + "/"
+                    + spell.getGroupName()
+                    + "/"
+                    + spellId, true);
+        }
+
+        FirebaseDatabase.getInstance().getReference().updateChildren(childUpdates);
 
         spellReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -248,14 +258,64 @@ public class DataSource {
 
     }
 
-    public static void removePowersFromList(String[] spellIds, String powerListId) {
-        for (String spellId : spellIds)
-            firebaseDatabase
+    public static void removePowersFromList(String[] spellIds, final String powerListId) {
+
+        for (final String spellId : spellIds) {
+            final Map<String, Object> childUpdates = new HashMap<>();
+
+            //first remove the spell from the power list
+            childUpdates.put(DB_SPELL_LIST_TREE_NAME
+                    + "/"
+                    + powerListId
+                    + "/"
+                    + DB_SPELL_LIST_CHILD_SPELLS
+                    + "/"
+                    + spellId, null);
+
+            //get the group name of this spell
+            firebaseDatabase.getReference()
+                    .child(DB_SPELL_TREE_NAME)
+                    .child(spellId)
+                    .child(DB_SPELLS_CHILD_GROUP_NAME)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            //delete the spell from the group it belongs to
+                            String groupName = dataSnapshot.getValue(String.class);
+                            childUpdates.put(DB_SPELL_GROUPS_TREE_NAME
+                                    + "/"
+                                    + powerListId
+                                    + "/"
+                                    + groupName
+                                    + "/"
+                                    + spellId, null);
+                            //trigger the updates in DB
+                            FirebaseDatabase.getInstance().getReference().updateChildren(childUpdates);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+            //remove the spell from spell_groups
+            /*childUpdates.put(DB_SPELL_GROUPS_TREE_NAME
+                    + "/"
+                    + powerListId
+                    + "/"
+                    +   *///mene groupnameen)
+                    //laita spellID:n kohalta nulliksi
+
+
+            //note, spell is not removed altogether, user does this somewhere else
+        }
+            /*firebaseDatabase
                     .getReference(DB_SPELL_LIST_TREE_NAME)
                     .child(powerListId)
                     .child(DB_SPELL_LIST_CHILD_SPELLS)
                     .child(spellId)
-                    .setValue(null);
+                    .setValue(null);*/
     }
 
     /**
@@ -562,18 +622,26 @@ public class DataSource {
     }
 
 
-    public static void addSpellToPowerLists(ArrayList<String> listIds, String spellId) {
-        for(String id : listIds) {
-            DatabaseReference ref =
-                    firebaseDatabase.getReference(DB_SPELL_LIST_TREE_NAME).child(id).child(DB_SPELL_LIST_CHILD_SPELLS);
-            ref.child(spellId).setValue(true);
+    public static void addSpellToPowerLists(ArrayList<String> listIds, Spell power) {
+
+        for(String listId : listIds) {
+            Log.d(TAG, "in addSpellToPowerLists, spell id: " + power.getSpellId());
+            //get the ID for the new spell
+            DatabaseReference spellReference = firebaseDatabase.getReference().child(DB_SPELL_TREE_NAME);
+            String powerId = spellReference.push().getKey();
+            //get the childUpdates needed for saving a new spell
+            Map<String, Object> childUpdates = getSaveSpellChildUpdates(power, listId, powerId);
+
+            FirebaseDatabase.getInstance().getReference().updateChildren(childUpdates);
         }
     }
 
     public static void addSpellToDailyPowerLists(ArrayList<String> listIds, String spellId) {
         for(String id : listIds) {
-            DatabaseReference ref =
-                    firebaseDatabase.getReference(DB_DAILY_POWER_LIST_NAME).child(id).child(DB_DAILY_POWER_LIST_CHILD_SPELLS);
+            DatabaseReference ref = firebaseDatabase
+                            .getReference(DB_DAILY_POWER_LIST_NAME)
+                            .child(id)
+                            .child(DB_DAILY_POWER_LIST_CHILD_SPELLS);
             ref.child(spellId).setValue(true);
         }
     }
@@ -607,6 +675,60 @@ public class DataSource {
                             }
                         }
                 );
+    }
+
+    /**
+     * Method for getting the map of updates needed to add a new spell to DB
+     * @param spell spell in question
+     * @param powerListId ID of the power list this spell belongs to
+     * @param spellId ID of the spell that is to be added
+     * @return a map containing the updates
+     */
+    private static Map<String, Object> getSaveSpellChildUpdates(Spell spell, String powerListId, String spellId){
+
+        Map<String, Object> childUpdates;
+
+        if (!"".equals(spellId)) {
+            //for saving $spell_id - true to spell_lists/$spellId/spells/$spellId
+            childUpdates = new HashMap<>();
+
+            //if spellList id not null, add it to the tables that are to be updated as well
+            if(powerListId != null && !powerListId.isEmpty()){
+                //add new child to spell_lists/$spell_id/spells/
+                childUpdates.put(DB_SPELL_LIST_TREE_NAME
+                        + "/"
+                        + powerListId
+                        + "/"
+                        + DB_SPELL_LIST_CHILD_SPELLS
+                        + "/"
+                        + spellId, true);
+
+                //add the spell_groups entry as well if spell is set to a group
+                if(!"".equals(spell.getGroupName())){
+                    childUpdates.put(
+                            DB_SPELL_GROUPS_TREE_NAME
+                                    + "/"
+                                    + powerListId
+                                    + "/"
+                                    + spell.getGroupName()
+                                    + "/"
+                                    + spellId, true);
+                }
+            }
+
+            //use Jackson Objectmapper to create map of the Spell object
+            Map<String, Object> spellValues = new ObjectMapper().convertValue(spell, Map.class);
+            //store the new spell to spells/$spell_id/, ID gotten with push() above
+            childUpdates.put(DB_SPELL_TREE_NAME
+                    + "/"
+                    + spellId
+                    + "/", spellValues);
+            return childUpdates;
+        } else {
+            throw new RuntimeException("Error at getSaveSpellChildUpdates, spell should already have ID initialized");
+        }
+
+
     }
 
     public static ArrayList<Spell> getSpellsWithSpellBookId2(Context context, long id){

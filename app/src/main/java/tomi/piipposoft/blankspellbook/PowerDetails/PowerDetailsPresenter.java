@@ -2,6 +2,7 @@ package tomi.piipposoft.blankspellbook.PowerDetails;
 
 import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -141,7 +142,10 @@ public class PowerDetailsPresenter extends DrawerPresenter
     @Override
     public void userSavingModifiedPower(ArrayMap<String, String> powerData) {
         Spell spell = constructPowerFromFields(powerData);
-        DataSource.updateSpell(spell, powerId);
+        if(spell.getGroupName().equals(thisPower.getGroupName()))
+            DataSource.updateSpell(spell, powerId, false, null, null);
+        else
+            DataSource.updateSpell(spell, powerId, true, thisPower.getGroupName(), powerListId);
         mPowerDetailsView.hideUnUsedFields(spell);
     }
 
@@ -157,49 +161,6 @@ public class PowerDetailsPresenter extends DrawerPresenter
             mPowerDetailsView.cancelEdits();
         else
             mPowerDetailsView.showDiscardChangesDialog();
-    }
-
-    // FROM DRAWERCONTRACT USERACTIONLISTENER
-    @Override
-    public void addPowerList(@NonNull String powerListName) {
-        this.addNewPowerList(powerListName);
-    }
-
-    @Override
-    public void addDailyPowerList(@NonNull String dailyPowerListName) {
-        this.addNewDailyPowerList(dailyPowerListName);
-    }
-
-    @Override
-    public void drawerOpened() {
-    }
-
-    @Override
-    public void powerListItemClicked(String itemId, String name) {
-        mDrawerActivityView.openPowerList(itemId, name);
-    }
-
-    @Override
-    public void dailyPowerListItemClicked(long itemId) {
-        mDrawerActivityView.openDailyPowerList(itemId);
-    }
-
-    @Override
-    public void powerListProfileSelected() {
-        showPowerLists();
-    }
-
-    @Override
-    public void dailyPowerListProfileSelected() {
-        this.showDailyPowerLists();
-    }
-
-    @Override
-    public void userPressingAddToLists() {
-        mPowerDetailsView.showAddToListsFragment();
-        //get data from DB
-        DataSource.getPowerLists(DataSource.POWERDETAILSPRESENTER);
-        DataSource.getDailyPowerLists(DataSource.POWERDETAILSPRESENTER);
     }
 
     /**
@@ -222,8 +183,10 @@ public class PowerDetailsPresenter extends DrawerPresenter
 
     @Override
     public void userAddingPowerToLists(ArrayList<String> listIds, boolean addingToPowerList) {
+        //set spell id as null so it won't be saved as field to DB, we don't want that
+        Spell saveableSpell = thisPower.setSpellId(null);
         if(addingToPowerList)
-            DataSource.addSpellToPowerLists(listIds, powerId);
+            DataSource.addSpellToPowerLists(listIds, saveableSpell);
         else
             DataSource.addSpellToDailyPowerLists(listIds, powerId);
     }
@@ -277,5 +240,48 @@ public class PowerDetailsPresenter extends DrawerPresenter
         }
 
         return spell;
+    }
+
+    // FROM DRAWERCONTRACT USERACTIONLISTENER
+    @Override
+    public void addPowerList(@NonNull String powerListName) {
+        this.addNewPowerList(powerListName);
+    }
+
+    @Override
+    public void addDailyPowerList(@NonNull String dailyPowerListName) {
+        this.addNewDailyPowerList(dailyPowerListName);
+    }
+
+    @Override
+    public void drawerOpened() {
+    }
+
+    @Override
+    public void powerListItemClicked(String itemId, String name) {
+        mDrawerActivityView.openPowerList(itemId, name);
+    }
+
+    @Override
+    public void dailyPowerListItemClicked(long itemId) {
+        mDrawerActivityView.openDailyPowerList(itemId);
+    }
+
+    @Override
+    public void powerListProfileSelected() {
+        showPowerLists();
+    }
+
+    @Override
+    public void dailyPowerListProfileSelected() {
+        this.showDailyPowerLists();
+    }
+
+    @Override
+    public void userPressingAddToLists() {
+        mPowerDetailsView.showAddToListsFragment();
+        //get data from DB
+        DataSource.getPowerLists(DataSource.POWERDETAILSPRESENTER);
+        DataSource.getDailyPowerLists(DataSource.POWERDETAILSPRESENTER);
     }
 }
