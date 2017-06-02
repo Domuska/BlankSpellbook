@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity
 
     private final String DATABASE_PERSISTANCE_SET_KEY = "databasePersistanceSet";
     private final String TAG = "MainActivity";
+    private final String FRAGMENT_LAST_VISIBLE = "lastVisibleFragment";
+
 
     private Button spellBookButton, dailySpellsButton;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -59,6 +61,9 @@ public class MainActivity extends AppCompatActivity
 
     private boolean databasePersistanceSet = false;
 
+    //default selection is the spell lists fragment
+    private int currentlySelectedList = MainActivityPresenter.POWER_LISTS_SELECTED;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +72,10 @@ public class MainActivity extends AppCompatActivity
 
         if(savedInstanceState != null) {
             databasePersistanceSet = savedInstanceState.getBoolean(DATABASE_PERSISTANCE_SET_KEY);
+
+            //if we get a value then activity was destroyed and is resuming
+            currentlySelectedList = savedInstanceState
+                    .getInt(FRAGMENT_LAST_VISIBLE);
         }
 
         //set the support library's toolbar as application toolbar
@@ -78,20 +87,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onResume(){
         super.onResume();
-        Log.d(TAG, "onResume");
 
         if(!databasePersistanceSet){
             DataSource.setDatabasePersistance();
             databasePersistanceSet = true;
         }
-
-
-        pagerAdapter = new MainActivityPagerAdapter(getSupportFragmentManager());
-
-        viewPager = (ViewPager) findViewById(R.id.pager);
-        viewPager.setAdapter(pagerAdapter);
-
-
 
         //nav drawer
         mDrawerHelper = DrawerHelper.getInstance(this, (Toolbar) findViewById(R.id.my_toolbar));
@@ -100,6 +100,29 @@ public class MainActivity extends AppCompatActivity
                 mDrawerHelper,
                 this);
 
+        //create a new adapter and give it the actionListener to attach to the fragments
+        pagerAdapter = new MainActivityPagerAdapter(getSupportFragmentManager(),
+                (MainActivityContract.PowerListActionListener) mActionlistener);
+
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager.setAdapter(pagerAdapter);
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                currentlySelectedList = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         if(mDrawerActionListener == null) {
             mDrawerActionListener = (DrawerContract.UserActionListener) mActionlistener;
@@ -125,6 +148,7 @@ public class MainActivity extends AppCompatActivity
         // Make the drawer initialize itself
         mDrawerActionListener.powerListProfileSelected();
         mActionlistener.resumeActivity();
+        viewPager.setCurrentItem(currentlySelectedList);
     }
 
     @Override
@@ -171,6 +195,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putBoolean(DATABASE_PERSISTANCE_SET_KEY, databasePersistanceSet);
+        outState.putInt(FRAGMENT_LAST_VISIBLE, viewPager.getCurrentItem());
         super.onSaveInstanceState(outState);
     }
 
@@ -203,6 +228,13 @@ public class MainActivity extends AppCompatActivity
         // TODO: 29.5.2017 do stuff
     }
 
+    @Override
+    public void startPowerListActivity(String name, String id) {
+        Intent i = new Intent(this, PowerListActivity.class);
+        i.putExtra(PowerListActivity.EXTRA_POWER_LIST_ID, id);
+        i.putExtra(PowerListActivity.EXTRA_POWER_LIST_NAME, name);
+        startActivity(i);
+    }
 
     // FROM DRAWER CONTRACT VIEWACTIVITY INTERFACE
 

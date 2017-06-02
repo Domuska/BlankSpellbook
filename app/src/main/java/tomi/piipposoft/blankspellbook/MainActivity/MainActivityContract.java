@@ -12,10 +12,15 @@ public interface MainActivityContract {
         void addDailyPowerListData(String name, String id, ArrayList<String> groupNames);
         void removePowerListData(String powerListName, String id);
         void removeDailyPowerListData(String dailyPowerListName, String id);
+        void startPowerListActivity(String name, String id);
     }
 
     interface UserActionListener{
         void resumeActivity();
         void pauseActivity();
+    }
+
+    interface PowerListActionListener{
+        void onPowerListClicked(String listName, String listId);
     }
 }

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.ArrayMap;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import tomi.piipposoft.blankspellbook.PowerList.PowerListContract;
 import tomi.piipposoft.blankspellbook.R;
 
 /**
@@ -38,13 +40,14 @@ public class PowerListsFragment extends Fragment {
     //map that has pairs: ID - list of groups this list has
     private ArrayMap<String, ArrayList<String>> listPowerGroups = new ArrayMap<>();
 
-    View rootView;
+    MainActivityContract.PowerListActionListener myClickListener;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView");
-        this.rootView = inflater.inflate(
+        View rootView = inflater.inflate(
                 R.layout.fragment_main_activity_power_lists, container, false);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.main_activity_power_lists_recyclerView);
@@ -65,7 +68,6 @@ public class PowerListsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         Log.d(TAG, "onResume");
-
     }
 
     public void handleNewPowerList(String name, String id, ArrayList<String> groupNames){
@@ -91,6 +93,11 @@ public class PowerListsFragment extends Fragment {
         listIds = new ArrayList<>();
     }
 
+    public void attachClickListener(MainActivityContract.PowerListActionListener listener) {
+        Log.d(TAG, "myClickListener is: " + listener.toString());
+        this.myClickListener = listener;
+    }
+
     /**
      * Adapter for the RecyclerView showing the power lists
      */
@@ -104,6 +111,7 @@ public class PowerListsFragment extends Fragment {
 
             TextView textViewPrimary, textViewSecondary, textViewTertiary;
             View splotchView;
+            CardView cardView;
 
             ViewHolder(View  v) {
                 super(v);
@@ -111,6 +119,7 @@ public class PowerListsFragment extends Fragment {
                 textViewSecondary = (TextView) v.findViewById(R.id.groupName1_textView);
                 textViewTertiary = (TextView) v.findViewById(R.id.groupName2_textView);
                 splotchView = v.findViewById(R.id.splotchView);
+                cardView = (CardView) v.findViewById(R.id.cardView);
             }
         }
 
@@ -130,12 +139,14 @@ public class PowerListsFragment extends Fragment {
 
         // Replace the contents of a view (invoked by the layout manager)
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
+        public void onBindViewHolder(ViewHolder holder, final int position) {
             // - get element from your dataset at this position
             // - replace the contents of the view with that element
             String groupName = listNames.get(position);
             holder.textViewPrimary.setText(groupName);
             String id = listIds.get(position);
+
+            final int itemPosition = holder.getAdapterPosition();
 
             //the map might not have entry with this ID, that means there's no groups under the spell list
             if (listPowerGroups.containsKey(id)) {
@@ -155,6 +166,15 @@ public class PowerListsFragment extends Fragment {
                 holder.textViewSecondary.setVisibility(View.INVISIBLE);
                 holder.textViewTertiary.setVisibility(View.INVISIBLE);
             }
+
+            holder.cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    myClickListener.onPowerListClicked(
+                            listNames.get(itemPosition),
+                            listIds.get(itemPosition));
+                }
+            });
 
             //get the drawable and give it a random color
             Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.recycler_child_rectangle);

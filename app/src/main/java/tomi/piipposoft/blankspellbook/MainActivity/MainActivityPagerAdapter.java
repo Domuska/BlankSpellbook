@@ -21,14 +21,17 @@ import java.util.ArrayList;
 
 public class MainActivityPagerAdapter extends FragmentPagerAdapter{
 
-    public final int FRAGMENTS_AMOUNT = 2;
+    public final int FRAGMENTS_AMOUNT = 3;
 
     private PowersFragment powersFragment;
-    private PowerListsFragment powerListsFragment;
+    private PowerListsFragment powerListsFragment, dailyPowerListsFramgment;
+    private MainActivityContract.PowerListActionListener actionListener;
     public static final String TAG = "MainActiviPagerAdapter";
 
-    public MainActivityPagerAdapter(FragmentManager manager){
+    public MainActivityPagerAdapter(FragmentManager manager,
+                                    MainActivityContract.PowerListActionListener actionListener){
         super(manager);
+        this.actionListener = actionListener;
     }
 
     //override this, so we can save the references to the fragments safely, we can call methods on them later
@@ -39,9 +42,16 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
         // save the appropriate reference depending on position
         switch (position) {
             case 0:
-                powerListsFragment = (PowerListsFragment) createdFragment;
+                dailyPowerListsFramgment = (PowerListsFragment) createdFragment;
+                //attach listener
+                dailyPowerListsFramgment.attachClickListener(actionListener);
                 break;
             case 1:
+                powerListsFragment = (PowerListsFragment) createdFragment;
+                //attach the listener
+                powerListsFragment.attachClickListener(actionListener);
+                break;
+            case 2:
                 powersFragment = (PowersFragment) createdFragment;
                 break;
         }
@@ -63,6 +73,8 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
             case 0:
                 return new PowerListsFragment();
             case 1:
+                return new PowerListsFragment();
+            case 2:
                 return new PowersFragment();
             default:
                 Log.d(TAG,"Unknown value in getItem: " + position);

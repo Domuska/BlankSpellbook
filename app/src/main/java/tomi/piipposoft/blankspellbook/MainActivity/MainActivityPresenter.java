@@ -19,7 +19,8 @@ import tomi.piipposoft.blankspellbook.Utils.DataSource;
  */
 public class MainActivityPresenter extends DrawerPresenter
         implements DrawerContract.UserActionListener,
-        MainActivityContract.UserActionListener {
+        MainActivityContract.UserActionListener,
+        MainActivityContract.PowerListActionListener{
 
     private static MainActivityContract.View mMainActivityView;
 
@@ -27,6 +28,10 @@ public class MainActivityPresenter extends DrawerPresenter
 
     private static MainActivityPresenter thisInstance;
     private static ChildEventListener powerListListener;
+
+    public static final int DAILY_POWER_LISTS_SELECTED = 0;
+    public static final int POWER_LISTS_SELECTED = 1;
+    public static final int SPELLS_SELECTED = 2;
 
     private MainActivityPresenter(
             @NonNull BlankSpellBookContract.DBHelper dbHelper,
@@ -55,19 +60,18 @@ public class MainActivityPresenter extends DrawerPresenter
 
     @Override
     public void resumeActivity() {
-        //attach the listener to get callbacks of the data being changed
+        //attach listeners to spells, power lists and daily power lists
         if(powerListListener == null)
             powerListListener = DataSource.attachPowerListListener(DataSource.MAINACTIVITYPRESENTER);
         else {
             Log.d(TAG, "resumeActivity: powerListListener is not null");
             DataSource.getPowerLists(DataSource.MAINACTIVITYPRESENTER);
         }
-
     }
 
     @Override
     public void pauseActivity() {
-        //remove the listeners to prevent leaks
+        //remove the listeners
         Log.d(TAG, "in pauseActivity");
         DataSource.removePowerListListener(powerListListener);
     }
@@ -87,5 +91,14 @@ public class MainActivityPresenter extends DrawerPresenter
 
     public static void handleRemovedPowerList(String powerListName, String id) {
         mMainActivityView.removePowerListData(powerListName, id);
+    }
+
+
+    //FROM POWERLISTCONTRACT
+
+
+    @Override
+    public void onPowerListClicked(String listName, String listId) {
+        mMainActivityView.startPowerListActivity(listName, listId);
     }
 }
