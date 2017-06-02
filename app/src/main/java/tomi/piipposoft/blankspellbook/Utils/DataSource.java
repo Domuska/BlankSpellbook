@@ -561,7 +561,6 @@ public class DataSource {
                                                 + ".getPowerLists"
                                                 + "use either DataSource.DRAWERPRESENTER or DataSource.POWERDETAILSPRESENTER");
                         }
-
                     }
 
                     @Override
