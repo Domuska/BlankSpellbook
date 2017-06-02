@@ -198,7 +198,6 @@ public class DataSource {
                 Log.d(TAG, "Error at fetching newly saved spell " + databaseError.toString());
             }
         });
-
     }
 
     /**
@@ -301,23 +300,9 @@ public class DataSource {
                         }
                     });
 
-            //remove the spell from spell_groups
-            /*childUpdates.put(DB_SPELL_GROUPS_TREE_NAME
-                    + "/"
-                    + powerListId
-                    + "/"
-                    +   *///mene groupnameen)
-                    //laita spellID:n kohalta nulliksi
-
 
             //note, spell is not removed altogether, user does this somewhere else
         }
-            /*firebaseDatabase
-                    .getReference(DB_SPELL_LIST_TREE_NAME)
-                    .child(powerListId)
-                    .child(DB_SPELL_LIST_CHILD_SPELLS)
-                    .child(spellId)
-                    .setValue(null);*/
     }
 
     /**
@@ -367,7 +352,8 @@ public class DataSource {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 String spellListName = dataSnapshot.child("name").getValue(String.class);
-                Log.d(TAG, "spell list name: " + spellListName);
+                Log.d(TAG, "attachPowerListListener: spell list name: " + spellListName);
+                Log.d(TAG, "attachPowerListListener: list ID: " + dataSnapshot.getKey());
                 //add a new power list item to the drawer
                 if(presenterCalling == DRAWERPRESENTER)
                     DrawerPresenter.handlePowerList(spellListName, dataSnapshot.getKey());
@@ -532,9 +518,11 @@ public class DataSource {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.d(TAG, "getPowerLists, presenter calling: " + presenterCalling);
                         //give power details presenter the data as two arrays
                         switch(presenterCalling){
                             case DataSource.POWERDETAILSPRESENTER:
+                                Log.d(TAG, "getPowerLists, powerDetailsPresenter");
                                 String[] names = new String[(int)dataSnapshot.getChildrenCount()];
                                 String[] ids = new String[(int)dataSnapshot.getChildrenCount()];
                                 int i = 0;
@@ -551,11 +539,12 @@ public class DataSource {
                                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                                     DrawerPresenter.handlePowerList(
                                             snapshot.child(DB_SPELL_LIST_CHILD_NAME).getValue(String.class),
-                                            dataSnapshot.getKey());
+                                            snapshot.getKey());
                                 }
                                 break;
 
                             case DataSource.MAINACTIVITYPRESENTER:
+                                Log.d(TAG, "getPowerLists, mainActivityPresenter");
                                 //give the children one by one to MainActivityPresenter
                                 for(DataSnapshot snapshot: dataSnapshot.getChildren()){
                                     //call addSpellGroupListener so we also get the spell group names for MainActivityPresenter

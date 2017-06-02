@@ -157,7 +157,7 @@ public class DrawerPresenter{
         }
 
         mDrawerView.showPowerList();
-        //remove the DAILY POWER LIST listener, wer're not interested in thsoe now
+        //remove the DAILY POWER LIST listener, we're not interested in those now
         if(dailyPowerListChildListener != null){
             DataSource.removeDailyPowerListListener(dailyPowerListChildListener);
             dailyPowerListChildListener = null;

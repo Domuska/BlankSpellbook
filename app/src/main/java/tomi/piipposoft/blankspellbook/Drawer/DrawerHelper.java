@@ -270,6 +270,7 @@ public class DrawerHelper implements
         @Override
         public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
             //tell the current activity that an item has been clicked
+            Log.d(TAG, "power list tag (should be ID): " + drawerItem.getTag());
             mDrawerListener.powerListClicked(drawerItem);
             return true;
         }

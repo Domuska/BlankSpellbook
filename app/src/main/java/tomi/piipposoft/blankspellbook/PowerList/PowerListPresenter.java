@@ -30,13 +30,13 @@ public class PowerListPresenter extends DrawerPresenter implements
     private static final String TAG = "PowerListPresenter";
     private static PowerListContract.View mPowerListActivity;
     private final DrawerContract.ViewActivity mDrawerActivityView;
-    //private ChildEventListener spellListListener;
     private String powerListId;
 
-    //private static ArrayList<String> listenerList = new ArrayList<>();
-    //the currently set listener, can only have one, dont make sense to have listeners
-    //to activities that aren't on foreground
-    private static ChildEventListener currentListener;
+
+    private static PowerListPresenter thisInstance;
+
+    //listener to the power list that is displayed
+    private static ChildEventListener powerListListener;
 
     public PowerListPresenter(
             @NonNull BlankSpellBookContract.DBHelper dbHelper,
@@ -48,6 +48,18 @@ public class PowerListPresenter extends DrawerPresenter implements
         mPowerListActivity = powerListActivity;
         mDrawerActivityView = (DrawerContract.ViewActivity)mPowerListActivity;
         this.powerListId = powerListId;
+    }
+
+    public static PowerListPresenter getInstance(@NonNull BlankSpellBookContract.DBHelper dbHelper,
+                                                 @NonNull PowerListContract.View powerListActivity,
+                                                 @NonNull DrawerHelper drawerHelper,
+                                                 @NonNull String powerListId){
+
+        if(thisInstance == null)
+            thisInstance = new PowerListPresenter(dbHelper, powerListActivity, drawerHelper, powerListId);
+        else
+            mPowerListActivity = powerListActivity;
+        return thisInstance;
     }
 
     public static void handleSpellFromDatabase(Spell spell){
@@ -64,31 +76,39 @@ public class PowerListPresenter extends DrawerPresenter implements
     @Override
     public void openPowerDetails(String itemId) {
         if(itemId.equals(PowerDetailsActivity.EXTRA_ADD_NEW_POWER_DETAILS)) {
-            Log.d(TAG, "removing listener: " + currentListener.toString());
-            DataSource.removePowerListPowerListener(currentListener, powerListId);
+            Log.d(TAG, "removing listener: " + powerListListener.toString());
+            DataSource.removePowerListPowerListener(powerListListener, powerListId);
             mPowerListActivity.showNewPowerUI();
         }
         else {
-            Log.d(TAG, "removing listener: " + currentListener.toString());
-            DataSource.removePowerListPowerListener(currentListener, powerListId);
+            Log.d(TAG, "removing listener: " + powerListListener.toString());
+            DataSource.removePowerListPowerListener(powerListListener, powerListId);
             mPowerListActivity.showPowerDetailsUI(itemId);
         }
     }
 
     @Override
-    public void getSpellList(Context context, String powerListId) {
+    public void getSpellList(String powerListId) {
         //remove the old listener
-        if(currentListener != null) {
+        if(powerListListener != null) {
             Log.d(TAG, "listener is not null, removing");
-            DataSource.removePowerListPowerListener(currentListener, powerListId);
+            DataSource.removePowerListPowerListener(powerListListener, powerListId);
         }
-        currentListener = DataSource.addPowerListPowerListener(powerListId);
-        Log.d(TAG, "added new listener: " + currentListener.toString());
+        Log.d(TAG, "power list ID in getSpellList is: " + powerListId);
+        powerListListener = DataSource.addPowerListPowerListener(powerListId);
+        Log.d(TAG, "added new listener: " + powerListListener.toString());
     }
 
     @Override
-    public void activityPausing() {
-        DataSource.removePowerListPowerListener(currentListener, powerListId);
+    public void resumeActivity() {
+
+    }
+
+    @Override
+    public void pauseActivity() {
+        Log.d(TAG, "activity pausing, removing listener");
+        DataSource.removePowerListPowerListener(powerListListener, powerListId);
+        powerListListener = null;
     }
 
     @Override

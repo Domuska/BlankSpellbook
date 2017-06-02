@@ -43,10 +43,9 @@ public interface PowerListContract {
     interface UserActionListener{
         /**
          * Get presenter to display the list of spells
-         * @param context
          * @param powerListId ID of the power list
          */
-        void getSpellList(Context context, String powerListId);
+        void getSpellList(String powerListId);
 
         /**
          * User is opening the powerDetailsActivity
@@ -55,9 +54,14 @@ public interface PowerListContract {
         void openPowerDetails(String itemId);
 
         /**
-         * Activity is pausing, tell presenter to do necessary actions
+         * Inform presenter that activity is resuming
          */
-        void activityPausing();
+        void resumeActivity();
+
+        /**
+         * Inform presenter that activity is pausing
+         */
+        void pauseActivity();
 
         /**
          * User is pressing delete button to delete selected powers

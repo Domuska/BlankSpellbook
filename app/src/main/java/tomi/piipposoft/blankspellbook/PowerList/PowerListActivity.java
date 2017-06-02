@@ -55,7 +55,7 @@ public class PowerListActivity extends AppCompatActivity
     private DrawerContract.UserActionListener myDrawerActionListener;
     private PowerListContract.UserActionListener myActionListener;
 
-    private final String TAG = "SpellBookActivity";
+    private final String TAG = "PowerListActivity";
     private String powerListId;
     private String powerListName;
 
@@ -107,11 +107,17 @@ public class PowerListActivity extends AppCompatActivity
         mDrawerHelper = DrawerHelper.getInstance(this, (Toolbar)findViewById(R.id.my_toolbar));
         //initialize listeners
 
-        myActionListener = new PowerListPresenter(
+        /*myActionListener = new PowerListPresenter(
                 DataSource.getDatasource(this),
                 this,
                 DrawerHelper.getInstance(this, (Toolbar) findViewById(R.id.my_toolbar)),
-                powerListId);
+                powerListId);*/
+        myActionListener = PowerListPresenter.getInstance(
+                DataSource.getDatasource(this),
+                this,
+                DrawerHelper.getInstance(this, (Toolbar) findViewById(R.id.my_toolbar)),
+                powerListId
+        );
 
 
         myDrawerActionListener = (DrawerContract.UserActionListener) myActionListener;
@@ -121,7 +127,7 @@ public class PowerListActivity extends AppCompatActivity
         layoutManager = new LinearLayoutManager(this);
 
         //initialize the drawer with the spell list
-        myActionListener.getSpellList(getApplicationContext(), powerListId);
+        myActionListener.getSpellList(powerListId);
 
 
         spellGroups = new ArrayList<>();
@@ -179,7 +185,7 @@ public class PowerListActivity extends AppCompatActivity
 
     @Override
     protected void onPause() {
-        myActionListener.activityPausing();
+        myActionListener.pauseActivity();
         super.onPause();
     }
 
