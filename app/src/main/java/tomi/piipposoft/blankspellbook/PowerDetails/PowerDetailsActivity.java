@@ -1,5 +1,6 @@
 package tomi.piipposoft.blankspellbook.PowerDetails;
 
+import android.app.Application;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -30,6 +31,7 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import tomi.piipposoft.blankspellbook.ApplicationActivity;
 import tomi.piipposoft.blankspellbook.R;
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
 import tomi.piipposoft.blankspellbook.Utils.Spell;
@@ -39,12 +41,11 @@ import tomi.piipposoft.blankspellbook.Drawer.DrawerContract;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerHelper;
 import tomi.piipposoft.blankspellbook.PowerList.PowerListActivity;
 
-public class PowerDetailsActivity extends AppCompatActivity
+public class PowerDetailsActivity extends ApplicationActivity
     implements DrawerHelper.DrawerListener,
         SetPowerListNameDialog.NoticeDialogListener,
         SetDailyPowerListNameDialog.NoticeDialogListener,
         AddToPowerListDialog.NoticeDialogListener,
-        DrawerContract.ViewActivity,
         PowerDetailsContract.View{
 
     public static final String EXTRA_POWER_DETAIL_ID = "powerDetailId";
@@ -654,22 +655,6 @@ public class PowerDetailsActivity extends AppCompatActivity
         mDrawerActionListener.dailyPowerListItemClicked(clickedItem.getIdentifier());
     }
 
-
-    // FROM DRAWER CONTRACT VIEW ACTIVITY INTERFACE
-    @Override
-    public void openPowerList(String powerListId, String name) {
-
-        Intent i = new Intent(this, PowerListActivity.class);
-        i.putExtra(PowerListActivity.EXTRA_POWER_LIST_ID, powerListId);
-        i.putExtra(PowerListActivity.EXTRA_POWER_LIST_NAME, name);
-        mDrawerHelper.closeDrawer();
-        startActivity(i);
-    }
-
-    @Override
-    public void openDailyPowerList(Long dailyPowerListId) {
-        // do stuff
-    }
 
     // FROM POPUP FRAGMENT INTERFACES
 

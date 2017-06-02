@@ -1,5 +1,6 @@
 package tomi.piipposoft.blankspellbook.MainActivity;
 
+import android.app.Application;
 import android.content.Intent;
 
 import android.support.v4.app.DialogFragment;
@@ -20,6 +21,7 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import java.util.ArrayList;
 
+import tomi.piipposoft.blankspellbook.ApplicationActivity;
 import tomi.piipposoft.blankspellbook.R;
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
 import tomi.piipposoft.blankspellbook.dialog_fragments.SetDailyPowerListNameDialog;
@@ -33,12 +35,11 @@ import tomi.piipposoft.blankspellbook.PowerList.PowerListActivity;
  *
  */
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends ApplicationActivity
         implements MainActivityContract.View,
         DrawerHelper.DrawerListener,
         SetPowerListNameDialog.NoticeDialogListener,
-        SetDailyPowerListNameDialog.NoticeDialogListener,
-        DrawerContract.ViewActivity{
+        SetDailyPowerListNameDialog.NoticeDialogListener{
 
     private final String DATABASE_PERSISTANCE_SET_KEY = "databasePersistanceSet";
     private final String TAG = "MainActivity";
@@ -56,8 +57,6 @@ public class MainActivity extends AppCompatActivity
     private FragmentManager fragmentManager;
     private MainActivityPagerAdapter pagerAdapter;
     private ViewPager viewPager;
-
-    private DrawerHelper mDrawerHelper;
 
     private boolean databasePersistanceSet = false;
 
@@ -94,10 +93,10 @@ public class MainActivity extends AppCompatActivity
         }
 
         //nav drawer
-        mDrawerHelper = DrawerHelper.getInstance(this, (Toolbar) findViewById(R.id.my_toolbar));
+        this.drawerHelper = DrawerHelper.getInstance(this, (Toolbar) findViewById(R.id.my_toolbar));
         mActionlistener = MainActivityPresenter.getInstance(
                 DataSource.getDatasource(this),
-                mDrawerHelper,
+                drawerHelper,
                 this);
 
         //create a new adapter and give it the actionListener to attach to the fragments
@@ -129,7 +128,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         //add button to toolbar to open the drawer
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerHelper.getDrawerLayout(),
+        mDrawerToggle = new ActionBarDrawerToggle(this, drawerHelper.getDrawerLayout(),
                 R.string.open_drawer_info,
                 R.string.close_drawer_info){
 
@@ -236,21 +235,7 @@ public class MainActivity extends AppCompatActivity
         startActivity(i);
     }
 
-    // FROM DRAWER CONTRACT VIEWACTIVITY INTERFACE
 
-    @Override
-    public void openPowerList(String powerListId, String powerListName) {
-        Intent i = new Intent(this, PowerListActivity.class);
-        i.putExtra(PowerListActivity.EXTRA_POWER_LIST_ID, powerListId);
-        i.putExtra(PowerListActivity.EXTRA_POWER_LIST_NAME, powerListName);
-        mDrawerHelper.closeDrawer();
-        startActivity(i);
-    }
-
-    @Override
-    public void openDailyPowerList(Long dailyPowerListId) {
-        // TODO: 17-Apr-16 handle opening a new daily power list activity
-    }
 
 
     // FROM DRAWER CONTRACT VIEW INTERFACE

@@ -24,6 +24,7 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import java.util.ArrayList;
 import java.util.List;
 
+import tomi.piipposoft.blankspellbook.ApplicationActivity;
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
 import tomi.piipposoft.blankspellbook.Utils.Spell;
 import tomi.piipposoft.blankspellbook.dialog_fragments.SetDailyPowerListNameDialog;
@@ -41,12 +42,11 @@ import tomi.piipposoft.blankspellbook.PowerDetails.PowerDetailsActivity;
  * Uses library by bignerdranch: https://github.com/bignerdranch/expandable-recycler-view
  * https://www.bignerdranch.com/blog/expand-a-recyclerview-in-four-steps/?utm_source=Android+Weekly&utm_campaign=8f0cc3ff1f-Android_Weekly_165&utm_medium=email&utm_term=0_4eb677ad19-8f0cc3ff1f-337834121
  */
-public class PowerListActivity extends AppCompatActivity
+public class PowerListActivity extends ApplicationActivity
         implements SetPowerListNameDialog.NoticeDialogListener,
         SetDailyPowerListNameDialog.NoticeDialogListener,
         DrawerHelper.DrawerListener,
-        PowerListContract.View,
-        DrawerContract.ViewActivity {
+        PowerListContract.View{
 
     //TODO: put this field to preferences maybe?
     public static final String EXTRA_POWER_LIST_ID = "powerListId";
@@ -295,23 +295,6 @@ public class PowerListActivity extends AppCompatActivity
         }
         //adapter = new PowerListRecyclerAdapter(this, spellGroups, myActionListener);
         //recyclerView.setAdapter(adapter);
-    }
-
-    // FROM DRAWER CONTRACT ACTIVITY VIEW INTERFACE
-
-
-    @Override
-    public void openPowerList(String powerListId, String powerListName) {
-        Intent i = new Intent(this, PowerListActivity.class);
-        i.putExtra(PowerListActivity.EXTRA_POWER_LIST_ID, powerListId);
-        i.putExtra(PowerListActivity.EXTRA_POWER_LIST_NAME, powerListName);
-        mDrawerHelper.closeDrawer();
-        startActivity(i);
-    }
-
-    @Override
-    public void openDailyPowerList(Long dailyPowerListId) {
-        // handle opening daily power list activity
     }
 
 
