@@ -36,10 +36,7 @@ import tomi.piipposoft.blankspellbook.PowerList.PowerListActivity;
  */
 
 public class MainActivity extends ApplicationActivity
-        implements MainActivityContract.View,
-        DrawerHelper.DrawerListener,
-        SetPowerListNameDialog.NoticeDialogListener,
-        SetDailyPowerListNameDialog.NoticeDialogListener{
+        implements MainActivityContract.View {
 
     private final String DATABASE_PERSISTANCE_SET_KEY = "databasePersistanceSet";
     private final String TAG = "MainActivity";
@@ -49,8 +46,6 @@ public class MainActivity extends ApplicationActivity
     private Button spellBookButton, dailySpellsButton;
     private ActionBarDrawerToggle mDrawerToggle;
     private MainActivityContract.UserActionListener mActionlistener;
-    private DrawerContract.UserActionListener mDrawerActionListener;
-
 
     PowersFragment powersFragment;
     PowerListsFragment powerListFragment;
@@ -123,8 +118,8 @@ public class MainActivity extends ApplicationActivity
             }
         });
 
-        if(mDrawerActionListener == null) {
-            mDrawerActionListener = (DrawerContract.UserActionListener) mActionlistener;
+        if(this.drawerActionListener == null) {
+            this.drawerActionListener = (DrawerContract.UserActionListener) mActionlistener;
         }
 
         //add button to toolbar to open the drawer
@@ -145,7 +140,7 @@ public class MainActivity extends ApplicationActivity
         };
 
         // Make the drawer initialize itself
-        mDrawerActionListener.powerListProfileSelected();
+        this.drawerActionListener.powerListProfileSelected();
         mActionlistener.resumeActivity();
         viewPager.setCurrentItem(currentlySelectedList);
     }
@@ -238,43 +233,5 @@ public class MainActivity extends ApplicationActivity
 
 
 
-    // FROM DRAWER CONTRACT VIEW INTERFACE
 
-    @Override
-    public void dailyPowerListProfileSelected() {
-        mDrawerActionListener.dailyPowerListProfileSelected();
-    }
-
-    @Override
-    public void powerListProfileSelected() {
-        mDrawerActionListener.powerListProfileSelected();
-    }
-
-
-    @Override
-    public void powerListClicked(IDrawerItem clickedItem) {
-        PrimaryDrawerItem item = (PrimaryDrawerItem)clickedItem;
-        mDrawerActionListener.powerListItemClicked(
-                (String)item.getTag(),
-                item.getName().toString());
-    }
-
-    @Override
-    public void dailyPowerListClicked(IDrawerItem clickedItem) {
-        mDrawerActionListener.dailyPowerListItemClicked(clickedItem.getIdentifier());
-    }
-
-    // FROM POPUP FRAGMENT INTERFACES
-
-    @Override
-    public void onSetDailyPowerNameDialogPositiveClick(DialogFragment dialog, String dailyPowerListName) {
-        mDrawerActionListener.addDailyPowerList(dailyPowerListName);
-
-    }
-
-    // Called when positive button on SetSpellBookNameDialog is clicked
-    @Override
-    public void onSetPowerListNameDialogPositiveClick(DialogFragment dialog, String powerListName) {
-        mDrawerActionListener.addPowerList(powerListName);
-    }
 }

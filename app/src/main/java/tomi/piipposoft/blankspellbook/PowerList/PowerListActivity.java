@@ -43,16 +43,12 @@ import tomi.piipposoft.blankspellbook.PowerDetails.PowerDetailsActivity;
  * https://www.bignerdranch.com/blog/expand-a-recyclerview-in-four-steps/?utm_source=Android+Weekly&utm_campaign=8f0cc3ff1f-Android_Weekly_165&utm_medium=email&utm_term=0_4eb677ad19-8f0cc3ff1f-337834121
  */
 public class PowerListActivity extends ApplicationActivity
-        implements SetPowerListNameDialog.NoticeDialogListener,
-        SetDailyPowerListNameDialog.NoticeDialogListener,
-        DrawerHelper.DrawerListener,
-        PowerListContract.View{
+        implements PowerListContract.View{
 
     //TODO: put this field to preferences maybe?
     public static final String EXTRA_POWER_LIST_ID = "powerListId";
     public static final String EXTRA_POWER_LIST_NAME = "powerBookName";
 
-    private DrawerContract.UserActionListener myDrawerActionListener;
     private PowerListContract.UserActionListener myActionListener;
 
     private final String TAG = "PowerListActivity";
@@ -64,8 +60,6 @@ public class PowerListActivity extends ApplicationActivity
     private PowerListRecyclerAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
-    private DrawerHelper mDrawerHelper;
-    ArrayList<Spell> spellList;
     List<SpellGroup> spellGroups;
 
 
@@ -104,24 +98,18 @@ public class PowerListActivity extends ApplicationActivity
         super.onResume();
 
 
-        mDrawerHelper = DrawerHelper.getInstance(this, (Toolbar) findViewById(R.id.my_toolbar));
-        //initialize listeners
+        this.drawerHelper = DrawerHelper.getInstance(this, (Toolbar) findViewById(R.id.my_toolbar));
 
-        /*myActionListener = new PowerListPresenter(
-                DataSource.getDatasource(this),
-                this,
-                DrawerHelper.getInstance(this, (Toolbar) findViewById(R.id.my_toolbar)),
-                powerListId);*/
         myActionListener = PowerListPresenter.getInstance(
                 DataSource.getDatasource(this),
                 this,
-                mDrawerHelper,
+                this.drawerHelper,
                 powerListId
         );
 
 
-        myDrawerActionListener = (DrawerContract.UserActionListener) myActionListener;
-        myDrawerActionListener.powerListProfileSelected();
+        this.drawerActionListener = (DrawerContract.UserActionListener) myActionListener;
+        this.drawerActionListener.powerListProfileSelected();
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(this);
@@ -297,44 +285,6 @@ public class PowerListActivity extends ApplicationActivity
         //recyclerView.setAdapter(adapter);
     }
 
-
-    // FROM DRAWER CONTRACT VIEW INTERFACE
-
-    @Override
-    public void powerListProfileSelected() {
-        myDrawerActionListener.powerListProfileSelected();
-    }
-
-    @Override
-    public void dailyPowerListProfileSelected() {
-        myDrawerActionListener.dailyPowerListProfileSelected();
-    }
-
-    @Override
-    public void powerListClicked(IDrawerItem clickedItem) {
-        PrimaryDrawerItem item = (PrimaryDrawerItem) clickedItem;
-        myDrawerActionListener.powerListItemClicked(
-                (String) item.getTag(),
-                item.getName().toString());
-    }
-
-    @Override
-    public void dailyPowerListClicked(IDrawerItem clickedItem) {
-        myDrawerActionListener.dailyPowerListItemClicked(clickedItem.getIdentifier());
-    }
-
-    // FROM POPUP FRAGMENT INTERFACES
-
-    // The method that is called when positive button on SetSpellbookNameDialog is clicked
-    @Override
-    public void onSetPowerListNameDialogPositiveClick(DialogFragment dialog, String powerListName) {
-        myDrawerActionListener.addPowerList(powerListName);
-    }
-
-    @Override
-    public void onSetDailyPowerNameDialogPositiveClick(DialogFragment dialog, String dailyPowerListName) {
-        myDrawerActionListener.addDailyPowerList(dailyPowerListName);
-    }
 
     private class RecyclerDividerDecorator extends RecyclerView.ItemDecoration {
 

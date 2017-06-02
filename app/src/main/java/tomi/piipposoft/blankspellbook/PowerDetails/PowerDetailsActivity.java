@@ -42,9 +42,7 @@ import tomi.piipposoft.blankspellbook.Drawer.DrawerHelper;
 import tomi.piipposoft.blankspellbook.PowerList.PowerListActivity;
 
 public class PowerDetailsActivity extends ApplicationActivity
-    implements DrawerHelper.DrawerListener,
-        SetPowerListNameDialog.NoticeDialogListener,
-        SetDailyPowerListNameDialog.NoticeDialogListener,
+    implements
         AddToPowerListDialog.NoticeDialogListener,
         PowerDetailsContract.View{
 
@@ -54,8 +52,6 @@ public class PowerDetailsActivity extends ApplicationActivity
 
     private final String TAG = "PowerDetailsActivity";
     private final int MENU_ITEM_CANCEL = 1;
-    private DrawerHelper mDrawerHelper;
-    private DrawerContract.UserActionListener mDrawerActionListener;
     private PowerDetailsContract.UserActionListener mActionListener;
 
     private String powerId, spellBookId;
@@ -103,11 +99,11 @@ public class PowerDetailsActivity extends ApplicationActivity
         String powerListId = getIntent().getStringExtra(EXTRA_POWER_LIST_ID);
         Log.d(TAG, "onResume: power list id got: " + powerListId);
 
-        mDrawerHelper = DrawerHelper.getInstance(this, (Toolbar)findViewById(R.id.my_toolbar));
+        this.drawerHelper = DrawerHelper.getInstance(this, (Toolbar)findViewById(R.id.my_toolbar));
         mActionListener = new PowerDetailsPresenter(
                 DataSource.getDatasource(this),
                 this,
-                mDrawerHelper,
+                this.drawerHelper,
                 powerId,
                 powerListId
         );
@@ -122,8 +118,8 @@ public class PowerDetailsActivity extends ApplicationActivity
             }
         });
 
-        mDrawerActionListener = (DrawerContract.UserActionListener)mActionListener;
-        mDrawerActionListener.powerListProfileSelected();
+        this.drawerActionListener = (DrawerContract.UserActionListener)mActionListener;
+        this.drawerActionListener.powerListProfileSelected();
 
         if(savedState == null)
             mActionListener.showPowerDetails(false);
@@ -630,46 +626,8 @@ public class PowerDetailsActivity extends ApplicationActivity
         groupText.setAdapter(adapter);
     }
 
-    // FROM DRAWER CONTRACT VIEW INTERFACE
-
-    @Override
-    public void dailyPowerListProfileSelected() {
-        mDrawerActionListener.dailyPowerListProfileSelected();
-    }
-
-    @Override
-    public void powerListProfileSelected() {
-        mDrawerActionListener.powerListProfileSelected();
-    }
-
-    @Override
-    public void powerListClicked(IDrawerItem clickedItem) {
-        PrimaryDrawerItem item = (PrimaryDrawerItem)clickedItem;
-        mDrawerActionListener.powerListItemClicked(
-                (String)item.getTag(),
-                item.getName().toString());
-    }
-
-    @Override
-    public void dailyPowerListClicked(IDrawerItem clickedItem) {
-        mDrawerActionListener.dailyPowerListItemClicked(clickedItem.getIdentifier());
-    }
-
-
-    // FROM POPUP FRAGMENT INTERFACES
-
-    @Override
-    public void onSetPowerListNameDialogPositiveClick(DialogFragment dialog, String powerListName) {
-        mDrawerActionListener.addPowerList(powerListName);
-    }
-
-    @Override
-    public void onSetDailyPowerNameDialogPositiveClick(DialogFragment dialog, String dailyPowerListName) {
-        mDrawerActionListener.addDailyPowerList(dailyPowerListName);
-    }
 
     // FROM ADDTOPOWERLIST FRAGMENT INTERFACE
-
 
     @Override
     public void onAddToListPositiveClick(DialogFragment dialog, ArrayList<String> listIds, boolean addingToPowerLists) {
