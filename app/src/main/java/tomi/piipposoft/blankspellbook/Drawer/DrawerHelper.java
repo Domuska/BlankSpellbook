@@ -34,17 +34,16 @@ public class DrawerHelper implements
         DrawerContract.View {
 
 
-    private static AppCompatActivity callerActivity;
-    private static String TAG;
+    private AppCompatActivity callerActivity;
+    private static String TAG = "DrawerHelper";
 
     private static final long POWER_LISTS_PROFILE_IDENTIFIER = -5;
     private static final long DAILY_POWER_LISTS_PROFILE_IDENTIFIER = -2;
     private static final long ADD_POWER_LIST_FOOTER_IDENTIFIER = -3;
     private static final long ADD_DAILY_POWER_LIST_FOOTER_IDENTIFIER = -4;
 
-    private static Drawer mDrawer;
+    private Drawer mDrawer;
 
-    private static DrawerHelper instance;
 
     private static DrawerListener mDrawerListener;
 
@@ -82,7 +81,6 @@ public class DrawerHelper implements
     }
 
     private void createDrawer(Toolbar toolbar) {
-        TAG = "createDrawer, called by " + callerActivity.getLocalClassName();
 
         //Create the drawer itself
         populateDrawer(toolbar);
@@ -171,6 +169,7 @@ public class DrawerHelper implements
                 })
                 .withCloseOnClick(false)
                 .build();
+        Log.d(TAG, "populateDrawer: drawer created: " + mDrawer.toString());
     }
 
 
@@ -199,6 +198,7 @@ public class DrawerHelper implements
     public void addDrawerItem(IDrawerItem item){
         PrimaryDrawerItem primaryItem = (PrimaryDrawerItem) item;
         primaryItem.withOnDrawerItemClickListener(new SpellDrawerItemListener());
+        Log.d(TAG, "addDrawerItem: drawer is " + mDrawer.toString());
         mDrawer.addItem(primaryItem);
     }
 
@@ -208,7 +208,7 @@ public class DrawerHelper implements
     }
 
     // TODO: 11.5.2017 this method should not stay here. This is just for testing if we could lock the nav drawer
-    public static void lockDrawerAndChangeIcon(){
+    /*public static void lockDrawerAndChangeIcon(){
         //this doesn't seem to work. If you do this, the toolbar button will change,
         //but the drawer isn't locked nor is the on click event changed. Icon changes though!
         //http://stackoverflow.com/questions/33479575/changing-navigation-drawer-hamburger-icon
@@ -224,7 +224,7 @@ public class DrawerHelper implements
         });
 
         mDrawer.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-    }
+    }*/
 
     /**
      * Helper method to populate the drawer spell books side

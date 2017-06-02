@@ -55,8 +55,11 @@ public class PowerListPresenter extends DrawerPresenter implements
 
         if(thisInstance == null)
             thisInstance = new PowerListPresenter(dbHelper, powerListActivity, drawerHelper, powerListId);
-        else
+        else {
+            //Instance already exists, just save references to activity and drawer views
             mPowerListActivity = powerListActivity;
+            mDrawerView = drawerHelper;
+        }
         return thisInstance;
     }
 

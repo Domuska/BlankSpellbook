@@ -106,7 +106,7 @@ public class PowerDetailsActivity extends AppCompatActivity
         mActionListener = new PowerDetailsPresenter(
                 DataSource.getDatasource(this),
                 this,
-                DrawerHelper.getInstance(this, (Toolbar)findViewById(R.id.my_toolbar)),
+                mDrawerHelper,
                 powerId,
                 powerListId
         );

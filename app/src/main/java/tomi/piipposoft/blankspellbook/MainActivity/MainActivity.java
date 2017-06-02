@@ -243,7 +243,6 @@ public class MainActivity extends AppCompatActivity
         Intent i = new Intent(this, PowerListActivity.class);
         i.putExtra(PowerListActivity.EXTRA_POWER_LIST_ID, powerListId);
         i.putExtra(PowerListActivity.EXTRA_POWER_LIST_NAME, powerListName);
-//        DrawerHelper.getInstance(this, (Toolbar)findViewById(R.id.my_toolbar)).closeDrawer();
         mDrawerHelper.closeDrawer();
         startActivity(i);
     }

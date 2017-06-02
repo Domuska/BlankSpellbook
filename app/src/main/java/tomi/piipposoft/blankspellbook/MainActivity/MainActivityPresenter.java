@@ -51,7 +51,9 @@ public class MainActivityPresenter extends DrawerPresenter
         }
         else {
             Log.d(TAG, "thisInstance not null, setting mainActivityView");
+            //Instance already exists, just save references to activity and drawer views
             mMainActivityView = mainActivityView;
+            mDrawerView = drawerHelper;
         }
         return thisInstance;
     }

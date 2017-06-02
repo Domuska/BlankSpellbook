@@ -24,7 +24,7 @@ public class DrawerPresenter implements DrawerContract.UserActionListener{
     // TODO: 5.5.2017 removal and re-adding of listeners (spellListReference & dailySpellListReference) should be possible
     // TODO: 10.5.2017 database actions should be moved from here to somewhere else. Maybe DataSource? or another class like it?
     private static BlankSpellBookContract.DBHelper mDbHelper;
-    private static DrawerContract.View mDrawerView;
+    protected static DrawerContract.View mDrawerView;
     private DrawerContract.ViewActivity mDrawerActivityView;
     private SQLiteDatabase mDb;
     private static final String TAG = "DrawerPresenter";
@@ -58,6 +58,7 @@ public class DrawerPresenter implements DrawerContract.UserActionListener{
      * @param powerListId The ID of the power list
      */
     public static void handlePowerList(String powerListName, String powerListId){
+        Log.d(TAG, "adding new powerList to drawer, name: " + powerListName + " id: " + powerListId);
         mDrawerView.addDrawerItem(initializeSpellBookListItem(powerListName, powerListId));
     }
 
@@ -158,6 +159,7 @@ public class DrawerPresenter implements DrawerContract.UserActionListener{
         //we have a listener, we just need to get the data again (when an activity is resumed)
         //should this data be cached at onPause rather? Would make it more difficult to synch though
         else{
+            Log.d(TAG, "showPowerLists: listener already set, just fetching data once");
             DataSource.getPowerLists(DataSource.DRAWERPRESENTER);
         }
 
