@@ -19,12 +19,13 @@ import tomi.piipposoft.blankspellbook.Utils.DataSource;
 /**
  * Created by Domu on 17-Apr-16.
  */
-public class DrawerPresenter{
+public class DrawerPresenter implements DrawerContract.UserActionListener{
 
     // TODO: 5.5.2017 removal and re-adding of listeners (spellListReference & dailySpellListReference) should be possible
     // TODO: 10.5.2017 database actions should be moved from here to somewhere else. Maybe DataSource? or another class like it?
     private static BlankSpellBookContract.DBHelper mDbHelper;
     private static DrawerContract.View mDrawerView;
+    private DrawerContract.ViewActivity mDrawerActivityView;
     private SQLiteDatabase mDb;
     private static final String TAG = "DrawerPresenter";
 
@@ -33,12 +34,16 @@ public class DrawerPresenter{
     private static ChildEventListener powerListChildListener;
     private static ChildEventListener dailyPowerListChildListener;
 
+
+
     public DrawerPresenter(
             @NonNull BlankSpellBookContract.DBHelper dbHelper,
-            @NonNull DrawerContract.View drawerView){
+            @NonNull DrawerContract.View drawerView,
+            @NonNull DrawerContract.ViewActivity drawerActivity){
 
         mDbHelper = dbHelper;
         mDrawerView = drawerView;
+        mDrawerActivityView = drawerActivity;
         if(powerListChildListener != null)
             DataSource.removePowerListListener(powerListChildListener);
         if(dailyPowerListChildListener != null)
@@ -184,14 +189,6 @@ public class DrawerPresenter{
         }
     }
 
-    protected void drawerLockAndClose(){
-        mDrawerView.lockDrawer();
-    }
-
-    protected void drawerUnlock(){
-        mDrawerView.unlockDrawer();
-    }
-
     /**
      * Helper method for fetching data for the power list drawer side
      */
@@ -315,6 +312,44 @@ public class DrawerPresenter{
         return new PrimaryDrawerItem()
                 .withName(itemName)
                 .withTag(identifier);
+    }
+
+
+    //FROM DrawerContract.UserActionListener
+
+    @Override
+    public void addPowerList(@NonNull String powerListName) {
+        this.addNewPowerList(powerListName);
+    }
+
+    @Override
+    public void addDailyPowerList(@NonNull String dailyPowerListName) {
+        this.addNewDailyPowerList(dailyPowerListName);
+    }
+
+    @Override
+    public void drawerOpened() {
+
+    }
+
+    @Override
+    public void powerListItemClicked(String itemId, String name) {
+        mDrawerActivityView.openPowerList(itemId, name);
+    }
+
+    @Override
+    public void dailyPowerListItemClicked(long itemId) {
+        mDrawerActivityView.openDailyPowerList(itemId);
+    }
+
+    @Override
+    public void powerListProfileSelected() {
+        showPowerLists();
+    }
+
+    @Override
+    public void dailyPowerListProfileSelected() {
+        this.showDailyPowerLists();
     }
 
 

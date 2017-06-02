@@ -22,7 +22,6 @@ public class MainActivityPresenter extends DrawerPresenter
         MainActivityContract.UserActionListener {
 
     private static MainActivityContract.View mMainActivityView;
-    private final DrawerContract.ViewActivity mDrawerActivityView;
 
     private static final String TAG = "MainActivityPresenter";
 
@@ -33,9 +32,8 @@ public class MainActivityPresenter extends DrawerPresenter
             @NonNull BlankSpellBookContract.DBHelper dbHelper,
             @NonNull MainActivityContract.View mainActivityView,
             @NonNull DrawerHelper drawerHelper){
-        super(dbHelper, drawerHelper);
+        super(dbHelper, drawerHelper, (DrawerContract.ViewActivity) mainActivityView);
         mMainActivityView = mainActivityView;
-        mDrawerActivityView = (DrawerContract.ViewActivity)mMainActivityView;
     }
 
 
@@ -90,41 +88,4 @@ public class MainActivityPresenter extends DrawerPresenter
     public static void handleRemovedPowerList(String powerListName, String id) {
         mMainActivityView.removePowerListData(powerListName, id);
     }
-
-
-    //From Drawer contract
-    @Override
-    public void addPowerList(@NonNull String powerListName){
-        this.addNewPowerList(powerListName);
-    }
-
-    @Override
-    public void addDailyPowerList(@NonNull String dailyPowerListName) {
-        this.addNewDailyPowerList(dailyPowerListName);
-    }
-
-    @Override
-    public void drawerOpened() {
-    }
-
-    @Override
-    public void powerListItemClicked(@NonNull String itemId, String name) {
-        mDrawerActivityView.openPowerList(itemId, name);
-    }
-
-    @Override
-    public void dailyPowerListItemClicked(@NonNull long itemId) {
-        mDrawerActivityView.openDailyPowerList(itemId);
-    }
-
-    @Override
-    public void powerListProfileSelected() {
-        showPowerLists();
-    }
-
-    @Override
-    public void dailyPowerListProfileSelected() {
-        this.showDailyPowerLists();
-    }
-
 }

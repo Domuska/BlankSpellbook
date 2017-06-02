@@ -17,12 +17,10 @@ import tomi.piipposoft.blankspellbook.Utils.Spell;
  * Created by Domu on 17-Apr-16.
  */
 public class PowerDetailsPresenter extends DrawerPresenter
-        implements PowerDetailsContract.UserActionListener,
-        DrawerContract.UserActionListener{
+        implements PowerDetailsContract.UserActionListener{
 
     private static final String TAG = "PowerDetailsPresenter";
     private static PowerDetailsContract.View mPowerDetailsView;
-    private final DrawerContract.ViewActivity mDrawerActivityView;
     private static String powerId;
     private String powerListId;
     private static Spell thisPower;
@@ -36,9 +34,8 @@ public class PowerDetailsPresenter extends DrawerPresenter
             @NonNull DrawerHelper drawerHelper,
             String spellId,
             String powerLIstId){
-        super(dbHelper, drawerHelper);
+        super(dbHelper, drawerHelper, (DrawerContract.ViewActivity) powerDetailsView);
         mPowerDetailsView = powerDetailsView;
-        mDrawerActivityView = (DrawerContract.ViewActivity) mPowerDetailsView;
         powerId = spellId;
         this.powerListId = powerLIstId;
         thisPower = new Spell();
@@ -197,6 +194,14 @@ public class PowerDetailsPresenter extends DrawerPresenter
         DataSource.getDailyPowerLists(6);
     }
 
+    @Override
+    public void userPressingAddToLists() {
+        mPowerDetailsView.showAddToListsFragment();
+        //get data from DB
+        DataSource.getPowerLists(DataSource.POWERDETAILSPRESENTER);
+        DataSource.getDailyPowerLists(DataSource.POWERDETAILSPRESENTER);
+    }
+
     /**
      * Used for constructing a spell object
      * @param powerData ArrayMap containing fields for the Spell to be constructed, handles null values
@@ -240,48 +245,5 @@ public class PowerDetailsPresenter extends DrawerPresenter
         }
 
         return spell;
-    }
-
-    // FROM DRAWERCONTRACT USERACTIONLISTENER
-    @Override
-    public void addPowerList(@NonNull String powerListName) {
-        this.addNewPowerList(powerListName);
-    }
-
-    @Override
-    public void addDailyPowerList(@NonNull String dailyPowerListName) {
-        this.addNewDailyPowerList(dailyPowerListName);
-    }
-
-    @Override
-    public void drawerOpened() {
-    }
-
-    @Override
-    public void powerListItemClicked(String itemId, String name) {
-        mDrawerActivityView.openPowerList(itemId, name);
-    }
-
-    @Override
-    public void dailyPowerListItemClicked(long itemId) {
-        mDrawerActivityView.openDailyPowerList(itemId);
-    }
-
-    @Override
-    public void powerListProfileSelected() {
-        showPowerLists();
-    }
-
-    @Override
-    public void dailyPowerListProfileSelected() {
-        this.showDailyPowerLists();
-    }
-
-    @Override
-    public void userPressingAddToLists() {
-        mPowerDetailsView.showAddToListsFragment();
-        //get data from DB
-        DataSource.getPowerLists(DataSource.POWERDETAILSPRESENTER);
-        DataSource.getDailyPowerLists(DataSource.POWERDETAILSPRESENTER);
     }
 }

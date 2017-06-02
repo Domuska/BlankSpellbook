@@ -29,7 +29,6 @@ public class PowerListPresenter extends DrawerPresenter implements
 
     private static final String TAG = "PowerListPresenter";
     private static PowerListContract.View mPowerListActivity;
-    private final DrawerContract.ViewActivity mDrawerActivityView;
     private String powerListId;
 
 
@@ -44,9 +43,8 @@ public class PowerListPresenter extends DrawerPresenter implements
             @NonNull DrawerHelper drawerHelper,
             @NonNull String powerListId){
         // TODO: 8.5.2017 remove the sql database requirement when FireBase implementation complete
-        super(dbHelper, drawerHelper);
+        super(dbHelper, drawerHelper, (DrawerContract.ViewActivity) powerListActivity);
         mPowerListActivity = powerListActivity;
-        mDrawerActivityView = (DrawerContract.ViewActivity)mPowerListActivity;
         this.powerListId = powerListId;
     }
 
@@ -121,45 +119,5 @@ public class PowerListPresenter extends DrawerPresenter implements
             deletablePowerIds[i] = deletablePowers.get(i).getSpellId();
         }
         DataSource.removePowersFromList(deletablePowerIds, powerListId);
-    }
-
-    // FROM DRAWER CONTRACT INTERFACE
-
-    @Override
-    public void addPowerList(@NonNull String powerListName) {
-        this.addNewPowerList(powerListName);
-    }
-
-    @Override
-    public void addDailyPowerList(@NonNull String dailyPowerListName) {
-        this.addNewDailyPowerList(dailyPowerListName);
-    }
-
-    @Override
-    public void drawerOpened() {
-        // do stuff...
-    }
-
-    @Override
-    public void powerListItemClicked(String itemId, String name) {
-        mDrawerActivityView.openPowerList(itemId, name);
-    }
-
-    @Override
-    public void dailyPowerListItemClicked(long itemId) {
-        mDrawerActivityView.openDailyPowerList(itemId);
-    }
-
-    @Override
-    public void powerListProfileSelected() {
-        showPowerLists();
-        /*if(DrawerPresenter.powerListChildListener == null){
-            DataSource.attachPowerListListener();
-        }*/
-    }
-
-    @Override
-    public void dailyPowerListProfileSelected() {
-        this.showDailyPowerLists();
     }
 }

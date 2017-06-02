@@ -207,18 +207,6 @@ public class DrawerHelper implements
 
     }
 
-    @Override
-    public void lockDrawer() {
-        //this doesn't seem to work for some reason
-        mDrawer.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-    }
-
-    @Override
-    public void unlockDrawer() {
-        //this doesnt seem to work for some reason
-        mDrawer.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-    }
-
     // TODO: 11.5.2017 this method should not stay here. This is just for testing if we could lock the nav drawer
     public static void lockDrawerAndChangeIcon(){
         //this doesn't seem to work. If you do this, the toolbar button will change,

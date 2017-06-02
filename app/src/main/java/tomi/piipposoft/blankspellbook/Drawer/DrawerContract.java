@@ -20,12 +20,12 @@ public interface DrawerContract {
         void showPowerList();
         void addDrawerItem(IDrawerItem item);
         void removeDrawerItem(String itemId);
-        void lockDrawer();
-        void unlockDrawer();
     }
 
     /**
-     * Used by presenters to tell the running activity to start new activites
+     * Used by presenters to tell the running activity to start new activites,
+     * this could maybe be combined with View interface since DrawerPresenter implements them both
+     * and only it implements any of them?
      */
     interface ViewActivity {
         void openPowerList(String powerListId, String name);
