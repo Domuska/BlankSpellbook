@@ -179,7 +179,9 @@ public class MainActivity extends ApplicationActivity
     @Override
     protected void onPause() {
         mActionlistener.pauseActivity();
+        //remove the data from the fragments since it's re-fetched on resume
         pagerAdapter.removePowerListsFromFragment();
+        pagerAdapter.removeDailyPowerListsFromFragment();
         super.onPause();
     }
 
@@ -240,17 +242,17 @@ public class MainActivity extends ApplicationActivity
 
     @Override
     public void addDailyPowerListData(String name, String id, ArrayList<String> groupNames) {
-        // TODO: 29.5.2017 do stuff
+        pagerAdapter.addDailyPowerListToFragment(name, id, groupNames);
     }
 
     @Override
     public void removePowerListData(String powerListName, String id) {
-        powerListFragment.removeListItem(powerListName, id);
+        pagerAdapter.removePowerListItem(powerListName, id);
     }
 
     @Override
     public void removeDailyPowerListData(String dailyPowerListName, String id) {
-        // TODO: 29.5.2017 do stuff
+        pagerAdapter.removeDailyPowerListItem(dailyPowerListName, id);
     }
 
     @Override

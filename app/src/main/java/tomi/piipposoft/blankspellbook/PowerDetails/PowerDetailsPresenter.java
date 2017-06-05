@@ -179,13 +179,14 @@ public class PowerDetailsPresenter extends DrawerPresenter
     }
 
     @Override
-    public void userAddingPowerToLists(ArrayList<String> listIds, boolean addingToPowerList) {
+    public void userCopyingPowerToLists(ArrayList<String> listIds, boolean addingToPowerList) {
         //set spell id as null so it won't be saved as field to DB, we don't want that
         Spell saveableSpell = thisPower.setSpellId(null);
         if(addingToPowerList)
             DataSource.addSpellToPowerLists(listIds, saveableSpell);
         else
-            DataSource.addSpellToDailyPowerLists(listIds, powerId);
+            DataSource.addSpellToDailyPowerLists(listIds,
+                    powerId, thisPower.getGroupName());
     }
 
     @Override

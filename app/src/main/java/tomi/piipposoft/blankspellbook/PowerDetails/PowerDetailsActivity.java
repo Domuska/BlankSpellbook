@@ -1,18 +1,15 @@
 package tomi.piipposoft.blankspellbook.PowerDetails;
 
-import android.app.Application;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.method.KeyListener;
@@ -25,21 +22,14 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
-import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import tomi.piipposoft.blankspellbook.ApplicationActivity;
 import tomi.piipposoft.blankspellbook.R;
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
 import tomi.piipposoft.blankspellbook.Utils.Spell;
-import tomi.piipposoft.blankspellbook.dialog_fragments.SetDailyPowerListNameDialog;
-import tomi.piipposoft.blankspellbook.dialog_fragments.SetPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerContract;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerHelper;
-import tomi.piipposoft.blankspellbook.PowerList.PowerListActivity;
 
 public class PowerDetailsActivity extends ApplicationActivity
     implements
@@ -636,7 +626,7 @@ public class PowerDetailsActivity extends ApplicationActivity
         }
 
         if(listIds.size() != 0){
-            mActionListener.userAddingPowerToLists(listIds, addingToPowerLists);
+            mActionListener.userCopyingPowerToLists(listIds, addingToPowerLists);
         }
     }
 }

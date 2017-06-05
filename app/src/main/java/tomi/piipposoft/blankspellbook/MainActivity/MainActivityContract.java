@@ -10,8 +10,10 @@ public interface MainActivityContract {
     interface View{
         void addPowerListData(String name, String id, ArrayList<String> groupNames);
         void addDailyPowerListData(String name, String id, ArrayList<String> groupNames);
+
         void removePowerListData(String powerListName, String id);
         void removeDailyPowerListData(String dailyPowerListName, String id);
+
         void startPowerListActivity(String name, String id);
 
         void startDailyPowerListActivity(String listName, String listId);

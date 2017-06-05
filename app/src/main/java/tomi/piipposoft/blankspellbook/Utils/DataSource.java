@@ -39,16 +39,21 @@ public class DataSource {
     public static final String DB_SPELL_LIST_CHILD_NAME = "name";
     public static final String DB_DAILY_POWER_LIST_CHILD_SPELLS = "spells";
     public static final String DB_DAILY_POWER_LIST_CHILD_NAME = "name";
+
     public static final String DB_SPELL_GROUPS_TREE_NAME = "spell_groups";
+    public static final String DB_DAILY_SPELL_GROUPS_TREE_NAME = "daily_spell_groups";
 
     public static final String DB_SPELL_TREE_NAME = "spells";
     public static final String DB_SPELLS_CHILD_GROUP_NAME = "groupName";
+    public static final String DB_SPELLS_CHILD_DAILY_POWER_LISTS = "dailyPowerLists";
+    private static final String DB_SPELLS_CHILD_POWER_LIST = "powerListId";
 
     public static final int DRAWERPRESENTER = 1;
     public static final int MAINACTIVITYPRESENTER = 2;
     public static final int POWERDETAILSPRESENTER = 3;
 
     private static final String TAG = "DataSource";
+
 
 //    SQLiteDatabase myDb = BlankSpellBookContract.DBHelper
 
@@ -211,7 +216,6 @@ public class DataSource {
                                    @NonNull boolean groupNameUpdated, @Nullable String oldGroupName,
                                    @Nullable String powerListId){
         DatabaseReference spellReference = firebaseDatabase.getReference().child(DB_SPELL_TREE_NAME).child(spellId);
-        //spellReference.setValue(spell);
 
         Map<String, Object> childUpdates = new HashMap<>();
 
@@ -220,25 +224,28 @@ public class DataSource {
                 + "/"
                 + spellId, spell);
 
-        //update also the spell_groups/id/groupName/ if group name has been updated
-        if(groupNameUpdated){
-            //remove the spell from the old group
-            childUpdates.put(DB_SPELL_GROUPS_TREE_NAME
-                    + "/"
-                    + powerListId
-                    + "/"
-                    + oldGroupName
-                    + "/"
-                    + spellId, null);
-            //add the spell to the new group if new name is not null
-            if (spell.getGroupName() != null) {
+        //check if the power belongs to a group, if it does we need to update the spell_groups table too
+        if(!"".equals(powerListId)) {
+            //update the spell_groups/id/groupName/
+            if (groupNameUpdated) {
+                //remove the spell from the old group
                 childUpdates.put(DB_SPELL_GROUPS_TREE_NAME
                         + "/"
                         + powerListId
                         + "/"
-                        + spell.getGroupName()
+                        + oldGroupName
                         + "/"
-                        + spellId, true);
+                        + spellId, null);
+                //add the spell to the new group if new name is not null
+                if (spell.getGroupName() != null) {
+                    childUpdates.put(DB_SPELL_GROUPS_TREE_NAME
+                            + "/"
+                            + powerListId
+                            + "/"
+                            + spell.getGroupName()
+                            + "/"
+                            + spellId, true);
+                }
             }
         }
 
@@ -259,8 +266,15 @@ public class DataSource {
 
     }
 
+    /**
+     * Used for removing the reference to a spell from spell_lists table,
+     * only removes the reference not the spell itself
+     * @param spellIds IDs of the powers to be removed from list
+     * @param powerListId ID of the power list where the power is to be removed
+     */
     public static void removePowersFromList(String[] spellIds, final String powerListId) {
 
+        Log.d(TAG, "removePowersFromList, power list id: " + powerListId);
         for (final String spellId : spellIds) {
             final Map<String, Object> childUpdates = new HashMap<>();
 
@@ -273,6 +287,14 @@ public class DataSource {
                     + "/"
                     + spellId, null);
 
+            //remove the power list reference from this power's field
+            childUpdates.put(
+                    DB_SPELL_TREE_NAME
+                    + "/"
+                    + spellId
+                    + "/"
+                    + DB_SPELLS_CHILD_POWER_LIST, null);
+
             //get the group name of this spell
             firebaseDatabase.getReference()
                     .child(DB_SPELL_TREE_NAME)
@@ -281,7 +303,7 @@ public class DataSource {
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            //delete the spell from the group it belongs to
+                            //delete the reference to the spell in spell_groups table in this list
                             String groupName = dataSnapshot.getValue(String.class);
                             childUpdates.put(DB_SPELL_GROUPS_TREE_NAME
                                     + "/"
@@ -299,9 +321,6 @@ public class DataSource {
 
                         }
                     });
-
-
-            //note, spell is not removed altogether, user does this somewhere else
         }
     }
 
@@ -423,7 +442,36 @@ public class DataSource {
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
+                        Log.d(TAG, "error at addSpellGroupListener: " + databaseError.toString());
+                    }
+                });
+    }
 
+    /**
+     * Used by attachDailyPowerListListener to get the names of the groups this daily power list
+     * contains, will inform MainActivityPresenter of the result
+     * @param name name of the power list
+     * @param id ID of the power list
+     */
+    private static void addDailySpellGroupListener(final String name, final String id) {
+        firebaseDatabase
+                .getReference(DB_DAILY_SPELL_GROUPS_TREE_NAME)
+                .child(id)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        ArrayList<String> groupNames = new ArrayList<>();
+                        for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                            groupNames.add(snapshot.getKey());
+                            //Log.d(TAG, "group name in addDailySpellGroupListener: " + snapshot.getKey());
+                        }
+                        Log.d(TAG, "daily power group name in addDailySpellGroupListener: " + name);
+                        MainActivityPresenter.handleNewDailyPowerList(name, id, groupNames);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.d(TAG, "error at addDailySpellGroupListener: " + databaseError.toString());
                     }
                 });
     }
@@ -441,8 +489,11 @@ public class DataSource {
                 //add a new daily power list item to the drawer
                 if(presenterCalling == DRAWERPRESENTER)
                     DrawerPresenter.handleDailyPowerList(name, dataSnapshot.getKey());
-                else if(presenterCalling == MAINACTIVITYPRESENTER)
-                    MainActivityPresenter.handleNewDailyPowerList(name, dataSnapshot.getKey());
+                else if(presenterCalling == MAINACTIVITYPRESENTER) {
+                    addDailySpellGroupListener(name, dataSnapshot.getKey());
+                    //MainActivityPresenter.handleNewDailyPowerList(name, dataSnapshot.getKey());
+                }
+
                 else {
                     throw new RuntimeException(
                             "Unhandled parameter at "
@@ -480,6 +531,8 @@ public class DataSource {
                 .addChildEventListener(dailyPowerListChildListener);
         return dailyPowerListChildListener;
     }
+
+
 
     public static void removePowerListListener(ChildEventListener spellListChildListener) {
         firebaseDatabase.getReference(DB_POWER_LISTS_REFERENCE).removeEventListener(spellListChildListener);
@@ -559,7 +612,7 @@ public class DataSource {
                                         "Unhandled parameter at "
                                                 + DataSource.class.getName()
                                                 + ".getPowerLists"
-                                                + "use either DataSource.DRAWERPRESENTER or DataSource.POWERDETAILSPRESENTER");
+                                                + "use either DataSource.DRAWERPRESENTER or DataSource.POWERDETAILSPRESENTER.");
                         }
                     }
 
@@ -577,30 +630,44 @@ public class DataSource {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Log.d(TAG, "# of children in getDailyPowerLists: " + dataSnapshot.getChildrenCount());
 
-                        if (presenterCalling == DataSource.POWERDETAILSPRESENTER) {
-                            String[] names = new String[(int)dataSnapshot.getChildrenCount()];
-                            String[] ids = new String[(int)dataSnapshot.getChildrenCount()];
-                            int i = 0;
-                            for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                                ids[i] = snapshot.getKey();
-                                names[i] = snapshot.child(DB_SPELL_LIST_CHILD_NAME).getValue(String.class);
-                                i++;
-                            }
-                            PowerDetailsPresenter.handleFetchedDailyPowerLists(names, ids);
-                        } else if(presenterCalling == DataSource.DRAWERPRESENTER){
-                            for(DataSnapshot snapshot: dataSnapshot.getChildren()){
-                                DrawerPresenter.handleDailyPowerList(
-                                        snapshot.child(DB_DAILY_POWER_LIST_CHILD_NAME).getValue(String.class),
-                                        snapshot.getKey());
-                            }
-                        }
-                        else{
-                            throw new RuntimeException(
-                                    "Unhandled parameter at "
-                                            + DataSource.class.getName()
-                                            + ".getPowerLists,"
-                                            + " use either DataSource.DRAWERPRESENTER"
-                                            + " or DataSource.POWERDETAILSPRESENTER");
+                        switch (presenterCalling) {
+                            case DataSource.POWERDETAILSPRESENTER:
+                                String[] names = new String[(int) dataSnapshot.getChildrenCount()];
+                                String[] ids = new String[(int) dataSnapshot.getChildrenCount()];
+                                int i = 0;
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    ids[i] = snapshot.getKey();
+                                    names[i] = snapshot.child(DB_SPELL_LIST_CHILD_NAME).getValue(String.class);
+                                    i++;
+                                }
+                                PowerDetailsPresenter.handleFetchedDailyPowerLists(names, ids);
+                                break;
+
+                            case DataSource.DRAWERPRESENTER:
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    DrawerPresenter.handleDailyPowerList(
+                                            snapshot.child(DB_DAILY_POWER_LIST_CHILD_NAME).getValue(String.class),
+                                            snapshot.getKey());
+                                }
+                                break;
+
+                            case DataSource.MAINACTIVITYPRESENTER:
+                                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                    addDailySpellGroupListener(
+                                            snapshot.child(DB_DAILY_POWER_LIST_CHILD_NAME).getValue(String.class),
+                                            snapshot.getKey());
+                                }
+                                break;
+
+                            default:
+                                throw new RuntimeException(
+                                        "Unhandled parameter at "
+                                                + DataSource.class.getName()
+                                                + ".getPowerLists,"
+                                                + " use either DataSource.DRAWERPRESENTER"
+                                                + " or DataSource.POWERDETAILSPRESENTER"
+                                                + " or DataSource.MAINACTIVITYPRESENTER"
+                                                + "Supplied parameter was: " + presenterCalling);
                         }
                     }
 
@@ -619,6 +686,8 @@ public class DataSource {
             //get the ID for the new spell
             DatabaseReference spellReference = firebaseDatabase.getReference().child(DB_SPELL_TREE_NAME);
             String powerId = spellReference.push().getKey();
+            //add the ID of this list to the power's list of IDs
+            power.setPowerListId(listId);
             //get the childUpdates needed for saving a new spell
             Map<String, Object> childUpdates = getSaveSpellChildUpdates(power, listId, powerId);
 
@@ -626,13 +695,52 @@ public class DataSource {
         }
     }
 
-    public static void addSpellToDailyPowerLists(ArrayList<String> listIds, String spellId) {
+    public static void addSpellToDailyPowerLists(ArrayList<String> listIds,
+                                                 String spellId, String groupName) {
+
+        Map<String, Object> childUpdates = new HashMap<>();
+
         for(String id : listIds) {
-            DatabaseReference ref = firebaseDatabase
+            //add the daily power list ID to this spell's list of daily power lists
+            childUpdates.put(
+                    DB_SPELL_TREE_NAME
+                    + "/"
+                    + spellId
+                    + "/"
+                    + DB_SPELLS_CHILD_DAILY_POWER_LISTS
+                    + "/"
+                    + id, true);
+
+            //add the spell to the daily power lists's spell list
+            childUpdates.put(
+                    DB_DAILY_POWER_LIST_NAME
+                    + "/"
+                    + id
+                    + "/"
+                    + DB_DAILY_POWER_LIST_CHILD_SPELLS
+                    + "/"
+                    + spellId, true);
+
+            //add also the spell's group to the daily_spell_groups table
+            if(!"".equals(groupName)) {
+                childUpdates.put(
+                        DB_DAILY_SPELL_GROUPS_TREE_NAME
+                        + "/"
+                        + id
+                        + "/"
+                        + groupName
+                        + "/"
+                        + spellId, true);
+            }
+
+
+
+            /*DatabaseReference ref = firebaseDatabase
                             .getReference(DB_DAILY_POWER_LIST_NAME)
                             .child(id)
                             .child(DB_DAILY_POWER_LIST_CHILD_SPELLS);
-            ref.child(spellId).setValue(true);
+            ref.child(spellId).setValue(true);*/
+            firebaseDatabase.getReference().updateChildren(childUpdates);
         }
     }
 
@@ -694,6 +802,7 @@ public class DataSource {
                         + spellId, true);
 
                 //add the spell_groups entry as well if spell is set to a group
+                //note, spell can't have a group if it's not in a list (only lists have groups)
                 if(!"".equals(spell.getGroupName())){
                     childUpdates.put(
                             DB_SPELL_GROUPS_TREE_NAME
@@ -706,6 +815,7 @@ public class DataSource {
                 }
             }
 
+            //add the spell entry to spells/ table
             //use Jackson Objectmapper to create map of the Spell object
             Map<String, Object> spellValues = new ObjectMapper().convertValue(spell, Map.class);
             //store the new spell to spells/$spell_id/, ID gotten with push() above
@@ -717,7 +827,6 @@ public class DataSource {
         } else {
             throw new RuntimeException("Error at getSaveSpellChildUpdates, spell should already have ID initialized");
         }
-
 
     }
 

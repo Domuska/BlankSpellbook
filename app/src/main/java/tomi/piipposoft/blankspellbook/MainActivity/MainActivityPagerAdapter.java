@@ -24,7 +24,7 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
     public final int FRAGMENTS_AMOUNT = 3;
 
     private PowersFragment powersFragment;
-    private RecyclerListFragment powerListsFragment, dailyPowerListsFramgment;
+    private RecyclerListFragment powerListsFragment, dailyPowerListsFragment;
     private MainActivityContract.FragmentListActionListener actionListener;
     public static final String TAG = "MainActiviPagerAdapter";
 
@@ -42,9 +42,9 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
         // save the appropriate reference depending on position
         switch (position) {
             case 0:
-                dailyPowerListsFramgment = (RecyclerListFragment) createdFragment;
+                dailyPowerListsFragment = (RecyclerListFragment) createdFragment;
                 //attach listener
-                dailyPowerListsFramgment.attachClickListener(actionListener);
+                dailyPowerListsFragment.attachClickListener(actionListener);
                 break;
             case 1:
                 powerListsFragment = (RecyclerListFragment) createdFragment;
@@ -102,4 +102,27 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
             powerListsFragment.removeAllLists();
         }
     }
+
+    void addDailyPowerListToFragment(String name, String id, ArrayList<String> groupNames) {
+        if(dailyPowerListsFragment != null)
+            dailyPowerListsFragment.handleNewListItem(name, id, groupNames);
+    }
+
+    void removeDailyPowerListsFromFragment(){
+        Log.d(TAG, "in removePowerListsFromFragment");
+        if(dailyPowerListsFragment != null){
+            dailyPowerListsFragment.removeAllLists();
+        }
+    }
+
+    void removePowerListItem(String name, String id){
+        if(powerListsFragment != null)
+            powerListsFragment.removeListItem(name, id);
+    }
+
+    void removeDailyPowerListItem(String name, String id){
+        if(dailyPowerListsFragment != null)
+            dailyPowerListsFragment.removeListItem(name, id);
+    }
 }
+

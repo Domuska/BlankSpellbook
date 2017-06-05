@@ -176,6 +176,7 @@ public class RecyclerListFragment extends Fragment {
             });
 
             //get the drawable and give it a random color
+            Log.d(TAG, "onBindViewHolder listNames size: " + listNames.size());
             Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.recycler_child_rectangle);
             drawable.setColorFilter(getRandomColorFromString(groupName), PorterDuff.Mode.SRC_IN);
 
@@ -198,6 +199,7 @@ public class RecyclerListFragment extends Fragment {
 
     private int getRandomColorFromString(String name){
 
+        Log.d(TAG, "name got in getRandomColorFromString: " + name);
         String color = String.format("#%X", name.hashCode());
         Log.d(TAG, "name in hex:" + color);
         int red = Integer.valueOf( color.substring( 1, 3 ), 16 );

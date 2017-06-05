@@ -28,11 +28,13 @@ public class MainActivityPresenter extends DrawerPresenter
 
     private static MainActivityPresenter thisInstance;
     private static ChildEventListener powerListListener;
+    private static ChildEventListener dailyPowerListListener;
     private int currentlySelectedList;
 
     public static final int DAILY_POWER_LISTS_SELECTED = 0;
     public static final int POWER_LISTS_SELECTED = 1;
     public static final int SPELLS_SELECTED = 2;
+
 
     private MainActivityPresenter(
             @NonNull BlankSpellBookContract.DBHelper dbHelper,
@@ -70,6 +72,14 @@ public class MainActivityPresenter extends DrawerPresenter
             Log.d(TAG, "resumeActivity: powerListListener is not null");
             DataSource.getPowerLists(DataSource.MAINACTIVITYPRESENTER);
         }
+        //attach listener for daily power lists
+
+        if(dailyPowerListListener == null)
+            dailyPowerListListener = DataSource.attachDailyPowerListListener(DataSource.MAINACTIVITYPRESENTER);
+        else{
+            Log.d(TAG, "resumeActivity: dailyPowerListListener is not null");
+            DataSource.getDailyPowerLists(DataSource.MAINACTIVITYPRESENTER);
+        }
     }
 
     @Override
@@ -77,6 +87,7 @@ public class MainActivityPresenter extends DrawerPresenter
         //remove the listeners
         Log.d(TAG, "in pauseActivity");
         DataSource.removePowerListListener(powerListListener);
+        DataSource.removeDailyPowerListListener(dailyPowerListListener);
     }
 
     @Override
@@ -89,8 +100,9 @@ public class MainActivityPresenter extends DrawerPresenter
         mMainActivityView.addPowerListData(name, id, groupNames);
     }
 
-    public static void handleNewDailyPowerList(String name, String id){
-        //mMainActivityView.addDailyPowerListData(name, id);
+    public static void handleNewDailyPowerList(String name, String id, ArrayList<String> groupNames){
+        Log.d(TAG, "handleNewDailyPowerList: " + name);
+        mMainActivityView.addDailyPowerListData(name, id, groupNames);
     }
 
     public static void handleRemovedDailyPowerList(String dailyPowerListName, String id) {

@@ -1,7 +1,8 @@
 package tomi.piipposoft.blankspellbook.Utils;
 
-import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 /**
  * Created by Domu on 12-Jun-16.
@@ -24,6 +25,9 @@ public class Spell {
     private String championFeat;
     private String epicFeat;
     private String trigger;
+
+    private String powerListId;
+    private HashMap<String, Boolean> dailyPowerLists;
 
     //not in database schema, needed still
     private String spellId;
@@ -170,6 +174,22 @@ public class Spell {
 
     public void setTrigger(String trigger) {
         this.trigger = trigger;
+    }
+
+    public String getPowerListId() {
+        return powerListId;
+    }
+
+    public void setPowerListId(String powerListId) {
+        this.powerListId = powerListId;
+    }
+
+    public HashMap<String, Boolean> getDailyPowerLists() {
+        return dailyPowerLists;
+    }
+
+    public void setDailyPowerLists(HashMap<String, Boolean> dailypowerLists) {
+        this.dailyPowerLists = dailypowerLists;
     }
 
     /**
