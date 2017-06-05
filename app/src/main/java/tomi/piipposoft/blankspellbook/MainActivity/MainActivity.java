@@ -10,11 +10,14 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.ViewStubCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewStub;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
@@ -52,6 +55,8 @@ public class MainActivity extends ApplicationActivity
     private FragmentManager fragmentManager;
     private MainActivityPagerAdapter pagerAdapter;
     private ViewPager viewPager;
+    private View secondaryToolbarTools;
+    private TextView secondaryToolbarText;
 
     private boolean databasePersistanceSet = false;
 
@@ -71,6 +76,8 @@ public class MainActivity extends ApplicationActivity
             currentlySelectedList = savedInstanceState
                     .getInt(FRAGMENT_LAST_VISIBLE);
         }
+
+        secondaryToolbarText = (TextView) findViewById(R.id.toolar_secondary_text);
 
         //set the support library's toolbar as application toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
@@ -110,6 +117,30 @@ public class MainActivity extends ApplicationActivity
             @Override
             public void onPageSelected(int position) {
                 currentlySelectedList = position;
+                switch (position) {
+                    case 0:
+                        secondaryToolbarText.setText(getString(R.string.toolbar_text_daily_power_lists));
+                        if (secondaryToolbarTools != null)
+                            secondaryToolbarTools.setVisibility(View.GONE);
+                        break;
+
+                    case 1:
+                        secondaryToolbarText.setText(getString(R.string.toolbar_text_power_lists));
+                        if (secondaryToolbarTools != null)
+                            secondaryToolbarTools.setVisibility(View.GONE);
+                        break;
+
+                    case 2:
+                        secondaryToolbarText.setText(getText(R.string.toolbar_text_spells));
+                        if (secondaryToolbarTools == null)
+                            secondaryToolbarTools = ((ViewStub) findViewById(R.id.toolbar_viewStub)).inflate();
+                        else
+                            secondaryToolbarTools.setVisibility(View.VISIBLE);
+                        break;
+                    default:
+                        Log.e(TAG, "onPageSelected: something went terribly wrong, position: " + position);
+                        break;
+                }
             }
 
             @Override

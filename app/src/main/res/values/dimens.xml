@@ -3,4 +3,11 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+
+    <!-- for toolbar -->
+    <dimen name="double_toolbar_size">112dp</dimen>
+    <dimen name="toolbar_secondary_margin_left">20dp</dimen>
+    <dimen name="toolbar_secondary_margin_top">10dp</dimen>
+
 </resources>

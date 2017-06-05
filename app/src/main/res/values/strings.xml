@@ -62,6 +62,11 @@
     <!-- Strings for spell list activity -->
     <string name="spellList_menu_deleteButton">Delete powers from list</string>
 
+    <!-- toolbar -->
+    <string name="toolbar_text_spells">Spells</string>
+    <string name="toolbar_text_daily_power_lists">Daily Power Lists</string>
+    <string name="toolbar_text_power_lists">Power Lists</string>
+
     <!-- Licenses, credits... -->
     <string name="add_to_list_source">https://icons8.com/web-app/8274/Add-List</string>
 

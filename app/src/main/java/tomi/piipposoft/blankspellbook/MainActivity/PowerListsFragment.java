@@ -58,8 +58,6 @@ public class PowerListsFragment extends Fragment {
         layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter.notifyItemInserted(0);
-
         return rootView;
     }
 
@@ -94,7 +92,6 @@ public class PowerListsFragment extends Fragment {
     }
 
     public void attachClickListener(MainActivityContract.PowerListActionListener listener) {
-        Log.d(TAG, "myClickListener is: " + listener.toString());
         this.myClickListener = listener;
     }
 

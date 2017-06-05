@@ -44,7 +44,6 @@ public class ApplicationActivity extends AppCompatActivity
 
 
     // FROM DRAWER CONTRACT VIEW INTERFACE
-
     @Override
     public void dailyPowerListProfileSelected() {
         drawerActionListener.dailyPowerListProfileSelected();
