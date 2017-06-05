@@ -358,7 +358,7 @@ public class DataSource {
                 if(presenterCalling == DRAWERPRESENTER)
                     DrawerPresenter.handlePowerList(spellListName, dataSnapshot.getKey());
                 else if(presenterCalling == MAINACTIVITYPRESENTER) {
-                    //MainActivityPresenter.handleNewPowerList(spellListName, dataSnapshot.getKey());
+                    //MainActivityPresenter.handleNewListItem(spellListName, dataSnapshot.getKey());
                     //now add a listener to the spell_groups so we get the group names too
                     addSpellGroupListener(spellListName, dataSnapshot.getKey());
                 }

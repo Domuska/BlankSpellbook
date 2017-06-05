@@ -13,14 +13,17 @@ public interface MainActivityContract {
         void removePowerListData(String powerListName, String id);
         void removeDailyPowerListData(String dailyPowerListName, String id);
         void startPowerListActivity(String name, String id);
+
+        void startDailyPowerListActivity(String listName, String listId);
     }
 
     interface UserActionListener{
         void resumeActivity();
         void pauseActivity();
+        void userSwitchedTo(int selectedList);
     }
 
-    interface PowerListActionListener{
+    interface FragmentListActionListener {
         void onPowerListClicked(String listName, String listId);
     }
 }

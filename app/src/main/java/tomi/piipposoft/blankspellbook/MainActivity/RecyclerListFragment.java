@@ -19,16 +19,18 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import tomi.piipposoft.blankspellbook.PowerList.PowerListContract;
 import tomi.piipposoft.blankspellbook.R;
 
 /**
- * Created by OMISTAJA on 27.5.2017.
+ * Fragment used in MainActivity to show either Power Lists or Daily Power lists
+ *
+ * Fragment has a RecyclerView with a StaggeredGridLayoutManager that shows the
+ * lists
  */
 
-public class PowerListsFragment extends Fragment {
+public class RecyclerListFragment extends Fragment {
 
-    public static final String TAG = "PowerListsFragment";
+    public static final String TAG = "RecyclerListFragment";
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -40,7 +42,7 @@ public class PowerListsFragment extends Fragment {
     //map that has pairs: ID - list of groups this list has
     private ArrayMap<String, ArrayList<String>> listPowerGroups = new ArrayMap<>();
 
-    MainActivityContract.PowerListActionListener myClickListener;
+    MainActivityContract.FragmentListActionListener myClickListener;
 
 
     @Override
@@ -51,7 +53,7 @@ public class PowerListsFragment extends Fragment {
                 R.layout.fragment_main_activity_power_lists, container, false);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.main_activity_power_lists_recyclerView);
-        adapter = new PowerListsAdapter();
+        adapter = new FragmentListAdapter();
         recyclerView.setAdapter(adapter);
 
         //set staggered grid layout manager to be more funky
@@ -68,7 +70,7 @@ public class PowerListsFragment extends Fragment {
         Log.d(TAG, "onResume");
     }
 
-    public void handleNewPowerList(String name, String id, ArrayList<String> groupNames){
+    public void handleNewListItem(String name, String id, ArrayList<String> groupNames){
         listNames.add(name);
         listIds.add(id);
         //only add the group to the map if there are groups under the spell list
@@ -78,7 +80,7 @@ public class PowerListsFragment extends Fragment {
         adapter.notifyItemInserted(listNames.size()-1);
     }
 
-    public void removePowerList(String powerListName, String id) {
+    public void removeListItem(String powerListName, String id) {
         //save the index so we can notify adapter
         int nameIndex = listNames.indexOf(powerListName);
         listNames.remove(powerListName);
@@ -91,14 +93,14 @@ public class PowerListsFragment extends Fragment {
         listIds = new ArrayList<>();
     }
 
-    public void attachClickListener(MainActivityContract.PowerListActionListener listener) {
+    public void attachClickListener(MainActivityContract.FragmentListActionListener listener) {
         this.myClickListener = listener;
     }
 
     /**
      * Adapter for the RecyclerView showing the power lists
      */
-    class PowerListsAdapter extends RecyclerView.Adapter<PowerListsAdapter.ViewHolder> {
+    class FragmentListAdapter extends RecyclerView.Adapter<FragmentListAdapter.ViewHolder> {
 
 
         // Provide a reference to the views for each data item
@@ -120,14 +122,14 @@ public class PowerListsFragment extends Fragment {
             }
         }
 
-        PowerListsAdapter() {
+        FragmentListAdapter() {
             //empty constructor, no local variables
         }
 
         // Create new views (invoked by the layout manager)
         @Override
-        public PowerListsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                               int viewType) {
+        public FragmentListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
+                                                                 int viewType) {
             // create a new view
             View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.main_activity_power_lists_child_row, parent, false);

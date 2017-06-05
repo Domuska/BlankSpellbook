@@ -20,7 +20,7 @@ import tomi.piipposoft.blankspellbook.Utils.DataSource;
 public class MainActivityPresenter extends DrawerPresenter
         implements DrawerContract.UserActionListener,
         MainActivityContract.UserActionListener,
-        MainActivityContract.PowerListActionListener{
+        MainActivityContract.FragmentListActionListener {
 
     private static MainActivityContract.View mMainActivityView;
 
@@ -28,6 +28,7 @@ public class MainActivityPresenter extends DrawerPresenter
 
     private static MainActivityPresenter thisInstance;
     private static ChildEventListener powerListListener;
+    private int currentlySelectedList;
 
     public static final int DAILY_POWER_LISTS_SELECTED = 0;
     public static final int POWER_LISTS_SELECTED = 1;
@@ -78,8 +79,13 @@ public class MainActivityPresenter extends DrawerPresenter
         DataSource.removePowerListListener(powerListListener);
     }
 
+    @Override
+    public void userSwitchedTo(int selectedList) {
+        currentlySelectedList = selectedList;
+    }
+
     public static void handleNewPowerList(String name, String id, ArrayList<String> groupNames){
-        Log.d(TAG, "handleNewPowerList: " + name);
+        Log.d(TAG, "handleNewListItem: " + name);
         mMainActivityView.addPowerListData(name, id, groupNames);
     }
 
@@ -101,6 +107,9 @@ public class MainActivityPresenter extends DrawerPresenter
 
     @Override
     public void onPowerListClicked(String listName, String listId) {
-        mMainActivityView.startPowerListActivity(listName, listId);
+        if(currentlySelectedList == POWER_LISTS_SELECTED)
+            mMainActivityView.startPowerListActivity(listName, listId);
+        else
+            mMainActivityView.startDailyPowerListActivity(listName, listId);
     }
 }

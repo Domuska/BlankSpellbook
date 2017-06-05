@@ -24,12 +24,12 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
     public final int FRAGMENTS_AMOUNT = 3;
 
     private PowersFragment powersFragment;
-    private PowerListsFragment powerListsFragment, dailyPowerListsFramgment;
-    private MainActivityContract.PowerListActionListener actionListener;
+    private RecyclerListFragment powerListsFragment, dailyPowerListsFramgment;
+    private MainActivityContract.FragmentListActionListener actionListener;
     public static final String TAG = "MainActiviPagerAdapter";
 
     public MainActivityPagerAdapter(FragmentManager manager,
-                                    MainActivityContract.PowerListActionListener actionListener){
+                                    MainActivityContract.FragmentListActionListener actionListener){
         super(manager);
         this.actionListener = actionListener;
     }
@@ -42,12 +42,12 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
         // save the appropriate reference depending on position
         switch (position) {
             case 0:
-                dailyPowerListsFramgment = (PowerListsFragment) createdFragment;
+                dailyPowerListsFramgment = (RecyclerListFragment) createdFragment;
                 //attach listener
                 dailyPowerListsFramgment.attachClickListener(actionListener);
                 break;
             case 1:
-                powerListsFragment = (PowerListsFragment) createdFragment;
+                powerListsFragment = (RecyclerListFragment) createdFragment;
                 //attach the listener
                 powerListsFragment.attachClickListener(actionListener);
                 break;
@@ -71,9 +71,9 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
         //here since this might not be called, save them in instantiateItem.
         switch(position){
             case 0:
-                return new PowerListsFragment();
+                return new RecyclerListFragment();
             case 1:
-                return new PowerListsFragment();
+                return new RecyclerListFragment();
             case 2:
                 return new PowersFragment();
             default:
@@ -92,7 +92,7 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
         Log.d(TAG, "in addPowerListToFragment");
         if(powerListsFragment != null){
             Log.d(TAG, "powerListsFragment not null");
-            powerListsFragment.handleNewPowerList(name, id, groupNames);
+            powerListsFragment.handleNewListItem(name, id, groupNames);
         }
     }
 
