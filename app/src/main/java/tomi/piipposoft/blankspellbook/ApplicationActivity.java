@@ -11,8 +11,8 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerContract;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerHelper;
 import tomi.piipposoft.blankspellbook.PowerList.PowerListActivity;
-import tomi.piipposoft.blankspellbook.dialog_fragments.SetDailyPowerListNameDialog;
-import tomi.piipposoft.blankspellbook.dialog_fragments.SetPowerListNameDialog;
+import tomi.piipposoft.blankspellbook.Drawer.SetDailyPowerListNameDialog;
+import tomi.piipposoft.blankspellbook.Drawer.SetPowerListNameDialog;
 
 /**
  * Created by OMISTAJA on 2.6.2017.

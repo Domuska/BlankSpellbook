@@ -7,7 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import tomi.piipposoft.blankspellbook.dialog_fragments.SetPowerListNameDialog;
+import tomi.piipposoft.blankspellbook.Drawer.SetPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.R;
 
 public class DailyPowerListActivity extends AppCompatActivity
