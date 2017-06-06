@@ -21,7 +21,8 @@ import tomi.piipposoft.blankspellbook.Utils.Spell;
 public class MainActivityPresenter extends DrawerPresenter
         implements DrawerContract.UserActionListener,
         MainActivityContract.UserActionListener,
-        MainActivityContract.FragmentListActionListener {
+        MainActivityContract.FragmentListActionListener,
+        MainActivityContract.PagerAdapterListener{
 
     private static MainActivityContract.View mMainActivityView;
 
@@ -67,38 +68,19 @@ public class MainActivityPresenter extends DrawerPresenter
 
     @Override
     public void resumeActivity() {
-        //attach listeners to spells, power lists and daily power lists
-        if(powerListListener == null)
-            powerListListener = DataSource.attachPowerListListener(DataSource.MAINACTIVITYPRESENTER);
-        else {
-            Log.d(TAG, "resumeActivity: powerListListener is not null");
-            DataSource.getPowerLists(DataSource.MAINACTIVITYPRESENTER);
-        }
-
-        //attach listener for daily power lists
-        if(dailyPowerListListener == null)
-            dailyPowerListListener = DataSource.attachDailyPowerListListener(DataSource.MAINACTIVITYPRESENTER);
-        else{
-            Log.d(TAG, "resumeActivity: dailyPowerListListener is not null");
-            DataSource.getDailyPowerLists(DataSource.MAINACTIVITYPRESENTER);
-        }
-
-        //listener for powers
-        if(powersListener == null)
-            powersListener = DataSource.attachPowerListener(DataSource.MAINACTIVITYPRESENTER);
-        else{
-            Log.d(TAG, "resumeActivity: powersListener is not null");
-            DataSource.getPowers(DataSource.MAINACTIVITYPRESENTER);
-        }
+        //listeners used to be added here, now handled after fragments have been created in PagerAdapter
     }
 
     @Override
     public void pauseActivity() {
         //remove the listeners
         Log.d(TAG, "in pauseActivity");
-        DataSource.removePowerListListener(powerListListener);
-        DataSource.removeDailyPowerListListener(dailyPowerListListener);
-        DataSource.removePowersListener(powersListener);
+        if(powerListListener != null)
+            DataSource.removePowerListListener(powerListListener);
+        if(dailyPowerListListener != null)
+            DataSource.removeDailyPowerListListener(dailyPowerListListener);
+        if(powersListener != null)
+            DataSource.removePowersListener(powersListener);
     }
 
     @Override
@@ -111,6 +93,10 @@ public class MainActivityPresenter extends DrawerPresenter
         mMainActivityView.addPowerListData(name, id, groupNames);
     }
 
+    public static void handleRemovedPowerList(String powerListName, String id) {
+        mMainActivityView.removePowerListData(powerListName, id);
+    }
+
     public static void handleNewDailyPowerList(String name, String id, ArrayList<String> groupNames){
         Log.d(TAG, "handleNewDailyPowerList: " + name);
         mMainActivityView.addDailyPowerListData(name, id, groupNames);
@@ -120,13 +106,9 @@ public class MainActivityPresenter extends DrawerPresenter
         mMainActivityView.removeDailyPowerListData(dailyPowerListName, id);
     }
 
-    public static void handleRemovedPowerList(String powerListName, String id) {
-        mMainActivityView.removePowerListData(powerListName, id);
-    }
-
     public static void handleNewPower(Spell power) {
-        //Log.d(TAG, "got new powerin handleNewPower: " + power.getName()
-        //        + " group: " + power.getGroupName());
+        Log.d(TAG, "got new powerin handleNewPower: " + power.getName()
+                + " group: " + power.getGroupName());
         mMainActivityView.addNewPowerToList(power);
     }
 
@@ -135,7 +117,7 @@ public class MainActivityPresenter extends DrawerPresenter
     }
 
 
-    //FROM POWERLISTCONTRACT
+    //FROM MainActivityContract.FragmentListActionListener
 
 
     @Override
@@ -147,4 +129,54 @@ public class MainActivityPresenter extends DrawerPresenter
     }
 
 
+    //from MainActivityContract.PagerAdapterListener
+
+    /**
+     * Called by PagerAdapter when daily power list fragment has been created
+     * Attaches a listener or fetches the data from DB and tells MainActivity to add data
+     * to the fragment
+     */
+    @Override
+    public void onDailyPowerListFragmentCreated() {
+        //attach listener for daily power lists
+        if(dailyPowerListListener == null)
+            dailyPowerListListener = DataSource.attachDailyPowerListListener(DataSource.MAINACTIVITYPRESENTER);
+        else{
+            Log.d(TAG, "resumeActivity: dailyPowerListListener is not null");
+            DataSource.getDailyPowerLists(DataSource.MAINACTIVITYPRESENTER);
+        }
+    }
+
+
+    /**
+     * Called by PagerAdapter when powers fragment has been created
+     * Attaches a listener or fetches the data from DB and tells MainActivity to add data
+     * to the fragment
+     */
+    @Override
+    public void onPowersFragmentCreated() {
+        //listener for powers
+        if(powersListener == null)
+            powersListener = DataSource.attachPowerListener(DataSource.MAINACTIVITYPRESENTER);
+        else{
+            Log.d(TAG, "resumeActivity: powersListener is not null");
+            DataSource.getPowers(DataSource.MAINACTIVITYPRESENTER);
+        }
+    }
+
+    /**
+     * Called by PagerAdapter when power list fragment has been created
+     * Attaches a listener or fetches the data from DB and tells MainActivity to add data
+     * to the fragment
+     */
+    @Override
+    public void onPowerListFragmentCreated() {
+        //attach listeners to spells, power lists and daily power lists
+        if(powerListListener == null)
+            powerListListener = DataSource.attachPowerListListener(DataSource.MAINACTIVITYPRESENTER);
+        else {
+            Log.d(TAG, "resumeActivity: powerListListener is not null");
+            DataSource.getPowerLists(DataSource.MAINACTIVITYPRESENTER);
+        }
+    }
 }

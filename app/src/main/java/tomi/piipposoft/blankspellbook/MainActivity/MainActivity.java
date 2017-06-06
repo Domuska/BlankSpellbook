@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.TextView;
@@ -96,10 +97,14 @@ public class MainActivity extends ApplicationActivity
 
         //create a new adapter and give it the actionListener to attach to the fragments
         pagerAdapter = new MainActivityPagerAdapter(getSupportFragmentManager(),
-                (MainActivityContract.FragmentListActionListener) mActionlistener);
+                (MainActivityContract.FragmentListActionListener) mActionlistener,
+                (MainActivityContract.PagerAdapterListener) mActionlistener);
 
         viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(pagerAdapter);
+        //set the number of screens that are away from currently focused screen
+        //if this is smaller, the fragments are re-created and data needs to be re-fetched
+        viewPager.setOffscreenPageLimit(2);
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

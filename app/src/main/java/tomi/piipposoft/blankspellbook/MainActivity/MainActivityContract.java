@@ -36,4 +36,14 @@ public interface MainActivityContract {
     interface FragmentListActionListener {
         void onPowerListClicked(String listName, String listId);
     }
+
+    /**
+     * interface for informing presenter when certain fragments have been
+     * created so presenter can supply the data to be shown
+     */
+    interface PagerAdapterListener{
+        void onDailyPowerListFragmentCreated();
+        void onPowerListFragmentCreated();
+        void onPowersFragmentCreated();
+    }
 }

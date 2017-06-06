@@ -25,15 +25,23 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
 
     public final int FRAGMENTS_AMOUNT = 3;
 
+    private static final String TAG = "MainActiviPagerAdapter";
     private PowersFragment powersFragment;
     private RecyclerListFragment powerListsFragment, dailyPowerListsFragment;
-    private MainActivityContract.FragmentListActionListener actionListener;
-    public static final String TAG = "MainActiviPagerAdapter";
+
+    //listener for presenter when user clicks on (daily) power list fragment list item,
+    //attached to those fragments on creation
+    private MainActivityContract.FragmentListActionListener fragmentListActionListener;
+    //listener for telling presenter when fragments have been created so it can supply the data
+    private MainActivityContract.PagerAdapterListener pagerAdapterListener;
+
 
     public MainActivityPagerAdapter(FragmentManager manager,
-                                    MainActivityContract.FragmentListActionListener actionListener){
+                                    MainActivityContract.FragmentListActionListener actionListener,
+                                    MainActivityContract.PagerAdapterListener pagerAdapterListener){
         super(manager);
-        this.actionListener = actionListener;
+        this.fragmentListActionListener = actionListener;
+        this.pagerAdapterListener = pagerAdapterListener;
     }
 
     //override this, so we can save the references to the fragments safely, we can call methods on them later
@@ -46,15 +54,24 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
             case 0:
                 dailyPowerListsFragment = (RecyclerListFragment) createdFragment;
                 //attach listener
-                dailyPowerListsFragment.attachClickListener(actionListener);
+                dailyPowerListsFragment.attachClickListener(fragmentListActionListener);
+                //inform presenter that fragment has been created
+                pagerAdapterListener.onDailyPowerListFragmentCreated();
+                Log.d(TAG, "instantiateItem: daily power list fragment created");
                 break;
             case 1:
                 powerListsFragment = (RecyclerListFragment) createdFragment;
                 //attach the listener
-                powerListsFragment.attachClickListener(actionListener);
+                powerListsFragment.attachClickListener(fragmentListActionListener);
+                //inform presenter fragment has been created
+                pagerAdapterListener.onPowerListFragmentCreated();
+                Log.d(TAG, "instantiateItem: power list fragment created");
                 break;
             case 2:
                 powersFragment = (PowersFragment) createdFragment;
+                //inform presenter that powers fragment has been created
+                pagerAdapterListener.onPowersFragmentCreated();
+                Log.d(TAG, "instantiateItem: powers fragment created");
                 break;
         }
         return createdFragment;
@@ -103,8 +120,12 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
     }
 
     void addDailyPowerListToFragment(String name, String id, ArrayList<String> groupNames) {
-        if(dailyPowerListsFragment != null)
+        if(dailyPowerListsFragment != null) {
             dailyPowerListsFragment.handleNewListItem(name, id, groupNames);
+        }
+        else {
+            Log.d(TAG, "dailyPowerListsFragment is null, not adding");
+        }
     }
 
     void removeDailyPowerListsFromFragment(){

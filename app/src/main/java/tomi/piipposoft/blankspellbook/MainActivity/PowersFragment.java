@@ -8,6 +8,7 @@ import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +56,6 @@ public class PowersFragment extends Fragment {
                 DividerItemDecoration.HORIZONTAL
         );
         recyclerView.addItemDecoration(divider);
-
         return rootView;
     }
 
