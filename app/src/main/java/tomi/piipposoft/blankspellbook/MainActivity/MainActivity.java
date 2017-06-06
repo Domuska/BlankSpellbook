@@ -257,15 +257,11 @@ public class MainActivity extends ApplicationActivity
 
     @Override
     public void startPowerListActivity(String name, String id) {
-        Intent i = new Intent(this, PowerListActivity.class);
-        i.putExtra(PowerListActivity.EXTRA_POWER_LIST_ID, id);
-        i.putExtra(PowerListActivity.EXTRA_POWER_LIST_NAME, name);
-        startActivity(i);
+        this.openPowerListActivity(id, name);
     }
 
     @Override
     public void startDailyPowerListActivity(String listName, String listId) {
-        Log.d(TAG, "we should start a daily power list activity now");
-        // TODO: 5.6.2017 do stuff
+        this.openDailyPowerList(listName, listId);
     }
 }

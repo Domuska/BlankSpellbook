@@ -11,6 +11,7 @@ import java.util.List;
  */
 public interface DrawerContract {
 
+    public enum WhichItem { DailyPowerList, PowerList }
 
     /**
      * Used by presenters to tell the drawer to show a list of items
@@ -18,7 +19,7 @@ public interface DrawerContract {
     interface View {
         void showDailyPowerList();
         void showPowerList();
-        void addDrawerItem(IDrawerItem item);
+        void addDrawerItem(IDrawerItem item, WhichItem whichItem);
         void removeDrawerItem(String itemId);
     }
 
@@ -27,7 +28,7 @@ public interface DrawerContract {
      */
     interface ViewActivity {
         void openPowerList(String powerListId, String name);
-        void openDailyPowerList(Long dailyPowerListId);
+        void openDailyPowerList(String id, String name);
     }
 
     /**
@@ -50,7 +51,7 @@ public interface DrawerContract {
         void drawerOpened();
 
         void powerListItemClicked(String itemId, String name);
-        void dailyPowerListItemClicked(long itemId);
+        void dailyPowerListItemClicked(String itemId, String name);
 
         /**
          * The user selected the power lists section of the drawer

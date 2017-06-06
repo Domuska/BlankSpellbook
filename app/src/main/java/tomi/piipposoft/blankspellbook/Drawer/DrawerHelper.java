@@ -1,7 +1,6 @@
 package tomi.piipposoft.blankspellbook.Drawer;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -19,12 +18,9 @@ import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
-import java.util.List;
-
 import tomi.piipposoft.blankspellbook.dialog_fragments.SetDailyPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.dialog_fragments.SetPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.R;
-import tomi.piipposoft.blankspellbook.PowerList.PowerListActivity;
 
 /**
  * Created by Domu on 11-Apr-16.
@@ -38,6 +34,11 @@ public class DrawerHelper implements
     private AppCompatActivity callerActivity;
     private static String TAG = "DrawerHelper";
 
+    public static final int POWER_LIST = 1;
+    public static final int DAILY_POWER_LIST = 2;
+
+
+
     private static final long POWER_LISTS_PROFILE_IDENTIFIER = -5;
     private static final long DAILY_POWER_LISTS_PROFILE_IDENTIFIER = -2;
     private static final long ADD_POWER_LIST_FOOTER_IDENTIFIER = -3;
@@ -48,6 +49,10 @@ public class DrawerHelper implements
 
     private static DrawerListener mDrawerListener;
 
+    /**
+     * Implemented by an activity that handles the item clicks,
+     * most likely ApplicationActivity
+     */
     public interface DrawerListener {
         void dailyPowerListProfileSelected();
         void powerListProfileSelected();
@@ -199,10 +204,13 @@ public class DrawerHelper implements
     }
 
     @Override
-    public void addDrawerItem(IDrawerItem item){
+    public void addDrawerItem(IDrawerItem item, DrawerContract.WhichItem which){
+        Log.d(TAG, "adding new drawer item with id: " + item.getTag());
         PrimaryDrawerItem primaryItem = (PrimaryDrawerItem) item;
-        primaryItem.withOnDrawerItemClickListener(new SpellDrawerItemListener());
-        Log.d(TAG, "addDrawerItem: drawer is " + mDrawer.toString());
+        if(which == DrawerContract.WhichItem.PowerList)
+            primaryItem.withOnDrawerItemClickListener(new PowerListDrawerItemListener());
+        else if(which == DrawerContract.WhichItem.DailyPowerList)
+            primaryItem.withOnDrawerItemClickListener(new DailyPowerListDrawerItemListener());
         mDrawer.addItem(primaryItem);
     }
 
@@ -210,25 +218,6 @@ public class DrawerHelper implements
     public void removeDrawerItem(String itemId){
 
     }
-
-    // TODO: 11.5.2017 this method should not stay here. This is just for testing if we could lock the nav drawer
-    /*public static void lockDrawerAndChangeIcon(){
-        //this doesn't seem to work. If you do this, the toolbar button will change,
-        //but the drawer isn't locked nor is the on click event changed. Icon changes though!
-        //http://stackoverflow.com/questions/33479575/changing-navigation-drawer-hamburger-icon
-
-        mDrawer.getActionBarDrawerToggle().setDrawerIndicatorEnabled(false);
-        mDrawer.getActionBarDrawerToggle().setHomeAsUpIndicator(R.drawable.ic_done_black_24dp);
-
-        mDrawer.getActionBarDrawerToggle().setToolbarNavigationClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "now we should be cancelling editing!");
-            }
-        });
-
-        mDrawer.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-    }*/
 
     /**
      * Helper method to populate the drawer spell books side
@@ -243,34 +232,10 @@ public class DrawerHelper implements
         drawer.addStickyFooterItem(new PrimaryDrawerItem()
                 .withName("Add new spell book")
                 .withIdentifier(ADD_POWER_LIST_FOOTER_IDENTIFIER));
-
-        /*
-        Log.d(TAG, "numer of drawer items being added: " + drawerItems.size());
-        for (int i = 0; i < drawerItems.size(); i++) {
-            final PrimaryDrawerItem item = (PrimaryDrawerItem)drawerItems.get(i);
-            Log.d(TAG, "new item being added to drawer: " + item.getName() +
-                    " ID: " + item.getTag());
-            //add listener to the drawer items
-            item.withOnDrawerItemClickListener(new SpellDrawerItemListener());
-            drawer.addItem(drawerItems.get(i));
-        }
-        */
-    }
-
-    private class SpellDrawerItemListener implements Drawer.OnDrawerItemClickListener{
-
-        @Override
-        public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-            //tell the current activity that an item has been clicked
-            Log.d(TAG, "power list tag (should be ID): " + drawerItem.getTag());
-            mDrawerListener.powerListClicked(drawerItem);
-            return true;
-        }
     }
 
     /**
      * Helper method to populate the drawer daily powers side
-     *
      * @param drawer
      */
     private void populateDailyPowersList(Drawer drawer){
@@ -279,26 +244,31 @@ public class DrawerHelper implements
         drawer.removeAllStickyFooterItems();
 
         drawer.addStickyFooterItem(new PrimaryDrawerItem()
-            .withName("Add new daily power list")
-            .withIdentifier(ADD_DAILY_POWER_LIST_FOOTER_IDENTIFIER));
-
-        /*
-        for(int i = 0; i < drawerItems.size(); i++){
-            final PrimaryDrawerItem item = (PrimaryDrawerItem)drawerItems.get(i);
-            Log.d(TAG, "new item being added to drawer: " + item.getName() +
-                    " ID: " + item.getTag());
-            //add listener to the drawer items
-            item.withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                @Override
-                public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                    //tell the current activity that an item has been clicked
-                    mDrawerListener.dailyPowerListClicked(drawerItem);
-                    return true;
-                }
-            });
-
-            drawer.addItem(drawerItems.get(i));
-        }
-        */
+                .withName("Add new daily power list")
+                .withIdentifier(ADD_DAILY_POWER_LIST_FOOTER_IDENTIFIER));
     }
+
+    private class PowerListDrawerItemListener implements Drawer.OnDrawerItemClickListener{
+
+        @Override
+        public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+            //tell the current activity that an item has been clicked
+            Log.d(TAG, "PowerListDrawerItemListener: power list tag (should be ID): " + drawerItem.getTag());
+            mDrawerListener.powerListClicked(drawerItem);
+            return true;
+        }
+    }
+
+    private class DailyPowerListDrawerItemListener implements Drawer.OnDrawerItemClickListener{
+
+        @Override
+        public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+            //tell the current activity that an item has been clicked
+            Log.d(TAG, "DailyPowerListDrawerItemListener: power list tag (should be ID): " + drawerItem.getTag());
+            mDrawerListener.dailyPowerListClicked(drawerItem);
+            return true;
+        }
+    }
+
+
 }

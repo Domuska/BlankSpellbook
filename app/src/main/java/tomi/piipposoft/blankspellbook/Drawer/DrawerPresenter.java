@@ -59,7 +59,9 @@ public class DrawerPresenter implements DrawerContract.UserActionListener{
      */
     public static void handlePowerList(String powerListName, String powerListId){
         Log.d(TAG, "adding new powerList to drawer, name: " + powerListName + " id: " + powerListId);
-        mDrawerView.addDrawerItem(initializeSpellBookListItem(powerListName, powerListId));
+        mDrawerView.addDrawerItem(
+                initializeSpellBookListItem(powerListName, powerListId),
+                DrawerContract.WhichItem.PowerList);
     }
 
     public static void handleRemovedItem(String powerListName, String powerListId){
@@ -89,7 +91,9 @@ public class DrawerPresenter implements DrawerContract.UserActionListener{
      * @param dailyPowerListId ID of the daily power list
      */
     public static void handleDailyPowerList(String dailyPowerListName, String dailyPowerListId){
-        mDrawerView.addDrawerItem(initializeDailyPowerListItem(dailyPowerListName, dailyPowerListId));
+        mDrawerView.addDrawerItem(
+                initializeDailyPowerListItem(dailyPowerListName, dailyPowerListId),
+                DrawerContract.WhichItem.DailyPowerList);
     }
 
     /**
@@ -331,24 +335,41 @@ public class DrawerPresenter implements DrawerContract.UserActionListener{
 
     @Override
     public void drawerOpened() {
-
     }
 
+    /**
+     * Called by ApplicationActivity telling that a power list (item) has been clicked
+     * @param itemId ID of the item (should be same ID as is in DB)
+     * @param name name of the item
+     */
     @Override
     public void powerListItemClicked(String itemId, String name) {
         mDrawerActivityView.openPowerList(itemId, name);
     }
 
+    /**
+     * Called by ApplicationActivity telling that a daily power list has been clicked
+     * @param itemId ID of the item that has been clicked
+     */
     @Override
-    public void dailyPowerListItemClicked(long itemId) {
-        mDrawerActivityView.openDailyPowerList(itemId);
+    public void dailyPowerListItemClicked(String itemId, String name) {
+        Log.d(TAG, "opening daily power list with ID: " + itemId);
+        mDrawerActivityView.openDailyPowerList(itemId, name);
     }
 
+    /**
+     * Called by ApplicationActivity telling that user has selected
+     * the power lists portion of the drawer
+     */
     @Override
     public void powerListProfileSelected() {
         showPowerLists();
     }
 
+    /**
+     * Called by the ApplicationActivity telling that user has selected
+     * the daily power lists portion of the drawer
+     */
     @Override
     public void dailyPowerListProfileSelected() {
         this.showDailyPowerLists();
