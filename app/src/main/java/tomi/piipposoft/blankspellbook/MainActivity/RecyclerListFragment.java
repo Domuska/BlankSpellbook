@@ -50,7 +50,7 @@ public class RecyclerListFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView");
         View rootView = inflater.inflate(
-                R.layout.fragment_main_activity_power_lists, container, false);
+                R.layout.fragment_main_recycler_list, container, false);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.main_activity_power_lists_recyclerView);
         adapter = new FragmentListAdapter();

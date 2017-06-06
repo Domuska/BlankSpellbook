@@ -17,7 +17,6 @@ import tomi.piipposoft.blankspellbook.R;
  */
 
 public class PowersFragment extends Fragment {
-    public static final String ARG_OBJECT = "object";
 
     private final String TAG = "PowersFragment";
 
