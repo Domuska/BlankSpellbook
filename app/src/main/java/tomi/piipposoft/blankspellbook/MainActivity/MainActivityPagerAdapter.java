@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
+import tomi.piipposoft.blankspellbook.Utils.Spell;
+
 /**
  * Created by OMISTAJA on 26.5.2017.
  *
@@ -89,15 +91,12 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
 
 
     void addPowerListToFragment(String name, String id, ArrayList<String> groupNames){
-        Log.d(TAG, "in addPowerListToFragment");
         if(powerListsFragment != null){
-            Log.d(TAG, "powerListsFragment not null");
             powerListsFragment.handleNewListItem(name, id, groupNames);
         }
     }
 
     void removePowerListsFromFragment(){
-        Log.d(TAG, "in removePowerListsFromFragment");
         if(powerListsFragment != null){
             powerListsFragment.removeAllLists();
         }
@@ -109,7 +108,6 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
     }
 
     void removeDailyPowerListsFromFragment(){
-        Log.d(TAG, "in removePowerListsFromFragment");
         if(dailyPowerListsFragment != null){
             dailyPowerListsFragment.removeAllLists();
         }
@@ -125,14 +123,14 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
             dailyPowerListsFragment.removeListItem(name, id);
     }
 
-    void addPowerToFragment(String name, String id){
+    void addPowerToFragment(Spell power){
         if(powersFragment != null)
-            powersFragment.handleNewPower(name, id);
+            powersFragment.handleNewPower(power);
     }
 
-    void removePowerFromFragment(String id){
+    void removePowerFromFragment(Spell power){
         if(powersFragment != null)
-            powersFragment.removePower(id);
+            powersFragment.removePower(power);
     }
 
     void removeAllPowers(){

@@ -543,8 +543,6 @@ public class DataSource {
     }
 
     public static void removePowerListPowerListener(ChildEventListener listener, String powerListId){
-        Log.d(TAG, "remove listener for ID: " + powerListId);
-        Log.d(TAG, "removal path: " + DB_SPELL_LIST_TREE_NAME + "/" + powerListId + "/" + DB_SPELL_LIST_CHILD_SPELLS);
         firebaseDatabase
                 .getReference(DB_SPELL_LIST_TREE_NAME)
                 .child(powerListId)
@@ -774,6 +772,82 @@ public class DataSource {
                         }
                 );
     }
+
+    public static ChildEventListener attachPowerListener(final int presenterCalling) {
+        ChildEventListener listener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                //if main activity presenter is the one adding the listener
+                if(presenterCalling == MAINACTIVITYPRESENTER){
+                    MainActivityPresenter.handleNewPower(dataSnapshot.getValue(Spell.class));
+                }
+                else{
+                    Log.e(TAG, "unknown caller in attachPowerListener onChildAdded: " + presenterCalling);
+                    throw new RuntimeException("unknown caller in attachPowerListener," +
+                            "use DataSource.MAINACTIVITYPRESENTER");
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                if(presenterCalling == MAINACTIVITYPRESENTER){
+                    MainActivityPresenter.handlePowerRemoved(dataSnapshot.getValue(Spell.class));
+                }
+                else{
+                    Log.e(TAG, "unknown caller in attachPowerListener onChildRemoved: " + presenterCalling);
+                    throw new RuntimeException("unknown caller in attachPowerListener," +
+                            "use DataSource.MAINACTIVITYPRESENTER");
+                }
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, "something went wrong at attachPowerListener, canceling: " + databaseError.toString());
+            }
+        };
+
+        //attach the listener and return it
+        firebaseDatabase.getReference().child(DB_SPELL_TREE_NAME).addChildEventListener(listener);
+        return listener;
+    }
+
+    public static void getPowers(final int presenterCalling) {
+        firebaseDatabase.getReference().child(DB_SPELL_TREE_NAME)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(presenterCalling == MAINACTIVITYPRESENTER){
+                            MainActivityPresenter.handleNewPower(dataSnapshot.getValue(Spell.class));
+                        }
+                        else{
+                            Log.e(TAG, "unknown caller in getPowers onDataChange: " + presenterCalling);
+                            throw new RuntimeException("unknown caller in getPowers," +
+                                    "use DataSource.MAINACTIVITYPRESENTER");
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.d(TAG, "something went wrong at getPowers, canceling: " + databaseError.toString());
+                    }
+                });
+    }
+
+    public static void removePowersListener(ChildEventListener powersListener) {
+        firebaseDatabase.getReference().child(DB_SPELL_TREE_NAME).removeEventListener(powersListener);
+    }
+
+
 
     /**
      * Method for getting the map of updates needed to add a new spell to DB

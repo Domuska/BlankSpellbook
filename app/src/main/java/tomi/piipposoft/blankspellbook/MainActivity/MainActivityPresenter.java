@@ -13,6 +13,7 @@ import tomi.piipposoft.blankspellbook.Drawer.DrawerContract;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerHelper;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerPresenter;
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
+import tomi.piipposoft.blankspellbook.Utils.Spell;
 
 /**
  * Created by Domu on 17-Apr-16.
@@ -29,6 +30,7 @@ public class MainActivityPresenter extends DrawerPresenter
     private static MainActivityPresenter thisInstance;
     private static ChildEventListener powerListListener;
     private static ChildEventListener dailyPowerListListener;
+    private static ChildEventListener powersListener;
     private int currentlySelectedList;
 
     public static final int DAILY_POWER_LISTS_SELECTED = 0;
@@ -72,13 +74,21 @@ public class MainActivityPresenter extends DrawerPresenter
             Log.d(TAG, "resumeActivity: powerListListener is not null");
             DataSource.getPowerLists(DataSource.MAINACTIVITYPRESENTER);
         }
-        //attach listener for daily power lists
 
+        //attach listener for daily power lists
         if(dailyPowerListListener == null)
             dailyPowerListListener = DataSource.attachDailyPowerListListener(DataSource.MAINACTIVITYPRESENTER);
         else{
             Log.d(TAG, "resumeActivity: dailyPowerListListener is not null");
             DataSource.getDailyPowerLists(DataSource.MAINACTIVITYPRESENTER);
+        }
+
+        //listener for powers
+        if(powersListener == null)
+            powersListener = DataSource.attachPowerListener(DataSource.MAINACTIVITYPRESENTER);
+        else{
+            Log.d(TAG, "resumeActivity: powersListener is not null");
+            DataSource.getPowers(DataSource.MAINACTIVITYPRESENTER);
         }
     }
 
@@ -88,6 +98,7 @@ public class MainActivityPresenter extends DrawerPresenter
         Log.d(TAG, "in pauseActivity");
         DataSource.removePowerListListener(powerListListener);
         DataSource.removeDailyPowerListListener(dailyPowerListListener);
+        DataSource.removePowersListener(powersListener);
     }
 
     @Override
@@ -113,6 +124,16 @@ public class MainActivityPresenter extends DrawerPresenter
         mMainActivityView.removePowerListData(powerListName, id);
     }
 
+    public static void handleNewPower(Spell power) {
+        //Log.d(TAG, "got new powerin handleNewPower: " + power.getName()
+        //        + " group: " + power.getGroupName());
+        mMainActivityView.addNewPowerToList(power);
+    }
+
+    public static void handlePowerRemoved(Spell power) {
+        mMainActivityView.removePowerFromList(power);
+    }
+
 
     //FROM POWERLISTCONTRACT
 
@@ -124,4 +145,6 @@ public class MainActivityPresenter extends DrawerPresenter
         else
             mMainActivityView.startDailyPowerListActivity(listName, listId);
     }
+
+
 }

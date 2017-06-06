@@ -2,20 +2,28 @@ package tomi.piipposoft.blankspellbook.MainActivity;
 
 import java.util.ArrayList;
 
+import tomi.piipposoft.blankspellbook.Utils.Spell;
+
 /**
  * Created by Domu on 17-Apr-16.
  */
 public interface MainActivityContract {
 
     interface View{
+        //add and remove data from the powerLists fragment
         void addPowerListData(String name, String id, ArrayList<String> groupNames);
-        void addDailyPowerListData(String name, String id, ArrayList<String> groupNames);
-
         void removePowerListData(String powerListName, String id);
+
+        //add and remove data from the dailyPowerLists fragment
+        void addDailyPowerListData(String name, String id, ArrayList<String> groupNames);
         void removeDailyPowerListData(String dailyPowerListName, String id);
 
-        void startPowerListActivity(String name, String id);
+        //add and remove data from powersFragment
+        void addNewPowerToList(Spell power);
+        void removePowerFromList(Spell power);
 
+        //for starting the activities when fragment elements are clicked
+        void startPowerListActivity(String name, String id);
         void startDailyPowerListActivity(String listName, String listId);
     }
 

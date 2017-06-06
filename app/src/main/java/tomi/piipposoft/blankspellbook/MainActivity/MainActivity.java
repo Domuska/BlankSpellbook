@@ -24,6 +24,7 @@ import tomi.piipposoft.blankspellbook.Utils.DataSource;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerContract;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerHelper;
 import tomi.piipposoft.blankspellbook.PowerList.PowerListActivity;
+import tomi.piipposoft.blankspellbook.Utils.Spell;
 
 /**
  *
@@ -182,6 +183,7 @@ public class MainActivity extends ApplicationActivity
         //remove the data from the fragments since it's re-fetched on resume
         pagerAdapter.removePowerListsFromFragment();
         pagerAdapter.removeDailyPowerListsFromFragment();
+        pagerAdapter.removeAllPowers();
         super.onPause();
     }
 
@@ -263,5 +265,15 @@ public class MainActivity extends ApplicationActivity
     @Override
     public void startDailyPowerListActivity(String listName, String listId) {
         this.openDailyPowerList(listName, listId);
+    }
+
+    @Override
+    public void addNewPowerToList(Spell power) {
+        pagerAdapter.addPowerToFragment(power);
+    }
+
+    @Override
+    public void removePowerFromList(Spell power) {
+        pagerAdapter.removePowerFromFragment(power);
     }
 }
