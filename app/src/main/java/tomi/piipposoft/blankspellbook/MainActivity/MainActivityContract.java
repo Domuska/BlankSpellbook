@@ -19,7 +19,7 @@ public interface MainActivityContract {
         void removeDailyPowerListData(String dailyPowerListName, String id);
 
         //add and remove data from powersFragment
-        void addNewPowerToList(Spell power);
+        void addNewPowerToList(Spell power, String powerListName);
         void removePowerFromList(Spell power);
 
         //for starting the activities when fragment elements are clicked

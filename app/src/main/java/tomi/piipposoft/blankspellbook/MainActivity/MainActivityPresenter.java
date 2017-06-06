@@ -1,6 +1,7 @@
 package tomi.piipposoft.blankspellbook.MainActivity;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 
@@ -106,10 +107,10 @@ public class MainActivityPresenter extends DrawerPresenter
         mMainActivityView.removeDailyPowerListData(dailyPowerListName, id);
     }
 
-    public static void handleNewPower(Spell power) {
-        Log.d(TAG, "got new powerin handleNewPower: " + power.getName()
-                + " group: " + power.getGroupName());
-        mMainActivityView.addNewPowerToList(power);
+    public static void handleNewPower(@NonNull Spell power, @Nullable String powerListName) {
+        Log.d(TAG, "got new power in handleNewPower: " + power.getName()
+                + " with power list name: " + powerListName);
+        mMainActivityView.addNewPowerToList(power, powerListName);
     }
 
     public static void handlePowerRemoved(Spell power) {

@@ -59,8 +59,9 @@ public class PowersFragment extends Fragment {
         return rootView;
     }
 
-    public void handleNewPower(@NonNull Spell power){
+    public void handleNewPower(@NonNull Spell power, String powerListName){
         //powers.put(power.getSpellId(), power);
+        // TODO: 6.6.2017 how should we save the power list name? make powers a map? store in another list?
         powers.add(power);
         adapter.notifyItemInserted(powers.size()-1);
     }

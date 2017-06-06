@@ -273,8 +273,8 @@ public class MainActivity extends ApplicationActivity
     }
 
     @Override
-    public void addNewPowerToList(Spell power) {
-        pagerAdapter.addPowerToFragment(power);
+    public void addNewPowerToList(Spell power, String powerListName) {
+        pagerAdapter.addPowerToFragment(power, powerListName);
     }
 
     @Override

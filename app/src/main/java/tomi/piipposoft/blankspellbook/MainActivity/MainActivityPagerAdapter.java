@@ -144,9 +144,9 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
             dailyPowerListsFragment.removeListItem(name, id);
     }
 
-    void addPowerToFragment(Spell power){
+    void addPowerToFragment(Spell power, String powerListName){
         if(powersFragment != null)
-            powersFragment.handleNewPower(power);
+            powersFragment.handleNewPower(power, powerListName);
     }
 
     void removePowerFromFragment(Spell power){

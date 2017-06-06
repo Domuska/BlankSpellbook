@@ -32,17 +32,22 @@ import tomi.piipposoft.blankspellbook.PowerList.PowerListPresenter;
  * Created by Domu on 17-Apr-16.
  */
 public class DataSource {
-    public static final String DB_SPELL_LIST_TREE_NAME = "spell_lists";
-    public static final String DB_SPELL_LIST_CHILD_SPELLS = "spells";
+
+    // TODO: 6.6.2017 sort these in some sensible way
+
     public static final String DB_POWER_LISTS_REFERENCE = "spell_lists";
     public static final String DB_DAILY_POWER_LIST_NAME = "daily_power_lists";
-    public static final String DB_SPELL_LIST_CHILD_NAME = "name";
     public static final String DB_DAILY_POWER_LIST_CHILD_SPELLS = "spells";
     public static final String DB_DAILY_POWER_LIST_CHILD_NAME = "name";
-
     public static final String DB_SPELL_GROUPS_TREE_NAME = "spell_groups";
     public static final String DB_DAILY_SPELL_GROUPS_TREE_NAME = "daily_spell_groups";
 
+    //for spell_groups table
+    public static final String DB_SPELL_LIST_TREE_NAME = "spell_lists";
+    public static final String DB_SPELL_LIST_CHILD_NAME = "name";
+    public static final String DB_SPELL_LIST_CHILD_SPELLS = "spells";
+
+    //for spells table
     public static final String DB_SPELL_TREE_NAME = "spells";
     public static final String DB_SPELLS_CHILD_GROUP_NAME = "groupName";
     public static final String DB_SPELLS_CHILD_DAILY_POWER_LISTS = "dailyPowerLists";
@@ -779,7 +784,13 @@ public class DataSource {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 //if main activity presenter is the one adding the listener
                 if(presenterCalling == MAINACTIVITYPRESENTER){
-                    MainActivityPresenter.handleNewPower(dataSnapshot.getValue(Spell.class));
+                    Spell power = dataSnapshot.getValue(Spell.class);
+                    //if power has a list it belongs to list, get name of that list too
+                    if(!"".equals(power.getPowerListId()))
+                        getListPowerBelongsTo(power);
+                    else
+                        MainActivityPresenter.handleNewPower(power, null);
+
                 }
                 else{
                     Log.e(TAG, "unknown caller in attachPowerListener onChildAdded: " + presenterCalling);
@@ -832,7 +843,12 @@ public class DataSource {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if(presenterCalling == MAINACTIVITYPRESENTER){
                             for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                MainActivityPresenter.handleNewPower(snapshot.getValue(Spell.class));
+                                Spell power = snapshot.getValue(Spell.class);
+                                //if power is associated with a power list, get the list's name
+                                if(!"".equals(power.getPowerListId()))
+                                    getListPowerBelongsTo(power);
+                                else
+                                    MainActivityPresenter.handleNewPower(power, null);
                             }
                         }
                         else{
@@ -853,6 +869,29 @@ public class DataSource {
         firebaseDatabase.getReference().child(DB_SPELL_TREE_NAME).removeEventListener(powersListener);
     }
 
+    /**
+     * Used for getting the name of power list a power belongs to, gives the whole power then to MainActivityPresenter
+     * @param power the power that should be passed to MainActivityPresenter
+     */
+    private static void getListPowerBelongsTo(final Spell power){
+        firebaseDatabase.getReference()
+                .child(DB_SPELL_GROUPS_TREE_NAME)
+                .child(power.getPowerListId())
+                .child(DB_SPELL_LIST_CHILD_NAME)
+                .addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        MainActivityPresenter.handleNewPower(power, dataSnapshot.getKey());
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.e(TAG, "something wrong in getListPowerBelongsTo, cancelling. " + databaseError.toString());
+                    }
+                }
+        );
+    }
 
 
     /**
