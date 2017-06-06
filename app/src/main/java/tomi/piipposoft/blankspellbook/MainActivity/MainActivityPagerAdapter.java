@@ -124,5 +124,20 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
         if(dailyPowerListsFragment != null)
             dailyPowerListsFragment.removeListItem(name, id);
     }
+
+    void addPowerToFragment(String name, String id){
+        if(powersFragment != null)
+            powersFragment.handleNewPower(name, id);
+    }
+
+    void removePowerFromFragment(String id){
+        if(powersFragment != null)
+            powersFragment.removePower(id);
+    }
+
+    void removeAllPowers(){
+        if(powersFragment != null)
+            powersFragment.removeAllPowers();
+    }
 }
 

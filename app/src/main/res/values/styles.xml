@@ -12,6 +12,8 @@
         <item name="android:textColorSecondary">@color/secondary_text_material_light</item>
     </style>
     
-
+    <style name="SecondaryTextRecyclerView">
+        <item name="android:textColor">@color/my_color_dark_gray</item>
+    </style>
     
 </resources>

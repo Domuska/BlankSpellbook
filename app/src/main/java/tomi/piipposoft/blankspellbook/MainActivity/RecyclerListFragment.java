@@ -52,7 +52,7 @@ public class RecyclerListFragment extends Fragment {
         View rootView = inflater.inflate(
                 R.layout.fragment_main_recycler_list, container, false);
 
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.main_activity_power_lists_recyclerView);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.main_activity_recycler_fragment_recyclerView);
         adapter = new FragmentListAdapter();
         recyclerView.setAdapter(adapter);
 
@@ -132,7 +132,7 @@ public class RecyclerListFragment extends Fragment {
                                                                  int viewType) {
             // create a new view
             View v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.main_activity_power_lists_child_row, parent, false);
+                    .inflate(R.layout.main_activity_recycler_list_child_row, parent, false);
             return new ViewHolder(v);
         }
 
