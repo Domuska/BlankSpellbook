@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.ArrayMap;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -49,6 +50,11 @@ public class PowersFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
+        DividerItemDecoration divider = new DividerItemDecoration(
+                recyclerView.getContext(),
+                DividerItemDecoration.HORIZONTAL
+        );
+        recyclerView.addItemDecoration(divider);
 
         return rootView;
     }
@@ -65,7 +71,7 @@ public class PowersFragment extends Fragment {
     }
 
     public void removeAllPowers(){
-        int listSize = powers.size()-1;
+        int listSize = powers.size();
         powers = new ArrayList<>();
         adapter.notifyItemRangeRemoved(0, listSize);
     }
@@ -75,11 +81,12 @@ public class PowersFragment extends Fragment {
 
         class ViewHolder extends RecyclerView.ViewHolder {
 
-            TextView powerName, groupName;
+            TextView powerName, powerListName, groupName;
 
             ViewHolder(View v){
                 super(v);
                 powerName = (TextView) v.findViewById(R.id.power_name);
+                powerListName = (TextView) v.findViewById(R.id.power_list_name);
                 groupName = (TextView) v.findViewById(R.id.power_group_name);
             }
         }
@@ -100,8 +107,12 @@ public class PowersFragment extends Fragment {
             //holder.powerName.setText(powers.get(powerId));
             Spell power = powers.get(itemPosition);
             holder.powerName.setText(power.getName());
+            //set the group name text field if power has group
             if(!"".equals(power.getGroupName()))
                 holder.groupName.setText(power.getGroupName());
+            //set the power list name and colour for splotch if the power is in a group
+            //if(!"".equals(power.getpowerlist))
+            // TODO: 6.6.2017 need to get the power list name in datasource, pass it here in handleNewPower
 
         }
 
