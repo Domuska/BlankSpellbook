@@ -821,13 +821,19 @@ public class DataSource {
         return listener;
     }
 
+    /**
+     * Method for getting all spells in the database without attaching a listener to the spells tree
+     * @param presenterCalling DataSource.MAINACTIVITYPRESENTER to signify it is calling for the data
+     */
     public static void getPowers(final int presenterCalling) {
         firebaseDatabase.getReference().child(DB_SPELL_TREE_NAME)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if(presenterCalling == MAINACTIVITYPRESENTER){
-                            MainActivityPresenter.handleNewPower(dataSnapshot.getValue(Spell.class));
+                            for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                MainActivityPresenter.handleNewPower(snapshot.getValue(Spell.class));
+                            }
                         }
                         else{
                             Log.e(TAG, "unknown caller in getPowers onDataChange: " + presenterCalling);
