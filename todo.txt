@@ -1,0 +1,35 @@
+mitä pitää appiin tehä yleensä ottaen
+
+lisätään latausikoneita
+	-spells listaan
+	-main activityyn spells listaan
+	-spell details activityyn tekstikenttien sijaan
+	-spell details activityyn save nappulaan
+	-animaatio power lists fragmentiin jossa rullataan yhen listan elementin sisällä läpi grouppeja?
+	
+	
+spellien poistaminen kannasta
+	-varmista myös että referenssit poistetaan spell_lists/$id/spells & spell_groups/$id/$group_name kohasta
+
+daily power listien lisääminen
+	-kun spelli poistetaan daily power lististä ni varmista että poistetaan kansa daily_power_groupsista
+	
+mitä mainActivityyn pitää tehdä
+-animaatio kun siirrytään power listiin
+
+
+mainactivityn alempaan toolbariin lisätään search & filtterit
+	-jotain vertailujuttuja pitää tehdä, guava voisi olla hyödyllinen tähän
+	https://github.com/google/guava/wiki/CommonObjectUtilitiesExplained#compare/compareTo.md
+	https://github.com/google/guava#Android
+	
+
+kun spell lisätään listaan tai daily power listaan tehdään toast käyttäjälle
+
+korjaa bugi jossa jos powerListsissä spelli on valittu ja avataan uusi powerlistsactivity, valinnat säilyy
+
+kun palataan mainactivityyn, pitää päivittää fragmentissa olevien korttien spell_groups
+
+implementoidaan powersFragment
+	-filttereitä
+		-varmaan listan päälle dropdown menuja (ei hyvä mutta voiko muutenkaan?)
