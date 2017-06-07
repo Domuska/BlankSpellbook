@@ -786,7 +786,7 @@ public class DataSource {
                 if(presenterCalling == MAINACTIVITYPRESENTER){
                     Spell power = dataSnapshot.getValue(Spell.class);
                     //if power has a list it belongs to list, get name of that list too
-                    if(!"".equals(power.getPowerListId()))
+                    if(power.getPowerListId() != null && !"".equals(power.getPowerListId()))
                         getListPowerBelongsTo(power);
                     else
                         MainActivityPresenter.handleNewPower(power, null);
@@ -845,7 +845,7 @@ public class DataSource {
                             for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 Spell power = snapshot.getValue(Spell.class);
                                 //if power is associated with a power list, get the list's name
-                                if(!"".equals(power.getPowerListId()))
+                                if(power.getPowerListId() != null && !"".equals(power.getPowerListId()))
                                     getListPowerBelongsTo(power);
                                 else
                                     MainActivityPresenter.handleNewPower(power, null);
@@ -874,15 +874,16 @@ public class DataSource {
      * @param power the power that should be passed to MainActivityPresenter
      */
     private static void getListPowerBelongsTo(final Spell power){
+        Log.d(TAG, "getListPowerBelongsTo: power list id: " + power.getPowerListId());
         firebaseDatabase.getReference()
-                .child(DB_SPELL_GROUPS_TREE_NAME)
+                .child(DB_SPELL_LIST_TREE_NAME)
                 .child(power.getPowerListId())
                 .child(DB_SPELL_LIST_CHILD_NAME)
                 .addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        MainActivityPresenter.handleNewPower(power, dataSnapshot.getKey());
+                        MainActivityPresenter.handleNewPower(power, dataSnapshot.getValue(String.class));
                     }
 
                     @Override
