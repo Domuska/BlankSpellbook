@@ -58,7 +58,18 @@ public interface PowerDetailsContract {
         void userCancelingEdits();
         void userPressingCancelButton(ArrayMap<String, String> powerData);
         void userPressingAddToLists();
+
+        /**
+         * Tell presenter that user is copying the showed power to (daily) power lists
+         * @param listIds IDs of the lists where power is being copied
+         * @param addingToPowerList true if copying to power lists, false if copying to daily power lists
+         */
         void userCopyingPowerToLists(ArrayList<String> listIds, boolean addingToPowerList);
+
+        /**
+         * Tell presenter user wants to undo previous copying to power lists
+         */
+        void userPushingUndo();
 
         /**
          * Handle AddToPowerListDialog re-creation in onresume, should re-populate

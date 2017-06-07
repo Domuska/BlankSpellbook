@@ -2,7 +2,6 @@ package tomi.piipposoft.blankspellbook.PowerDetails;
 
 import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -24,6 +23,10 @@ public class PowerDetailsPresenter extends DrawerPresenter
     private static String powerId;
     private String powerListId;
     private static Spell thisPower;
+
+    private ArrayList<String> previouslySavedPowerListIds;
+    private String[] savedPowerIds;
+    private boolean addedToPowerList;
 
     //used when activity gets savedInstanceState bundle, user might have been editing a power
     private static boolean wasUserEditingPower = false;
@@ -183,13 +186,34 @@ public class PowerDetailsPresenter extends DrawerPresenter
 
     @Override
     public void userCopyingPowerToLists(ArrayList<String> listIds, boolean addingToPowerList) {
+        //save the IDs of the lists so we can undo (in snackbar likely)
+        previouslySavedPowerListIds = listIds;
+        //save whether we saved to a power list or daily power list as well
+        addedToPowerList = addingToPowerList;
         //set spell id as null so it won't be saved as field to DB, we don't want that
         Spell saveableSpell = thisPower.setSpellId(null);
-        if(addingToPowerList)
-            DataSource.addSpellToPowerLists(listIds, saveableSpell);
+        if(addingToPowerList) {
+            //save the power IDs so we can undo the action
+            savedPowerIds = DataSource.addSpellToPowerLists(listIds, saveableSpell);
+        }
         else
             DataSource.addSpellToDailyPowerLists(listIds,
                     powerId, thisPower.getGroupName());
+    }
+
+    @Override
+    public void userPushingUndo() {
+        //remove the copied powers
+        if(addedToPowerList) {
+            for(int i = 0; i < previouslySavedPowerListIds.size(); i++) {
+                //a copy has been made of the power, remove it, the method takes care of everything
+                DataSource.deletePower(savedPowerIds[i]);
+            }
+        }
+        //remove the references from daily power lists
+        else {
+            DataSource.removeSpellFromDailyPowerLists(previouslySavedPowerListIds, powerId, thisPower.getGroupName());
+        }
     }
 
     @Override
@@ -205,6 +229,7 @@ public class PowerDetailsPresenter extends DrawerPresenter
         DataSource.getPowerLists(DataSource.POWERDETAILSPRESENTER);
         DataSource.getDailyPowerLists(DataSource.POWERDETAILSPRESENTER);
     }
+
 
     /**
      * Used for constructing a spell object

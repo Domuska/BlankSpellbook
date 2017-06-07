@@ -36,7 +36,7 @@ public class DataSource {
     // TODO: 6.6.2017 sort these in some sensible way
 
     public static final String DB_POWER_LISTS_REFERENCE = "spell_lists";
-    public static final String DB_DAILY_POWER_LIST_NAME = "daily_power_lists";
+    public static final String DB_DAILY_POWER_LIST_TREE_NAME = "daily_power_lists";
     public static final String DB_DAILY_POWER_LIST_CHILD_SPELLS = "spells";
     public static final String DB_DAILY_POWER_LIST_CHILD_NAME = "name";
     public static final String DB_SPELL_GROUPS_TREE_NAME = "spell_groups";
@@ -277,7 +277,7 @@ public class DataSource {
      * @param spellIds IDs of the powers to be removed from list
      * @param powerListId ID of the power list where the power is to be removed
      */
-    public static void removePowersFromList(String[] spellIds, final String powerListId) {
+    private static void handlePowerRemoval(String[] spellIds, final String powerListId) {
 
         Log.d(TAG, "removePowersFromList, power list id: " + powerListId);
         for (final String spellId : spellIds) {
@@ -323,10 +323,19 @@ public class DataSource {
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
-
+                            Log.e(TAG, "removePowersFromList: something went wrong when gettin power list name: "
+                                        + databaseError.toString());
                         }
                     });
         }
+    }
+
+    public static void removePowersFromList(String[] spellIds, final String powerListId){
+        handlePowerRemoval(spellIds, powerListId);
+    }
+
+    public static void removePowersFromList(String spellId, String powerListId){
+        handlePowerRemoval(new String[]{spellId}, powerListId);
     }
 
     /**
@@ -532,7 +541,7 @@ public class DataSource {
             }
         };
 
-        firebaseDatabase.getReference(DB_DAILY_POWER_LIST_NAME)
+        firebaseDatabase.getReference(DB_DAILY_POWER_LIST_TREE_NAME)
                 .addChildEventListener(dailyPowerListChildListener);
         return dailyPowerListChildListener;
     }
@@ -544,7 +553,7 @@ public class DataSource {
     }
 
     public static void removeDailyPowerListListener(ChildEventListener spellListChildListener) {
-        firebaseDatabase.getReference(DB_DAILY_POWER_LIST_NAME).removeEventListener(spellListChildListener);
+        firebaseDatabase.getReference(DB_DAILY_POWER_LIST_TREE_NAME).removeEventListener(spellListChildListener);
     }
 
     public static void removePowerListPowerListener(ChildEventListener listener, String powerListId){
@@ -557,7 +566,7 @@ public class DataSource {
 
     public static void addNewDailyPowerList(String dailyPowerListName) {
         DailySpellList dailySpellList = new DailySpellList(dailyPowerListName);
-        firebaseDatabase.getReference(DB_DAILY_POWER_LIST_NAME).push().setValue(dailySpellList);
+        firebaseDatabase.getReference(DB_DAILY_POWER_LIST_TREE_NAME).push().setValue(dailySpellList);
     }
 
     public static void addNewPowerList(String powerListName) {
@@ -627,7 +636,7 @@ public class DataSource {
     }
 
     public static void getDailyPowerLists(final int presenterCalling){
-        firebaseDatabase.getReference(DB_DAILY_POWER_LIST_NAME)
+        firebaseDatabase.getReference(DB_DAILY_POWER_LIST_TREE_NAME)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -682,20 +691,27 @@ public class DataSource {
     }
 
 
-    public static void addSpellToPowerLists(ArrayList<String> listIds, Spell power) {
+    public static String[] addSpellToPowerLists(ArrayList<String> listIds, Spell power) {
 
+        String[] powerIds = new String[listIds.size()];
+
+        int i = 0;
         for(String listId : listIds) {
             Log.d(TAG, "in addSpellToPowerLists, spell id: " + power.getSpellId());
             //get the ID for the new spell
             DatabaseReference spellReference = firebaseDatabase.getReference().child(DB_SPELL_TREE_NAME);
             String powerId = spellReference.push().getKey();
+            powerIds[i] = powerId;
+
             //add the ID of this list to the power's list of IDs
             power.setPowerListId(listId);
             //get the childUpdates needed for saving a new spell
             Map<String, Object> childUpdates = getSaveSpellChildUpdates(power, listId, powerId);
 
             FirebaseDatabase.getInstance().getReference().updateChildren(childUpdates);
+            i++;
         }
+        return powerIds;
     }
 
     public static void addSpellToDailyPowerLists(ArrayList<String> listIds,
@@ -716,7 +732,7 @@ public class DataSource {
 
             //add the spell to the daily power lists's spell list
             childUpdates.put(
-                    DB_DAILY_POWER_LIST_NAME
+                    DB_DAILY_POWER_LIST_TREE_NAME
                     + "/"
                     + id
                     + "/"
@@ -736,15 +752,36 @@ public class DataSource {
                         + spellId, true);
             }
 
-
-
-            /*DatabaseReference ref = firebaseDatabase
-                            .getReference(DB_DAILY_POWER_LIST_NAME)
-                            .child(id)
-                            .child(DB_DAILY_POWER_LIST_CHILD_SPELLS);
-            ref.child(spellId).setValue(true);*/
             firebaseDatabase.getReference().updateChildren(childUpdates);
         }
+    }
+
+
+    public static void removeSpellFromDailyPowerLists(ArrayList<String> powerLists, String powerId, String groupName) {
+        HashMap<String, Object> childUpdates = new HashMap<>();
+
+        for(String listId : powerLists) {
+            //remove the reference from the daily_power_lists
+            childUpdates.put(
+                    DB_DAILY_POWER_LIST_TREE_NAME + "/"
+                    + listId + "/"
+                    + DB_DAILY_POWER_LIST_CHILD_SPELLS + "/"
+                    + powerId, null);
+
+            //remove the reference from daily_spell_groups
+            if(groupName != null){
+                childUpdates.put(
+                        DB_DAILY_SPELL_GROUPS_TREE_NAME + "/"
+                        + listId + "/"
+                        + groupName + "/"
+                        + powerId, null);
+            }
+
+            firebaseDatabase.getReference().updateChildren(childUpdates);
+        }
+
+
+
     }
 
     /**
@@ -871,6 +908,72 @@ public class DataSource {
 
     public static void removePowersListener(ChildEventListener powersListener) {
         firebaseDatabase.getReference().child(DB_SPELL_TREE_NAME).removeEventListener(powersListener);
+    }
+
+    /**
+     * Remove a power from the database
+     * removes all references to the power as well from spell_groups and spell_lists
+     * @param powerId ID of the power that is to be removed
+     */
+    public static void deletePower(final String powerId) {
+        firebaseDatabase.getReference().child(DB_SPELL_TREE_NAME).child(powerId)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        HashMap<String, Object> childUpdates = new HashMap<>();
+                        //remove the daily_power_list references to this power
+                        for(DataSnapshot snapshot :
+                                dataSnapshot.child(DB_SPELLS_CHILD_DAILY_POWER_LISTS).getChildren()){
+                            /*firebaseDatabase.getReference()
+                                    .child(DB_DAILY_POWER_LIST_TREE_NAME)
+                                    .child(snapshot.getKey())
+                                    .child(DB_DAILY_POWER_LIST_CHILD_SPELLS)
+                                    .child(powerId)
+                                    .setValue(null);*/
+                            childUpdates.put(
+                                    DB_DAILY_POWER_LIST_TREE_NAME + "/"
+                                    + snapshot.getKey() + "/"
+                                    + DB_DAILY_POWER_LIST_CHILD_SPELLS + "/"
+                                    + powerId, null);
+                        }
+
+                        //remove references to the power_list
+                        String powerListId = dataSnapshot.child(DB_SPELLS_CHILD_POWER_LIST).getValue(String.class);
+                        //Log.d(TAG, "deletePower power name : " + dataSnapshot.child("name").getValue());
+                        //Log.d(TAG, "deletePower power list ID for power: " + powerListId);
+
+                        if(powerListId != null && !powerListId.equals("")){
+                            childUpdates.put(
+                                    DB_SPELL_LIST_TREE_NAME + "/"
+                                    + powerListId + "/"
+                                    + DB_SPELL_LIST_CHILD_SPELLS + "/"
+                                    + powerId, null);
+
+                            //remove references to the spell_groups
+                            //note, there is no entry in spell_groups if power is not in a list of powers
+                            String groupName = dataSnapshot.child(DB_SPELLS_CHILD_GROUP_NAME).getValue(String.class);
+                            if(groupName != null) {
+                                childUpdates.put(
+                                        DB_SPELL_GROUPS_TREE_NAME + "/"
+                                                + powerListId + "/"
+                                                + groupName + "/"
+                                                + powerId ,null);
+                            }
+                        }
+
+                        //then remove the entry from spells
+                        childUpdates.put(
+                                DB_SPELL_TREE_NAME + "/"
+                                + powerId, null);
+
+                        firebaseDatabase.getReference().updateChildren(childUpdates);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.e(TAG, "deletePower: error occurred: " + databaseError.toString());
+                    }
+                });
     }
 
     /**
@@ -1040,6 +1143,5 @@ public class DataSource {
         }
         return data;
     }
-
 
 }

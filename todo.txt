@@ -28,6 +28,12 @@ kun spell lisätään listaan tai daily power listaan tehdään toast käyttäj�
 
 korjaa bugi jossa jos powerListsissä spelli on valittu ja avataan uusi powerlistsactivity, valinnat säilyy
 
+korjaa bugi, kun sovellus sammutetaan se välillä kaatuu ennen sammutusta. Varmaankin tuli sillon ku lisättiin powersfragment
+
+kun power removataan listalta, tehdään snackbar jossa undo nappi
+	-listalle on lisätty listener ja sillä on onDeleteChild, tässä varmaan tulee poistettu elementti meille, otetaan se talteen
+	ja tallennetaan uusiksi jos käyttäjä painaa undo:ta
+
 kun palataan mainactivityyn, pitää päivittää fragmentissa olevien korttien spell_groups
 
 implementoidaan powersFragment

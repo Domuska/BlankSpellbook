@@ -11,6 +11,7 @@
     <string name="action_no">No</string>
     <string name="action_ok">OK</string>
     <string name="action_cancel">Cancel</string>
+    <string name="action_undo">Undo</string>
     <string name="action_add_to_powerlist">Add to list of powers</string>
     <string name="spell_details_discard_changes">Do you want to discard changes?</string>
     <string name="spell_group_not_grouped">Not grouped</string>
@@ -57,10 +58,12 @@
     <string name="recycler_parent_arrow_content_descriptor">Expand this level</string>
 
     <!-- Strings for PowerDetailsActivity & things in that package-->
-    <string name="add_to_list_dialog_title">Add the spell to</string>
+    <string name="add_to_list_dialog_title">Copy the spell to</string>
     <string name="radio_button_power_list">List of known powers</string>
     <string name="radio_button_daily_power_list">List of daily powers</string>
     <string name="error_empty_fields">Add something to the fields before saving</string>
+    <string name="toast_powers_copied">Powers copied to selected lists</string>
+
 
 
     <!-- Strings for spell list activity -->

@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -622,11 +623,25 @@ public class PowerDetailsActivity extends ApplicationActivity
     @Override
     public void onAddToListPositiveClick(DialogFragment dialog, ArrayList<String> listIds, boolean addingToPowerLists) {
         for(int i = 0; i < listIds.size(); i++){
-            Log.d(TAG, "got selected item id: " + listIds.get(i));
+            Log.d(TAG, "onAddToListPositiveClick: selected item id: " + listIds.get(i));
         }
 
         if(listIds.size() != 0){
             mActionListener.userCopyingPowerToLists(listIds, addingToPowerLists);
         }
+        //Toast.makeText(this, getString(R.string.toast_powers_copied), Toast.LENGTH_SHORT).show();
+        Snackbar.make(findViewById(R.id.coordinatorLayout),
+                getString(R.string.toast_powers_copied),
+                Snackbar.LENGTH_LONG)
+                .setAction(getString(R.string.action_undo),
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mActionListener.userPushingUndo();
+                            }
+                        })
+                .show();
+
+
     }
 }
