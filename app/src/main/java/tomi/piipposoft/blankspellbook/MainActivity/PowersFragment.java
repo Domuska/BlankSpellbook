@@ -60,7 +60,7 @@ public class PowersFragment extends Fragment {
 
         DividerItemDecoration divider = new DividerItemDecoration(
                 recyclerView.getContext(),
-                DividerItemDecoration.HORIZONTAL
+                DividerItemDecoration.VERTICAL
         );
         recyclerView.addItemDecoration(divider);
         return rootView;
