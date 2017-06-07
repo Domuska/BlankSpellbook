@@ -1,7 +1,5 @@
 package tomi.piipposoft.blankspellbook.MainActivity;
 
-import android.content.Intent;
-
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -11,7 +9,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.TextView;
@@ -24,7 +21,6 @@ import tomi.piipposoft.blankspellbook.R;
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerContract;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerHelper;
-import tomi.piipposoft.blankspellbook.PowerList.PowerListActivity;
 import tomi.piipposoft.blankspellbook.Utils.Spell;
 
 /**
@@ -97,7 +93,7 @@ public class MainActivity extends ApplicationActivity
 
         //create a new adapter and give it the actionListener to attach to the fragments
         pagerAdapter = new MainActivityPagerAdapter(getSupportFragmentManager(),
-                (MainActivityContract.FragmentListActionListener) mActionlistener,
+                (MainActivityContract.FragmentUserActionListener) mActionlistener,
                 (MainActivityContract.PagerAdapterListener) mActionlistener);
 
         viewPager = (ViewPager) findViewById(R.id.pager);
@@ -263,6 +259,16 @@ public class MainActivity extends ApplicationActivity
     }
 
     @Override
+    public void addNewPowerToList(Spell power, String powerListName) {
+        pagerAdapter.addPowerToFragment(power, powerListName);
+    }
+
+    @Override
+    public void removePowerFromList(Spell power) {
+        pagerAdapter.removePowerFromFragment(power);
+    }
+
+    @Override
     public void startPowerListActivity(String name, String id) {
         this.openPowerListActivity(id, name);
     }
@@ -273,12 +279,7 @@ public class MainActivity extends ApplicationActivity
     }
 
     @Override
-    public void addNewPowerToList(Spell power, String powerListName) {
-        pagerAdapter.addPowerToFragment(power, powerListName);
-    }
-
-    @Override
-    public void removePowerFromList(Spell power) {
-        pagerAdapter.removePowerFromFragment(power);
+    public void startPowerDetailsActivity(String powerId, String powerListId) {
+        this.openPowerDetailsActivity(powerId, powerListId);
     }
 }

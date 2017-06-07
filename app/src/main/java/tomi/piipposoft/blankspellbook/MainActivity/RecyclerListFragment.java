@@ -1,6 +1,5 @@
 package tomi.piipposoft.blankspellbook.MainActivity;
 
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -43,7 +42,7 @@ public class RecyclerListFragment extends Fragment {
     //map that has pairs: ID - list of groups this list has
     private ArrayMap<String, ArrayList<String>> listPowerGroups = new ArrayMap<>();
 
-    MainActivityContract.FragmentListActionListener myClickListener;
+    MainActivityContract.FragmentUserActionListener myClickListener;
 
 
     @Override
@@ -94,7 +93,7 @@ public class RecyclerListFragment extends Fragment {
         listIds = new ArrayList<>();
     }
 
-    public void attachClickListener(MainActivityContract.FragmentListActionListener listener) {
+    public void attachClickListener(MainActivityContract.FragmentUserActionListener listener) {
         this.myClickListener = listener;
     }
 

@@ -111,8 +111,11 @@ public class PowerDetailsPresenter extends DrawerPresenter
             DataSource.getSpellWithId(powerId);
         }
 
-        //get data for the group name's autofill feature
-        DataSource.getPowerGroupsWithListId(powerListId);
+        //powerListId might be null if this power doesn't belong to any group
+        if(powerListId != null && !powerListId.equals("")) {
+            //get data for the group name's autofill feature
+            DataSource.getPowerGroupsWithListId(powerListId);
+        }
     }
 
     @Override
@@ -229,8 +232,6 @@ public class PowerDetailsPresenter extends DrawerPresenter
                 spell.setHitDamageOrEffect(powerData.get(PowerDetailsContract.hitDamageOrEffect));
             if (powerData.containsKey(PowerDetailsContract.missDamage))
                 spell.setMissDamage(powerData.get(PowerDetailsContract.missDamage));
-            if (powerData.containsKey(PowerDetailsContract.adventurerFeat))
-                spell.setMissDamage(powerData.get(PowerDetailsContract.adventurerFeat));
             if (powerData.containsKey(PowerDetailsContract.adventurerFeat))
                 spell.setAdventurerFeat(powerData.get(PowerDetailsContract.adventurerFeat));
             if (powerData.containsKey(PowerDetailsContract.championFeat))

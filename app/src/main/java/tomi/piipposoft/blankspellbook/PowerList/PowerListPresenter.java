@@ -84,7 +84,7 @@ public class PowerListPresenter extends DrawerPresenter implements
         else {
             Log.d(TAG, "removing listener: " + powerListListener.toString());
             DataSource.removePowerListPowerListener(powerListListener, powerListId);
-            mPowerListActivity.showPowerDetailsUI(itemId);
+            mPowerListActivity.showPowerDetailsUI(itemId, powerListId);
         }
     }
 

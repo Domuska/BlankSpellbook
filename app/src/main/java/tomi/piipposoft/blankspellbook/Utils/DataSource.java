@@ -230,7 +230,7 @@ public class DataSource {
                 + spellId, spell);
 
         //check if the power belongs to a group, if it does we need to update the spell_groups table too
-        if(!"".equals(powerListId)) {
+        if(powerListId != null && !"".equals(powerListId)) {
             //update the spell_groups/id/groupName/
             if (groupNameUpdated) {
                 //remove the spell from the old group
@@ -785,6 +785,8 @@ public class DataSource {
                 //if main activity presenter is the one adding the listener
                 if(presenterCalling == MAINACTIVITYPRESENTER){
                     Spell power = dataSnapshot.getValue(Spell.class);
+                    //save spell id since it might be needed if starting spellDetailsActivity of this spell
+                    power.setSpellId(dataSnapshot.getKey());
                     //if power has a list it belongs to list, get name of that list too
                     if(power.getPowerListId() != null && !"".equals(power.getPowerListId()))
                         getListPowerBelongsTo(power);
@@ -844,6 +846,8 @@ public class DataSource {
                         if(presenterCalling == MAINACTIVITYPRESENTER){
                             for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 Spell power = snapshot.getValue(Spell.class);
+                                //save spell id since it might be needed if starting spellDetailsActivity of this spell
+                                power.setSpellId(snapshot.getKey());
                                 //if power is associated with a power list, get the list's name
                                 if(power.getPowerListId() != null && !"".equals(power.getPowerListId()))
                                     getListPowerBelongsTo(power);

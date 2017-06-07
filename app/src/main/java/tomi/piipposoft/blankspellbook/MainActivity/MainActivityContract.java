@@ -25,6 +25,7 @@ public interface MainActivityContract {
         //for starting the activities when fragment elements are clicked
         void startPowerListActivity(String name, String id);
         void startDailyPowerListActivity(String listName, String listId);
+        void startPowerDetailsActivity(String powerId, String powerListId);
     }
 
     interface UserActionListener{
@@ -33,8 +34,9 @@ public interface MainActivityContract {
         void userSwitchedTo(int selectedList);
     }
 
-    interface FragmentListActionListener {
+    interface FragmentUserActionListener {
         void onPowerListClicked(String listName, String listId);
+        void onPowerClicked(String powerId, String powerListId);
     }
 
     /**

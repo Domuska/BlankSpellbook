@@ -176,13 +176,8 @@ public class PowerListActivity extends ApplicationActivity
     // FROM POWER LIST CONTRACT INTERFACE
 
     @Override
-    public void showPowerDetailsUI(String itemId) {
-        Intent i = new Intent(this, PowerDetailsActivity.class);
-        Log.d(TAG, "setting spell ID as extra: " + itemId);
-        i.putExtra(PowerDetailsActivity.EXTRA_POWER_DETAIL_ID, itemId);
-        i.putExtra(PowerDetailsActivity.EXTRA_POWER_LIST_ID,
-                powerListId);
-        startActivity(i);
+    public void showPowerDetailsUI(String itemId, String powerListId) {
+        this.openPowerDetailsActivity(itemId, powerListId);
     }
 
     @Override

@@ -22,7 +22,7 @@ import tomi.piipposoft.blankspellbook.Utils.Spell;
 public class MainActivityPresenter extends DrawerPresenter
         implements DrawerContract.UserActionListener,
         MainActivityContract.UserActionListener,
-        MainActivityContract.FragmentListActionListener,
+        MainActivityContract.FragmentUserActionListener,
         MainActivityContract.PagerAdapterListener{
 
     private static MainActivityContract.View mMainActivityView;
@@ -118,7 +118,7 @@ public class MainActivityPresenter extends DrawerPresenter
     }
 
 
-    //FROM MainActivityContract.FragmentListActionListener
+    //FROM MainActivityContract.FragmentUserActionListener
 
 
     @Override
@@ -129,6 +129,10 @@ public class MainActivityPresenter extends DrawerPresenter
             mMainActivityView.startDailyPowerListActivity(listName, listId);
     }
 
+    @Override
+    public void onPowerClicked(String powerId, String powerListId) {
+        mMainActivityView.startPowerDetailsActivity(powerId, powerListId);
+    }
 
     //from MainActivityContract.PagerAdapterListener
 

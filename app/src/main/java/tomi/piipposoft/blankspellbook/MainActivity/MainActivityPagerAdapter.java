@@ -31,13 +31,13 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
 
     //listener for presenter when user clicks on (daily) power list fragment list item,
     //attached to those fragments on creation
-    private MainActivityContract.FragmentListActionListener fragmentListActionListener;
+    private MainActivityContract.FragmentUserActionListener fragmentListActionListener;
     //listener for telling presenter when fragments have been created so it can supply the data
     private MainActivityContract.PagerAdapterListener pagerAdapterListener;
 
 
     public MainActivityPagerAdapter(FragmentManager manager,
-                                    MainActivityContract.FragmentListActionListener actionListener,
+                                    MainActivityContract.FragmentUserActionListener actionListener,
                                     MainActivityContract.PagerAdapterListener pagerAdapterListener){
         super(manager);
         this.fragmentListActionListener = actionListener;
@@ -53,7 +53,7 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
         switch (position) {
             case 0:
                 dailyPowerListsFragment = (RecyclerListFragment) createdFragment;
-                //attach listener
+                //attach presenter as listener
                 dailyPowerListsFragment.attachClickListener(fragmentListActionListener);
                 //inform presenter that fragment has been created
                 pagerAdapterListener.onDailyPowerListFragmentCreated();
@@ -61,7 +61,7 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
                 break;
             case 1:
                 powerListsFragment = (RecyclerListFragment) createdFragment;
-                //attach the listener
+                //attach the presenter as listener
                 powerListsFragment.attachClickListener(fragmentListActionListener);
                 //inform presenter fragment has been created
                 pagerAdapterListener.onPowerListFragmentCreated();
@@ -69,6 +69,8 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
                 break;
             case 2:
                 powersFragment = (PowersFragment) createdFragment;
+                //attach the presenter as listener
+                powersFragment.attachClickListener(fragmentListActionListener);
                 //inform presenter that powers fragment has been created
                 pagerAdapterListener.onPowersFragmentCreated();
                 Log.d(TAG, "instantiateItem: powers fragment created");

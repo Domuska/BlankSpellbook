@@ -10,6 +10,7 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import tomi.piipposoft.blankspellbook.Drawer.DrawerContract;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerHelper;
+import tomi.piipposoft.blankspellbook.PowerDetails.PowerDetailsActivity;
 import tomi.piipposoft.blankspellbook.PowerList.PowerListActivity;
 import tomi.piipposoft.blankspellbook.Drawer.SetDailyPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.Drawer.SetPowerListNameDialog;
@@ -40,6 +41,15 @@ public class ApplicationActivity extends AppCompatActivity
         i.putExtra(PowerListActivity.EXTRA_POWER_LIST_ID, id);
         i.putExtra(PowerListActivity.EXTRA_POWER_LIST_NAME, name);
         drawerHelper.closeDrawer();
+        startActivity(i);
+    }
+
+    protected void openPowerDetailsActivity(String powerId, String powerListId){
+        Intent i = new Intent(this, PowerDetailsActivity.class);
+        Log.d(TAG, "setting spell ID as extra: " + powerId);
+        i.putExtra(PowerDetailsActivity.EXTRA_POWER_DETAIL_ID, powerId);
+        i.putExtra(PowerDetailsActivity.EXTRA_POWER_LIST_ID,
+                powerListId);
         startActivity(i);
     }
 

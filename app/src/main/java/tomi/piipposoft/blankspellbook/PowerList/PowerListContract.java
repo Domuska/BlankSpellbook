@@ -19,7 +19,7 @@ public interface PowerListContract {
          * called when an existing power is to be shown
          * @param itemId the ID of the power that is opened
          */
-        void showPowerDetailsUI(String itemId);
+        void showPowerDetailsUI(String itemId, String powerListId);
 
         /**
          * Indicate that the PowerDetailsActivity should be started

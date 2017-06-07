@@ -5,11 +5,13 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +33,7 @@ public class PowersFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
+    private MainActivityContract.FragmentUserActionListener listener;
 
     //private ArrayMap<String, Spell> powers = new ArrayMap<>();
     //just use two arraylists for this, map would be preferred but maps either put
@@ -66,7 +69,7 @@ public class PowersFragment extends Fragment {
         return rootView;
     }
 
-    public void handleNewPower(@NonNull Spell power, String powerListName){
+    public void handleNewPower(@NonNull Spell power, @Nullable String powerListName){
         //powers.put(power.getSpellId(), power);
         powers.add(power);
         //add the power list name nevertheless if it's empty to keep the lists in sync
@@ -89,13 +92,17 @@ public class PowersFragment extends Fragment {
         adapter.notifyItemRangeRemoved(0, listSize);
     }
 
+    public void attachClickListener(MainActivityContract.FragmentUserActionListener fragmentListActionListener) {
+        this.listener = fragmentListActionListener;
+    }
+
     class PowerListAdapter extends RecyclerView.Adapter<PowerListAdapter.ViewHolder> {
 
 
         class ViewHolder extends RecyclerView.ViewHolder {
 
             TextView powerName, powerListName, groupName;
-            View splotchView;
+            View parentView, splotchView;
 
             ViewHolder(View v){
                 super(v);
@@ -103,6 +110,7 @@ public class PowersFragment extends Fragment {
                 powerListName = (TextView) v.findViewById(R.id.power_list_name);
                 groupName = (TextView) v.findViewById(R.id.power_group_name);
                 splotchView = v.findViewById(R.id.splotchView);
+                parentView = v;
             }
         }
 
@@ -118,9 +126,19 @@ public class PowersFragment extends Fragment {
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             final int itemPosition = holder.getAdapterPosition();
-            //String powerId = powers.keyAt(itemPosition);
-            //holder.powerName.setText(powers.get(powerId));
-            Spell power = powers.get(itemPosition);
+            final Spell power = powers.get(itemPosition);
+
+            //onClickListener for the whole row
+            holder.parentView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onPowerClicked(
+                            power.getSpellId(),
+                            power.getPowerListId());
+                }
+            });
+
+
             holder.powerName.setText(power.getName());
             //set the group name text field if power has group
             if(!"".equals(power.getGroupName()))
