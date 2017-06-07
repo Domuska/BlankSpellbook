@@ -1,0 +1,184 @@
+{
+  "daily_power_lists" : {
+    "-KjNj7eJShv1IKLz7gaE" : {
+      "name" : "uguu",
+      "spells" : {
+        "-KlsVlSuF6CPI6HoaG-E" : true
+      }
+    },
+    "-KkAvdJzVZKJ9Vcf7pam" : {
+      "name" : "hahaaaac",
+      "spells" : {
+        "-KlsVlSuF6CPI6HoaG-E" : true
+      }
+    },
+    "-KkB0bu3rgGtkAgLPSLs" : {
+      "name" : "huuuuui"
+    },
+    "-Klc1AWqLq64vGLgdtt1" : {
+      "name" : "hurujan päiväspellit"
+    },
+    "-KlcwP0uxMkK4Bwr3sEb" : {
+      "name" : "nikon mahtiloitsut"
+    },
+    "-Kld1-9ijsBQR1QtQ6hV" : {
+      "name" : "jopajopa",
+      "spells" : {
+        "-KlsVjXz1r8_0_9njiVQ" : true,
+        "-KlsVlSuF6CPI6HoaG-E" : true
+      }
+    }
+  },
+  "daily_spell_groups" : {
+    "-KjNj7eJShv1IKLz7gaE" : {
+      "lvl 3" : {
+        "-KlsVlSuF6CPI6HoaG-E" : true
+      }
+    },
+    "-KkAvdJzVZKJ9Vcf7pam" : {
+      "lvl 3" : {
+        "-KlsVlSuF6CPI6HoaG-E" : true
+      }
+    },
+    "-Kld1-9ijsBQR1QtQ6hV" : {
+      "lvl 1" : {
+        "-KlsVjXz1r8_0_9njiVQ" : true
+      },
+      "lvl 3" : {
+        "-KlsVlSuF6CPI6HoaG-E" : true
+      }
+    }
+  },
+  "spell_groups" : {
+    "-KJFISOTESTI" : {
+      "lvl 1" : {
+        "-KlsVjXz1r8_0_9njiVQ" : true
+      },
+      "lvl 3" : {
+        "-KlsVlSuF6CPI6HoaG-E" : true
+      }
+    }
+  },
+  "spell_lists" : {
+    "-KJFISOTESTI" : {
+      "name" : "MahtiRougen Liipaisulista",
+      "spells" : {
+        "-KlsVjXz1r8_0_9njiVQ" : true,
+        "-KlsVlSuF6CPI6HoaG-E" : true
+      }
+    },
+    "-Kjbt6C7TDjNsWCcxM-i" : {
+      "name" : "ukko",
+      "spells" : {
+        "-TESTI221" : true
+      }
+    },
+    "-KkAhLkZc9agtStapWgP" : {
+      "name" : "uhup"
+    },
+    "-Klc13XBrOEm3_oTrZQj" : {
+      "name" : "hurjalista"
+    },
+    "-fsdlhfodsif" : {
+      "name" : "Sepon Suuri Mahtiloitsulista"
+    }
+  },
+  "spells" : {
+    "-KlsVjXz1r8_0_9njiVQ" : {
+      "adventurerFeat" : "doesnt have really one",
+      "attackRoll" : "d20 + Cha + level vs PD",
+      "attackType" : "",
+      "castingTime" : "standard action",
+      "championFeat" : "doesnt have one of these either",
+      "dailyPowerLists" : {
+        "-KjNj7eJShv1IKLz7gaE" : true,
+        "-KkAvdJzVZKJ9Vcf7pam" : true,
+        "-Kld0wl_RUFkTrsznJ5u" : true,
+        "-Kld1-9ijsBQR1QtQ6hV" : true
+      },
+      "epicFeat" : "this spell dont need feats",
+      "groupName" : "lvl 1",
+      "hitDamageOrEffect" : "lvl 1: 1d6+CHA \\n lvl 3: 3d6+CHA \\n This is a new line!",
+      "missDamage" : "half",
+      "name" : "Breath of the  white wyrm",
+      "playerNotes" : "Breath weapon! Roll 16+ at start of turn to use again. be ze white dorgan, baby! breath the ice! do it all!",
+      "powerListId" : "-KJFISOTESTI",
+      "rechargeTime" : "daily",
+      "target" : "1d2 nearby enemies in group",
+      "trigger" : "When enemy dares to be visible"
+    },
+    "-KlsVlSuF6CPI6HoaG-E" : {
+      "adventurerFeat" : "",
+      "attackRoll" : "vs MD",
+      "attackType" : "close quarters",
+      "castingTime" : "1 action",
+      "championFeat" : "",
+      "dailyPowerLists" : {
+        "-KjNj7eJShv1IKLz7gaE" : true,
+        "-KkAvdJzVZKJ9Vcf7pam" : true,
+        "-Kld0wl_RUFkTrsznJ5u" : true,
+        "-Kld1-9ijsBQR1QtQ6hV" : true
+      },
+      "epicFeat" : "",
+      "groupName" : "lvl 3",
+      "hitDamageOrEffect" : "",
+      "missDamage" : "",
+      "name" : "ahdin mahti",
+      "playerNotes" : "",
+      "powerListId" : "-KJFISOTESTI",
+      "rechargeTime" : "at will",
+      "target" : "nearby",
+      "trigger" : ""
+    },
+    "-KlsVn94v2fIvDqXaObe" : {
+      "adventurerFeat" : "kill gnomes instantly",
+      "attackRoll" : "d20 + Cha + level vs PD",
+      "castingTime" : "standard action",
+      "championFeat" : "kill dorfs instantly",
+      "epicFeat" : "this spell dont need feats",
+      "groupName" : "lvl 534831",
+      "hitDamageOrEffect" : "lvl 1: 1d6+CHA \\n lvl 3: 3d6+CHA \\n This is a new line!",
+      "missDamage" : "5 per level",
+      "name" : "puukko",
+      "playerNotes" : "Breath weapon! Roll 16+ at start of turn to use again. be ze white dorgan, baby! breath the ice! do it all!",
+      "rechargeTime" : "daily",
+      "target" : "1d2 nearby enemies in group",
+      "trigger" : "When enemy dares to be visible"
+    },
+    "-KlsbH122rA1ECcdd0ae" : {
+      "adventurerFeat" : "doesnt have really one",
+      "attackRoll" : "d20 + Cha + level vs PD",
+      "attackType" : "",
+      "castingTime" : "standard action",
+      "championFeat" : "doesnt have one of these either",
+      "epicFeat" : "this spell dont need feats",
+      "groupName" : "lvl 1",
+      "hitDamageOrEffect" : "lvl 1: 1d6+CHA \\n lvl 3: 3d6+CHA \\n This is a new line!",
+      "missDamage" : "half",
+      "name" : "Breath of the  white wyrm",
+      "playerNotes" : "Breath weapon! Roll 16+ at start of turn to use again. be ze white dorgan, baby! breath the ice! do it all!",
+      "rechargeTime" : "daily",
+      "target" : "1d2 nearby enemies in group",
+      "trigger" : "When enemy dares to be visible"
+    },
+    "-Kujfkojf7-21" : {
+      "attackRoll" : "vs MD",
+      "castingTime" : "quick action",
+      "effect" : "Does nasty things to enemies",
+      "groupName" : "lvl 2",
+      "hitDamage" : "2d4",
+      "missDamage" : "equal to level",
+      "name" : "Mind magic missile",
+      "playerNotes" : "This is homebrew. OP shit.",
+      "range" : "nearby or far away",
+      "rechargeTime" : "at will",
+      "spellListId" : "-Kjbt6C7TDjNsWCcxM-i",
+      "target" : "one"
+    },
+    "-TESTI221" : {
+      "adventurerFeat" : "Do more damagez",
+      "name" : "Abi zalim's hablibabli",
+      "powerListId" : "-Kjbt6C7TDjNsWCcxM-i"
+    }
+  }
+}
