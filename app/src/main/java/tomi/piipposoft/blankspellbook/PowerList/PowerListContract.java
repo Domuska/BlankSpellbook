@@ -38,6 +38,7 @@ public interface PowerListContract {
          * @param spell an initialized Spell object to be removed
          */
         void removeSpellFromList(Spell spell);
+
     }
 
     interface UserActionListener{
@@ -66,6 +67,6 @@ public interface PowerListContract {
         /**
          * User is pressing delete button to delete selected powers
          */
-        void userPressingDeleteButton(ArrayList<Spell> deletablePowers);
+        void userDeletingPowersFromList(ArrayList<Spell> deletablePowers);
     }
 }

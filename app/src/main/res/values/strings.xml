@@ -15,8 +15,12 @@
     <string name="spell_details_discard_changes">Do you want to discard changes?</string>
     <string name="spell_group_not_grouped">Not grouped</string>
 
+    <!-- strings for power list activity & fragments -->
+    <string name="powerlist_confirmRemoval">Do you want to remove selected powers from this list? Note: The powers will still be available in the list of powers</string>
+    <string name="action_remove">Remove</string>
+    <string name="powerList_confirmRemoval_title">Confirm removal</string>
 
-    <!-- Strings for alert dialogs -->
+    <!-- Strings drawer's popup dialogs -->
     <string name="alertdialog_createspellbook">Create new spell book</string>
     <string name="createspellbook_hint">Spellbook\'s name</string>
     <string name="alertdialog_createdailypowerlist">Create new daily power list</string>

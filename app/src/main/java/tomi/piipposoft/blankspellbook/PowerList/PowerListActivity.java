@@ -1,6 +1,7 @@
 package tomi.piipposoft.blankspellbook.PowerList;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -8,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -154,7 +156,7 @@ public class PowerListActivity extends ApplicationActivity
         }
         if (id == R.id.deleteButton) {
             Log.d(TAG, "delete menu button clicked");
-            myActionListener.userPressingDeleteButton(PowerListRecyclerAdapter.getSelectedSpells());
+            showConfirmDeletionDialog();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -276,6 +278,26 @@ public class PowerListActivity extends ApplicationActivity
         }
         //adapter = new PowerListRecyclerAdapter(this, spellGroups, myActionListener);
         //recyclerView.setAdapter(adapter);
+    }
+
+    /**
+     * Show user a popup asking if she wants to delete selected powers
+     * On yes will defer to Presenter to do the job
+     */
+    private void showConfirmDeletionDialog(){
+        new AlertDialog.Builder(this)
+                .setMessage(getString(R.string.powerlist_confirmRemoval))
+                .setTitle(getString(R.string.powerList_confirmRemoval_title))
+                .setPositiveButton(getString(R.string.action_remove),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                myActionListener
+                                        .userDeletingPowersFromList(PowerListRecyclerAdapter.getSelectedSpells());
+                            }
+                        })
+                .setNegativeButton(getString(R.string.action_cancel), null)
+                .show();
     }
 
 
