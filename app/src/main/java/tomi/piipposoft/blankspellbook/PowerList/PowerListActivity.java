@@ -23,6 +23,7 @@ import java.util.List;
 
 import tomi.piipposoft.blankspellbook.ApplicationActivity;
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
+import tomi.piipposoft.blankspellbook.Utils.SharedPreferencesHandler;
 import tomi.piipposoft.blankspellbook.Utils.Spell;
 import tomi.piipposoft.blankspellbook.R;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerContract;
@@ -62,6 +63,11 @@ public class PowerListActivity extends ApplicationActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_power_list);
+
+        if(!SharedPreferencesHandler.isDatabasePersistanceSet(this)){
+            DataSource.setDatabasePersistance();
+            SharedPreferencesHandler.setDatabasePersistance(true, this);
+        }
 
         Intent thisIntent = getIntent();
         powerListId = thisIntent.getStringExtra(EXTRA_POWER_LIST_ID);

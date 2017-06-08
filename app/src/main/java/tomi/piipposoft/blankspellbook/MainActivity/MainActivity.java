@@ -21,6 +21,7 @@ import tomi.piipposoft.blankspellbook.R;
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerContract;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerHelper;
+import tomi.piipposoft.blankspellbook.Utils.SharedPreferencesHandler;
 import tomi.piipposoft.blankspellbook.Utils.Spell;
 
 /**
@@ -56,8 +57,12 @@ public class MainActivity extends ApplicationActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
+
+        if(!SharedPreferencesHandler.isDatabasePersistanceSet(this)){
+            DataSource.setDatabasePersistance();
+            SharedPreferencesHandler.setDatabasePersistance(true, this);
+        }
 
         if(savedInstanceState != null) {
             databasePersistanceSet = savedInstanceState.getBoolean(DATABASE_PERSISTANCE_SET_KEY);
@@ -78,11 +83,6 @@ public class MainActivity extends ApplicationActivity
     @Override
     public void onResume(){
         super.onResume();
-
-        if(!databasePersistanceSet){
-            DataSource.setDatabasePersistance();
-            databasePersistanceSet = true;
-        }
 
         //nav drawer
         this.drawerHelper = DrawerHelper.getInstance(this, (Toolbar) findViewById(R.id.my_toolbar));

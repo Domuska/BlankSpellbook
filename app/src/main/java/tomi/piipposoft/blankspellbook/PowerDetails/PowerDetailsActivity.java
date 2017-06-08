@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import tomi.piipposoft.blankspellbook.ApplicationActivity;
 import tomi.piipposoft.blankspellbook.R;
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
+import tomi.piipposoft.blankspellbook.Utils.SharedPreferencesHandler;
 import tomi.piipposoft.blankspellbook.Utils.Spell;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerContract;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerHelper;
@@ -72,6 +73,11 @@ public class PowerDetailsActivity extends ApplicationActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_power_details);
 
+        if(!SharedPreferencesHandler.isDatabasePersistanceSet(this)){
+            DataSource.setDatabasePersistance();
+            SharedPreferencesHandler.setDatabasePersistance(true, this);
+        }
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         toolbar.setTitle("Details");
         setSupportActionBar(toolbar);
@@ -84,6 +90,7 @@ public class PowerDetailsActivity extends ApplicationActivity
     @Override
     protected void onResume() {
         super.onResume();
+
 
         powerId = getIntent().getStringExtra(EXTRA_POWER_DETAIL_ID);
         Log.i(TAG, "onResume: power ID extra got: " + powerId);
