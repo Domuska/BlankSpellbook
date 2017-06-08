@@ -2,6 +2,7 @@ package tomi.piipposoft.blankspellbook.PowerDetails;
 
 import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -230,6 +231,10 @@ public class PowerDetailsPresenter extends DrawerPresenter
         DataSource.getDailyPowerLists(DataSource.POWERDETAILSPRESENTER);
     }
 
+    @Override
+    public void userPressingDeletePower() {
+        Log.d(TAG, "userPressingDeletePower: should we be doing something?");
+    }
 
     /**
      * Used for constructing a spell object

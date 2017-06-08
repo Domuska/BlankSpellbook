@@ -58,6 +58,7 @@ public interface PowerDetailsContract {
         void userCancelingEdits();
         void userPressingCancelButton(ArrayMap<String, String> powerData);
         void userPressingAddToLists();
+        void userPressingDeletePower();
 
         /**
          * Tell presenter that user is copying the showed power to (daily) power lists

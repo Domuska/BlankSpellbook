@@ -2,7 +2,7 @@ mitä pitää appiin tehä yleensä ottaen
 
 lisätään latausikoneita
 	-spells listaan
-	-main activityyn spells listaan
+	-main activityyn fragmentteihin
 	-spell details activityyn tekstikenttien sijaan
 	-spell details activityyn save nappulaan
 	-animaatio power lists fragmentiin jossa rullataan yhen listan elementin sisällä läpi grouppeja?
@@ -25,15 +25,11 @@ mainactivityn alempaan toolbariin lisätään search & filtterit
 	https://github.com/google/guava/wiki/CommonObjectUtilitiesExplained#compare/compareTo.md
 	https://github.com/google/guava#Android
 	
-
-
-kun power removataan ja tälle laitetaan undo, powerit pysyy valittuina, MUUTA!
-kun yksi power valitaan, oisi kiva jos vaihdettaisiin "selection moodiin" jossa ei tarvi ku klikata kerran jotain toista poweria että se valitaan.
 	
 mieti powerdetailsin add to power listsiä
 	-kun power lisätään listalle, siitä tehdään kopio
 	-kun power lisätään daily listalle, ei tehdä kopiota
-	-teksti on nyt hämmentävä ainakin
+	-teksti on nyt hämmentävä ainakin, muuta se jos ei muuta
 
 kun palataan mainactivityyn, pitää päivittää fragmentissa olevien korttien spell_groups
 

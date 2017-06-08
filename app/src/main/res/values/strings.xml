@@ -12,7 +12,7 @@
     <string name="action_ok">OK</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_undo">Undo</string>
-    <string name="action_add_to_powerlist">Add to list of powers</string>
+
     <string name="spell_details_discard_changes">Do you want to discard changes?</string>
     <string name="spell_group_not_grouped">Not grouped</string>
 
@@ -31,7 +31,15 @@
     <string name="createspellbook_cancel">Cancel</string>
 
 
-    <!-- Strings for spell book's ordinary fields -->
+    <!-- Strings for power details activity & Fragments -->
+
+    <string name="action_add_to_powerlist">Add to list of powers</string>
+    <string name="action_delete_power">Delete power</string>
+    <string name="deleteDialog_title">Confirm power deletion</string>
+    <string name="deleteDialog_infotext">Do you want to delete this power from storage?</string>
+    <string name="deleteDialog_warning">WARNING: </string>
+    <string name="deleteDialog_warningtext">power will be deleted permanently and it can\'t be restored</string>
+
     <string name="spellbook_attacktype">Attack type (close quarters, melee attack…)</string>
     <string name="spellbook_attackroll">Attack roll</string>
     <string name="spellbook_castingtime">Casting time</string>

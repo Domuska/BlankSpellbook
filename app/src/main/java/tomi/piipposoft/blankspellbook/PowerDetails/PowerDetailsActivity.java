@@ -36,6 +36,7 @@ import tomi.piipposoft.blankspellbook.Drawer.DrawerHelper;
 public class PowerDetailsActivity extends ApplicationActivity
     implements
         AddToPowerListDialog.NoticeDialogListener,
+        ConfirmDeletionDialog.ConfirmDeletionListener,
         PowerDetailsContract.View{
 
     public static final String EXTRA_POWER_DETAIL_ID = "powerDetailId";
@@ -151,8 +152,11 @@ public class PowerDetailsActivity extends ApplicationActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
             case R.id.action_add_to_powerlist:
-                Log.d(TAG, "pressed the add to power list button!");
+                Log.d(TAG, "onOptionsItemSelected: pressed the add to power list button!");
                 mActionListener.userPressingAddToLists();
+            case R.id.action_delete_power:
+                Log.d(TAG, "onOptionsItemSelected: deleting power from DB");
+                showConfirmDeleteDialog();
             default:
                 return false;
         }
@@ -173,6 +177,11 @@ public class PowerDetailsActivity extends ApplicationActivity
         //save if user is editing a power
         outState.putBoolean("userEditingPower", editingSpell);
         super.onSaveInstanceState(outState);
+    }
+
+    private void showConfirmDeleteDialog() {
+        DialogFragment dialog = new ConfirmDeletionDialog();
+        dialog.show(getSupportFragmentManager(), "ConfirmDeletionDialog");
     }
 
     private ArrayMap<String, String> constructDataFromFields(){
@@ -648,7 +657,13 @@ public class PowerDetailsActivity extends ApplicationActivity
                             }
                         })
                 .show();
+    }
 
+    // From ConfirmDeletionDialog.ConfirmDeletionListener
 
+    @Override
+    public void onPositiveClick() {
+        Log.d(TAG, "onPositiveClick: deleting power...");
+        mActionListener.userPressingDeletePower();
     }
 }
