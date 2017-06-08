@@ -1,7 +1,6 @@
 package tomi.piipposoft.blankspellbook.PowerList;
 
 import android.content.Context;
-import android.support.v4.util.ArrayMap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,8 +33,10 @@ class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
     private PowerListContract.UserActionListener actionListener;
 
     //map for keeping track which spells have been selected by user
-    private ArrayList<Spell> isSpellSelected = new ArrayList<>();
+    private ArrayList<Spell> selectedSpellsList = new ArrayList<>();
 
+    //flag for setting when user is selecting power lists for deletion
+    private boolean selectionMode;
 
     PowerListRecyclerAdapter(Context context, List<? extends ParentListItem> spellGroups,
                                     PowerListContract.UserActionListener listener){
@@ -46,7 +47,12 @@ class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
     }
 
     ArrayList<Spell> getSelectedSpells(){
-        return isSpellSelected;
+        return selectedSpellsList;
+    }
+
+    void endSelectionMode(){
+        selectionMode = false;
+        selectedSpellsList = new ArrayList<>();
     }
 
     @Override
@@ -72,22 +78,29 @@ class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
         final Spell spell = (Spell) childListItem;
         childViewHolder.bind(spell);
 
-        //onClickListener for when the row is not "selected": start new activity
-        final View.OnClickListener startActivityOnClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PowerListRecyclerAdapter.this.actionListener.openPowerDetails(spell.getSpellId());
-            }
-        };
 
-        //onClickListener when the row is "selected": unselect the row
-        final View.OnClickListener selectedClickListener = new View.OnClickListener(){
+        final View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                childViewHolder.recyclerRowBackground.setSelected(false);
-                isSpellSelected.remove(spell);
-                //since row is not now selected, return the default onClickListener
-                childViewHolder.recyclerRowBackground.setOnClickListener(startActivityOnClickListener);
+                //selection mode on, select row instead of opening activity
+                if(selectionMode){
+                    if(childViewHolder.recyclerRowBackground.isSelected()){
+                        //item already selected, unselect it
+                        childViewHolder.recyclerRowBackground.setSelected(false);
+                        selectedSpellsList.remove(spell);
+                    }
+                    else{
+                        //select the item
+                        childViewHolder.recyclerRowBackground.setSelected(true);
+                        selectedSpellsList.add(spell);
+                    }
+                    //if the list is empty, end selection mode
+                    if(selectedSpellsList.size() < 1){
+                        selectionMode = false;
+                    }
+                }
+                else
+                    PowerListRecyclerAdapter.this.actionListener.openPowerDetails(spell.getSpellId());
             }
         };
 
@@ -99,23 +112,24 @@ class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
                     //item already selected, set unselected
                     childViewHolder.recyclerRowBackground.setSelected(false);
                     //remove the selected item from map of selected items
-                    isSpellSelected.remove(spell);
+                    selectedSpellsList.remove(spell);
+                    //set off "selection mode"
+                    selectionMode = false;
                 }
                 else {
                     //item not selected, set selected
                     childViewHolder.recyclerRowBackground.setSelected(true);
                     //add item to map of selected items
-                    isSpellSelected.add(spell);
-                    //since row is now selected, set the click listener which removes the selection
-                    childViewHolder.recyclerRowBackground.setOnClickListener(selectedClickListener);
-
+                    selectedSpellsList.add(spell);
+                    //enable selection mode
+                    selectionMode = true;
                 }
                 return true;
             }
         };
 
-        //set the onClickListener on the row so user doesn't have to aim to the text
-        childViewHolder.recyclerRowBackground.setOnClickListener(startActivityOnClickListener);
+        //set the onClickListener for the whole row to make clicking easier
+        childViewHolder.recyclerRowBackground.setOnClickListener(onClickListener);
         childViewHolder.recyclerRowBackground.setOnLongClickListener(unSelectedLongClickListener);
     }
 
@@ -167,7 +181,7 @@ class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
             childTextView.setText(spell.getName());
 
             //if the item is in map of selected items, add set it as selected
-            if(isSpellSelected.contains(spell)) {
+            if(selectedSpellsList.contains(spell)) {
                 recyclerRowBackground.setSelected(true);
                 Log.d("PowerListsAdapter", "spell " + spell.getName() +  " should be selected");
             }

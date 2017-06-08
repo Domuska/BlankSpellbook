@@ -282,25 +282,6 @@ public class PowerListActivity extends ApplicationActivity
         //recyclerView.setAdapter(adapter);
     }
 
-    /**
-     * Show user a popup asking if she wants to delete selected powers
-     * On yes will defer to Presenter to do the job
-     */
-    private void showConfirmDeletionDialog(){
-        new AlertDialog.Builder(this)
-                .setMessage(getString(R.string.powerlist_confirmRemoval))
-                .setTitle(getString(R.string.powerList_confirmRemoval_title))
-                .setPositiveButton(getString(R.string.action_remove),
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                myActionListener.userDeletingPowersFromList(
-                                                PowerListActivity.this.adapter.getSelectedSpells());
-                            }
-                        })
-                .setNegativeButton(getString(R.string.action_cancel), null)
-                .show();
-    }
 
     @Override
     public void showPowerDeletedSnackBar() {
@@ -316,6 +297,29 @@ public class PowerListActivity extends ApplicationActivity
                 })
                 .show();
     }
+
+    /**
+     * Show user a popup asking if she wants to delete selected powers
+     * On yes will defer to Presenter to do the job
+     */
+    private void showConfirmDeletionDialog(){
+        new AlertDialog.Builder(this)
+                .setMessage(getString(R.string.powerlist_confirmRemoval))
+                .setTitle(getString(R.string.powerList_confirmRemoval_title))
+                .setPositiveButton(getString(R.string.action_remove),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                myActionListener.userDeletingPowersFromList(
+                                                PowerListActivity.this.adapter.getSelectedSpells());
+                                //tell adapter to switch selection mode off
+                                PowerListActivity.this.adapter.endSelectionMode();
+                            }
+                        })
+                .setNegativeButton(getString(R.string.action_cancel), null)
+                .show();
+    }
+
 
     private class RecyclerDividerDecorator extends RecyclerView.ItemDecoration {
 

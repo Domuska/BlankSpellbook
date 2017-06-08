@@ -83,8 +83,10 @@ public class PowerListPresenter extends DrawerPresenter implements
             mPowerListActivity.showNewPowerUI();
         }
         else {
-            Log.d(TAG, "removing listener: " + powerListListener.toString());
-            DataSource.removePowerListPowerListener(powerListListener, powerListId);
+            if(powerListListener != null) {
+                Log.d(TAG, "removing listener: " + powerListListener.toString());
+                DataSource.removePowerListPowerListener(powerListListener, powerListId);
+            }
             mPowerListActivity.showPowerDetailsUI(itemId, powerListId);
         }
     }
