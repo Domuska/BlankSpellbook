@@ -30,9 +30,16 @@ korjaa bugi jossa jos powerListsissä spelli on valittu ja avataan uusi powerlis
 
 korjaa bugi, kun sovellus sammutetaan se välillä kaatuu ennen sammutusta. Varmaankin tuli sillon ku lisättiin powersfragment
 
+korjaa bugi, sovellus kaatuu kun käyt power listassa, tuut takasin ja koitat mennä uudestaan power listaan joskus
+
 kun power removataan listalta, tehdään snackbar jossa undo nappi
 	-listalle on lisätty listener ja sillä on onDeleteChild, tässä varmaan tulee poistettu elementti meille, otetaan se talteen
 	ja tallennetaan uusiksi jos käyttäjä painaa undo:ta
+	
+mieti powerdetailsin add to power listsiä
+	-kun power lisätään listalle, siitä tehdään kopio
+	-kun power lisätään daily listalle, ei tehdä kopiota
+	-teksti on nyt hämmentävä ainakin
 
 kun palataan mainactivityyn, pitää päivittää fragmentissa olevien korttien spell_groups
 
