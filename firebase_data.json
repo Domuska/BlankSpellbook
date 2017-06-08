@@ -90,12 +90,6 @@
       "attackType" : "",
       "castingTime" : "standard action",
       "championFeat" : "doesnt have one of these either",
-      "dailyPowerLists" : {
-        "-KjNj7eJShv1IKLz7gaE" : true,
-        "-KkAvdJzVZKJ9Vcf7pam" : true,
-        "-Kld0wl_RUFkTrsznJ5u" : true,
-        "-Kld1-9ijsBQR1QtQ6hV" : true
-      },
       "epicFeat" : "this spell dont need feats",
       "groupName" : "lvl 1",
       "hitDamageOrEffect" : "lvl 1: 1d6+CHA \\n lvl 3: 3d6+CHA \\n This is a new line!",

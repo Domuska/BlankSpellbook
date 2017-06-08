@@ -26,17 +26,9 @@ mainactivityn alempaan toolbariin lisätään search & filtterit
 	https://github.com/google/guava#Android
 	
 
-kun spell lisätään listaan tai daily power listaan tehdään toast käyttäjälle
 
-korjaa bugi jossa jos powerListsissä spelli on valittu ja avataan uusi powerlistsactivity, valinnat säilyy
-
-korjaa bugi, kun sovellus sammutetaan se välillä kaatuu ennen sammutusta. Varmaankin tuli sillon ku lisättiin powersfragment
-
-korjaa bugi, sovellus kaatuu kun käyt power listassa, tuut takasin ja koitat mennä uudestaan power listaan joskus
-
-kun power removataan listalta, tehdään snackbar jossa undo nappi
-	-listalle on lisätty listener ja sillä on onDeleteChild, tässä varmaan tulee poistettu elementti meille, otetaan se talteen
-	ja tallennetaan uusiksi jos käyttäjä painaa undo:ta
+kun power removataan ja tälle laitetaan undo, powerit pysyy valittuina, MUUTA!
+kun yksi power valitaan, oisi kiva jos vaihdettaisiin "selection moodiin" jossa ei tarvi ku klikata kerran jotain toista poweria että se valitaan.
 	
 mieti powerdetailsin add to power listsiä
 	-kun power lisätään listalle, siitä tehdään kopio

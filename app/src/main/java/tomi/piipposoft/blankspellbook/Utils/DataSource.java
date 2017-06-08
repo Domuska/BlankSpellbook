@@ -824,14 +824,14 @@ public class DataSource {
         HashMap<String, Object> childUpdates = new HashMap<>();
 
         for(String listId : powerLists) {
-            //remove the reference from the daily_power_lists
+            //remove the reference from the $daily_power_lists
             childUpdates.put(
                     DB_DAILY_POWER_LIST_TREE_NAME + "/"
                     + listId + "/"
                     + DB_DAILY_POWER_LIST_CHILD_SPELLS + "/"
                     + powerId, null);
 
-            //remove the reference from daily_spell_groups
+            //remove the reference from $daily_spell_groups
             if(groupName != null){
                 childUpdates.put(
                         DB_DAILY_SPELL_GROUPS_TREE_NAME + "/"
@@ -839,12 +839,9 @@ public class DataSource {
                         + groupName + "/"
                         + powerId, null);
             }
-
+            //push the updates
             firebaseDatabase.getReference().updateChildren(childUpdates);
         }
-
-
-
     }
 
     /**
@@ -979,20 +976,16 @@ public class DataSource {
      * @param powerId ID of the power that is to be removed
      */
     public static void deletePower(final String powerId) {
-        firebaseDatabase.getReference().child(DB_SPELL_TREE_NAME).child(powerId)
+        firebaseDatabase.getReference()
+                .child(DB_SPELL_TREE_NAME)
+                .child(powerId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         HashMap<String, Object> childUpdates = new HashMap<>();
-                        //remove the daily_power_list references to this power
+                        //remove references from $daily_power_list
                         for(DataSnapshot snapshot :
                                 dataSnapshot.child(DB_SPELLS_CHILD_DAILY_POWER_LISTS).getChildren()){
-                            /*firebaseDatabase.getReference()
-                                    .child(DB_DAILY_POWER_LIST_TREE_NAME)
-                                    .child(snapshot.getKey())
-                                    .child(DB_DAILY_POWER_LIST_CHILD_SPELLS)
-                                    .child(powerId)
-                                    .setValue(null);*/
                             childUpdates.put(
                                     DB_DAILY_POWER_LIST_TREE_NAME + "/"
                                     + snapshot.getKey() + "/"
@@ -1000,11 +993,31 @@ public class DataSource {
                                     + powerId, null);
                         }
 
-                        //remove references to the power_list
-                        String powerListId = dataSnapshot.child(DB_SPELLS_CHILD_POWER_LIST).getValue(String.class);
-                        //Log.d(TAG, "deletePower power name : " + dataSnapshot.child("name").getValue());
-                        //Log.d(TAG, "deletePower power list ID for power: " + powerListId);
+                        String groupName = dataSnapshot.child(DB_SPELLS_CHILD_GROUP_NAME).getValue(String.class);
 
+                        for(DataSnapshot dailyPowerList :
+                                dataSnapshot.child(DB_SPELLS_CHILD_DAILY_POWER_LISTS).getChildren()){
+                            String dailyPowerListId = dailyPowerList.getValue(String.class);
+
+                            //remove references from $daily_power_lists
+                            childUpdates.put(
+                                    DB_DAILY_POWER_LIST_TREE_NAME + "/"
+                                    + dailyPowerListId + "/"
+                                    + DB_DAILY_POWER_LIST_CHILD_SPELLS + "/"
+                                    + powerId, null);
+
+                            //remove reference from daily_spell_groups if power has group name
+                            if(groupName != null && !"".equals(groupName)){
+                                childUpdates.put(
+                                        DB_DAILY_SPELL_GROUPS_TREE_NAME + "/"
+                                        + dailyPowerListId + "/"
+                                        + groupName + "/"
+                                        + powerId, null);
+                            }
+                        }
+
+                        //remove references from $spell_lists
+                        String powerListId = dataSnapshot.child(DB_SPELLS_CHILD_POWER_LIST).getValue(String.class);
                         if(powerListId != null && !powerListId.equals("")){
                             childUpdates.put(
                                     DB_SPELL_LIST_TREE_NAME + "/"
@@ -1012,9 +1025,8 @@ public class DataSource {
                                     + DB_SPELL_LIST_CHILD_SPELLS + "/"
                                     + powerId, null);
 
-                            //remove references to the spell_groups
+                            //remove references from $spell_groups
                             //note, there is no entry in spell_groups if power is not in a list of powers
-                            String groupName = dataSnapshot.child(DB_SPELLS_CHILD_GROUP_NAME).getValue(String.class);
                             if(groupName != null) {
                                 childUpdates.put(
                                         DB_SPELL_GROUPS_TREE_NAME + "/"
