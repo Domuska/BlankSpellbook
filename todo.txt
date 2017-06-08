@@ -7,6 +7,8 @@ lisätään latausikoneita
 	-spell details activityyn save nappulaan
 	-animaatio power lists fragmentiin jossa rullataan yhen listan elementin sisällä läpi grouppeja?
 	
+Siirretään verkkojutut johonkin taustathreadiin
+	
 	
 spellien poistaminen kannasta
 	-varmista myös että referenssit poistetaan spell_lists/$id/spells & spell_groups/$id/$group_name kohasta

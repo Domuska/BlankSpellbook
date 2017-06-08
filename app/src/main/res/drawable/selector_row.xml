@@ -15,6 +15,6 @@
         android:state_selected="true" />
 
     <!-- Standard background color -->
-    <item android:drawable="@color/my_color_colorWhiteBackGround"
+    <item android:drawable="@color/my_color_colorBackground"
         android:state_selected="false" />
 </selector>
