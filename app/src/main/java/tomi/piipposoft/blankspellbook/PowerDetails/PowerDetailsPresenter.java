@@ -220,7 +220,7 @@ public class PowerDetailsPresenter extends DrawerPresenter
     @Override
     public void activityResumingWithFragment() {
         DataSource.getPowerLists(DataSource.POWERDETAILSPRESENTER);
-        DataSource.getDailyPowerLists(6);
+        DataSource.getDailyPowerLists(DataSource.POWERDETAILSPRESENTER);
     }
 
     @Override

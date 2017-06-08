@@ -154,9 +154,11 @@ public class PowerDetailsActivity extends ApplicationActivity
             case R.id.action_add_to_powerlist:
                 Log.d(TAG, "onOptionsItemSelected: pressed the add to power list button!");
                 mActionListener.userPressingAddToLists();
+                return true;
             case R.id.action_delete_power:
                 Log.d(TAG, "onOptionsItemSelected: deleting power from DB");
                 showConfirmDeleteDialog();
+                return true;
             default:
                 return false;
         }
