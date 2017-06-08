@@ -1,6 +1,5 @@
 package tomi.piipposoft.blankspellbook.PowerList;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -31,6 +30,7 @@ public class PowerListPresenter extends DrawerPresenter implements
     private static PowerListContract.View mPowerListActivity;
     private static String powerListId;
 
+    private String[] deletedPowerIds;
 
     private static PowerListPresenter thisInstance;
 
@@ -117,11 +117,17 @@ public class PowerListPresenter extends DrawerPresenter implements
     public void userDeletingPowersFromList(ArrayList<Spell> deletablePowers) {
         Log.d(TAG, "spells that should be selected for deletion:");
 
-        String[] deletablePowerIds = new String[deletablePowers.size()];
-        for (int i = 0; i < deletablePowerIds.length; i++) {
+        deletedPowerIds = new String[deletablePowers.size()];
+        for (int i = 0; i < deletedPowerIds.length; i++) {
             Log.d(TAG, "Spell id: " + deletablePowers.get(i).getSpellId());
-            deletablePowerIds[i] = deletablePowers.get(i).getSpellId();
+            deletedPowerIds[i] = deletablePowers.get(i).getSpellId();
         }
-        DataSource.removePowersFromList(deletablePowerIds, powerListId);
+        DataSource.removePowersFromList(deletedPowerIds, powerListId);
+        mPowerListActivity.showPowerDeletedSnackBar();
+    }
+
+    @Override
+    public void userPushingUndo() {
+        DataSource.addPowersToList(deletedPowerIds, powerListId);
     }
 }

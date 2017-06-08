@@ -39,6 +39,11 @@ public interface PowerListContract {
          */
         void removeSpellFromList(Spell spell);
 
+        /**
+         * Show power the power deleted snackbar to user
+         */
+        void showPowerDeletedSnackBar();
+
     }
 
     interface UserActionListener{
@@ -68,5 +73,10 @@ public interface PowerListContract {
          * User is pressing delete button to delete selected powers
          */
         void userDeletingPowersFromList(ArrayList<Spell> deletablePowers);
+
+        /**
+         * User is pushing undo in the SnackBar when removing powers from list
+         */
+        void userPushingUndo();
     }
 }

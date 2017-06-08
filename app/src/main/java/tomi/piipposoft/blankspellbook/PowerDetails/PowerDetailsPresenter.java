@@ -194,7 +194,7 @@ public class PowerDetailsPresenter extends DrawerPresenter
         Spell saveableSpell = thisPower.setSpellId(null);
         if(addingToPowerList) {
             //save the power IDs so we can undo the action
-            savedPowerIds = DataSource.addSpellToPowerLists(listIds, saveableSpell);
+            savedPowerIds = DataSource.copyPowerToPowerLists(listIds, saveableSpell);
         }
         else
             DataSource.addSpellToDailyPowerLists(listIds,

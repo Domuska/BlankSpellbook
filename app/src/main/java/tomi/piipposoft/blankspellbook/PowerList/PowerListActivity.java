@@ -7,6 +7,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -293,8 +294,7 @@ public class PowerListActivity extends ApplicationActivity
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                myActionListener
-                                        .userDeletingPowersFromList(
+                                myActionListener.userDeletingPowersFromList(
                                                 PowerListActivity.this.adapter.getSelectedSpells());
                             }
                         })
@@ -302,6 +302,20 @@ public class PowerListActivity extends ApplicationActivity
                 .show();
     }
 
+    @Override
+    public void showPowerDeletedSnackBar() {
+        Snackbar.make(
+                findViewById(R.id.power_list_layout),
+                getString(R.string.power_list_snackbar_info),
+                Snackbar.LENGTH_LONG)
+                .setAction(R.string.action_undo, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        myActionListener.userPushingUndo();
+                    }
+                })
+                .show();
+    }
 
     private class RecyclerDividerDecorator extends RecyclerView.ItemDecoration {
 

@@ -163,6 +163,11 @@ public class DataSource {
         });
     }
 
+    /**
+     * Used for gettin a spell object from DB
+     * NOTE: used only by PowerDetailsPresenter at the moment
+     * @param spellId ID of the spell that should be fetched
+     */
     public static void getSpellWithId(String spellId) {
         DatabaseReference spellReference =
                 firebaseDatabase.getReference(DB_SPELL_TREE_NAME).child(spellId);
@@ -284,23 +289,19 @@ public class DataSource {
             final Map<String, Object> childUpdates = new HashMap<>();
 
             //first remove the spell from the power list
-            childUpdates.put(DB_SPELL_LIST_TREE_NAME
-                    + "/"
-                    + powerListId
-                    + "/"
-                    + DB_SPELL_LIST_CHILD_SPELLS
-                    + "/"
+            childUpdates.put(
+                    DB_SPELL_LIST_TREE_NAME + "/"
+                    + powerListId + "/"
+                    + DB_SPELL_LIST_CHILD_SPELLS + "/"
                     + spellId, null);
 
             //remove the power list reference from this power's field
             childUpdates.put(
-                    DB_SPELL_TREE_NAME
-                    + "/"
-                    + spellId
-                    + "/"
+                    DB_SPELL_TREE_NAME + "/"
+                    + spellId + "/"
                     + DB_SPELLS_CHILD_POWER_LIST, null);
 
-            //get the group name of this spell
+            //get the group name of this spell to remove reference in spell_groups
             firebaseDatabase.getReference()
                     .child(DB_SPELL_TREE_NAME)
                     .child(spellId)
@@ -310,12 +311,10 @@ public class DataSource {
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             //delete the reference to the spell in spell_groups table in this list
                             String groupName = dataSnapshot.getValue(String.class);
-                            childUpdates.put(DB_SPELL_GROUPS_TREE_NAME
-                                    + "/"
-                                    + powerListId
-                                    + "/"
-                                    + groupName
-                                    + "/"
+                            childUpdates.put(
+                                    DB_SPELL_GROUPS_TREE_NAME + "/"
+                                    + powerListId + "/"
+                                    + groupName + "/"
                                     + spellId, null);
                             //trigger the updates in DB
                             FirebaseDatabase.getInstance().getReference().updateChildren(childUpdates);
@@ -336,6 +335,57 @@ public class DataSource {
 
     public static void removePowersFromList(String spellId, String powerListId){
         handlePowerRemoval(new String[]{spellId}, powerListId);
+    }
+
+    /**
+     * Add powers to a list of powers
+     * @param powerIds IDs of the powers that should be added
+     * @param powerListId The ID of the list where powers should be added
+     */
+    public static void addPowersToList(String[] powerIds, final String powerListId) {
+        //this method is basically reverse to handlePowerRemoval
+        final HashMap<String, Object> childUpdates = new HashMap<>();
+        Log.d(TAG, "addPowersToList: power list id: " + powerListId);
+        for(final String id : powerIds){
+            //add the to the power list
+            childUpdates.put(DB_SPELL_LIST_TREE_NAME + "/"
+                    + powerListId + "/"
+                    + DB_SPELL_LIST_CHILD_SPELLS + "/"
+                    + id, true);
+
+            //add reference to the power about this list
+            childUpdates.put(DB_SPELL_TREE_NAME + "/"
+                    + id + "/"
+                    + DB_SPELLS_CHILD_POWER_LIST, powerListId);
+
+            //get power's group name and add reference to spell_groups
+            firebaseDatabase.getReference()
+                    .child(DB_SPELL_TREE_NAME)
+                    .child(id)
+                    .child(DB_SPELLS_CHILD_GROUP_NAME)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            String groupName = dataSnapshot.getValue(String.class);
+                            Log.d(TAG, "addPowersToList: group name: " + groupName);
+                            //add the group name to spell_groups
+                            if(groupName != null && !"".equals(groupName)) {
+                                childUpdates.put(
+                                        DB_SPELL_GROUPS_TREE_NAME + "/"
+                                                + powerListId + "/"
+                                                + groupName + "/"
+                                                + id, true);
+                            }
+                            firebaseDatabase.getReference().updateChildren(childUpdates);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.e(TAG, "addPowersToList: error at getting power group name "
+                                    + databaseError.toString());
+                        }
+                    });
+        }
     }
 
     /**
@@ -691,13 +741,20 @@ public class DataSource {
     }
 
 
-    public static String[] addSpellToPowerLists(ArrayList<String> listIds, Spell power) {
+    /**
+     * Used for creating a copy of the spell and adding that power to power lists
+     * handles updating spell_groups table as well
+     * @param listIds IDs of the lists where a copy should be saved
+     * @param power power that should be copied
+     * @return the IDs of the powers that were created
+     */
+    public static String[] copyPowerToPowerLists(ArrayList<String> listIds, Spell power) {
 
         String[] powerIds = new String[listIds.size()];
 
         int i = 0;
         for(String listId : listIds) {
-            Log.d(TAG, "in addSpellToPowerLists, spell id: " + power.getSpellId());
+            Log.d(TAG, "in copyPowerToPowerLists, spell id: " + power.getSpellId());
             //get the ID for the new spell
             DatabaseReference spellReference = firebaseDatabase.getReference().child(DB_SPELL_TREE_NAME);
             String powerId = spellReference.push().getKey();
@@ -714,8 +771,14 @@ public class DataSource {
         return powerIds;
     }
 
-    public static void addSpellToDailyPowerLists(ArrayList<String> listIds,
-                                                 String spellId, String groupName) {
+    /**
+     * Add a reference of a power to a daily power list and daily_power_groups
+     * @param listIds IDs of the daily power lists where a copy should be saved
+     * @param spellId ID of the power that should be added
+     * @param groupName name of the power's group, supply this if power actually has a group
+     */
+    public static void addSpellToDailyPowerLists(@NonNull ArrayList<String> listIds,
+                                                 @NonNull String spellId, @Nullable String groupName) {
 
         Map<String, Object> childUpdates = new HashMap<>();
 
@@ -741,7 +804,7 @@ public class DataSource {
                     + spellId, true);
 
             //add also the spell's group to the daily_spell_groups table
-            if(!"".equals(groupName)) {
+            if(groupName != null && !"".equals(groupName)) {
                 childUpdates.put(
                         DB_DAILY_SPELL_GROUPS_TREE_NAME
                         + "/"
@@ -1143,5 +1206,6 @@ public class DataSource {
         }
         return data;
     }
+
 
 }
