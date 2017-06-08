@@ -96,7 +96,7 @@ public class AddToPowerListDialog extends DialogFragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        // TODO: 8.6.2017 could save the pwoer list ids and names here too, no need to re-fetch them 
+        // TODO: 8.6.2017 could save the pwoer list ids and names here too, no need to re-fetch them
         //save the state of the fragment
         outState.putStringArrayList("selectedLists", selectedListIds);
         if(selectedList == Selected.POWER_LISTS)

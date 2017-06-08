@@ -5,9 +5,14 @@ lisätään latausikoneita
 	-main activityyn fragmentteihin
 	-spell details activityyn tekstikenttien sijaan
 	-spell details activityyn save nappulaan
+	-powerdetailsactivityn add to lists fragmentiin
 	-animaatio power lists fragmentiin jossa rullataan yhen listan elementin sisällä läpi grouppeja?
 	
+power lists fragmentin kortteihin ungrouped lista?
+	
 Siirretään verkkojutut johonkin taustathreadiin
+
+korjaa bugi - välillä tulee tuplana mainactivityn fragmentteihin asiat. tuleeko silloin kun activity pysäytetään ja jatketaan?
 	
 	
 spellien poistaminen kannasta
