@@ -294,7 +294,8 @@ public class PowerListActivity extends ApplicationActivity
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 myActionListener
-                                        .userDeletingPowersFromList(PowerListRecyclerAdapter.getSelectedSpells());
+                                        .userDeletingPowersFromList(
+                                                PowerListActivity.this.adapter.getSelectedSpells());
                             }
                         })
                 .setNegativeButton(getString(R.string.action_cancel), null)

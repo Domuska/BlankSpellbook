@@ -30,12 +30,11 @@ import tomi.piipposoft.blankspellbook.Utils.Spell;
 class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
         <PowerListRecyclerAdapter.SpellGroupViewHolder, PowerListRecyclerAdapter.SpellViewHolder>{
 
-    private ArrayList<Spell> dataSet;
     private LayoutInflater inflater;
     private PowerListContract.UserActionListener actionListener;
 
     //map for keeping track which spells have been selected by user
-    private static ArrayList<Spell> isSpellSelected = new ArrayList<>();
+    private ArrayList<Spell> isSpellSelected = new ArrayList<>();
 
 
     PowerListRecyclerAdapter(Context context, List<? extends ParentListItem> spellGroups,
@@ -43,9 +42,10 @@ class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
         super(spellGroups);
         actionListener = listener;
         inflater = LayoutInflater.from(context);
+
     }
 
-    static ArrayList<Spell> getSelectedSpells(){
+    ArrayList<Spell> getSelectedSpells(){
         return isSpellSelected;
     }
 
