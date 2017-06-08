@@ -29,7 +29,7 @@ public class PowerListPresenter extends DrawerPresenter implements
 
     private static final String TAG = "PowerListPresenter";
     private static PowerListContract.View mPowerListActivity;
-    private String powerListId;
+    private static String powerListId;
 
 
     private static PowerListPresenter thisInstance;
@@ -41,24 +41,25 @@ public class PowerListPresenter extends DrawerPresenter implements
             @NonNull BlankSpellBookContract.DBHelper dbHelper,
             @NonNull PowerListContract.View powerListActivity,
             @NonNull DrawerHelper drawerHelper,
-            @NonNull String powerListId){
+            @NonNull String listId){
         // TODO: 8.5.2017 remove the sql database requirement when FireBase implementation complete
         super(dbHelper, drawerHelper, (DrawerContract.ViewActivity) powerListActivity);
         mPowerListActivity = powerListActivity;
-        this.powerListId = powerListId;
+        powerListId = listId;
     }
 
     public static PowerListPresenter getInstance(@NonNull BlankSpellBookContract.DBHelper dbHelper,
                                                  @NonNull PowerListContract.View powerListActivity,
                                                  @NonNull DrawerHelper drawerHelper,
-                                                 @NonNull String powerListId){
+                                                 @NonNull String listId){
 
         if(thisInstance == null)
-            thisInstance = new PowerListPresenter(dbHelper, powerListActivity, drawerHelper, powerListId);
+            thisInstance = new PowerListPresenter(dbHelper, powerListActivity, drawerHelper, listId);
         else {
             //Instance already exists, just save references to activity and drawer views
             mPowerListActivity = powerListActivity;
             mDrawerView = drawerHelper;
+            powerListId = listId;
         }
         return thisInstance;
     }
