@@ -21,7 +21,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -79,6 +78,8 @@ public class PowerDetailsActivity extends ApplicationActivity
             SharedPreferencesHandler.setDatabasePersistance(true, this);
         }
 
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         toolbar.setTitle("Details");
         setSupportActionBar(toolbar);
@@ -123,6 +124,7 @@ public class PowerDetailsActivity extends ApplicationActivity
             mActionListener.showPowerDetails(false);
         else {
             mActionListener.showPowerDetails(savedState.getBoolean("userEditingPower"));
+
         }
 
         //check if there is addToPowerList fragment visible, if so let presenter handle this
@@ -658,7 +660,6 @@ public class PowerDetailsActivity extends ApplicationActivity
     }
 
     // From ConfirmDeletionDialog.ConfirmDeletionListener
-
     @Override
     public void onPositiveClick() {
         Log.d(TAG, "onPositiveClick: deleting power...");

@@ -31,6 +31,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import tomi.piipposoft.blankspellbook.R;
@@ -60,16 +61,15 @@ public class AddToPowerListDialog extends DialogFragment {
 
     private AddToPowerListAdapter adapter;
 
-
     private enum Selected {POWER_LISTS, DAILY_POWER_LISTS}
     Selected selectedList = Selected.POWER_LISTS;
-    final ArrayList<String> selectedListIds = new ArrayList<>();
+    ArrayList<String> selectedListIds = new ArrayList<>();
 
 
     /* The activity that creates an instance of this dialog fragment must
      * implement this interface in order to receive event callbacks.
      * Each method passes the DialogFragment in case the host needs to query it. */
-    public interface NoticeDialogListener{
+    interface NoticeDialogListener{
         /**
          * Called when the OK button in the dialog is clicked
          * @param dialog the dialog itself for future referencing
@@ -94,7 +94,19 @@ public class AddToPowerListDialog extends DialogFragment {
         super.onCreate(savedInstanceState);
     }
 
-    // Override the Fragment.onAttach() method to instantiate the NoticeDialogListener
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        // TODO: 8.6.2017 could save the pwoer list ids and names here too, no need to re-fetch them 
+        //save the state of the fragment
+        outState.putStringArrayList("selectedLists", selectedListIds);
+        if(selectedList == Selected.POWER_LISTS)
+            outState.putBoolean("powerListsSelected", true);
+        else
+            outState.putBoolean("powerListsSelected", false);
+        super.onSaveInstanceState(outState);
+    }
+
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -109,10 +121,24 @@ public class AddToPowerListDialog extends DialogFragment {
         }
     }
 
+
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.d(TAG, "onCreateDialog called");
+
+        if(savedInstanceState != null) {
+            Log.d(TAG, "onCreateDialog got saved instance state");
+            //set the previously selected list, this used after radio button initialization
+            boolean powerListSelected = savedInstanceState.getBoolean("powerListsSelected");
+            if(powerListSelected)
+                selectedList = Selected.POWER_LISTS;
+            else
+                selectedList = Selected.DAILY_POWER_LISTS;
+            //save the selected list IDs
+            selectedListIds = savedInstanceState.getStringArrayList("selectedLists");
+        }
 
         //we can't know if setPowerListData has been called yet, can be a slow network call...
         if(powerListNames == null)
@@ -148,7 +174,6 @@ public class AddToPowerListDialog extends DialogFragment {
         recyclerView.setAdapter(adapter);
 
         final RadioButton powerListButton = (RadioButton) view.findViewById(R.id.radio_power_list);
-        powerListButton.setChecked(true);
         powerListButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -167,6 +192,12 @@ public class AddToPowerListDialog extends DialogFragment {
                 AddToPowerListDialog.this.adapter.notifyDataSetChanged();
             }
         });
+
+        //see which radio button should be selected
+        if(selectedList == Selected.POWER_LISTS)
+            powerListButton.setChecked(true);
+        else
+            dailyPowerListButton.setChecked(true);
 
         builder.setTitle(R.string.add_to_list_dialog_title)
                 .setView(view)
@@ -271,14 +302,14 @@ public class AddToPowerListDialog extends DialogFragment {
 
         class ViewHolder extends RecyclerView.ViewHolder{
             private CheckBox checkBox;
-            private TextView textView;
+            //private TextView textView;
             private View recyclerRowBackground;
             private ViewHolder(View view){
                 super(view);
                 checkBox = (CheckBox)view.findViewById(R.id.myCheckBox);
                 //was used when the recycler rows were clickable
                 // TODO: 23.5.2017 remove in time
-                textView = (TextView)view.findViewById(R.id.recycler_row_textview);
+                //textView = (TextView)view.findViewById(R.id.recycler_row_textview);
                 recyclerRowBackground = view;
             }
         }
@@ -288,36 +319,52 @@ public class AddToPowerListDialog extends DialogFragment {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            //set the checkboxes unchecked here, otherwise when changing
-            //the dataset the recycled checkboxes occasionally stay checked
-            final int checkBoxPosition = holder.getAdapterPosition();
+            //get position for this row's data from adapter
+            final int thisDataPosition = holder.getAdapterPosition();
 
-            //stuff for the checkbox in rows
-            // TODO: 19.5.2017 to be removed if the list highlighting is better
-            if(selectedList == Selected.POWER_LISTS)
+
+            if(selectedList == Selected.POWER_LISTS) {
+                //set the checkbox text
                 holder.checkBox.setText(powerListNames[position]);
-            else
+                //see if we need to check checkbox, might happen when fragment re-created
+                if(selectedListIds != null) {
+                    String listId = powerListIds[thisDataPosition];
+                    if(selectedListIds.contains(listId))
+                        holder.checkBox.setChecked(true);
+                    else
+                        holder.checkBox.setChecked(false);
+                }
+            }
+            else {
                 holder.checkBox.setText(dailyPowerListNames[position]);
-
-            holder.checkBox.setChecked(false);
+                if(selectedListIds != null) {
+                    //see if we need to check checkbox, might happen when fragment re-created
+                    String listId = dailyPowerListIds[thisDataPosition];
+                    //check if the list of selected IDs (could be set at onCreateDialog) contains
+                    //ID this row should have
+                    if(selectedListIds.contains(listId))
+                        holder.checkBox.setChecked(true);
+                    else
+                        holder.checkBox.setChecked(false);
+                }
+            }
 
             holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if(isChecked)
-                        addSelectedItem(checkBoxPosition);
+                        addSelectedItem(thisDataPosition);
                     else
-                        removeSelectedItem(checkBoxPosition);
+                        removeSelectedItem(thisDataPosition);
                 }
             });
 
-
-            if(selectedList == Selected.POWER_LISTS) {
+            /*if(selectedList == Selected.POWER_LISTS) {
                 //get the name for the element from powerListNames
                 holder.textView.setText(powerListNames[position]);
 
                 //set the background color if the item is selected
-                if(selectedListIds.contains(powerListIds[checkBoxPosition]))
+                if(selectedListIds.contains(powerListIds[thisDataPosition]))
                     holder.recyclerRowBackground.setSelected(true);
                 else
                     holder.recyclerRowBackground.setSelected(false);
@@ -326,12 +373,13 @@ public class AddToPowerListDialog extends DialogFragment {
                 //get the name for the element from dailyPowerListNames
                 holder.textView.setText(dailyPowerListNames[position]);
                 //set the background color if the item is selected
-                if(selectedListIds.contains(dailyPowerListIds[checkBoxPosition]))
+                if(selectedListIds.contains(dailyPowerListIds[thisDataPosition]))
                     holder.recyclerRowBackground.setSelected(true);
                 else
                     holder.recyclerRowBackground.setSelected(false);
-            }
+            }*/
 
+            //set onclicklistener for the whole row so user dont have to aim for checkbox
             holder.recyclerRowBackground.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -342,6 +390,7 @@ public class AddToPowerListDialog extends DialogFragment {
                 }
             });
 
+
             //implementation where there's no checkboxes, the rows are just clickable
             //see also decorator above in onCreateDialog
             /*holder.recyclerRowBackground.setOnClickListener(new View.OnClickListener() {
@@ -349,27 +398,27 @@ public class AddToPowerListDialog extends DialogFragment {
                 public void onClick(View v) {
                     Log.d(TAG, "recycler's textview clicked");
                     if(selectedList == Selected.POWER_LISTS){
-                        if(selectedListIds.contains(powerListIds[checkBoxPosition])){
-                            //mySelectedItems.delete(checkBoxPosition);
+                        if(selectedListIds.contains(powerListIds[thisDataPosition])){
+                            //mySelectedItems.delete(thisDataPosition);
                             holder.recyclerRowBackground.setSelected(false);
-                            removeSelectedItem(checkBoxPosition);
+                            removeSelectedItem(thisDataPosition);
                         }
                         else{
-                            //mySelectedItems.put(checkBoxPosition, true);
+                            //mySelectedItems.put(thisDataPosition, true);
                             holder.recyclerRowBackground.setSelected(true);
-                            addSelectedItem(checkBoxPosition);
+                            addSelectedItem(thisDataPosition);
                         }
                     }
                     else{
-                        if(selectedListIds.contains(dailyPowerListIds[checkBoxPosition])){
+                        if(selectedListIds.contains(dailyPowerListIds[thisDataPosition])){
                             //this element's ID is already in the list of selected items, removing...
                             holder.recyclerRowBackground.setSelected(false);
-                            removeSelectedItem(checkBoxPosition);
+                            removeSelectedItem(thisDataPosition);
                         }
                         else{
                             //this element is not selected, adding to selected items...
                             holder.recyclerRowBackground.setSelected(true);
-                            addSelectedItem(checkBoxPosition);
+                            addSelectedItem(thisDataPosition);
                         }
                     }
                 }
