@@ -92,7 +92,6 @@ public class PowerDetailsActivity extends ApplicationActivity
     protected void onResume() {
         super.onResume();
 
-
         powerId = getIntent().getStringExtra(EXTRA_POWER_DETAIL_ID);
         Log.i(TAG, "onResume: power ID extra got: " + powerId);
         String powerListId = getIntent().getStringExtra(EXTRA_POWER_LIST_ID);
@@ -133,9 +132,6 @@ public class PowerDetailsActivity extends ApplicationActivity
             addToPowerListDialogFragment = (AddToPowerListDialog) prev;
             mActionListener.activityResumingWithFragment();
         }
-
-
-
         Log.d(TAG, "onResume called");
     }
 
