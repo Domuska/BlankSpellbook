@@ -36,9 +36,8 @@
     <string name="action_add_to_powerlist">Add to list of powers</string>
     <string name="action_delete_power">Delete power</string>
     <string name="deleteDialog_title">Confirm power deletion</string>
-    <string name="deleteDialog_infotext">Do you want to delete this power from storage?</string>
-    <string name="deleteDialog_warning">WARNING: </string>
-    <string name="deleteDialog_warningtext">power will be deleted permanently and it can\'t be restored</string>
+    <string name="deleteDialog_infotext">Do you want to <b>delete permanently</b> this power from storage?</string>
+    <string name="deleteDialog_warningtext"><b>WARNING:</b> the power can\'t be restored once deleted</string>
 
     <string name="spellbook_attacktype">Attack type (close quarters, melee attack…)</string>
     <string name="spellbook_attackroll">Attack roll</string>
