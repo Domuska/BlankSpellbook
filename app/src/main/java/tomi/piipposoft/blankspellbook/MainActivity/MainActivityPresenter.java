@@ -89,18 +89,41 @@ public class MainActivityPresenter extends DrawerPresenter
         currentlySelectedList = selectedList;
     }
 
-    public static void handleNewPowerList(String name, String id, ArrayList<String> groupNames){
-        Log.d(TAG, "handleNewListItem: " + name);
-        mMainActivityView.addPowerListData(name, id, groupNames);
+    /**
+     * handle a new power list from DB, give it to View
+     * @param name name of the power list
+     * @param id ID of the power list
+     */
+    public static void handleNewPowerList(String name, String id){
+        mMainActivityView.addPowerListData(name, id);
     }
 
     public static void handleRemovedPowerList(String powerListName, String id) {
         mMainActivityView.removePowerListData(powerListName, id);
     }
 
-    public static void handleNewDailyPowerList(String name, String id, ArrayList<String> groupNames){
-        Log.d(TAG, "handleNewDailyPowerList: " + name);
-        mMainActivityView.addDailyPowerListData(name, id, groupNames);
+    /**
+     * handle a new power list from DB, pass that on to the View
+     * @param name name of the power list
+     * @param id ID of the power list
+     */
+    public static void handleNewDailyPowerList(String name, String id){
+        mMainActivityView.addDailyPowerListData(name, id);
+    }
+
+    /**
+     * handle a new power name from power list, given to View that should display it with a power list
+     * @param powerName Name of the power
+     * @param powerListId ID of the power list where this power is
+     * @param isPowerList flag whether this is a power list or a daily power list
+     */
+    public static void handleNewPowerNameForList(String powerName, String powerListId, boolean isPowerList) {
+        Log.d(TAG, "handleNewPowerNameForList: powerName: " + powerName
+                + " powerListId: " + powerListId + " isPowerList: " + isPowerList);
+        if(isPowerList)
+            mMainActivityView.addPowerNameToPowerList(powerName, powerListId);
+        else
+            mMainActivityView.addPowerNameToDailyPowerList(powerName, powerListId);
     }
 
     public static void handleRemovedDailyPowerList(String dailyPowerListName, String id) {

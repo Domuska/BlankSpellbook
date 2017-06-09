@@ -4,6 +4,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.ArrayMap;
@@ -39,8 +40,8 @@ public class RecyclerListFragment extends Fragment {
     private ArrayList<String> listNames = new ArrayList<>();
     private ArrayList<String> listIds = new ArrayList<>();
 
-    //map that has pairs: ID - list of groups this list has
-    private ArrayMap<String, ArrayList<String>> listPowerGroups = new ArrayMap<>();
+    //map that has pairs: ID - list of power names this list has
+    private ArrayMap<String, ArrayList<String>> listPowerNames = new ArrayMap<>();
 
     MainActivityContract.FragmentUserActionListener myClickListener;
 
@@ -70,21 +71,57 @@ public class RecyclerListFragment extends Fragment {
         Log.d(TAG, "onResume");
     }
 
-    public void handleNewListItem(String name, String id, ArrayList<String> groupNames){
+    /**
+     * Take in a new (daily) power list
+     * @param name Name of the list
+     * @param id ID of the list
+     * @param powerNames Names of the powers under this list
+     */
+    public void handleNewListItem(String name, String id, ArrayList<String> powerNames){
         listNames.add(name);
         listIds.add(id);
         //only add the group to the map if there are groups under the spell list
-        if(groupNames.size() > 0)
-            listPowerGroups.put(id, groupNames);
+        if(powerNames.size() > 0)
+            listPowerNames.put(id, powerNames);
         //notify adapter that new item inserted
         adapter.notifyItemInserted(listNames.size()-1);
     }
+
+    public void handleNewListItem(String listName, String id) {
+        Log.d(TAG, "handleNewListItem: new item: " + listName);
+        listNames.add(listName);
+        listIds.add(id);
+        adapter.notifyItemInserted(listNames.size()-1);
+    }
+
+    /**
+     * Add name of a power related to a list
+     * @param powerName name of the power
+     * @param powerListId ID of the power list this name is related to
+     */
+    public void handleNewPowerName(@NonNull String powerName, @NonNull String powerListId) {
+        Log.d(TAG, "handleNewPowerName: new name got " + powerName + " for list " + powerListId);
+        if(listPowerNames.containsKey(powerListId)){
+            //add the name to the list in map
+            listPowerNames.get(powerListId).add(powerName);
+        }
+        else{
+            //add the list to the map
+            ArrayList<String> list = new ArrayList<>();
+            list.add(powerName);
+            listPowerNames.put(powerListId, list);
+        }
+        //notify adapter to update the card
+        adapter.notifyItemChanged(listIds.indexOf(powerListId));
+    }
+
 
     public void removeListItem(String powerListName, String id) {
         //save the index so we can notify adapter
         int nameIndex = listNames.indexOf(powerListName);
         listNames.remove(powerListName);
         listIds.remove(id);
+        // TODO: 9.6.2017 remove also from map the entry
         adapter.notifyItemRemoved(nameIndex);
     }
 
@@ -96,6 +133,9 @@ public class RecyclerListFragment extends Fragment {
     public void attachClickListener(MainActivityContract.FragmentUserActionListener listener) {
         this.myClickListener = listener;
     }
+
+
+
 
     /**
      * Adapter for the RecyclerView showing the power lists
@@ -148,15 +188,15 @@ public class RecyclerListFragment extends Fragment {
             final int itemPosition = holder.getAdapterPosition();
 
             //the map might not have entry with this ID, that means there's no groups under the spell list
-            if (listPowerGroups.containsKey(id)) {
+            if (listPowerNames.containsKey(id)) {
                 //add the group name to the first text view
-                String grpName1 = listPowerGroups.get(id).get(0);
+                String grpName1 = listPowerNames.get(id).get(0);
                 if(!"".equals(grpName1))
                     holder.textViewSecondary.setText(grpName1);
 
                 //if the list has also second group, add second one too
-                if(listPowerGroups.get(id).size() > 1) {
-                    String grpName2 = listPowerGroups.get(id).get(1);
+                if(listPowerNames.get(id).size() > 1) {
+                    String grpName2 = listPowerNames.get(id).get(1);
                     if (!"".equals(grpName2))
                         holder.textViewTertiary.setText(grpName2);
                 }

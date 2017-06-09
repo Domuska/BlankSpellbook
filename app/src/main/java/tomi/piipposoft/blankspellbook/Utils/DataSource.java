@@ -52,6 +52,7 @@ public class DataSource {
     public static final String DB_SPELLS_CHILD_GROUP_NAME = "groupName";
     public static final String DB_SPELLS_CHILD_DAILY_POWER_LISTS = "dailyPowerLists";
     private static final String DB_SPELLS_CHILD_POWER_LIST = "powerListId";
+    public static final String DB_SPELLS_CHILD_NAME = "name";
 
     public static final int DRAWERPRESENTER = 1;
     public static final int MAINACTIVITYPRESENTER = 2;
@@ -441,9 +442,13 @@ public class DataSource {
                 if(presenterCalling == DRAWERPRESENTER)
                     DrawerPresenter.handlePowerList(spellListName, dataSnapshot.getKey());
                 else if(presenterCalling == MAINACTIVITYPRESENTER) {
-                    //MainActivityPresenter.handleNewListItem(spellListName, dataSnapshot.getKey());
-                    //now add a listener to the spell_groups so we get the group names too
-                    addSpellGroupListener(spellListName, dataSnapshot.getKey());
+                    //give mainActivityPresenter info of the power group
+                    String powerListId = dataSnapshot.getKey();
+                    MainActivityPresenter.handleNewPowerList(spellListName, powerListId);
+                    //get all the power names, those will be given to MainActivityPresenter as well
+                    for(DataSnapshot snapshot : dataSnapshot.child(DB_SPELL_LIST_CHILD_SPELLS).getChildren()) {
+                        getPowerNameForPresenter(snapshot.getKey(), powerListId, true);
+                    }
                 }
                 else {
                     throw new RuntimeException(
@@ -485,8 +490,36 @@ public class DataSource {
         return spellListChildListener;
     }
 
-    //used for adding a listener to the spell_groups
-    //spellListName and key are passed in so these can be given to MainActivityPresenter in the callback
+    private static void getPowerNameForPresenter(final String powerId,
+                                                 final String powerListId,
+                                                 final boolean isPowerList){
+        firebaseDatabase
+                .getReference()
+                .child(DB_SPELL_TREE_NAME)
+                .child(powerId)
+                .child(DB_SPELLS_CHILD_NAME)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        MainActivityPresenter.handleNewPowerNameForList(
+                                dataSnapshot.getValue(String.class),
+                                powerListId,
+                                isPowerList);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.e(TAG, "error occurred at getPowerNameForPresenter: " + databaseError.toString());
+                    }
+                });
+
+    }
+
+    /**
+     * Get power group names from spell_groups, calls back to MainActivityPresenter with the data
+     * @param spellListName Name of the power list
+     * @param spellListId ID of the power list
+     */
     private static void addSpellGroupListener(final String spellListName, final String spellListId) {
 
         firebaseDatabase
@@ -501,7 +534,7 @@ public class DataSource {
                                 dataSnapshot.getChildren()) {
                             groupNames.add(snapshot.getKey());
                         }
-                        MainActivityPresenter.handleNewPowerList(spellListName, spellListId, groupNames);
+                        //MainActivityPresenter.handleNewPowerList(spellListName, spellListId, groupNames);
                     }
 
                     @Override
@@ -530,7 +563,8 @@ public class DataSource {
                             //Log.d(TAG, "group name in addDailySpellGroupListener: " + snapshot.getKey());
                         }
                         Log.d(TAG, "daily power group name in addDailySpellGroupListener: " + name);
-                        MainActivityPresenter.handleNewDailyPowerList(name, id, groupNames);
+                        // TODO: 9.6.2017 tuu takas tänne
+                        //MainActivityPresenter.handleNewDailyPowerList(name, id, groupNames);
                     }
 
                     @Override
@@ -554,8 +588,16 @@ public class DataSource {
                 if(presenterCalling == DRAWERPRESENTER)
                     DrawerPresenter.handleDailyPowerList(name, dataSnapshot.getKey());
                 else if(presenterCalling == MAINACTIVITYPRESENTER) {
-                    addDailySpellGroupListener(name, dataSnapshot.getKey());
-                    //MainActivityPresenter.handleNewDailyPowerList(name, dataSnapshot.getKey());
+                    //give presenter the daily power list
+                    String dailyPowerListId = dataSnapshot.getKey();
+                    MainActivityPresenter.handleNewDailyPowerList(name, dailyPowerListId);
+                    //get the names of powers in this list
+                    for(DataSnapshot spellChild :
+                            dataSnapshot.child(DB_DAILY_POWER_LIST_CHILD_SPELLS).getChildren()) {
+                        //get the power names in this list for presenter
+                        getPowerNameForPresenter(
+                                spellChild.getKey(), dailyPowerListId, false);
+                    }
                 }
 
                 else {
@@ -662,10 +704,17 @@ public class DataSource {
                                 Log.d(TAG, "getPowerLists, mainActivityPresenter");
                                 //give the children one by one to MainActivityPresenter
                                 for(DataSnapshot snapshot: dataSnapshot.getChildren()){
-                                    //call addSpellGroupListener so we also get the spell group names for MainActivityPresenter
-                                    addSpellGroupListener(
-                                            snapshot.child(DB_DAILY_POWER_LIST_CHILD_NAME).getValue(String.class),
-                                            snapshot.getKey());
+                                    //give MainActivityPresenter the power list
+                                    String powerListId = snapshot.getKey();
+                                    MainActivityPresenter.handleNewPowerList(
+                                            snapshot.child(DB_SPELL_LIST_CHILD_NAME).getValue(String.class),
+                                            powerListId);
+                                    //get the names of powers that are in this group
+                                    for(DataSnapshot powerSnapshot :
+                                            snapshot.child(DB_SPELL_LIST_CHILD_SPELLS).getChildren()){
+                                        getPowerNameForPresenter(powerSnapshot.getKey(),
+                                                powerListId, true);
+                                    }
                                 }
                                 break;
 
@@ -715,9 +764,17 @@ public class DataSource {
 
                             case DataSource.MAINACTIVITYPRESENTER:
                                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                                    addDailySpellGroupListener(
+                                    String dailyPowerListId = snapshot.getKey();
+                                    //give presenter the new daily power list
+                                    MainActivityPresenter.handleNewDailyPowerList(
                                             snapshot.child(DB_DAILY_POWER_LIST_CHILD_NAME).getValue(String.class),
-                                            snapshot.getKey());
+                                            dailyPowerListId);
+                                    //get the power names for the MainActivityPresenter
+                                    for(DataSnapshot spellsChild :
+                                            snapshot.child(DB_DAILY_POWER_LIST_CHILD_SPELLS).getChildren()){
+                                        getPowerNameForPresenter(
+                                                spellsChild.getKey(), dailyPowerListId, false);
+                                    }
                                 }
                                 break;
 

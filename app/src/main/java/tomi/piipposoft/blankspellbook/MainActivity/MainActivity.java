@@ -238,14 +238,25 @@ public class MainActivity extends ApplicationActivity
 
     //FROM MAIN ACTIVITY CONTRACT INTERFACE
 
+
     @Override
-    public void addPowerListData(String name, String id, ArrayList<String> groupNames) {
-        pagerAdapter.addPowerListToFragment(name, id, groupNames);
+    public void addPowerListData(String name, String id) {
+        pagerAdapter.addPowerListToFragment(name, id);
     }
 
     @Override
-    public void addDailyPowerListData(String name, String id, ArrayList<String> groupNames) {
-        pagerAdapter.addDailyPowerListToFragment(name, id, groupNames);
+    public void addPowerNameToPowerList(String name, String powerListId) {
+        pagerAdapter.addPowerNameToPowerList(name, powerListId);
+    }
+
+    @Override
+    public void addDailyPowerListData(String name, String id) {
+        pagerAdapter.addDailyPowerListToFragment(name, id);
+    }
+
+    @Override
+    public void addPowerNameToDailyPowerList(String powerName, String dailyPowerListId) {
+        pagerAdapter.addPowerNameToDailyPowerList(powerName, dailyPowerListId);
     }
 
     @Override

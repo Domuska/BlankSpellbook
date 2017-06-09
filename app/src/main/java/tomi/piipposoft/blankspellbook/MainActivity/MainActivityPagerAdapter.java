@@ -1,5 +1,7 @@
 package tomi.piipposoft.blankspellbook.MainActivity;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -108,57 +110,115 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
         return super.getPageTitle(position);
     }
 
-
-    void addPowerListToFragment(String name, String id, ArrayList<String> groupNames){
+    /**
+     * Add a new item to power lists fragment
+     * @param name name of the list
+     * @param id ID of the list
+     */
+    void addPowerListToFragment(String name, String id){
         if(powerListsFragment != null){
-            powerListsFragment.handleNewListItem(name, id, groupNames);
+            powerListsFragment.handleNewListItem(name, id);
         }
     }
 
+    /**
+     * add a name of a power to a power list
+     * @param powerName name of the power
+     * @param powerListId ID of the power list where the power is in
+     */
+    void addPowerNameToPowerList(String powerName, String powerListId){
+        if(powerListsFragment != null){
+            powerListsFragment.handleNewPowerName(powerName, powerListId);
+        }
+    }
+
+    /**
+     * remove all items from power lists fragment
+     */
     void removePowerListsFromFragment(){
         if(powerListsFragment != null){
             powerListsFragment.removeAllLists();
         }
     }
 
-    void addDailyPowerListToFragment(String name, String id, ArrayList<String> groupNames) {
+
+    /**
+     * add an item to daily power lists fragment
+     * @param name name of the daily power list
+     * @param id ID of the daily power list
+     */
+    void addDailyPowerListToFragment(String name, String id) {
         if(dailyPowerListsFragment != null) {
-            dailyPowerListsFragment.handleNewListItem(name, id, groupNames);
-        }
-        else {
-            Log.d(TAG, "dailyPowerListsFragment is null, not adding");
+            dailyPowerListsFragment.handleNewListItem(name, id);
         }
     }
 
+    /**
+     * add name of a power to daily power list
+     * @param powerName name of the power
+     * @param dailyPowerListId ID of the daily power list that has this item
+     */
+    void addPowerNameToDailyPowerList(String powerName, String dailyPowerListId) {
+        if(dailyPowerListsFragment != null){
+            dailyPowerListsFragment.handleNewPowerName(powerName, dailyPowerListId);
+        }
+    }
+
+    /**
+     * remove all items from daily power lists fragment
+     */
     void removeDailyPowerListsFromFragment(){
         if(dailyPowerListsFragment != null){
             dailyPowerListsFragment.removeAllLists();
         }
     }
 
+    /**
+     * remove a power list from power lis ts fragment
+     * @param name name of the power list
+     * @param id ID of the power list
+     */
     void removePowerListItem(String name, String id){
         if(powerListsFragment != null)
             powerListsFragment.removeListItem(name, id);
     }
 
+    /**
+     * remove a daily power list from daily power lists fragment
+     * @param name name of the daily power list
+     * @param id ID of the list
+     */
     void removeDailyPowerListItem(String name, String id){
         if(dailyPowerListsFragment != null)
             dailyPowerListsFragment.removeListItem(name, id);
     }
 
-    void addPowerToFragment(Spell power, String powerListName){
+    /**
+     * add a new power to powers fragment
+     * @param power the power that is to be added
+     * @param powerListName name of the power list this power belongs to, can be null
+     */
+    void addPowerToFragment(@NonNull Spell power, @Nullable String powerListName){
         if(powersFragment != null)
             powersFragment.handleNewPower(power, powerListName);
     }
 
+    /**
+     * remove a power from powers fragment
+     * @param power the power that is to be removed
+     */
     void removePowerFromFragment(Spell power){
         if(powersFragment != null)
             powersFragment.removePower(power);
     }
 
+    /**
+     * remove all powers from the powers fragment
+     */
     void removeAllPowers(){
         if(powersFragment != null)
             powersFragment.removeAllPowers();
     }
+
 }
 
