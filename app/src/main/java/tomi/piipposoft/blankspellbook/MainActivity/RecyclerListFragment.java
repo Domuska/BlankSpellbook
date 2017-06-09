@@ -134,13 +134,12 @@ public class RecyclerListFragment extends Fragment {
     public void removeAllLists() {
         listNames = new ArrayList<>();
         listIds = new ArrayList<>();
+        listPowerNames = new ArrayMap<>();
     }
 
     public void attachClickListener(MainActivityContract.FragmentUserActionListener listener) {
         this.myClickListener = listener;
     }
-
-
 
 
     /**

@@ -13,6 +13,13 @@ lisätään latausikoneita
 Siirretään verkkojutut johonkin taustathreadiin
 
 korjaa bugi - välillä tulee tuplana mainactivityn fragmentteihin asiat. tuleeko silloin kun activity pysäytetään ja jatketaan?
+
+korjaa bugi - kun lisäät powerin ilman grouppia johonkin toiseen listaan, tämän listan activityssä ei näy ungrouped vaan tyhjä rivi
+
+back movement main activityssä fragmenttien välillä voisi olla eri tavalla - nyt back vain sammuttaa apin
+
+powers fragmentissa splotch väri näkyy väärin kun lisäät spellejä spells listan kautta - välillä näyttää värit (tällöinkin väärin) ja välillä ei
+	-näyttäisi että kun listaa scrollaa se fragmentti taitaa säilyttää värit jotenkin
 	
 	
 spellien poistaminen kannasta
