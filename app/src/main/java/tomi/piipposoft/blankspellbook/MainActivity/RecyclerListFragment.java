@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import tomi.piipposoft.blankspellbook.R;
 import tomi.piipposoft.blankspellbook.Utils.Helper;
@@ -192,19 +193,43 @@ public class RecyclerListFragment extends Fragment {
 
             final int itemPosition = holder.getAdapterPosition();
 
-            //the map might not have entry with this ID, that means there's no groups under the spell list
+            //the map might not have entry with this ID, that means there's no powers under the spell list
             if (listPowerNames.containsKey(id)) {
-                //add the group name to the first text view
-                String grpName1 = listPowerNames.get(id).get(0);
-                if(!"".equals(grpName1))
-                    holder.textViewSecondary.setText(grpName1);
+                //add a random name to first text view
+                Random random = new Random();
+                int namesListSize = listPowerNames.get(id).size();
 
-                //if the list has also second group, add second one too
-                if(listPowerNames.get(id).size() > 1) {
-                    String grpName2 = listPowerNames.get(id).get(1);
-                    if (!"".equals(grpName2))
-                        holder.textViewTertiary.setText(grpName2);
+                //if we only have one entry, set that and be done with it
+                if(namesListSize == 1) {
+                    String powerName1 = listPowerNames.get(id).get(0);
+                    holder.textViewSecondary.setText(powerName1);
+                    holder.textViewTertiary.setText("");
                 }
+                else{
+                    //if list size exactly 2, set first and second name
+                    if(namesListSize == 2){
+                        holder.textViewSecondary.setText(
+                                listPowerNames.get(id).get(0));
+
+                        holder.textViewTertiary.setText(
+                                listPowerNames.get(id).get(1));
+                    }
+                    else if (namesListSize >= 2) {
+                        //else set a random name
+                        int random1, random2;
+                        do{
+                            random1 = random.nextInt(namesListSize - 1);
+                            random2 = random.nextInt(namesListSize - 1);
+                        }while(random1 == random2);
+                        String powerName1 = listPowerNames.get(id).get(random1);
+                        String powerName2 = listPowerNames.get(id).get(random2);
+
+                        //could maybe check if the names are same get a new name
+                        holder.textViewSecondary.setText(powerName1);
+                        holder.textViewTertiary.setText(powerName2);
+                    }
+                }
+
             }
             else{
                 holder.textViewSecondary.setVisibility(View.INVISIBLE);
