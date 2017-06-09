@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -33,6 +34,8 @@ public class PowersFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
+    private ProgressBar progressBar;
+
     private MainActivityContract.FragmentUserActionListener listener;
 
     //private ArrayMap<String, Spell> powers = new ArrayMap<>();
@@ -55,6 +58,7 @@ public class PowersFragment extends Fragment {
         //Log.d(TAG, "got args: " + args.getString("key"));
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.main_activity_powers_recyclerview);
+        progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         adapter = new PowerListAdapter();
         recyclerView.setAdapter(adapter);
 
@@ -79,6 +83,8 @@ public class PowersFragment extends Fragment {
             powerListNames.add(powerListName);
 
         adapter.notifyItemInserted(powers.size()-1);
+        progressBar.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
     }
 
     public void removePower(@NonNull Spell power){

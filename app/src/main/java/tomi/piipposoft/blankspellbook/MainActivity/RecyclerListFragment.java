@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class RecyclerListFragment extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
+    private ProgressBar progressBar;
 
     //use arrayLists instead of map to make it easier to populate text views in adapter
     private ArrayList<String> listNames = new ArrayList<>();
@@ -54,6 +56,7 @@ public class RecyclerListFragment extends Fragment {
                 R.layout.fragment_main_recycler_list, container, false);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.main_activity_recycler_fragment_recyclerView);
+        progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         adapter = new FragmentListAdapter();
         recyclerView.setAdapter(adapter);
 
@@ -92,6 +95,8 @@ public class RecyclerListFragment extends Fragment {
         listNames.add(listName);
         listIds.add(id);
         adapter.notifyItemInserted(listNames.size()-1);
+        progressBar.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
     }
 
     /**
