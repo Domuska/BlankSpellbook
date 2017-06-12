@@ -171,6 +171,7 @@ public class PowerListActivity extends ApplicationActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        //adapter.onSaveInstanceState(outState);
     }
 
     @Override
@@ -179,6 +180,11 @@ public class PowerListActivity extends ApplicationActivity
         super.onPause();
     }
 
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        //adapter.onRestoreInstanceState(savedInstanceState);
+        super.onRestoreInstanceState(savedInstanceState);
+    }
 
     // FROM POWER LIST CONTRACT INTERFACE
 

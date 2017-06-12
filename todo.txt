@@ -12,6 +12,8 @@ lisätään latausikoneita
 	
 Siirretään verkkojutut johonkin taustathreadiin
 
+lisätään onclicklistener power lists activityyn koko riville nii että kansa nuolta voi klikata
+
 korjaa bugi - välillä tulee tuplana mainactivityn fragmentteihin asiat. tuleeko silloin kun activity pysäytetään ja jatketaan?
 
 korjaa bugi - kun lisäät powerin ilman grouppia johonkin toiseen listaan, tämän listan activityssä ei näy ungrouped vaan tyhjä rivi
@@ -21,6 +23,9 @@ back movement main activityssä fragmenttien välillä voisi olla eri tavalla - 
 powers fragmentissa splotch väri näkyy väärin kun lisäät spellejä spells listan kautta - välillä näyttää värit (tällöinkin väärin) ja välillä ei
 	-näyttäisi että kun listaa scrollaa se fragmentti taitaa säilyttää värit jotenkin
 	
+	
+oisko hurja jos power details activityssä poistoruudussa näytettäisiin swipettävä nappula?
+	https://android.jlelse.eu/make-a-great-android-ux-how-to-make-a-swipe-button-eefbf060326d
 	
 spellien poistaminen kannasta
 	-varmista myös että referenssit poistetaan spell_lists/$id/spells & spell_groups/$id/$group_name kohasta

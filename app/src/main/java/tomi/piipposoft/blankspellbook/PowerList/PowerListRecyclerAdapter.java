@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -29,11 +31,14 @@ import tomi.piipposoft.blankspellbook.Utils.Spell;
 class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
         <PowerListRecyclerAdapter.SpellGroupViewHolder, PowerListRecyclerAdapter.SpellViewHolder>{
 
+    private final String TAG = "PowerListRecyclerAdapte";
     private LayoutInflater inflater;
     private PowerListContract.UserActionListener actionListener;
 
     //map for keeping track which spells have been selected by user
     private ArrayList<Spell> selectedSpellsList = new ArrayList<>();
+    private Animation rotateAnimation, reverseRotateAnimation;
+    private final int ARROW_ROTATION_DURATION = 300;
 
     //flag for setting when user is selecting power lists for deletion
     private boolean selectionMode;
@@ -43,6 +48,18 @@ class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
         super(spellGroups);
         actionListener = listener;
         inflater = LayoutInflater.from(context);
+
+        rotateAnimation =
+                new RotateAnimation(0.0f, 180f,
+                        Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        rotateAnimation.setDuration(ARROW_ROTATION_DURATION);
+        rotateAnimation.setFillAfter(true);
+
+        reverseRotateAnimation =
+                new RotateAnimation(180f, 0.0f,
+                        Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        reverseRotateAnimation.setDuration(ARROW_ROTATION_DURATION);
+        reverseRotateAnimation.setFillAfter(true);
 
     }
 
@@ -147,6 +164,18 @@ class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
             super(view);
             parentTextView = (TextView) view.findViewById(R.id.recycler_parent_text_view);
             parentDropDownArrow = (ImageButton) view.findViewById(R.id.recycler_parent_expand_arrow);
+
+            parentDropDownArrow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(isExpanded()) {
+                        collapseView();
+                    }
+                    else {
+                        expandView();
+                    }
+                }
+            });
         }
 
         void bind(SpellGroup spellGroup){
@@ -156,14 +185,29 @@ class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
         @Override
         public void setExpanded(boolean expanded) {
             super.setExpanded(expanded);
-            // TODO: 12-Jun-16 some animation could go here
+            //this would be better with proper animations, but can't get them to work reasonably
+            //the other arrows are animated too when one of the rows is expanded, leave this like this for now
+            //not sure if this library will be even used in future, it has not been updated in a long time
+            //12.6.2017
+            if(expanded){
+                //parentDropDownArrow.startAnimation(rotateAnimation);
+                parentDropDownArrow.setRotation(180);
+                Log.d(TAG, "row is now expanded");
+            }
+            else {
+                //parentDropDownArrow.startAnimation(reverseRotateAnimation);
+                parentDropDownArrow.setRotation(0);
+                Log.d(TAG, "row is not expanded any more");
+            }
         }
+
+
 
         @Override
         public void onExpansionToggled(boolean expanded) {
             super.onExpansionToggled(expanded);
-            //todo some animations could go here
         }
+
     }
 
     class SpellViewHolder extends ChildViewHolder{
