@@ -76,12 +76,18 @@ public class MainActivityPresenter extends DrawerPresenter
     public void pauseActivity() {
         //remove the listeners
         Log.d(TAG, "in pauseActivity");
-        if(powerListListener != null)
+        if(powerListListener != null) {
             DataSource.removePowerListListener(powerListListener);
-        if(dailyPowerListListener != null)
+            powerListListener = null;
+        }
+        if(dailyPowerListListener != null) {
             DataSource.removeDailyPowerListListener(dailyPowerListListener);
-        if(powersListener != null)
+            dailyPowerListListener = null;
+        }
+        if(powersListener != null) {
             DataSource.removePowersListener(powersListener);
+            powersListener = null;
+        }
     }
 
     @Override
@@ -95,6 +101,7 @@ public class MainActivityPresenter extends DrawerPresenter
      * @param id ID of the power list
      */
     public static void handleNewPowerList(String name, String id){
+        Log.d(TAG, "handleNewPowerList: name: " + name + " id: " + id);
         mMainActivityView.addPowerListData(name, id);
     }
 
@@ -108,6 +115,7 @@ public class MainActivityPresenter extends DrawerPresenter
      * @param id ID of the power list
      */
     public static void handleNewDailyPowerList(String name, String id){
+        Log.d(TAG, "handleNewDailyPowerList: name: " + name + " id: " + id);
         mMainActivityView.addDailyPowerListData(name, id);
     }
 
@@ -170,7 +178,7 @@ public class MainActivityPresenter extends DrawerPresenter
         if(dailyPowerListListener == null)
             dailyPowerListListener = DataSource.attachDailyPowerListListener(DataSource.MAINACTIVITYPRESENTER);
         else{
-            Log.d(TAG, "resumeActivity: dailyPowerListListener is not null");
+            Log.d(TAG, "onDailyPowerListFragmentCreated: dailyPowerListListener is not null");
             DataSource.getDailyPowerLists(DataSource.MAINACTIVITYPRESENTER);
         }
     }
@@ -187,7 +195,7 @@ public class MainActivityPresenter extends DrawerPresenter
         if(powersListener == null)
             powersListener = DataSource.attachPowerListener(DataSource.MAINACTIVITYPRESENTER);
         else{
-            Log.d(TAG, "resumeActivity: powersListener is not null");
+            Log.d(TAG, "onPowersFragmentCreated: powersListener is not null");
             DataSource.getPowers(DataSource.MAINACTIVITYPRESENTER);
         }
     }
@@ -203,7 +211,7 @@ public class MainActivityPresenter extends DrawerPresenter
         if(powerListListener == null)
             powerListListener = DataSource.attachPowerListListener(DataSource.MAINACTIVITYPRESENTER);
         else {
-            Log.d(TAG, "resumeActivity: powerListListener is not null");
+            Log.d(TAG, "onPowerListFragmentCreated: powerListListener is not null");
             DataSource.getPowerLists(DataSource.MAINACTIVITYPRESENTER);
         }
     }
