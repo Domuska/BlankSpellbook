@@ -122,21 +122,33 @@ public class RecyclerListFragment extends Fragment {
     }
 
 
-    public void removeListItem(String powerListName, String id) {
+    /**
+     * Remove an element from the recyclerList
+     * @param listName Name of the list that is to be removed
+     * @param id ID of the element
+     */
+    public void removeListItem(String listName, String id) {
         //save the index so we can notify adapter
-        int nameIndex = listNames.indexOf(powerListName);
-        listNames.remove(powerListName);
+        int nameIndex = listNames.indexOf(listName);
+        listNames.remove(listName);
         listIds.remove(id);
-        // TODO: 9.6.2017 remove also from map the entry
+        listPowerNames.remove(id);
         adapter.notifyItemRemoved(nameIndex);
     }
 
-    public void removeAllLists() {
+    /**
+     * Remove all items from the recycler view
+     */
+    public void removeAllElements() {
         listNames = new ArrayList<>();
         listIds = new ArrayList<>();
         listPowerNames = new ArrayMap<>();
     }
 
+    /**
+     * Attach the MainActivityPresenter listener to this fragment
+     * @param listener presenter of the Activity
+     */
     public void attachClickListener(MainActivityContract.FragmentUserActionListener listener) {
         this.myClickListener = listener;
     }

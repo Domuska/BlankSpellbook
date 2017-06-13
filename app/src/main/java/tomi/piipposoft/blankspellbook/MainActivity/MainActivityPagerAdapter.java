@@ -8,8 +8,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-
 import tomi.piipposoft.blankspellbook.Utils.Spell;
 
 /**
@@ -137,7 +135,7 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
      */
     void removePowerListsFromFragment(){
         if(powerListsFragment != null){
-            powerListsFragment.removeAllLists();
+            powerListsFragment.removeAllElements();
         }
     }
 
@@ -169,7 +167,7 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
      */
     void removeDailyPowerListsFromFragment(){
         if(dailyPowerListsFragment != null){
-            dailyPowerListsFragment.removeAllLists();
+            dailyPowerListsFragment.removeAllElements();
         }
     }
 
