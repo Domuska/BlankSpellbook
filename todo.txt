@@ -2,6 +2,7 @@ mitä pitää appiin tehä yleensä ottaen
 
 lisätään latausikoneita
 	-spells listaan
+		-crossfade myös latausikonille kun se lisätty
 	-spell details activityyn tekstikenttien sijaan
 	-spell details activityyn save nappulaan
 		-https://material.io/guidelines/components/progress-activity.html#progress-activity-types-of-indicators
@@ -12,13 +13,17 @@ lisätään latausikoneita
 	
 Siirretään verkkojutut johonkin taustathreadiin
 
-lisätään onclicklistener power lists activityyn koko riville nii että kansa nuolta voi klikata
+mainactivityn fragmenteihin crossfade latausikonin ja recyclerin välille
+
+lisätään "tutorial" mainactivityyn jossa näytetään että fragmentteja voi scrollata sivuille
+	-ehkä? https://developer.android.com/training/animation/screen-slide.html#pagetransformer
 
 korjaa bugi - välillä tulee tuplana mainactivityn fragmentteihin asiat. tuleeko silloin kun activity pysäytetään ja jatketaan?
 
 korjaa bugi - kun lisäät powerin ilman grouppia johonkin toiseen listaan, tämän listan activityssä ei näy ungrouped vaan tyhjä rivi
 
-back movement main activityssä fragmenttien välillä voisi olla eri tavalla - nyt back vain sammuttaa apin
+korjaa bugi - joskus appi kaatuu randomina kun palataan mainactivityyn, syy varmaan täällä:
+	https://stackoverflow.com/questions/31759171/recyclerview-and-java-lang-indexoutofboundsexception-inconsistency-detected-in
 
 powers fragmentissa splotch väri näkyy väärin kun lisäät spellejä spells listan kautta - välillä näyttää värit (tällöinkin väärin) ja välillä ei
 	-näyttäisi että kun listaa scrollaa se fragmentti taitaa säilyttää värit jotenkin
@@ -35,6 +40,7 @@ daily power listien lisääminen
 	
 mitä mainActivityyn pitää tehdä
 -animaatio kun siirrytään power listiin
+-fabbinappulat kiinni alempaan toolbariin
 
 
 mainactivityn alempaan toolbariin lisätään search & filtterit

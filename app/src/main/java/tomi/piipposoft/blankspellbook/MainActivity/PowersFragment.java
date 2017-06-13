@@ -154,20 +154,22 @@ public class PowersFragment extends Fragment {
             holder.powerListName.setText(powerListName);
 
 
+            Drawable drawable = null;
             //set splotch colour
             if(!powerListName.equals("")){
-                Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.recycler_child_rectangle);
+                drawable = ContextCompat.getDrawable(getContext(), R.drawable.recycler_child_rectangle);
                 drawable.setColorFilter(Helper.getRandomColorFromString(powerListName), PorterDuff.Mode.SRC_IN);
-
-                //set background for the splotch, seems like this really has to be done like this
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    holder.splotchView.setBackground(drawable);
-                }
-                else {
-                    //we can call this since only on ancient devices we get here, those still have this method
-                    holder.splotchView.setBackgroundDrawable(drawable);
-                }
             }
+
+            //set background for the splotch, seems like this really has to be done like this
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                holder.splotchView.setBackground(drawable);
+            }
+            else {
+                //we can call this since only on ancient devices we get here, those still have this method
+                holder.splotchView.setBackgroundDrawable(drawable);
+            }
+
 
         }
 
