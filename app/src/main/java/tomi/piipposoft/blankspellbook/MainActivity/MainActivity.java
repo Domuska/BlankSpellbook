@@ -1,11 +1,14 @@
 package tomi.piipposoft.blankspellbook.MainActivity;
 
+import android.content.DialogInterface;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +20,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import tomi.piipposoft.blankspellbook.ApplicationActivity;
+import tomi.piipposoft.blankspellbook.PowerDetails.PowerDetailsActivity;
 import tomi.piipposoft.blankspellbook.R;
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerContract;
@@ -233,6 +237,27 @@ public class MainActivity extends ApplicationActivity
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        //back button functionality
+        if(keyCode == KeyEvent.KEYCODE_BACK ) {
+            new AlertDialog.Builder(MainActivity.this)
+                    .setTitle(R.string.mainactivity_back_button_popup_title)
+                    .setMessage(R.string.mainactivity_back_button_popup_info)
+                    .setPositiveButton(getString(R.string.action_yes)
+                            , new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    MainActivity.this.finish();
+                                }
+                            })
+                    .setNegativeButton(getString(R.string.action_no), null)
+                    .show();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
 

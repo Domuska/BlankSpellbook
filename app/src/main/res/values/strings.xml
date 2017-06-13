@@ -30,6 +30,9 @@
     <string name="createspellbook_create">Create</string>
     <string name="createspellbook_cancel">Cancel</string>
 
+    <!-- strings for mainactivity & fragments -->
+    <string name="mainactivity_back_button_popup_title">Confirm quit</string>
+    <string name="mainactivity_back_button_popup_info">Do you want to quit?</string>
 
     <!-- Strings for power details activity & Fragments -->
 
