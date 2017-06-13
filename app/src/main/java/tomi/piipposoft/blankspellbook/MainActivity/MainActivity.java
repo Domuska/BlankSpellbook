@@ -1,6 +1,9 @@
 package tomi.piipposoft.blankspellbook.MainActivity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -20,6 +23,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import tomi.piipposoft.blankspellbook.ApplicationActivity;
+import tomi.piipposoft.blankspellbook.Drawer.SetDailyPowerListNameDialog;
+import tomi.piipposoft.blankspellbook.Drawer.SetPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.PowerDetails.PowerDetailsActivity;
 import tomi.piipposoft.blankspellbook.R;
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
@@ -34,20 +39,15 @@ import tomi.piipposoft.blankspellbook.Utils.Spell;
  */
 
 public class MainActivity extends ApplicationActivity
-        implements MainActivityContract.View {
+        implements MainActivityContract.View{
 
     private final String DATABASE_PERSISTANCE_SET_KEY = "databasePersistanceSet";
     private final String TAG = "MainActivity";
     private final String FRAGMENT_LAST_VISIBLE = "lastVisibleFragment";
 
-
-    private Button spellBookButton, dailySpellsButton;
     private ActionBarDrawerToggle mDrawerToggle;
     private MainActivityContract.UserActionListener mActionlistener;
 
-    PowersFragment powersFragment;
-    RecyclerListFragment powerListFragment;
-    private FragmentManager fragmentManager;
     private MainActivityPagerAdapter pagerAdapter;
     private ViewPager viewPager;
     private View secondaryToolbarTools;
@@ -95,6 +95,12 @@ public class MainActivity extends ApplicationActivity
                 drawerHelper,
                 this);
 
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.mainactivity_fab);
+        //fab listeners
+        final View.OnClickListener powersListener = new OnNewPowerClickListener();
+        final View.OnClickListener dailyPowerListListener = new OnNewDailyPowerListClickListener();
+        final View.OnClickListener powerListListener = new OnNewPowerListClickListener();
+
         //create a new adapter and give it the actionListener to attach to the fragments
         pagerAdapter = new MainActivityPagerAdapter(getSupportFragmentManager(),
                 (MainActivityContract.FragmentUserActionListener) mActionlistener,
@@ -122,6 +128,7 @@ public class MainActivity extends ApplicationActivity
                             secondaryToolbarTools.setVisibility(View.GONE);
                         //tell presenter which page was switched to
                         mActionlistener.userSwitchedTo(MainActivityPresenter.DAILY_POWER_LISTS_SELECTED);
+                        fab.setOnClickListener(dailyPowerListListener);
                         break;
 
                     case MainActivityPresenter.POWER_LISTS_SELECTED:
@@ -129,6 +136,7 @@ public class MainActivity extends ApplicationActivity
                         if (secondaryToolbarTools != null)
                             secondaryToolbarTools.setVisibility(View.GONE);
                         mActionlistener.userSwitchedTo(MainActivityPresenter.POWER_LISTS_SELECTED);
+                        fab.setOnClickListener(powerListListener);
                         break;
 
                     case MainActivityPresenter.SPELLS_SELECTED:
@@ -138,6 +146,7 @@ public class MainActivity extends ApplicationActivity
                         else
                             secondaryToolbarTools.setVisibility(View.VISIBLE);
                         mActionlistener.userSwitchedTo(MainActivityPresenter.SPELLS_SELECTED);
+                        fab.setOnClickListener(powersListener);
                         break;
                     default:
                         Log.e(TAG, "onPageSelected: something went terribly wrong, position: " + position);
@@ -178,7 +187,9 @@ public class MainActivity extends ApplicationActivity
         // Make the drawer initialize itself
         this.drawerActionListener.powerListProfileSelected();
         mActionlistener.resumeActivity();
+        //set the current list and click listener
         viewPager.setCurrentItem(currentlySelectedList);
+        fab.setOnClickListener(powerListListener);
         mActionlistener.userSwitchedTo(currentlySelectedList);
     }
 
@@ -261,8 +272,37 @@ public class MainActivity extends ApplicationActivity
     }
 
 
-    //FROM MAIN ACTIVITY CONTRACT INTERFACE
+    //click listeners for the FAB
+    private class OnNewDailyPowerListClickListener implements View.OnClickListener{
 
+        @Override
+        public void onClick(View v) {
+            DialogFragment dialog = new SetDailyPowerListNameDialog();
+            dialog.show(MainActivity.this.getSupportFragmentManager(), "SetDailyPowerListNameDialog");
+        }
+    }
+
+    private class OnNewPowerListClickListener implements View.OnClickListener{
+
+        @Override
+        public void onClick(View v) {
+            DialogFragment dialog = new SetPowerListNameDialog();
+            dialog.show(MainActivity.this.getSupportFragmentManager(), "SetSpellBookNameDialogFragment");
+        }
+    }
+
+    private class OnNewPowerClickListener implements View.OnClickListener{
+
+        @Override
+        public void onClick(View v) {
+            Intent i = new Intent(MainActivity.this, PowerDetailsActivity.class);
+            i.putExtra(PowerDetailsActivity.EXTRA_POWER_DETAIL_ID,
+                    PowerDetailsActivity.EXTRA_ADD_NEW_POWER_DETAILS);
+            MainActivity.this.startActivity(i);
+        }
+    }
+
+    //FROM MAIN ACTIVITY CONTRACT INTERFACE
 
     @Override
     public void addPowerListData(String name, String id) {
