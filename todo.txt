@@ -24,11 +24,8 @@ korjaa bugi - kun lisäät powerin ilman grouppia johonkin toiseen listaan, täm
 
 korjaa bugi - joskus appi kaatuu randomina kun palataan mainactivityyn, syy varmaan täällä:
 	https://stackoverflow.com/questions/31759171/recyclerview-and-java-lang-indexoutofboundsexception-inconsistency-detected-in
+	
 
-powers fragmentissa splotch väri näkyy väärin kun lisäät spellejä spells listan kautta - välillä näyttää värit (tällöinkin väärin) ja välillä ei
-	-näyttäisi että kun listaa scrollaa se fragmentti taitaa säilyttää värit jotenkin
-	
-	
 oisko hurja jos power details activityssä poistoruudussa näytettäisiin swipettävä nappula?
 	https://android.jlelse.eu/make-a-great-android-ux-how-to-make-a-swipe-button-eefbf060326d
 	

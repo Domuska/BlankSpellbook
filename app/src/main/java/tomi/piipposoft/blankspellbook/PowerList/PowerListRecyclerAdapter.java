@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.bignerdranch.expandablerecyclerview.Adapter.ExpandableRecyclerAdapter;
 import com.bignerdranch.expandablerecyclerview.Model.ParentListItem;
+import com.bignerdranch.expandablerecyclerview.Model.ParentWrapper;
 import com.bignerdranch.expandablerecyclerview.ViewHolder.ChildViewHolder;
 import com.bignerdranch.expandablerecyclerview.ViewHolder.ParentViewHolder;
 
@@ -28,8 +29,9 @@ import tomi.piipposoft.blankspellbook.Utils.Spell;
  * Has parent and child ViewHolders, when parent is clicked it is expanded
  * and child is brought below parent
  */
-class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
-        <PowerListRecyclerAdapter.SpellGroupViewHolder, PowerListRecyclerAdapter.SpellViewHolder>{
+class PowerListRecyclerAdapter
+        extends ExpandableRecyclerAdapter
+        <PowerListRecyclerAdapter.SpellGroupViewHolder, PowerListRecyclerAdapter.SpellViewHolder> {
 
     private final String TAG = "PowerListRecyclerAdapte";
     private LayoutInflater inflater;
@@ -39,6 +41,7 @@ class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
     private ArrayList<Spell> selectedSpellsList = new ArrayList<>();
     private Animation rotateAnimation, reverseRotateAnimation;
     private final int ARROW_ROTATION_DURATION = 300;
+
 
     //flag for setting when user is selecting power lists for deletion
     private boolean selectionMode;
@@ -60,7 +63,6 @@ class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
                         Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         reverseRotateAnimation.setDuration(ARROW_ROTATION_DURATION);
         reverseRotateAnimation.setFillAfter(true);
-
     }
 
     ArrayList<Spell> getSelectedSpells(){
@@ -100,23 +102,21 @@ class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
             @Override
             public void onClick(View v) {
                 //selection mode on, select row instead of opening activity
-                if(selectionMode){
-                    if(childViewHolder.recyclerRowBackground.isSelected()){
+                if (selectionMode) {
+                    if (childViewHolder.recyclerRowBackground.isSelected()) {
                         //item already selected, unselect it
                         childViewHolder.recyclerRowBackground.setSelected(false);
                         selectedSpellsList.remove(spell);
-                    }
-                    else{
+                    } else {
                         //select the item
                         childViewHolder.recyclerRowBackground.setSelected(true);
                         selectedSpellsList.add(spell);
                     }
                     //if the list is empty, end selection mode
-                    if(selectedSpellsList.size() < 1){
+                    if (selectedSpellsList.size() < 1) {
                         selectionMode = false;
                     }
-                }
-                else
+                } else
                     PowerListRecyclerAdapter.this.actionListener.openPowerDetails(spell.getSpellId());
             }
         };
@@ -125,15 +125,14 @@ class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
         View.OnLongClickListener unSelectedLongClickListener = new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if(childViewHolder.recyclerRowBackground.isSelected()) {
+                if (childViewHolder.recyclerRowBackground.isSelected()) {
                     //item already selected, set unselected
                     childViewHolder.recyclerRowBackground.setSelected(false);
                     //remove the selected item from map of selected items
                     selectedSpellsList.remove(spell);
                     //set off "selection mode"
                     selectionMode = false;
-                }
-                else {
+                } else {
                     //item not selected, set selected
                     childViewHolder.recyclerRowBackground.setSelected(true);
                     //add item to map of selected items
@@ -150,20 +149,19 @@ class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
         childViewHolder.recyclerRowBackground.setOnLongClickListener(unSelectedLongClickListener);
     }
 
-
-
-
-
     // ADAPTERS
     class SpellGroupViewHolder extends ParentViewHolder {
 
         TextView parentTextView;
         ImageButton parentDropDownArrow;
 
+        ArrayList<ImageButton> parentArrows = new ArrayList<>();
+
         SpellGroupViewHolder(View view){
             super(view);
             parentTextView = (TextView) view.findViewById(R.id.recycler_parent_text_view);
             parentDropDownArrow = (ImageButton) view.findViewById(R.id.recycler_parent_expand_arrow);
+            parentArrows.add(parentDropDownArrow);
 
             parentDropDownArrow.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -189,23 +187,27 @@ class PowerListRecyclerAdapter extends ExpandableRecyclerAdapter
             //the other arrows are animated too when one of the rows is expanded, leave this like this for now
             //not sure if this library will be even used in future, it has not been updated in a long time
             //12.6.2017
+            //Log.d(TAG, "setExpanded: adapter position: " + getAdapterPosition());
+
             if(expanded){
+                //parentArrows.get(getAdapterPosition()).startAnimation(rotateAnimation);
                 //parentDropDownArrow.startAnimation(rotateAnimation);
                 parentDropDownArrow.setRotation(180);
                 Log.d(TAG, "row is now expanded");
             }
             else {
+                //parentArrows.get(getAdapterPosition()).startAnimation(reverseRotateAnimation);
                 //parentDropDownArrow.startAnimation(reverseRotateAnimation);
                 parentDropDownArrow.setRotation(0);
+
                 Log.d(TAG, "row is not expanded any more");
             }
         }
 
-
-
         @Override
         public void onExpansionToggled(boolean expanded) {
             super.onExpansionToggled(expanded);
+            Log.d(TAG, "onExpansionToggled: expanded? " + expanded);
         }
 
     }
