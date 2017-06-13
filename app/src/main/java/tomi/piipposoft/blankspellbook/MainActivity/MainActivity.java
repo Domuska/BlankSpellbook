@@ -3,6 +3,8 @@ package tomi.piipposoft.blankspellbook.MainActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -26,12 +28,15 @@ import tomi.piipposoft.blankspellbook.ApplicationActivity;
 import tomi.piipposoft.blankspellbook.Drawer.SetDailyPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.Drawer.SetPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.PowerDetails.PowerDetailsActivity;
+import tomi.piipposoft.blankspellbook.PowerList.PowerListActivity;
 import tomi.piipposoft.blankspellbook.R;
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerContract;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerHelper;
 import tomi.piipposoft.blankspellbook.Utils.SharedPreferencesHandler;
 import tomi.piipposoft.blankspellbook.Utils.Spell;
+
+
 
 /**
  *
@@ -54,6 +59,8 @@ public class MainActivity extends ApplicationActivity
     private TextView secondaryToolbarText;
 
     private boolean databasePersistanceSet = false;
+
+    private FloatingActionButton fab;
 
     //default selection is the spell lists fragment
     private int currentlySelectedList = MainActivityPresenter.POWER_LISTS_SELECTED;
@@ -95,7 +102,7 @@ public class MainActivity extends ApplicationActivity
                 drawerHelper,
                 this);
 
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.mainactivity_fab);
+        fab = (FloatingActionButton) findViewById(R.id.mainactivity_fab);
         //fab listeners
         final View.OnClickListener powersListener = new OnNewPowerClickListener();
         final View.OnClickListener dailyPowerListListener = new OnNewDailyPowerListClickListener();
@@ -293,12 +300,27 @@ public class MainActivity extends ApplicationActivity
 
     private class OnNewPowerClickListener implements View.OnClickListener{
 
+        //https://android-developers.googleblog.com/2014/10/implementing-material-design-in-your.html
+        // Activity + Fragment Transitions
+        //https://github.com/codepath/android_guides/wiki/Shared-Element-Activity-Transition
         @Override
         public void onClick(View v) {
+            //Intent i = new Intent(MainActivity.this, PowerDetailsActivity.class);
+            /*i.putExtra(PowerDetailsActivity.EXTRA_POWER_DETAIL_ID,
+                    PowerDetailsActivity.EXTRA_ADD_NEW_POWER_DETAILS);*/
+            //MainActivity.this.startActivity(i);
             Intent i = new Intent(MainActivity.this, PowerDetailsActivity.class);
+            String transitionName = "fabTransition";
+            ActivityOptionsCompat options =
+                    ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            MainActivity.this,
+                            fab,
+                            transitionName);
+            Bundle bundle = options.toBundle();
+
             i.putExtra(PowerDetailsActivity.EXTRA_POWER_DETAIL_ID,
                     PowerDetailsActivity.EXTRA_ADD_NEW_POWER_DETAILS);
-            MainActivity.this.startActivity(i);
+            ActivityCompat.startActivity(MainActivity.this, i, bundle);
         }
     }
 
@@ -346,7 +368,10 @@ public class MainActivity extends ApplicationActivity
 
     @Override
     public void startPowerListActivity(String name, String id) {
-        this.openPowerListActivity(id, name);
+        // TODO: 13.6.2017 kantsii varmaan kuttua kuitenkin yliluokan implementaatiota.. ehkä?
+
+        //this.openPowerListActivity(id, name);
+
     }
 
     @Override

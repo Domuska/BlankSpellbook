@@ -85,7 +85,8 @@
             android:layout_margin="@dimen/fab_margin"
             android:src="@drawable/ic_add_black_36dp"
             app:layout_anchor="@id/toolbar_secondary_layout"
-            app:layout_anchorGravity="start|bottom"/>
+            app:layout_anchorGravity="start|bottom"
+            android:transitionName="fabTransition"/>
 
     </android.support.design.widget.CoordinatorLayout>
 

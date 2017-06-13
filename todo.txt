@@ -22,6 +22,9 @@ korjaa bugi - välillä tulee tuplana mainactivityn fragmentteihin asiat. tuleek
 
 korjaa bugi - kun lisäät powerin ilman grouppia johonkin toiseen listaan, tämän listan activityssä ei näy ungrouped vaan tyhjä rivi
 
+kun power details activity alkaa ja lisätään uus power ni ei laiteta fokusta suoraan
+ku palataan mainactivityyn power detailsista ni fabin onclicklistener väärä
+
 korjaa bugi - joskus appi kaatuu randomina kun palataan mainactivityyn, syy varmaan täällä:
 	https://stackoverflow.com/questions/31759171/recyclerview-and-java-lang-indexoutofboundsexception-inconsistency-detected-in
 	

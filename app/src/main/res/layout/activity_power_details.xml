@@ -33,7 +33,8 @@
         android:clickable="true"
         android:layout_margin="@dimen/fab_margin"
         android:visibility="gone"
-        app:layout_behavior="tomi.piipposoft.blankspellbook.PowerDetails.ScrollingFABBehavior"/>
+        app:layout_behavior="tomi.piipposoft.blankspellbook.PowerDetails.ScrollingFABBehavior"
+        android:transitionName="fabTransition"/>
 
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
