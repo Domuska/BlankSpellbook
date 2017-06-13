@@ -203,11 +203,13 @@ public class RecyclerListFragment extends Fragment {
 
             holder.textViewPrimary.setText(groupName);
 
-            //the map might not have entry with this ID, that means there's no powers under the spell list
+            //check if power list ID in listPowerNames map - if it is there is at least one power name in there
             if (listPowerNames.containsKey(id)) {
-                //add a random name to first text view
                 Random random = new Random();
                 int namesListSize = listPowerNames.get(id).size();
+                //set text views as visible, they might be invisible
+                holder.textViewSecondary.setVisibility(View.VISIBLE);
+                holder.textViewTertiary.setVisibility(View.VISIBLE);
 
                 //if we only have one entry, set that and be done with it
                 if (namesListSize == 1) {
@@ -225,14 +227,18 @@ public class RecyclerListFragment extends Fragment {
                     } else if (namesListSize >= 2) {
                         //else set a random name
                         int random1, random2;
+                        //try to get different power names, limit number of tries though
+                        //note, this doesn't guarantee different names, if same name is
+                        //multiple times in DB, those different powers (but same names) can be selected
+                        int i = 0;
                         do {
                             random1 = random.nextInt(namesListSize - 1);
                             random2 = random.nextInt(namesListSize - 1);
-                        } while (random1 == random2);
+                            i++;
+                        } while (random1 == random2 && i <= 50);
                         String powerName1 = listPowerNames.get(id).get(random1);
                         String powerName2 = listPowerNames.get(id).get(random2);
 
-                        //could maybe check if the names are same get a new name
                         holder.textViewSecondary.setText(powerName1);
                         holder.textViewTertiary.setText(powerName2);
                     }
