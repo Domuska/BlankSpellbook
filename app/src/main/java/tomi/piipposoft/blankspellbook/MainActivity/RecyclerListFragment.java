@@ -184,86 +184,77 @@ public class RecyclerListFragment extends Fragment {
         // Replace the contents of a view (invoked by the layout manager)
         @Override
         public void onBindViewHolder(ViewHolder holder, final int position) {
-            //first card position is reserved as empty to have room for FAB
-            if(position != 0) {
-                //make sure we get position-1 since first position is reserved
-                String groupName = listNames.get(position-1);
-                String id = listIds.get(position-1);
-                final int itemPosition = holder.getAdapterPosition();
 
-                holder.textViewPrimary.setText(groupName);
+            String groupName = listNames.get(position);
+            String id = listIds.get(position);
+            final int itemPosition = holder.getAdapterPosition();
 
-                //the map might not have entry with this ID, that means there's no powers under the spell list
-                if (listPowerNames.containsKey(id)) {
-                    //add a random name to first text view
-                    Random random = new Random();
-                    int namesListSize = listPowerNames.get(id).size();
+            holder.textViewPrimary.setText(groupName);
 
-                    //if we only have one entry, set that and be done with it
-                    if (namesListSize == 1) {
-                        String powerName1 = listPowerNames.get(id).get(0);
+            //the map might not have entry with this ID, that means there's no powers under the spell list
+            if (listPowerNames.containsKey(id)) {
+                //add a random name to first text view
+                Random random = new Random();
+                int namesListSize = listPowerNames.get(id).size();
+
+                //if we only have one entry, set that and be done with it
+                if (namesListSize == 1) {
+                    String powerName1 = listPowerNames.get(id).get(0);
+                    holder.textViewSecondary.setText(powerName1);
+                    holder.textViewTertiary.setText("");
+                } else {
+                    //if list size exactly 2, set first and second name
+                    if (namesListSize == 2) {
+                        holder.textViewSecondary.setText(
+                                listPowerNames.get(id).get(0));
+
+                        holder.textViewTertiary.setText(
+                                listPowerNames.get(id).get(1));
+                    } else if (namesListSize >= 2) {
+                        //else set a random name
+                        int random1, random2;
+                        do {
+                            random1 = random.nextInt(namesListSize - 1);
+                            random2 = random.nextInt(namesListSize - 1);
+                        } while (random1 == random2);
+                        String powerName1 = listPowerNames.get(id).get(random1);
+                        String powerName2 = listPowerNames.get(id).get(random2);
+
+                        //could maybe check if the names are same get a new name
                         holder.textViewSecondary.setText(powerName1);
-                        holder.textViewTertiary.setText("");
-                    } else {
-                        //if list size exactly 2, set first and second name
-                        if (namesListSize == 2) {
-                            holder.textViewSecondary.setText(
-                                    listPowerNames.get(id).get(0));
-
-                            holder.textViewTertiary.setText(
-                                    listPowerNames.get(id).get(1));
-                        } else if (namesListSize >= 2) {
-                            //else set a random name
-                            int random1, random2;
-                            do {
-                                random1 = random.nextInt(namesListSize - 1);
-                                random2 = random.nextInt(namesListSize - 1);
-                            } while (random1 == random2);
-                            String powerName1 = listPowerNames.get(id).get(random1);
-                            String powerName2 = listPowerNames.get(id).get(random2);
-
-                            //could maybe check if the names are same get a new name
-                            holder.textViewSecondary.setText(powerName1);
-                            holder.textViewTertiary.setText(powerName2);
-                        }
+                        holder.textViewTertiary.setText(powerName2);
                     }
-
-                } else {
-                    holder.textViewSecondary.setVisibility(View.INVISIBLE);
-                    holder.textViewTertiary.setVisibility(View.INVISIBLE);
                 }
 
-                holder.cardView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        myClickListener.onPowerListClicked(
-                                listNames.get(itemPosition),
-                                listIds.get(itemPosition));
-                    }
-                });
+            } else {
+                holder.textViewSecondary.setVisibility(View.INVISIBLE);
+                holder.textViewTertiary.setVisibility(View.INVISIBLE);
+            }
 
-                //get the drawable and give it a random color
-                Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.recycler_child_rectangle);
-                drawable.setColorFilter(Helper.getRandomColorFromString(groupName), PorterDuff.Mode.SRC_IN);
-
-                //set background for the splotch, seems like this really has to be done like this
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    holder.splotchView.setBackground(drawable);
-                } else {
-                    //we can call this since only on ancient devices we get here, those still have this method
-                    holder.splotchView.setBackgroundDrawable(drawable);
+            holder.cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    myClickListener.onPowerListClicked(
+                            listNames.get(itemPosition),
+                            listIds.get(itemPosition));
                 }
+            });
+
+            //get the drawable and give it a random color
+            Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.recycler_child_rectangle);
+            drawable.setColorFilter(Helper.getRandomColorFromString(groupName), PorterDuff.Mode.SRC_IN);
+
+            //set background for the splotch, seems like this really has to be done like this
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                holder.splotchView.setBackground(drawable);
+            } else {
+                //we can call this since only on ancient devices we get here, those still have this method
+                holder.splotchView.setBackgroundDrawable(drawable);
             }
-            else{
-                holder.cardView.setVisibility(View.INVISIBLE);
-                //... is this a bad idea? It feels like a bad idea.
-                holder.textViewPrimary.setVisibility(View.GONE);
-                holder.textViewSecondary.setVisibility(View.GONE);
-                holder.textViewTertiary.setVisibility(View.GONE);
-            }
+
         }
 
-        // Return the size of your dataset (invoked by the layout manager)
+        //invoked by layout manager
         @Override
         public int getItemCount() {
             return listNames.size();
