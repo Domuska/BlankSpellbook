@@ -11,4 +11,7 @@
     <dimen name="toolbar_secondary_margin_left">20dp</dimen>
     <dimen name="toolbar_secondary_margin_top">10dp</dimen>
 
+    <!-- activity_power_details_textviews padding between texts -->
+    <dimen name="padding_power_details_text_views">10dp</dimen>
+
 </resources>
