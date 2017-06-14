@@ -2,27 +2,246 @@
 <android.support.v4.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scrollView_text"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:showIn="@layout/activity_power_details"
+    >
 
     <!-- Layout for the non-editable textviews in Power Details Activity -->
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/text_spellName"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:lines="1"
             android:ellipsize="end"
+            android:lines="1"
             android:transitionName="@string/transition_powerDetails_name"
-            />
+            tools:text="spell name"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="16dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            tools:layout_constraintRight_creator="1"
+            tools:layout_constraintLeft_creator="1" />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/info_attackType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="49dp"
+            android:text="@string/spellbook_attacktype_info"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/text_group"
+            android:layout_marginLeft="8dp"
+            tools:layout_constraintTop_creator="1"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="49dp"
+            android:layout_marginTop="17dp"
+            app:layout_constraintTop_toBottomOf="@+id/text_spellName" />
+
+        <TextView
+            android:id="@+id/text_attackType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="attacktype"
+            app:layout_constraintLeft_toLeftOf="@+id/info_attackType"
+            tools:layout_constraintTop_creator="1"
+            app:layout_constraintTop_toBottomOf="@+id/info_attackType"
+            android:layout_marginRight="8dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="-1dp"
+            app:layout_constraintHorizontal_bias="0.0" />
+
+        <TextView
+            android:id="@+id/text_recharge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="recharge"
+            android:layout_marginLeft="16dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginTop="11dp"
+            app:layout_constraintTop_toBottomOf="@+id/text_miss_damage"
+            android:layout_marginStart="16dp" />
+
+        <TextView
+            android:id="@+id/text_castingTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="castingtime"
+            app:layout_constraintLeft_toLeftOf="@+id/info_attackType"
+            android:layout_marginTop="21dp"
+            app:layout_constraintTop_toBottomOf="@+id/text_attackType"
+            app:layout_constraintBottom_toBottomOf="@+id/text_target"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="0dp"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/text_target"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="target"
+            app:layout_constraintRight_toRightOf="@+id/info_attackRoll"
+            android:layout_marginTop="21dp"
+            app:layout_constraintTop_toBottomOf="@+id/text_attackRoll" />
+
+        <TextView
+            android:id="@+id/info_attackRoll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:text="@string/spellbook_attackroll"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/text_group"
+            android:layout_marginRight="8dp"
+            tools:layout_constraintTop_creator="1"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="17dp"
+            app:layout_constraintTop_toBottomOf="@+id/text_spellName" />
+
+        <TextView
+            android:id="@+id/text_attackRoll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="attackroll"
+            app:layout_constraintRight_toRightOf="@+id/info_attackRoll"
+            tools:layout_constraintTop_creator="1"
+            app:layout_constraintTop_toBottomOf="@+id/info_attackRoll"
+            android:layout_marginTop="-1dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="0dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintHorizontal_bias="1.0" />
+
+        <TextView
+            android:id="@+id/text_trigger"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="trigger"
+            android:layout_marginLeft="16dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginTop="13dp"
+            app:layout_constraintTop_toBottomOf="@+id/text_recharge"
+            android:layout_marginStart="16dp" />
+
+        <TextView
+            android:id="@+id/info_hitdamage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/spellbook_damageEffect"
+            android:layout_marginBottom="9dp"
+            app:layout_constraintBottom_toTopOf="@+id/text_hitDamage_effect"
+            app:layout_constraintLeft_toLeftOf="@+id/text_hitDamage_effect" />
+
+        <TextView
+            android:id="@+id/text_hitDamage_effect"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="43dp"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_castingTime"
+            tools:layout_constraintLeft_creator="1"
+            tools:layout_constraintRight_creator="1"
+            tools:text="hitdamage_effect" />
+
+        <TextView
+            android:id="@+id/text_miss_damage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="missdamage"
+            android:layout_marginLeft="16dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginTop="13dp"
+            app:layout_constraintTop_toBottomOf="@+id/text_hitDamage_effect"
+            android:layout_marginStart="16dp" />
+
+        <TextView
+            android:id="@+id/text_adventurer_feat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="adv feat"
+            android:layout_marginLeft="16dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginTop="11dp"
+            app:layout_constraintTop_toBottomOf="@+id/text_trigger"
+            android:layout_marginStart="16dp" />
+
+        <TextView
+            android:id="@+id/text_champion_feat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="champ feat"
+            android:layout_marginLeft="16dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginTop="14dp"
+            app:layout_constraintTop_toBottomOf="@+id/text_adventurer_feat"
+            android:layout_marginStart="16dp" />
+
+        <TextView
+            android:id="@+id/text_epic_feat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="epic feat"
+            android:layout_marginLeft="16dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginTop="11dp"
+            app:layout_constraintTop_toBottomOf="@+id/text_champion_feat"
+            android:layout_marginStart="16dp" />
+
+        <TextView
+            android:id="@+id/text_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="group"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:layout_constraintTop_creator="1"
+            tools:layout_constraintRight_creator="1"
+            app:layout_constraintTop_toBottomOf="@+id/text_spellName"
+            tools:layout_constraintLeft_creator="1"
+            android:layout_marginTop="0dp" />
+
+        <TextView
+            android:id="@+id/info_notes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/spellbook_playerNotes"
+            app:layout_constraintLeft_toLeftOf="@+id/text_notes"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/text_notes" />
+
+        <TextView
+            android:id="@+id/text_notes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="56dp"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_epic_feat"
+            tools:layout_constraintLeft_creator="1"
+            tools:layout_constraintRight_creator="1"
+            tools:text="notes" />
+
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.v4.widget.NestedScrollView>
 

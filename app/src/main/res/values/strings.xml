@@ -35,33 +35,37 @@
     <string name="mainactivity_back_button_popup_info">Do you want to quit?</string>
 
     <!-- Strings for power details activity & Fragments -->
-    <string name="title_power_details">Details</string>
-    <string name="action_add_to_powerlist">Add to list of powers</string>
-    <string name="action_delete_power">Delete power</string>
-    <string name="deleteDialog_title">Confirm power deletion</string>
-    <string name="deleteDialog_infotext">Do you want to <b>delete permanently</b> this power from storage?</string>
-    <string name="deleteDialog_warningtext"><b>WARNING:</b> the power can\'t be restored once deleted</string>
+        <string name="title_power_details">Details</string>
+        <string name="action_add_to_powerlist">Add to list of powers</string>
+        <string name="action_delete_power">Delete power</string>
+        <string name="deleteDialog_title">Confirm power deletion</string>
+        <string name="deleteDialog_infotext">Do you want to <b>delete permanently</b> this power from storage?</string>
+        <string name="deleteDialog_warningtext"><b>WARNING:</b> the power can\'t be restored once deleted</string>
 
-    <string name="spellbook_attacktype">Attack type (close quarters, melee attack…)</string>
-    <string name="spellbook_attackroll">Attack roll</string>
-    <string name="spellbook_castingtime">Casting time</string>
-    <string name="spellbook_effect">Spell\'s effect</string>
-    <string name="spellbook_group">Spell\'s level or other custom group</string>
-    <string name="spellbook_hitDamageFirst">Damage at first level</string>
-    <string name="spellbook_hitDamageThird">Damage at third level</string>
-    <string name="spellbook_hitDamageFifth">Damage at fifth level</string>
-    <string name="spellbook_hitDamageSeventh">Damage at seventh level</string>
-    <string name="spellbook_hitDamageNinth">Damage at ninth level</string>
-    <string name="spellbook_damageEffect">Spell\'s damage or other effect</string>
-    <string name="spellbook_missdamage">Miss damage</string>
-    <string name="spellbook_name">Spell name</string>
-    <string name="spellbook_playerNotes">Notes</string>
-    <string name="spellbook_rechargeTime">Recharge time</string>
-    <string name="spellbook_target">Target</string>
-    <string name="spellbook_trigger">Trigger for the spell or power</string>
-    <string name="spellbook_adventurerFeat">Adventurer level feat</string>
-    <string name="spellbook_championFeat">Champion level feat</string>
-    <string name="spellbook_epicFeat">Epic level feat</string>
+        <!-- for edit text hints -->
+            <string name="spellbook_attacktype">Attack type (close quarters, melee attack…)</string>
+            <string name="spellbook_attackroll">Attack roll</string>
+            <string name="spellbook_castingtime">Casting time</string>
+            <string name="spellbook_effect">Spell\'s effect</string>
+            <string name="spellbook_group">Spell\'s level or other custom group</string>
+            <string name="spellbook_hitDamageFirst">Damage at first level</string>
+            <string name="spellbook_hitDamageThird">Damage at third level</string>
+            <string name="spellbook_hitDamageFifth">Damage at fifth level</string>
+            <string name="spellbook_hitDamageSeventh">Damage at seventh level</string>
+            <string name="spellbook_hitDamageNinth">Damage at ninth level</string>
+            <string name="spellbook_damageEffect">Spell\'s damage or other effect</string>
+            <string name="spellbook_missdamage">Miss damage</string>
+            <string name="spellbook_name">Spell name</string>
+            <string name="spellbook_playerNotes">Notes</string>
+            <string name="spellbook_rechargeTime">Recharge time</string>
+            <string name="spellbook_target">Target</string>
+            <string name="spellbook_trigger">Trigger for the spell or power</string>
+            <string name="spellbook_adventurerFeat">Adventurer level feat</string>
+            <string name="spellbook_championFeat">Champion level feat</string>
+            <string name="spellbook_epicFeat">Epic level feat</string>
+
+        <!-- for text field infos -->
+            <string name="spellbook_attacktype_info">Attack type</string>
 
     <string name="title_activity_spell_book">SpellBookActivity</string>
     <string name="title_activity_daily_spells">DailySpellsActivity</string>
