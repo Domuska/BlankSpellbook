@@ -1,5 +1,6 @@
 package tomi.piipposoft.blankspellbook.PowerDetails;
 
+import android.content.Context;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -18,6 +19,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
@@ -129,7 +131,9 @@ public class PowerDetailsActivity extends ApplicationActivity
 
         //set the power name
         spellNameText = (TextInputEditText)findViewById(R.id.editText_spellName);
+        spellNameText.setFocusable(false);
         spellNameText.setText(powerName);
+        spellNameText.setFocusable(true);
 
         //check if there is addToPowerList fragment visible, if so let presenter handle this
         Fragment prev = getSupportFragmentManager().findFragmentByTag("addToPowerListDialog");
@@ -246,7 +250,7 @@ public class PowerDetailsActivity extends ApplicationActivity
     }
 
 
-    ////// FROM PowerDetailsContract
+    ////// FROM PowerDetailsContract.View
 
     @Override
     public void showAddToListsFragment() {
@@ -340,9 +344,17 @@ public class PowerDetailsActivity extends ApplicationActivity
                 editingSpell = false;
             }
         });
-        fab.setVisibility(View.VISIBLE);
 
+        fab.setVisibility(View.VISIBLE);
         fabCancel.setVisibility(View.VISIBLE);
+
+        //spellNameText.clearFocus();
+        View currentFocus = getCurrentFocus();
+        if(currentFocus != null){
+            currentFocus.clearFocus();
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+        }
     }
 
     @Override
@@ -425,8 +437,13 @@ public class PowerDetailsActivity extends ApplicationActivity
             spellNameLayout = (TextInputLayout)findViewById(R.id.input_layout_spell_name);
             spellNameText = (TextInputEditText)findViewById(R.id.editText_spellName);
             spellNameLayout.setVisibility(View.VISIBLE);
+            //spellNameText.setFocusable(false);
             spellNameText.setText(spell.getName());
             spellNameText.setKeyListener(null);
+            //spellNameText.setFocusable(true);
+            //InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            //imm.hideSoftInputFromWindow(spellNameText.getWindowToken(), 0);
+
         }
 
         if(!spell.getPlayerNotes().equals("")){
