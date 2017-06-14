@@ -1,6 +1,8 @@
 package tomi.piipposoft.blankspellbook.PowerList;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.util.ArrayMap;
 
 import java.util.ArrayList;
@@ -19,7 +21,7 @@ public interface PowerListContract {
          * called when an existing power is to be shown
          * @param itemId the ID of the power that is opened
          */
-        void showPowerDetailsUI(String itemId, String powerListId);
+        void showPowerDetailsUI(String itemId, String itemName, String powerListId, android.view.View transitioningView);
 
         /**
          * Indicate that the PowerDetailsActivity should be started
@@ -56,8 +58,9 @@ public interface PowerListContract {
         /**
          * User is opening the powerDetailsActivity
          * @param itemId the item that has been clicked, either empty string or a valid FireBase ID
+         * @param transitioningView the view used for activityTransition animation origin, can be null
          */
-        void openPowerDetails(String itemId);
+        void openPowerDetails(@NonNull String itemId, @Nullable String itemName, @Nullable android.view.View transitioningView);
 
         /**
          * Inform presenter that activity is resuming

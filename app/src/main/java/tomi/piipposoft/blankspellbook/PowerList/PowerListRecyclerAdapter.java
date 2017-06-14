@@ -117,7 +117,10 @@ class PowerListRecyclerAdapter
                         selectionMode = false;
                     }
                 } else
-                    PowerListRecyclerAdapter.this.actionListener.openPowerDetails(spell.getSpellId());
+                    PowerListRecyclerAdapter.this.actionListener.openPowerDetails(
+                                    spell.getSpellId(),
+                                    spell.getName(),
+                                    childViewHolder.childTextView);
             }
         };
 

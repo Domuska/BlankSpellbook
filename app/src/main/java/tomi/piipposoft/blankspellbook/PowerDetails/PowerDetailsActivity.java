@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -39,8 +40,10 @@ public class PowerDetailsActivity extends ApplicationActivity
         PowerDetailsContract.View{
 
     public static final String EXTRA_POWER_DETAIL_ID = "powerDetailId";
+    public static final String EXTRA_POWER_DETAIL_NAME = "powerDetailName";
     public static final String EXTRA_ADD_NEW_POWER_DETAILS = "";
     public static final String EXTRA_POWER_LIST_ID = "powerListId";
+
 
     private final String TAG = "PowerDetailsActivity";
     private final int MENU_ITEM_CANCEL = 1;
@@ -78,8 +81,6 @@ public class PowerDetailsActivity extends ApplicationActivity
             SharedPreferencesHandler.setDatabasePersistance(true, this);
         }
 
-
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         toolbar.setTitle(getString(R.string.title_power_details));
         setSupportActionBar(toolbar);
@@ -97,6 +98,7 @@ public class PowerDetailsActivity extends ApplicationActivity
         Log.i(TAG, "onResume: power ID extra got: " + powerId);
         String powerListId = getIntent().getStringExtra(EXTRA_POWER_LIST_ID);
         Log.d(TAG, "onResume: power list id got: " + powerListId);
+        String powerName = getIntent().getStringExtra(EXTRA_POWER_DETAIL_NAME);
 
         this.drawerHelper = DrawerHelper.getInstance(this, (Toolbar)findViewById(R.id.my_toolbar));
         mActionListener = new PowerDetailsPresenter(
@@ -122,10 +124,12 @@ public class PowerDetailsActivity extends ApplicationActivity
 
         if(savedState == null)
             mActionListener.showPowerDetails(false);
-        else {
+        else
             mActionListener.showPowerDetails(savedState.getBoolean("userEditingPower"));
 
-        }
+        //set the power name
+        spellNameText = (TextInputEditText)findViewById(R.id.editText_spellName);
+        spellNameText.setText(powerName);
 
         //check if there is addToPowerList fragment visible, if so let presenter handle this
         Fragment prev = getSupportFragmentManager().findFragmentByTag("addToPowerListDialog");

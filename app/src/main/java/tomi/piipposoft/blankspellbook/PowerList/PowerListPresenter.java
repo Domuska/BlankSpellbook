@@ -2,6 +2,7 @@ package tomi.piipposoft.blankspellbook.PowerList;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.View;
 
 import com.google.firebase.database.ChildEventListener;
 
@@ -76,7 +77,7 @@ public class PowerListPresenter extends DrawerPresenter implements
     // FROM POWERLISTCONTRACT
 
     @Override
-    public void openPowerDetails(String itemId) {
+    public void openPowerDetails(String itemId, String itemName, View transitioningView) {
         if(itemId.equals(PowerDetailsActivity.EXTRA_ADD_NEW_POWER_DETAILS)) {
             Log.d(TAG, "removing listener: " + powerListListener.toString());
             DataSource.removePowerListPowerListener(powerListListener, powerListId);
@@ -87,7 +88,7 @@ public class PowerListPresenter extends DrawerPresenter implements
                 Log.d(TAG, "removing listener: " + powerListListener.toString());
                 DataSource.removePowerListPowerListener(powerListListener, powerListId);
             }
-            mPowerListActivity.showPowerDetailsUI(itemId, powerListId);
+            mPowerListActivity.showPowerDetailsUI(itemId, itemName, powerListId, transitioningView);
         }
     }
 

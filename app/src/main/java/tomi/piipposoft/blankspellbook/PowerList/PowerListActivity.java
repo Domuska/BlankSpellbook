@@ -8,6 +8,8 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -25,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tomi.piipposoft.blankspellbook.ApplicationActivity;
+import tomi.piipposoft.blankspellbook.MainActivity.MainActivity;
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
 import tomi.piipposoft.blankspellbook.Utils.SharedPreferencesHandler;
 import tomi.piipposoft.blankspellbook.Utils.Spell;
@@ -85,7 +88,7 @@ public class PowerListActivity extends ApplicationActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                myActionListener.openPowerDetails(PowerDetailsActivity.EXTRA_ADD_NEW_POWER_DETAILS);
+                myActionListener.openPowerDetails(PowerDetailsActivity.EXTRA_ADD_NEW_POWER_DETAILS, null, null);
             }
         });
 
@@ -192,8 +195,24 @@ public class PowerListActivity extends ApplicationActivity
     // FROM POWER LIST CONTRACT INTERFACE
 
     @Override
-    public void showPowerDetailsUI(String itemId, String powerListId) {
-        this.openPowerDetailsActivity(itemId, powerListId);
+    public void showPowerDetailsUI(String itemId, String itemName, String powerListId, View transitioningView) {
+        if (transitioningView != null){
+            Intent i = new Intent(PowerListActivity.this, PowerDetailsActivity.class);
+            String transitionName = getString(R.string.transition_powerDetails_name);
+            ActivityOptionsCompat options =
+                    ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            PowerListActivity.this,
+                            transitioningView,
+                            transitionName);
+            Bundle bundle = options.toBundle();
+
+            i.putExtra(PowerDetailsActivity.EXTRA_POWER_DETAIL_ID, itemId);
+            i.putExtra(PowerDetailsActivity.EXTRA_POWER_LIST_ID, powerListId);
+            i.putExtra(PowerDetailsActivity.EXTRA_POWER_DETAIL_NAME, itemName);
+            ActivityCompat.startActivity(PowerListActivity.this, i, bundle);
+        }
+        else
+            this.openPowerDetailsActivity(itemId, powerListId);
     }
 
     @Override

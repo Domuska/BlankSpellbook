@@ -91,4 +91,5 @@
 
     <!-- activity transition strings -->
     <string name="transition_powerlist_name">powerListTransition</string>
+    <string name="transition_powerDetails_name">powerDetailsNameTransition</string>
 </resources>

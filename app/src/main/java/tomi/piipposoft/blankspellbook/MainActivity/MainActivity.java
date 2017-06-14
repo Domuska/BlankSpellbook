@@ -368,7 +368,6 @@ public class MainActivity extends ApplicationActivity
 
     @Override
     public void startPowerListActivity(String name, String id, View transitionOrigin) {
-        //
         if (transitionOrigin != null){
             Intent i = new Intent(MainActivity.this, PowerListActivity.class);
             String transitionName = getString(R.string.transition_powerlist_name);
