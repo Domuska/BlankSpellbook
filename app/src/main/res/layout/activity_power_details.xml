@@ -47,11 +47,14 @@
         android:visibility="gone"
         app:layout_behavior="tomi.piipposoft.blankspellbook.PowerDetails.ScrollingFABBehavior"/>
 
+    <include layout="@layout/activity_power_details_textviews"/>
 
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scrollView_editText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:visibility="gone">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -73,7 +76,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/spellbook_name"
                     style="@android:style/TextAppearance.Small"
-                    android:transitionName="@string/transition_powerDetails_name"/>
+                    />
             </android.support.design.widget.TextInputLayout>
 
 

@@ -10,6 +10,7 @@ import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.util.ArrayMap;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -63,6 +64,8 @@ public class PowerDetailsActivity extends ApplicationActivity
     private TextInputEditText spellNameText, attackTypeText, rechargeText, castingTimeText,
     targetText, attackRollText, hitDamageEffectText, missDamageText, adventurerFeatText, championFeatText,
     epicFeatText, notesText, triggerText;
+
+    private NestedScrollView editTextScrollView, textScrollView;
 
     private AutoCompleteTextView groupText;
 
@@ -131,9 +134,13 @@ public class PowerDetailsActivity extends ApplicationActivity
 
         //set the power name
         spellNameText = (TextInputEditText)findViewById(R.id.editText_spellName);
-        spellNameText.setFocusable(false);
-        spellNameText.setText(powerName);
-        spellNameText.setFocusable(true);
+        //spellNameText.setFocusable(false);
+        //spellNameText.setText(powerName);
+        //spellNameText.setFocusable(true);
+        ((TextView)findViewById(R.id.text_spellName)).setText(powerName);
+
+        editTextScrollView = (NestedScrollView) findViewById(R.id.scrollView_editText);
+        textScrollView = (NestedScrollView) findViewById(R.id.scrollView_text);
 
         //check if there is addToPowerList fragment visible, if so let presenter handle this
         Fragment prev = getSupportFragmentManager().findFragmentByTag("addToPowerListDialog");
@@ -305,6 +312,9 @@ public class PowerDetailsActivity extends ApplicationActivity
 
         editingSpell = true;
         Log.d(TAG, "showing empty fields...");
+        editTextScrollView.setVisibility(View.VISIBLE);
+        textScrollView.setVisibility(View.GONE);
+
         findViewById(R.id.input_layout_attackType).setVisibility(View.VISIBLE);
         findViewById(R.id.input_layout_attackRoll).setVisibility(View.VISIBLE);
         findViewById(R.id.input_layout_castingTime).setVisibility(View.VISIBLE);
@@ -361,6 +371,9 @@ public class PowerDetailsActivity extends ApplicationActivity
     public void showFilledFields(final Spell spell) {
 
         Log.d(TAG, "starting method call showFilledFields");
+
+        editTextScrollView.setVisibility(View.GONE);
+        textScrollView.setVisibility(View.VISIBLE);
 
         fab.setImageResource(R.drawable.ic_mode_edit_black_24dp);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -435,15 +448,15 @@ public class PowerDetailsActivity extends ApplicationActivity
 
         if(!spell.getName().equals("")){
             spellNameLayout = (TextInputLayout)findViewById(R.id.input_layout_spell_name);
-            spellNameText = (TextInputEditText)findViewById(R.id.editText_spellName);
-            spellNameLayout.setVisibility(View.VISIBLE);
+            //spellNameText = (TextInputEditText)findViewById(R.id.editText_spellName);
+            //spellNameLayout.setVisibility(View.VISIBLE);
             //spellNameText.setFocusable(false);
-            spellNameText.setText(spell.getName());
-            spellNameText.setKeyListener(null);
+            //spellNameText.setText(spell.getName());
+            //spellNameText.setKeyListener(null);
             //spellNameText.setFocusable(true);
             //InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
             //imm.hideSoftInputFromWindow(spellNameText.getWindowToken(), 0);
-
+            ((TextView)findViewById(R.id.text_spellName)).setText(spell.getName());
         }
 
         if(!spell.getPlayerNotes().equals("")){
@@ -507,6 +520,10 @@ public class PowerDetailsActivity extends ApplicationActivity
     public void showSpellEditView(Spell spell) {
 
         editingSpell = true;
+
+        editTextScrollView.setVisibility(View.VISIBLE);
+        textScrollView.setVisibility(View.GONE);
+
         fab.setImageResource(R.drawable.ic_done_black_24dp);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
