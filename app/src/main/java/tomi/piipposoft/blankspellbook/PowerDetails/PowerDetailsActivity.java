@@ -81,7 +81,7 @@ public class PowerDetailsActivity extends ApplicationActivity
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        toolbar.setTitle("Details");
+        toolbar.setTitle(getString(R.string.title_power_details));
         setSupportActionBar(toolbar);
         savedState = savedInstanceState;
 

@@ -35,7 +35,7 @@
     <string name="mainactivity_back_button_popup_info">Do you want to quit?</string>
 
     <!-- Strings for power details activity & Fragments -->
-
+    <string name="title_power_details">Details</string>
     <string name="action_add_to_powerlist">Add to list of powers</string>
     <string name="action_delete_power">Delete power</string>
     <string name="deleteDialog_title">Confirm power deletion</string>
