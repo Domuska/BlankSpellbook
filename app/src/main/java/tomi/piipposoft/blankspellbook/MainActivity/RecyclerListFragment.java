@@ -195,7 +195,7 @@ public class RecyclerListFragment extends Fragment {
 
         // Replace the contents of a view (invoked by the layout manager)
         @Override
-        public void onBindViewHolder(ViewHolder holder, final int position) {
+        public void onBindViewHolder(final ViewHolder holder, final int position) {
 
             String groupName = listNames.get(position);
             String id = listIds.get(position);
@@ -249,12 +249,14 @@ public class RecyclerListFragment extends Fragment {
                 holder.textViewTertiary.setVisibility(View.INVISIBLE);
             }
 
+            //call presenter, pass in the textView for activity transitions
             holder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     myClickListener.onPowerListClicked(
                             listNames.get(itemPosition),
-                            listIds.get(itemPosition));
+                            listIds.get(itemPosition),
+                            holder.textViewPrimary);
                 }
             });
 

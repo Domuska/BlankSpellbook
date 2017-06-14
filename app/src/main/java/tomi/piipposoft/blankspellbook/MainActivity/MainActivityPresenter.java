@@ -3,6 +3,7 @@ package tomi.piipposoft.blankspellbook.MainActivity;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.View;
 
 
 import com.google.firebase.database.ChildEventListener;
@@ -153,9 +154,9 @@ public class MainActivityPresenter extends DrawerPresenter
 
 
     @Override
-    public void onPowerListClicked(String listName, String listId) {
+    public void onPowerListClicked(String listName, String listId, View originView) {
         if(currentlySelectedList == POWER_LISTS_SELECTED)
-            mMainActivityView.startPowerListActivity(listName, listId);
+            mMainActivityView.startPowerListActivity(listName, listId, originView);
         else
             mMainActivityView.startDailyPowerListActivity(listName, listId);
     }

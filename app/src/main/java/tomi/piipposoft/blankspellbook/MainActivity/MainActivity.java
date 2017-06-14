@@ -367,11 +367,24 @@ public class MainActivity extends ApplicationActivity
     }
 
     @Override
-    public void startPowerListActivity(String name, String id) {
-        // TODO: 13.6.2017 kantsii varmaan kuttua kuitenkin yliluokan implementaatiota.. ehkä?
+    public void startPowerListActivity(String name, String id, View transitionOrigin) {
+        //
+        if (transitionOrigin != null){
+            Intent i = new Intent(MainActivity.this, PowerListActivity.class);
+            String transitionName = getString(R.string.transition_powerlist_name);
+            ActivityOptionsCompat options =
+                    ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            MainActivity.this,
+                            transitionOrigin,
+                            transitionName);
+            Bundle bundle = options.toBundle();
 
-        //this.openPowerListActivity(id, name);
-
+            i.putExtra(PowerListActivity.EXTRA_POWER_LIST_NAME, name);
+            i.putExtra(PowerListActivity.EXTRA_POWER_LIST_ID, id);
+            ActivityCompat.startActivity(MainActivity.this, i, bundle);
+        }
+        else
+            this.openPowerListActivity(id, name);
     }
 
     @Override

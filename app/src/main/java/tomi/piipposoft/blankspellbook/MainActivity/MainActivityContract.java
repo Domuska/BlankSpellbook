@@ -1,6 +1,5 @@
 package tomi.piipposoft.blankspellbook.MainActivity;
 
-import java.util.ArrayList;
 
 import tomi.piipposoft.blankspellbook.Utils.Spell;
 
@@ -25,7 +24,7 @@ public interface MainActivityContract {
         void removePowerFromList(Spell power);
 
         //for starting the activities when fragment elements are clicked
-        void startPowerListActivity(String name, String id);
+        void startPowerListActivity(String name, String id, android.view.View originView);
         void startDailyPowerListActivity(String listName, String listId);
         void startPowerDetailsActivity(String powerId, String powerListId);
     }
@@ -37,7 +36,7 @@ public interface MainActivityContract {
     }
 
     interface FragmentUserActionListener {
-        void onPowerListClicked(String listName, String listId);
+        void onPowerListClicked(String listName, String listId, android.view.View originView);
         void onPowerClicked(String powerId, String powerListId);
     }
 

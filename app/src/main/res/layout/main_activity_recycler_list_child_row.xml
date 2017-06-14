@@ -49,7 +49,8 @@
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:textColor="?android:attr/textColorPrimary"
-                android:textSize="20sp"/>
+                android:textSize="20sp"
+                android:transitionName="@string/transition_powerlist_name"/>
 
             <TextView
                 android:id="@+id/groupName1_textView"
