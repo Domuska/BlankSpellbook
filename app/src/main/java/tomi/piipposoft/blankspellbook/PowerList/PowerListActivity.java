@@ -92,10 +92,21 @@ public class PowerListActivity extends ApplicationActivity
             }
         });
 
+        //onclicklistener for the delete button in "menu" bar
+        findViewById(R.id.toolbar_delete).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "delete menu button clicked");
+                showConfirmDeletionDialog();
+            }
+        });
+
+        ((TextView)findViewById(R.id.powerlist_name_text)).setText(powerListName);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         if (toolbar != null) {
             toolbar.setTitle("");
-            ((AppCompatTextView)toolbar.findViewById(R.id.toolbar_title)).setText(powerListName);
+            //((AppCompatTextView)toolbar.findViewById(R.id.toolbar_title)).setText(powerListName);
         }
 
         setSupportActionBar(toolbar);
@@ -105,7 +116,6 @@ public class PowerListActivity extends ApplicationActivity
     protected void onResume() {
         super.onResume();
 
-
         this.drawerHelper = DrawerHelper.getInstance(this, (Toolbar) findViewById(R.id.my_toolbar));
 
         myActionListener = PowerListPresenter.getInstance(
@@ -114,7 +124,6 @@ public class PowerListActivity extends ApplicationActivity
                 this.drawerHelper,
                 powerListId
         );
-
 
         this.drawerActionListener = (DrawerContract.UserActionListener) myActionListener;
         this.drawerActionListener.powerListProfileSelected();
@@ -167,10 +176,11 @@ public class PowerListActivity extends ApplicationActivity
         if (id == R.id.action_settings) {
             return true;
         }
-        if (id == R.id.deleteButton) {
+        //when delete was in the menu bar still
+        /*if (id == R.id.deleteButton) {
             Log.d(TAG, "delete menu button clicked");
             showConfirmDeletionDialog();
-        }
+        }*/
         return super.onOptionsItemSelected(item);
     }
 

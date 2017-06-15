@@ -29,7 +29,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:paddingTop="28dp"
-        android:clipToPadding="false"/>
+        android:clipToPadding="false" />
 
 </android.support.constraint.ConstraintLayout>
 

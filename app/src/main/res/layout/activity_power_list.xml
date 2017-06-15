@@ -7,33 +7,81 @@
     android:id="@+id/power_list_layout">
 
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/my_toolbar"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+        android:layout_height="@dimen/double_toolbar_size"
+        android:fitsSystemWindows="true">
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/toolbar_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="?android:textColorPrimary"
-            android:textSize="20sp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:transitionName="@string/transition_powerlist_name"/>
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/my_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            android:layout_weight="1">
 
-    </android.support.v7.widget.Toolbar>
+            <!-- this view is not actually used any more, it used to be the way to have
+             activity transition to fly up to toolbar but that is not done any more -->
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?android:textColorPrimary"
+                android:textSize="20sp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                />
+
+        </android.support.v7.widget.Toolbar>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/my_color_primary_lighter"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/powerlist_name_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?android:textColorPrimaryInverse"
+                android:textSize="20sp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:layout_marginLeft="@dimen/fab_size"
+                android:layout_marginStart="@dimen/fab_size"
+                android:layout_marginEnd="18dp"
+                android:layout_marginRight="18dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:transitionName="@string/transition_powerlist_name"/>
+
+            <ImageButton
+                android:id="@+id/toolbar_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="12dip"
+                android:layout_marginRight="12dip"
+                android:background="?android:selectableItemBackground"
+                android:title="@string/spellList_menu_deleteButton"
+                android:src="@drawable/ic_delete_white_24dp"/>
+
+        </RelativeLayout>
+
+    </android.support.design.widget.AppBarLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:scrollbars="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/my_toolbar"
+        android:layout_below="@+id/appbar"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"

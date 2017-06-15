@@ -65,7 +65,7 @@
                 android:id="@+id/groupName2_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/my_color_dark_gray"
+                style="@style/SecondaryTextRecyclerView"
                 android:paddingLeft="5dp"
                 android:paddingStart="5dp"
                 />
