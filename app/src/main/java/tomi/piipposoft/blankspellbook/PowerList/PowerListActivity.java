@@ -331,7 +331,8 @@ public class PowerListActivity extends ApplicationActivity
      * On yes will defer to Presenter to do the job
      */
     private void showConfirmDeletionDialog(){
-        new AlertDialog.Builder(this)
+        //give builder our custom dialog fragment style
+        new AlertDialog.Builder(this, R.style.dialogFragment_title_style)
                 .setMessage(getString(R.string.powerlist_confirmRemoval))
                 .setTitle(getString(R.string.powerList_confirmRemoval_title))
                 .setPositiveButton(getString(R.string.action_remove),

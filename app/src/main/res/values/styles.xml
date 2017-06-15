@@ -18,8 +18,15 @@
         <item name="android:textColor">@color/my_color_dark_gray</item>
     </style>
 
+
     <style name="dialogFragment_title_style" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="android:titleTextColor">?android:textColorPrimaryInverse</item>
+        <!-- if we were on Lollipop (23) upwards, we could just use the following line -->
+        <!-- <item name="android:titleTextColor">?android:textColorPrimaryInverse</item> -->
+        <item name="android:titleTextStyle">@style/dialogfragment_title</item>
+    </style>
+
+    <style name="dialogfragment_title">
+        <item name="android:textColor">?android:textColorPrimaryInverse</item>
     </style>
     
 </resources>

@@ -54,7 +54,9 @@ public class ConfirmDeletionDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.dialogFragment_title_style);
+        //give builder our custom style for dialog fragments
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),
+                R.style.dialogFragment_title_style);
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
         builder.setView(inflater.inflate(R.layout.dialog_confirm_power_deletion, null))

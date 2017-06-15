@@ -50,7 +50,9 @@ public class SetDailyPowerListNameDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        //give the builder our custom style for dialog fragments
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),
+                R.style.dialogFragment_title_style);
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
         View view = inflater.inflate(R.layout.set_daily_power_list_name_dialog, null);

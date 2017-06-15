@@ -261,7 +261,8 @@ public class MainActivity extends ApplicationActivity
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         //back button functionality
         if(keyCode == KeyEvent.KEYCODE_BACK ) {
-            new AlertDialog.Builder(MainActivity.this)
+            //pass builder our custom dialog fragment style
+            new AlertDialog.Builder(MainActivity.this, R.style.dialogFragment_title_style)
                     .setTitle(R.string.mainactivity_back_button_popup_title)
                     .setMessage(R.string.mainactivity_back_button_popup_info)
                     .setPositiveButton(getString(R.string.action_yes)

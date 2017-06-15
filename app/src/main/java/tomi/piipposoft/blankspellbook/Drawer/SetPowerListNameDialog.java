@@ -50,7 +50,9 @@ public class SetPowerListNameDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        //give builder our custom style to be used in dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),
+                R.style.dialogFragment_title_style);
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
         View view = inflater.inflate(R.layout.set_spellbook_name_dialog, null);

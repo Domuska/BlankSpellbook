@@ -150,7 +150,9 @@ public class AddToPowerListDialog extends DialogFragment {
         if(dailyPowerListIds == null)
             dailyPowerListIds = new String[0];
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        //pass builder custom dialog fragment style
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),
+                R.style.dialogFragment_title_style);
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_add_to_power_list, null);

@@ -287,7 +287,8 @@ public class PowerDetailsActivity extends ApplicationActivity
 
     @Override
     public void showDiscardChangesDialog(){
-        new AlertDialog.Builder(PowerDetailsActivity.this)
+        //pass custom dialog fragment style
+        new AlertDialog.Builder(PowerDetailsActivity.this, R.style.dialogFragment_title_style)
                 .setMessage(getString(R.string.spell_details_discard_changes))
                 .setPositiveButton(getString(R.string.action_yes)
                         , new DialogInterface.OnClickListener() {
