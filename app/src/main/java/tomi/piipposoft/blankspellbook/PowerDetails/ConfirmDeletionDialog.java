@@ -8,9 +8,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.text.Html;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import tomi.piipposoft.blankspellbook.R;
 
@@ -41,12 +45,16 @@ public class ConfirmDeletionDialog extends DialogFragment {
         }
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.dialogFragment_title_style);
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
         builder.setView(inflater.inflate(R.layout.dialog_confirm_power_deletion, null))
@@ -63,6 +71,7 @@ public class ConfirmDeletionDialog extends DialogFragment {
                         ConfirmDeletionDialog.this.getDialog().cancel();
                     }
                 });
+
 
         return builder.create();
     }

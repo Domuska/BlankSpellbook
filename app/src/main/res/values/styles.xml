@@ -17,7 +17,9 @@
     <style name="SecondaryTextRecyclerView">
         <item name="android:textColor">@color/my_color_dark_gray</item>
     </style>
-    
 
+    <style name="dialogFragment_title_style" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:titleTextColor">?android:textColorPrimaryInverse</item>
+    </style>
     
 </resources>
