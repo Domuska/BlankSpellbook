@@ -61,6 +61,7 @@ public class MainActivity extends ApplicationActivity
     private boolean databasePersistanceSet = false;
 
     private FloatingActionButton fab;
+    View.OnClickListener powersListener, dailyPowerListListener, powerListListener;
 
     //default selection is the spell lists fragment
     private int currentlySelectedList = MainActivityPresenter.POWER_LISTS_SELECTED;
@@ -104,9 +105,9 @@ public class MainActivity extends ApplicationActivity
 
         fab = (FloatingActionButton) findViewById(R.id.mainactivity_fab);
         //fab listeners
-        final View.OnClickListener powersListener = new OnNewPowerClickListener();
-        final View.OnClickListener dailyPowerListListener = new OnNewDailyPowerListClickListener();
-        final View.OnClickListener powerListListener = new OnNewPowerListClickListener();
+        powersListener = new OnNewPowerClickListener();
+        dailyPowerListListener = new OnNewDailyPowerListClickListener();
+        powerListListener = new OnNewPowerListClickListener();
 
         //create a new adapter and give it the actionListener to attach to the fragments
         pagerAdapter = new MainActivityPagerAdapter(getSupportFragmentManager(),
@@ -128,6 +129,7 @@ public class MainActivity extends ApplicationActivity
             @Override
             public void onPageSelected(int position) {
                 currentlySelectedList = position;
+                setFabFunctionality(position);
                 switch (position) {
                     case MainActivityPresenter.DAILY_POWER_LISTS_SELECTED:
                         secondaryToolbarText.setText(getString(R.string.toolbar_text_daily_power_lists));
@@ -135,7 +137,6 @@ public class MainActivity extends ApplicationActivity
                             secondaryToolbarTools.setVisibility(View.GONE);
                         //tell presenter which page was switched to
                         mActionlistener.userSwitchedTo(MainActivityPresenter.DAILY_POWER_LISTS_SELECTED);
-                        fab.setOnClickListener(dailyPowerListListener);
                         break;
 
                     case MainActivityPresenter.POWER_LISTS_SELECTED:
@@ -143,7 +144,6 @@ public class MainActivity extends ApplicationActivity
                         if (secondaryToolbarTools != null)
                             secondaryToolbarTools.setVisibility(View.GONE);
                         mActionlistener.userSwitchedTo(MainActivityPresenter.POWER_LISTS_SELECTED);
-                        fab.setOnClickListener(powerListListener);
                         break;
 
                     case MainActivityPresenter.SPELLS_SELECTED:
@@ -153,12 +153,12 @@ public class MainActivity extends ApplicationActivity
                         else
                             secondaryToolbarTools.setVisibility(View.VISIBLE);
                         mActionlistener.userSwitchedTo(MainActivityPresenter.SPELLS_SELECTED);
-                        fab.setOnClickListener(powersListener);
                         break;
                     default:
                         Log.e(TAG, "onPageSelected: something went terribly wrong, position: " + position);
                         Toast.makeText(getApplicationContext(),
-                                "Something went really wrong, please inform the developer, position: " + position,
+                                "Something went really wrong, please inform the developer, position" +
+                                        "in onPageSelected: " + position + ". Restart the application.",
                                 Toast.LENGTH_LONG).show();
                         break;
                 }
@@ -194,9 +194,10 @@ public class MainActivity extends ApplicationActivity
         // Make the drawer initialize itself
         this.drawerActionListener.powerListProfileSelected();
         mActionlistener.resumeActivity();
-        //set the current list and click listener
+        //set the list that was previously selected
         viewPager.setCurrentItem(currentlySelectedList);
-        fab.setOnClickListener(powerListListener);
+        //set fab onclicklistener and possible icon
+        setFabFunctionality(currentlySelectedList);
         mActionlistener.userSwitchedTo(currentlySelectedList);
     }
 
@@ -322,6 +323,26 @@ public class MainActivity extends ApplicationActivity
             i.putExtra(PowerDetailsActivity.EXTRA_POWER_DETAIL_ID,
                     PowerDetailsActivity.EXTRA_ADD_NEW_POWER_DETAILS);
             ActivityCompat.startActivity(MainActivity.this, i, bundle);
+        }
+    }
+
+    /**
+     * Set onClickListener, icon and other attributes for FAB depending on which fragment is shown
+     * @param selectedFragment fragment that is currently visible
+     */
+    private void setFabFunctionality(int selectedFragment){
+        switch(selectedFragment){
+            case 0:
+                fab.setOnClickListener(dailyPowerListListener);
+                break;
+            case 1:
+                fab.setOnClickListener(powerListListener);
+                break;
+            case 2:
+                fab.setOnClickListener(powersListener);
+                break;
+            default:
+                throw new RuntimeException("Unknown value in setFabFunctionality: use 0, 1 or 2");
         }
     }
 
