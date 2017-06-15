@@ -130,7 +130,7 @@ public class PowersFragment extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
+        public void onBindViewHolder(final ViewHolder holder, int position) {
             final int itemPosition = holder.getAdapterPosition();
             final Spell power = powers.get(itemPosition);
 
@@ -140,7 +140,8 @@ public class PowersFragment extends Fragment {
                 public void onClick(View v) {
                     listener.onPowerClicked(
                             power.getSpellId(),
-                            power.getPowerListId());
+                            power.getPowerListId(),
+                            holder.powerName);
                 }
             });
 

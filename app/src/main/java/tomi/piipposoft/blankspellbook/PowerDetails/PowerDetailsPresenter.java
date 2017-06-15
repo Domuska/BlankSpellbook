@@ -86,13 +86,13 @@ public class PowerDetailsPresenter extends DrawerPresenter
                 spell.setTrigger("");
 
             if(wasUserEditingPower) {
-                mPowerDetailsView.showSpellEditView(spell);
+                mPowerDetailsView.showEditableFilledFields(spell);
                 // since we have handled this situation already, set as false,
                 // this method is called again after edits have been done and power saved to DB)
                 wasUserEditingPower = false;
             }
             else
-                mPowerDetailsView.showFilledFields(spell);
+                mPowerDetailsView.showNonEditableFilledFields(spell);
         }
     }
 
@@ -140,7 +140,7 @@ public class PowerDetailsPresenter extends DrawerPresenter
 
     @Override
     public void userEditingPower(Spell spell) {
-        mPowerDetailsView.showSpellEditView(spell);
+        mPowerDetailsView.showEditableFilledFields(spell);
     }
 
     @Override
@@ -155,7 +155,7 @@ public class PowerDetailsPresenter extends DrawerPresenter
 
     @Override
     public void userCancelingEdits() {
-        mPowerDetailsView.showFilledFields(thisPower);
+        mPowerDetailsView.showNonEditableFilledFields(thisPower);
         mPowerDetailsView.hideUnUsedFields(thisPower);
     }
 

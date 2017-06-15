@@ -30,8 +30,8 @@ public interface PowerDetailsContract {
 
     interface View {
         void showEmptyFields();
-        void showFilledFields(Spell spell);
-        void showSpellEditView(Spell spell);
+        void showNonEditableFilledFields(Spell spell);
+        void showEditableFilledFields(Spell spell);
         void setCancelAsGoBack(boolean b);
         void hideUnUsedFields(Spell spell);
         void showDiscardChangesDialog();

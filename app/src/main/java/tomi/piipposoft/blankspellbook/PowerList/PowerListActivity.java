@@ -136,7 +136,6 @@ public class PowerListActivity extends ApplicationActivity
 
 
         spellGroups = new ArrayList<>();
-
         adapter = new PowerListRecyclerAdapter(this, spellGroups, myActionListener);
 
 //        adapter.setExpandCollapseListener(new ExpandableRecyclerAdapter.ExpandCollapseListener() {

@@ -135,10 +135,9 @@ public class PowerDetailsActivity extends ApplicationActivity
         textScrollView = (NestedScrollView) findViewById(R.id.scrollView_text);
 
         //Set the power name
-        if(!"".equals(powerName)) {
-            spellNameTextEdit = (TextInputEditText)findViewById(R.id.editText_spellName);
+        if(!"".equals(powerName))
             ((TextView) findViewById(R.id.text_spellName)).setText(powerName);
-        }
+
 
         if(savedState == null)
             mActionListener.showPowerDetails(false);
@@ -364,9 +363,10 @@ public class PowerDetailsActivity extends ApplicationActivity
         fab.setVisibility(View.VISIBLE);
         fabCancel.setVisibility(View.VISIBLE);
 
-        //spellNameTextEdit.clearFocus();
+        //make sure keyboard does not pop up
         View currentFocus = getCurrentFocus();
         if(currentFocus != null){
+            Log.d(TAG, "current focus not null, clearing");
             currentFocus.clearFocus();
             InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
@@ -374,9 +374,9 @@ public class PowerDetailsActivity extends ApplicationActivity
     }
 
     @Override
-    public void showFilledFields(final Spell spell) {
+    public void showNonEditableFilledFields(final Spell spell) {
 
-        Log.d(TAG, "starting method call showFilledFields");
+        Log.d(TAG, "starting method call showNonEditableFilledFields");
 
         editTextScrollView.setVisibility(View.GONE);
         textScrollView.setVisibility(View.VISIBLE);
@@ -550,7 +550,7 @@ public class PowerDetailsActivity extends ApplicationActivity
     }
 
     @Override
-    public void showSpellEditView(Spell spell) {
+    public void showEditableFilledFields(Spell spell) {
 
         editingSpell = true;
 
@@ -645,6 +645,14 @@ public class PowerDetailsActivity extends ApplicationActivity
         triggerTextEdit.setText(spell.getTrigger());
         triggerTextEdit.setKeyListener(newListener);
 
+        //make sure keyboard does not pop up
+        View currentFocus = getCurrentFocus();
+        if(currentFocus != null){
+            Log.d(TAG, "current focus not null, clearing");
+            currentFocus.clearFocus();
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+        }
     }
 
     @Override

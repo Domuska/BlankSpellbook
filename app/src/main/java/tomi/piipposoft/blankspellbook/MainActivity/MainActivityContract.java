@@ -26,7 +26,7 @@ public interface MainActivityContract {
         //for starting the activities when fragment elements are clicked
         void startPowerListActivity(String name, String id, android.view.View originView);
         void startDailyPowerListActivity(String listName, String listId);
-        void startPowerDetailsActivity(String powerId, String powerListId);
+        void startPowerDetailsActivity(String powerId, String powerListId, android.view.View transitionOrigin);
     }
 
     interface UserActionListener{
@@ -37,7 +37,7 @@ public interface MainActivityContract {
 
     interface FragmentUserActionListener {
         void onPowerListClicked(String listName, String listId, android.view.View originView);
-        void onPowerClicked(String powerId, String powerListId);
+        void onPowerClicked(String powerId, String powerListId, android.view.View originView);
     }
 
     /**

@@ -414,7 +414,23 @@ public class MainActivity extends ApplicationActivity
     }
 
     @Override
-    public void startPowerDetailsActivity(String powerId, String powerListId) {
-        this.openPowerDetailsActivity(powerId, powerListId);
+    public void startPowerDetailsActivity(String powerId, String powerListId, View transitionOrigin) {
+
+        if(transitionOrigin != null){
+            Intent i = new Intent(MainActivity.this, PowerDetailsActivity.class);
+            String transitionName = getString(R.string.transition_powerDetails_name);
+            ActivityOptionsCompat options =
+                    ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            MainActivity.this,
+                            transitionOrigin,
+                            transitionName);
+            Bundle bundle = options.toBundle();
+
+            i.putExtra(PowerDetailsActivity.EXTRA_POWER_DETAIL_ID, powerId);
+            i.putExtra(PowerDetailsActivity.EXTRA_POWER_LIST_ID, powerListId);
+            ActivityCompat.startActivity(MainActivity.this, i, bundle);
+        }
+        else
+            this.openPowerDetailsActivity(powerId, powerListId);
     }
 }

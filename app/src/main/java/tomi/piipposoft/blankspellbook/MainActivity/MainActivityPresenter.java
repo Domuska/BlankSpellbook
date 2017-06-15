@@ -162,8 +162,8 @@ public class MainActivityPresenter extends DrawerPresenter
     }
 
     @Override
-    public void onPowerClicked(String powerId, String powerListId) {
-        mMainActivityView.startPowerDetailsActivity(powerId, powerListId);
+    public void onPowerClicked(String powerId, String powerListId, View transitionOrigin) {
+        mMainActivityView.startPowerDetailsActivity(powerId, powerListId, transitionOrigin);
     }
 
     //from MainActivityContract.PagerAdapterListener
