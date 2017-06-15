@@ -445,7 +445,7 @@ public class PowerDetailsActivity extends ApplicationActivity
 
         if(!spell.getHitDamageOrEffect().equals("")){
             hitDamageEffectText = (TextView) findViewById(R.id.text_hitDamage_effect);
-            spell.getHitDamageOrEffect();
+            hitDamageEffectText.setText(spell.getHitDamageOrEffect());
             /*hitDamageEffectLayout = (TextInputLayout)findViewById(R.id.input_layout_damage_effect);
             hitDamageEffectTextEdit = (TextInputEditText)findViewById(R.id.editText_hitDamage_effect);
             hitDamageEffectLayout.setVisibility(View.VISIBLE);
@@ -528,7 +528,7 @@ public class PowerDetailsActivity extends ApplicationActivity
         }
 
         if(!spell.getEpicFeat().equals("")){
-            epicFeatText = (TextView) findViewById(R.id.text_champion_feat);
+            epicFeatText = (TextView) findViewById(R.id.text_epic_feat);
             epicFeatText.setText(spell.getChampionFeat());
             /*epicFeatLayout = (TextInputLayout)findViewById(R.id.input_layout_epic_feat);
             epicFeatTextEdit = (TextInputEditText)findViewById(R.id.editText_epic_feat);
