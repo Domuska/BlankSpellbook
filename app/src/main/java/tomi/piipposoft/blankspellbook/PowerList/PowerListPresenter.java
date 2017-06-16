@@ -66,7 +66,7 @@ public class PowerListPresenter extends DrawerPresenter implements
     }
 
     public static void handleSpellFromDatabase(Spell spell){
-        Log.d(TAG, "New spell! name: " + spell.getName());
+        Log.d(TAG, "handleSpellFromDatabase: name: " + spell.getName() + " group: " + spell.getGroupName());
         mPowerListActivity.addSpellToList(spell);
     }
 
@@ -96,12 +96,12 @@ public class PowerListPresenter extends DrawerPresenter implements
     public void getSpellList(String powerListId) {
         //remove the old listener
         if(powerListListener != null) {
-            Log.d(TAG, "listener is not null, removing");
+            Log.d(TAG, "getSpellList: removing old power list listener");
             DataSource.removePowerListPowerListener(powerListListener, powerListId);
         }
-        Log.d(TAG, "power list ID in getSpellList is: " + powerListId);
+        Log.d(TAG, "getSpellList: power list ID in getSpellList is: " + powerListId);
         powerListListener = DataSource.addPowerListPowerListener(powerListId);
-        Log.d(TAG, "added new listener: " + powerListListener.toString());
+        Log.d(TAG, "getSpellList: added new listener: " + powerListListener.toString());
     }
 
     @Override

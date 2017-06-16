@@ -14,6 +14,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -114,6 +115,15 @@ public class DataSource {
 
         Log.d(TAG, "adding path " + DB_SPELL_LIST_TREE_NAME + "/" + id + "/" + DB_SPELL_LIST_CHILD_SPELLS);
 
+        /*Query powersQueryOrderedByGroup = firebaseDatabase
+                .getReference(DB_SPELL_LIST_TREE_NAME)
+                .child(id)
+                .child(DB_SPELL_LIST_CHILD_SPELLS)
+                .orderByValue();*/
+        /*Query powersQueryOrderedByGroup = firebaseDatabase
+                .getReference(DB_SPELL_GROUPS_TREE_NAME)
+                .child(id)
+                .*/
 
         return spellListReference.addChildEventListener(new ChildEventListener() {
             @Override

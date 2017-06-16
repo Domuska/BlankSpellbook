@@ -19,6 +19,8 @@ import tomi.piipposoft.blankspellbook.Utils.Spell;
 public class PowerDetailsPresenter extends DrawerPresenter
         implements PowerDetailsContract.UserActionListener{
 
+    public static final String DB_SPELL_DEFAULT_GROUP_NAME = "Ungrouped";
+
     private static final String TAG = "PowerDetailsPresenter";
     private static PowerDetailsContract.View mPowerDetailsView;
     private static String powerId;
@@ -276,13 +278,20 @@ public class PowerDetailsPresenter extends DrawerPresenter
                 spell.setChampionFeat(powerData.get(PowerDetailsContract.championFeat));
             if (powerData.containsKey(PowerDetailsContract.epicFeat))
                 spell.setEpicFeat(powerData.get(PowerDetailsContract.epicFeat));
+
+            //spell must always have a group name, otherwise we can't order by group name at DB side
+            //when the spells are fetched, or it would become difficult
             if (powerData.containsKey(PowerDetailsContract.groupName))
                 spell.setGroupName(powerData.get(PowerDetailsContract.groupName));
+            else
+                spell.setGroupName(DB_SPELL_DEFAULT_GROUP_NAME);
+
             if (powerData.containsKey(PowerDetailsContract.playerNotes))
                 spell.setPlayerNotes(powerData.get(PowerDetailsContract.playerNotes));
             if (powerData.containsKey(PowerDetailsContract.trigger))
                 spell.setTrigger(powerData.get(PowerDetailsContract.trigger));
         }
+
 
         return spell;
     }
