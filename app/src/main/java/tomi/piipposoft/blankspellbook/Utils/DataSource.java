@@ -47,6 +47,7 @@ public class DataSource {
     public static final String DB_SPELL_LIST_TREE_NAME = "spell_lists";
     public static final String DB_SPELL_LIST_CHILD_NAME = "name";
     public static final String DB_SPELL_LIST_CHILD_SPELLS = "spells";
+    public static final String DB_SPELL_LIST_SINGLE_SPELL_NAME = "powerName";
 
     //for spells table
     public static final String DB_SPELL_TREE_NAME = "spells";
@@ -54,6 +55,8 @@ public class DataSource {
     public static final String DB_SPELLS_CHILD_DAILY_POWER_LISTS = "dailyPowerLists";
     private static final String DB_SPELLS_CHILD_POWER_LIST = "powerListId";
     public static final String DB_SPELLS_CHILD_NAME = "name";
+
+
 
     public static final int DRAWERPRESENTER = 1;
     public static final int MAINACTIVITYPRESENTER = 2;
@@ -103,29 +106,107 @@ public class DataSource {
 
     /**
      * Add a new ChildEventListener to a spell list in DB
-     * @param id ID of the spell list which to listen to
+     * @param powerListId ID of the spell list which to listen to
      * @return the child event listener
      */
-    public static ChildEventListener addPowerListPowerListener(String id){
+    public static ChildEventListener addPowerListPowerListener(final String powerListId){
         DatabaseReference spellListReference =
                 firebaseDatabase
                         .getReference(DB_SPELL_LIST_TREE_NAME)
-                        .child(id)
+                        .child(powerListId)
                         .child(DB_SPELL_LIST_CHILD_SPELLS);
 
-        Log.d(TAG, "adding path " + DB_SPELL_LIST_TREE_NAME + "/" + id + "/" + DB_SPELL_LIST_CHILD_SPELLS);
+        Log.d(TAG, "adding path " + DB_SPELL_LIST_TREE_NAME + "/" + powerListId + "/" + DB_SPELL_LIST_CHILD_SPELLS);
 
         /*Query powersQueryOrderedByGroup = firebaseDatabase
                 .getReference(DB_SPELL_LIST_TREE_NAME)
                 .child(id)
                 .child(DB_SPELL_LIST_CHILD_SPELLS)
                 .orderByValue();*/
-        /*Query powersQueryOrderedByGroup = firebaseDatabase
+        final Query powerGroupsQuery = firebaseDatabase
                 .getReference(DB_SPELL_GROUPS_TREE_NAME)
-                .child(id)
-                .*/
+                .child(powerListId)
+                .orderByValue();
 
-        return spellListReference.addChildEventListener(new ChildEventListener() {
+        //ekana haetaan powerien groupit, orderattuna grouppien nimen mukaan
+        //nämä annetaan presenterille
+        //samalla laukaistaan uusi pyyntö kaikille spelleille groupin alla, orderattuna spellin nimen mukaan
+        //nämä annetaan presenterille
+
+
+        return powerGroupsQuery.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                //pass the group names to presenter
+                String powerGroupName = dataSnapshot.getKey();
+                Log.d(TAG, "addPowerListPowerListener: got group: " + powerGroupName);
+                PowerListPresenter.handlePowerGroup(powerGroupName);
+
+                //Get the power ids from spell_groups/$powerlistId/$groupName/
+                Query powersIdsQuery = firebaseDatabase
+                        .getReference(DB_SPELL_GROUPS_TREE_NAME)
+                        .child(powerListId)
+                        .child(powerGroupName)
+                        .orderByChild(DB_SPELL_LIST_SINGLE_SPELL_NAME);
+
+
+                powersIdsQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for(DataSnapshot powerSnapshot : dataSnapshot.getChildren()){
+                            //get the actual powers from DB
+                            String powerId = powerSnapshot.getKey();
+                            firebaseDatabase
+                                    .getReference(DB_SPELL_TREE_NAME)
+                                    .child(powerId)
+                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            PowerListPresenter.handleSpellFromDatabase(
+                                                    dataSnapshot.getValue(Spell.class)
+                                            );
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                //launch a query on the child
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        /*return spellListReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 String newSpellId = dataSnapshot.getKey();
@@ -171,7 +252,7 @@ public class DataSource {
             public void onCancelled(DatabaseError databaseError) {
                 Log.d(TAG, "Error ocurred: " + databaseError.toString());
             }
-        });
+        });*/
     }
 
     /**

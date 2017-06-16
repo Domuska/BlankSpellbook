@@ -1,12 +1,14 @@
 package tomi.piipposoft.blankspellbook.PowerList;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.ArrayMap;
 import android.util.Log;
 import android.view.View;
 
 import com.google.firebase.database.ChildEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
 import tomi.piipposoft.blankspellbook.PowerDetails.PowerDetailsActivity;
@@ -38,6 +40,8 @@ public class PowerListPresenter extends DrawerPresenter implements
     //listener to the power list that is displayed
     private static ChildEventListener powerListListener;
 
+    private static ArrayMap<String, ArrayList<Spell>> powerGroups = new ArrayMap<>();
+
     PowerListPresenter(
             @NonNull BlankSpellBookContract.DBHelper dbHelper,
             @NonNull PowerListContract.View powerListActivity,
@@ -67,11 +71,20 @@ public class PowerListPresenter extends DrawerPresenter implements
 
     public static void handleSpellFromDatabase(Spell spell){
         Log.d(TAG, "handleSpellFromDatabase: name: " + spell.getName() + " group: " + spell.getGroupName());
-        mPowerListActivity.addSpellToList(spell);
+        //mPowerListActivity.addSpellToList(spell);
+        //add the power to the list of powers in the powerGroups map
+        powerGroups.get(spell.getGroupName()).add(spell);
     }
 
     public static void handleSpellDeletion(Spell spell){
         mPowerListActivity.removeSpellFromList(spell);
+    }
+
+    public static void handlePowerGroup(String powerGroupName) {
+        //add the power group name to the map if it's not there yet
+        Log.d(TAG, "handlePowerGroup: got a new group " + powerGroupName);
+        if(!powerGroups.containsKey(powerGroupName))
+            powerGroups.put(powerGroupName, new ArrayList<Spell>());
     }
 
     // FROM POWERLISTCONTRACT
@@ -133,4 +146,5 @@ public class PowerListPresenter extends DrawerPresenter implements
     public void userPushingUndo() {
         DataSource.addPowersToList(deletedPowerIds, powerListId);
     }
+
 }
