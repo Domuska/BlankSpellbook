@@ -1171,7 +1171,8 @@ public class DataSource {
                         + spellId, true);
 
                 //add the spell_groups entry as well if spell is set to a group
-                //note, spell can't have a group if it's not in a list (only lists have groups)
+                //note, spell's group is only added to spell_groups when spell is added to a list
+                //of spells, there is no need to have spells that aren't in a list in this table
                 if(!"".equals(spell.getGroupName())){
                     childUpdates.put(
                             DB_SPELL_GROUPS_TREE_NAME
@@ -1180,7 +1181,9 @@ public class DataSource {
                                     + "/"
                                     + spell.getGroupName()
                                     + "/"
-                                    + spellId, true);
+                                    + spellId
+                                    + "/"
+                                    + spell.getName(), true);
                 }
             }
 
