@@ -41,6 +41,7 @@ public class PowerListPresenter extends DrawerPresenter implements
     private static ChildEventListener powerListListener;
 
     private static ArrayMap<String, ArrayList<Spell>> powerGroups = new ArrayMap<>();
+    private static ArrayList<ChildEventListener> powerGroupListeners = new ArrayList<>();
 
     PowerListPresenter(
             @NonNull BlankSpellBookContract.DBHelper dbHelper,
@@ -74,6 +75,8 @@ public class PowerListPresenter extends DrawerPresenter implements
         //mPowerListActivity.addSpellToList(spell);
         //add the power to the list of powers in the powerGroups map
         powerGroups.get(spell.getGroupName()).add(spell);
+        //pass the power to view to display it as it wishes
+        mPowerListActivity.addSpellToList(spell);
     }
 
     public static void handleSpellDeletion(Spell spell){
@@ -85,6 +88,22 @@ public class PowerListPresenter extends DrawerPresenter implements
         Log.d(TAG, "handlePowerGroup: got a new group " + powerGroupName);
         if(!powerGroups.containsKey(powerGroupName))
             powerGroups.put(powerGroupName, new ArrayList<Spell>());
+    }
+
+    public static void handlePowerGroupListener(ChildEventListener childEventListener) {
+        Log.d(TAG, "handlePowerGroupListener: added new listener");
+        powerGroupListeners.add(childEventListener);
+        // TODO: 16.6.2017 remove these listeners too
+    }
+
+    /**
+     * Check if presenter is already listening to a certain power group
+     * in spell_groups/$powerlistId/$powerGroup
+     * @param powerGroupName name of the powerGroup
+     * @return true if already listens to the group
+     */
+    public static boolean listeningToGroup(String powerGroupName) {
+        return powerGroups.containsKey(powerGroupName);
     }
 
     // FROM POWERLISTCONTRACT

@@ -21,9 +21,9 @@ public class SpellGroup implements ParentListItem, Comparable<SpellGroup>{
     private String groupName;
     private final String TAG = "SpellGroup";
 
-    public SpellGroup(String groupName, List<Spell> spells){
+    public SpellGroup(String groupName, List<Spell> spell){
         this.groupName = groupName;
-        spellsList = spells;
+        spellsList = spell;
     }
 
     public SpellGroup(String groupName, Spell spell){
@@ -63,7 +63,6 @@ public class SpellGroup implements ParentListItem, Comparable<SpellGroup>{
     @Override
     public boolean equals(Object o) {
 
-
         if(o!= null && o instanceof String){
             Log.d(TAG, "comparing with a String: " + o);
             return o.equals(this.groupName);
@@ -75,6 +74,8 @@ public class SpellGroup implements ParentListItem, Comparable<SpellGroup>{
         }
         return false;
     }
+
+
 
     @Override
     public int hashCode() {

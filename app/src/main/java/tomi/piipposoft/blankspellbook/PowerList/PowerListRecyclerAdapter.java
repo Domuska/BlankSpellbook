@@ -1,6 +1,7 @@
 package tomi.piipposoft.blankspellbook.PowerList;
 
 import android.content.Context;
+import android.support.v4.util.ArrayMap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,7 +43,6 @@ class PowerListRecyclerAdapter
     private Animation rotateAnimation, reverseRotateAnimation;
     private final int ARROW_ROTATION_DURATION = 300;
 
-
     //flag for setting when user is selecting power lists for deletion
     private boolean selectionMode;
 
@@ -73,6 +73,7 @@ class PowerListRecyclerAdapter
         selectionMode = false;
         selectedSpellsList = new ArrayList<>();
     }
+
 
     @Override
     public SpellGroupViewHolder onCreateParentViewHolder(ViewGroup parentViewGroup) {
@@ -227,16 +228,17 @@ class PowerListRecyclerAdapter
         }
 
         void bind(final Spell spell) {
+            Log.d(TAG, "SpellViewHolder: bind: spell name" + spell.getName());
             childTextView.setText(spell.getName());
 
             //if the item is in map of selected items, add set it as selected
             if(selectedSpellsList.contains(spell)) {
                 recyclerRowBackground.setSelected(true);
-                Log.d("PowerListsAdapter", "spell " + spell.getName() +  " should be selected");
+                Log.d(TAG, "spell " + spell.getName() +  " should be selected");
             }
             else{
                 recyclerRowBackground.setSelected(false);
-                Log.d("PowerListsAdapter", "spell " + spell.getName() + " should not be selected");
+                Log.d(TAG, "spell " + spell.getName() + " should not be selected");
             }
         }
     }

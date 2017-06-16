@@ -238,8 +238,29 @@ public class PowerListActivity extends ApplicationActivity
 
     @Override
     public void addSpellToList(Spell spell) {
-        Log.d(TAG, "Got a spell to be added to adapter: " + spell.getName());
+        Log.d(TAG, "addSpellToList: Got a spell to be added to adapter: " + spell.getName());
 
+        String powerGroupName = spell.getGroupName();
+        Log.d(TAG, "addSpellToList: power group name " + powerGroupName);
+        if(!spellGroups.contains(new SpellGroup(powerGroupName, spell))) {
+            spellGroups.add(new SpellGroup(powerGroupName, spell));
+            //notify adapter that new parent was added so it can animate it in
+            adapter.notifyParentItemInserted( spellGroups.size()-1 );
+        }
+        else {
+            //spellGroups.get(powerGroupName).add(spell);
+            int parentIndex = spellGroups.indexOf(new SpellGroup(powerGroupName, spell));
+            spellGroups.get(parentIndex).addSpell(spell);
+            //notify adapter that new child was added so it can animate it in
+            Log.d(TAG, "addSpellToList: parent index " + parentIndex);
+            Log.d(TAG, "addSpellToList: parent list size: " + spellGroups.get(parentIndex).getListSize());
+            adapter.notifyChildItemInserted(
+                    parentIndex,
+                    spellGroups.get(parentIndex).getListSize() - 1
+            );
+        }
+
+        /*
         String groupName = spell.getGroupName();
 
         if (groupName != null) {
@@ -281,7 +302,7 @@ public class PowerListActivity extends ApplicationActivity
                         spellGroups.get(spellGroups.indexOf(emptyGroup)).getListSize() - 1
                 );
             }
-        }
+        }*/
     }
 
 
@@ -290,7 +311,7 @@ public class PowerListActivity extends ApplicationActivity
         Log.d(TAG, "starting to remove spell with name " + spell.getName());
         Log.d(TAG, "spell's group:" + spell.getGroupName());
 
-        int spellGroupIndex;
+        /*int spellGroupIndex;
         //make sure spell has group name
         if (spell.getGroupName() != null && !"".equals(spell.getGroupName())) {
             Log.d(TAG, "spell grouped");
@@ -314,7 +335,7 @@ public class PowerListActivity extends ApplicationActivity
         if (group.getListSize() == 0) {
             spellGroups.remove(group);
             adapter.notifyParentItemRemoved(spellGroupIndex);
-        }
+        }*/
         //adapter = new PowerListRecyclerAdapter(this, spellGroups, myActionListener);
         //recyclerView.setAdapter(adapter);
     }
