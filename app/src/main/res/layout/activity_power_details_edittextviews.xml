@@ -281,8 +281,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/spellbook_group"
                 style="@android:style/TextAppearance.Small"
-                android:completionThreshold="1"
-                />
+                android:completionThreshold="1" />
         </android.support.design.widget.TextInputLayout>
 
 

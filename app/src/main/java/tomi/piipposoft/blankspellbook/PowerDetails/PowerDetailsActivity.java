@@ -746,8 +746,9 @@ public class PowerDetailsActivity extends ApplicationActivity
         //create the adapter with the group names
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
-                android.R.layout.simple_dropdown_item_1line,
+                R.layout.popup_list_row_item,
                 powerGroups);
+
 
         if(groupTextEdit == null)
             groupTextEdit = (AutoCompleteTextView) findViewById(R.id.editText_group);

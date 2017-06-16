@@ -38,7 +38,7 @@ public class PowerListPresenter extends DrawerPresenter implements
     //listener to the power list that is displayed
     private static ChildEventListener powerListListener;
 
-    public PowerListPresenter(
+    PowerListPresenter(
             @NonNull BlankSpellBookContract.DBHelper dbHelper,
             @NonNull PowerListContract.View powerListActivity,
             @NonNull DrawerHelper drawerHelper,
@@ -49,7 +49,7 @@ public class PowerListPresenter extends DrawerPresenter implements
         powerListId = listId;
     }
 
-    public static PowerListPresenter getInstance(@NonNull BlankSpellBookContract.DBHelper dbHelper,
+    static PowerListPresenter getInstance(@NonNull BlankSpellBookContract.DBHelper dbHelper,
                                                  @NonNull PowerListContract.View powerListActivity,
                                                  @NonNull DrawerHelper drawerHelper,
                                                  @NonNull String listId){

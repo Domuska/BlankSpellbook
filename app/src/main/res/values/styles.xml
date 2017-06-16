@@ -13,11 +13,9 @@
         <item name="android:textColorPrimaryInverse">@color/primary_text_material_dark</item>
 
     </style>
-    
     <style name="SecondaryTextRecyclerView">
         <item name="android:textColor">@color/my_color_dark_gray</item>
     </style>
-
 
     <style name="dialogFragment_title_style" parent="Theme.AppCompat.Light.Dialog.Alert">
         <!-- if we were on Lollipop (23) upwards, we could just use the following line -->
