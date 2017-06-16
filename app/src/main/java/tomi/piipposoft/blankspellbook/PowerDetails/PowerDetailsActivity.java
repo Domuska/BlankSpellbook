@@ -14,6 +14,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.ViewStubCompat;
 import android.text.method.KeyListener;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -131,12 +132,12 @@ public class PowerDetailsActivity extends ApplicationActivity
         this.drawerActionListener = (DrawerContract.UserActionListener)mActionListener;
         this.drawerActionListener.powerListProfileSelected();
 
-        editTextScrollView = (NestedScrollView) findViewById(R.id.scrollView_editText);
         textScrollView = (NestedScrollView) findViewById(R.id.scrollView_text);
 
-        //Set the power name
-        if(!"".equals(powerName))
+        //add name
+        if(!"".equals(powerName)) {
             ((TextView) findViewById(R.id.text_spellName)).setText(powerName);
+        }
 
 
         if(savedState == null)
@@ -316,7 +317,14 @@ public class PowerDetailsActivity extends ApplicationActivity
 
         editingSpell = true;
         Log.d(TAG, "showing empty fields...");
+
+
         textScrollView.setVisibility(View.GONE);
+
+        if(editTextScrollView == null) {
+            editTextScrollView = (NestedScrollView)
+                    ((ViewStubCompat) findViewById(R.id.editText_viewStub)).inflate();
+        }
         editTextScrollView.setVisibility(View.VISIBLE);
 
 
@@ -378,7 +386,10 @@ public class PowerDetailsActivity extends ApplicationActivity
 
         Log.d(TAG, "starting method call showNonEditableFilledFields");
 
-        editTextScrollView.setVisibility(View.GONE);
+        if(editTextScrollView != null)
+            editTextScrollView.setVisibility(View.GONE);
+
+        //the textscrollview is not inflated unless it's needed
         textScrollView.setVisibility(View.VISIBLE);
 
         fab.setImageResource(R.drawable.ic_mode_edit_black_24dp);
@@ -554,7 +565,12 @@ public class PowerDetailsActivity extends ApplicationActivity
 
         editingSpell = true;
 
+        if(editTextScrollView == null) {
+            editTextScrollView = (NestedScrollView)
+                    ((ViewStubCompat) findViewById(R.id.editText_viewStub)).inflate();
+        }
         editTextScrollView.setVisibility(View.VISIBLE);
+
         textScrollView.setVisibility(View.GONE);
 
         fab.setImageResource(R.drawable.ic_done_black_24dp);

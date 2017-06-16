@@ -50,7 +50,16 @@
     <!-- include layout for the text fields that display details -->
     <include layout="@layout/activity_power_details_textviews"/>
 
-    <!-- include layout for the edit text fields that are displayed when editing power -->
-    <include layout="@layout/activity_power_details_edittextviews"/>
+
+    <!-- include editable fields as stub so it won't be loaded until user goes to edit view -->
+    <!-- note, app:layout_behavior needs to be only on this element for it to work properly -->
+    <android.support.v7.widget.ViewStubCompat
+        android:id="@+id/editText_viewStub"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inflatedId="@+id/scrollView_editText"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout="@layout/activity_power_details_edittextviews" />
+
 
 </android.support.design.widget.CoordinatorLayout>

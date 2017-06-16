@@ -32,6 +32,8 @@ public class PowerDetailsPresenter extends DrawerPresenter
     //used when activity gets savedInstanceState bundle, user might have been editing a power
     private static boolean wasUserEditingPower = false;
 
+    private static String[] powerGroups;
+
     public PowerDetailsPresenter(
             @NonNull BlankSpellBookContract.DBHelper dbHelper,
             @NonNull PowerDetailsContract.View powerDetailsView,
@@ -43,6 +45,7 @@ public class PowerDetailsPresenter extends DrawerPresenter
         powerId = spellId;
         this.powerListId = powerLIstId;
         thisPower = new Spell();
+        powerGroups = null;
     }
 
     /**
@@ -96,9 +99,10 @@ public class PowerDetailsPresenter extends DrawerPresenter
         }
     }
 
-    public static void handleFetchedSpellGroups(String[] powerGroups){
-        if(powerGroups != null)
-            mPowerDetailsView.populatePowerGroupSuggestions(powerGroups);
+    public static void handleFetchedSpellGroups(String[] fetchedPowerGroups){
+        if(fetchedPowerGroups != null)
+            powerGroups = fetchedPowerGroups;
+            //mPowerDetailsView.populatePowerGroupSuggestions(powerGroups);
     }
 
 
@@ -109,6 +113,8 @@ public class PowerDetailsPresenter extends DrawerPresenter
         wasUserEditingPower = wasUserEditing;
         if (powerId.equals(PowerDetailsActivity.EXTRA_ADD_NEW_POWER_DETAILS)) {
             mPowerDetailsView.showEmptyFields();
+            if(powerGroups != null)
+                mPowerDetailsView.populatePowerGroupSuggestions(powerGroups);
             mPowerDetailsView.setCancelAsGoBack(true);
         } else {
             mPowerDetailsView.setCancelAsGoBack(false);
@@ -141,6 +147,8 @@ public class PowerDetailsPresenter extends DrawerPresenter
     @Override
     public void userEditingPower(Spell spell) {
         mPowerDetailsView.showEditableFilledFields(spell);
+        if(powerGroups != null)
+            mPowerDetailsView.populatePowerGroupSuggestions(powerGroups);
     }
 
     @Override
