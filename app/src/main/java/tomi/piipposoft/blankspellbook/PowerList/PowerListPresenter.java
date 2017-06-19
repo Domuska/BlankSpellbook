@@ -1,6 +1,7 @@
 package tomi.piipposoft.blankspellbook.PowerList;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.util.ArrayMap;
 import android.util.Log;
 import android.view.View;
@@ -8,7 +9,6 @@ import android.view.View;
 import com.google.firebase.database.ChildEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
 import tomi.piipposoft.blankspellbook.PowerDetails.PowerDetailsActivity;
@@ -41,9 +41,11 @@ public class PowerListPresenter extends DrawerPresenter implements
     private static ChildEventListener powerListListener;
 
     private static ArrayMap<String, ArrayList<Spell>> powerGroups = new ArrayMap<>();
-    private static ArrayList<ChildEventListener> powerGroupListeners = new ArrayList<>();
+    private static ArrayMap<String, ArrayList<Spell>> previousPowerGroups;
+    //private static ArrayList<ChildEventListener> powerGroupListeners = new ArrayList<>();
+    private static ArrayMap<ChildEventListener, String> powerGroupListeners = new ArrayMap<>();
 
-    PowerListPresenter(
+    private PowerListPresenter(
             @NonNull BlankSpellBookContract.DBHelper dbHelper,
             @NonNull PowerListContract.View powerListActivity,
             @NonNull DrawerHelper drawerHelper,
@@ -90,10 +92,9 @@ public class PowerListPresenter extends DrawerPresenter implements
             powerGroups.put(powerGroupName, new ArrayList<Spell>());
     }
 
-    public static void handlePowerGroupListener(ChildEventListener childEventListener) {
-        Log.d(TAG, "handlePowerGroupListener: added new listener");
-        powerGroupListeners.add(childEventListener);
-        // TODO: 16.6.2017 remove these listeners too
+    public static void handlePowerGroupListener(ChildEventListener childEventListener, String groupName) {
+        Log.d(TAG, "handlePowerGroupListener: added new listener: " + childEventListener);
+        powerGroupListeners.put(childEventListener, groupName);
     }
 
     /**
@@ -109,17 +110,32 @@ public class PowerListPresenter extends DrawerPresenter implements
     // FROM POWERLISTCONTRACT
 
     @Override
-    public void openPowerDetails(String itemId, String itemName, View transitioningView) {
-        if(itemId.equals(PowerDetailsActivity.EXTRA_ADD_NEW_POWER_DETAILS)) {
-            Log.d(TAG, "removing listener: " + powerListListener.toString());
+    public void openPowerDetails(@NonNull String itemId, @Nullable String itemName,
+                                 @Nullable View transitioningView) {
+
+        //first remove the listeners
+        if(powerListListener != null) {
+            Log.d(TAG, "openPowerDetails: removing listener: " + powerListListener.toString());
             DataSource.removePowerListPowerListener(powerListListener, powerListId);
+        }
+        Log.d(TAG, "openPowerDetails: powerGroupListeners size: " + powerGroupListeners.size());
+        for(int i = 0; i < powerGroupListeners.size(); i++) {
+            Log.d(TAG, "openPowerDetails: removing group listener at index " + i);
+            ChildEventListener listener = powerGroupListeners.keyAt(i);
+            Log.d(TAG, "openPowerDetails: listener removed is " + listener);
+            DataSource.removePowerGroupListener(
+                    listener, powerGroupListeners.get(listener), powerListId);
+        }
+        powerGroupListeners.clear();
+        previousPowerGroups = powerGroups;
+        powerGroups.clear();
+
+        //decide if we open new power input screen or just show existing power details
+        if(itemId.equals(PowerDetailsActivity.EXTRA_ADD_NEW_POWER_DETAILS)) {
+            Log.d(TAG, "openPowerDetails: removing listener: " + powerListListener.toString());
             mPowerListActivity.showNewPowerUI();
         }
         else {
-            if(powerListListener != null) {
-                Log.d(TAG, "removing listener: " + powerListListener.toString());
-                DataSource.removePowerListPowerListener(powerListListener, powerListId);
-            }
             mPowerListActivity.showPowerDetailsUI(itemId, itemName, powerListId, transitioningView);
         }
     }
@@ -131,8 +147,7 @@ public class PowerListPresenter extends DrawerPresenter implements
             Log.d(TAG, "getSpellList: removing old power list listener");
             DataSource.removePowerListPowerListener(powerListListener, powerListId);
         }
-        Log.d(TAG, "getSpellList: power list ID in getSpellList is: " + powerListId);
-        powerListListener = DataSource.addPowerListPowerListener(powerListId);
+        powerListListener = DataSource.attachPowerGroupListeners(powerListId);
         Log.d(TAG, "getSpellList: added new listener: " + powerListListener.toString());
     }
 
@@ -143,8 +158,15 @@ public class PowerListPresenter extends DrawerPresenter implements
 
     @Override
     public void pauseActivity() {
-        Log.d(TAG, "activity pausing, removing listener");
+        Log.d(TAG, "pauseActivity: activity pausing, removing listener");
         DataSource.removePowerListPowerListener(powerListListener, powerListId);
+        for(int i = 0; i < powerGroupListeners.size(); i++) {
+            ChildEventListener listener = powerGroupListeners.keyAt(i);
+            Log.d(TAG, "pauseActivity: group listener removed is " + listener);
+            DataSource.removePowerGroupListener(
+                    listener, powerGroupListeners.get(listener), powerListId);
+        }
+        powerGroupListeners.clear();
         powerListListener = null;
     }
 

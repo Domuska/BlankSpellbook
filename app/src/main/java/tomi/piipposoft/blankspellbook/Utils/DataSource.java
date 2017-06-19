@@ -109,25 +109,28 @@ public class DataSource {
      * @param powerListId ID of the spell list which to listen to
      * @return the child event listener
      */
-    public static ChildEventListener addPowerListPowerListener(final String powerListId){
+    public static ChildEventListener attachPowerGroupListeners(final String powerListId){
+
+        /*
+        This method flows as follows:
+        1) get power groups, ordered by name
+        2) give these groups to presenter
+        3) launch a new query to get all powers under a group, ordered by power name
+        4) give these powers one by one to presenter
+         */
 
         final Query powerGroupsQuery = firebaseDatabase
                 .getReference(DB_SPELL_GROUPS_TREE_NAME)
                 .child(powerListId)
                 .orderByValue();
-
-        //ekana haetaan powerien groupit, orderattuna grouppien nimen mukaan
-        //nämä annetaan presenterille
-        //samalla laukaistaan uusi pyyntö kaikille spelleille groupin alla, orderattuna spellin nimen mukaan
-        //nämä annetaan presenterille
-
+        Log.d(TAG, "attachPowerGroupListeners: adding query");
 
         return powerGroupsQuery.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 //at this point we have $group_name as each snapshot
                 String powerGroupName = dataSnapshot.getKey();
-                Log.d(TAG, "addPowerListPowerListener: got group: " + powerGroupName);
+                Log.d(TAG, "attachPowerGroupListeners: got group: " + powerGroupName);
 
                 //make sure we dont start to listen twice to a group
                 if(!PowerListPresenter.listeningToGroup(powerGroupName)) {
@@ -141,8 +144,10 @@ public class DataSource {
                             .child(powerGroupName)
                             .orderByChild(DB_SPELL_LIST_SINGLE_SPELL_NAME);
 
+                    //pass the childeventlistener and group's name to presenter to deattach this later
                     PowerListPresenter.handlePowerGroupListener(
-                            powersIdsQuery.addChildEventListener(new powerValueListener()));
+                            powersIdsQuery.addChildEventListener(new powerValueListener()),
+                            powerGroupName);
                 }
 
             }
@@ -1193,6 +1198,22 @@ public class DataSource {
         } else {
             throw new RuntimeException("Error at getSaveSpellChildUpdates, spell should already have ID initialized");
         }
+
+    }
+
+    /**
+     * Remove a listener in Power Groups tree
+     * @param listener the listener to be removed
+     * @param powerGroupName Name of the power group where listener should be removed from
+     * @param powerListId Name of the power list where power group is
+     */
+    public static void removePowerGroupListener(ChildEventListener listener,
+                                                String powerGroupName, String powerListId) {
+        firebaseDatabase
+                .getReference(DB_SPELL_GROUPS_TREE_NAME)
+                .child(powerListId)
+                .child(powerGroupName)
+                .removeEventListener(listener);
 
     }
 
