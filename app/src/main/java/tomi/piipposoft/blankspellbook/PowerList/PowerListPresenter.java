@@ -9,6 +9,7 @@ import android.view.View;
 import com.google.firebase.database.ChildEventListener;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
 import tomi.piipposoft.blankspellbook.PowerDetails.PowerDetailsActivity;
@@ -40,10 +41,11 @@ public class PowerListPresenter extends DrawerPresenter implements
     //listener to the power list that is displayed
     private static ChildEventListener powerListListener;
 
+    //power group name - list of powers under it
     private static ArrayMap<String, ArrayList<Spell>> powerGroups = new ArrayMap<>();
-    private static ArrayMap<String, ArrayList<Spell>> previousPowerGroups;
-    //private static ArrayList<ChildEventListener> powerGroupListeners = new ArrayList<>();
-    private static ArrayMap<ChildEventListener, String> powerGroupListeners = new ArrayMap<>();
+    private static String previousPowerListId;
+
+    private static ArrayMap<String, ChildEventListener> powerGroupListeners = new ArrayMap<>();
 
     private PowerListPresenter(
             @NonNull BlankSpellBookContract.DBHelper dbHelper,
@@ -73,12 +75,27 @@ public class PowerListPresenter extends DrawerPresenter implements
     }
 
     public static void handleSpellFromDatabase(Spell spell){
-        Log.d(TAG, "handleSpellFromDatabase: name: " + spell.getName() + " group: " + spell.getGroupName());
-        //mPowerListActivity.addSpellToList(spell);
-        //add the power to the list of powers in the powerGroups map
-        powerGroups.get(spell.getGroupName()).add(spell);
-        //pass the power to view to display it as it wishes
-        mPowerListActivity.addSpellToList(spell);
+        Log.d(TAG, "handleSpellFromDatabase: name: " + spell.getName()
+                + " group: " + spell.getGroupName());
+
+        //we simply check if power is already in this group, if it is, discard it
+        //note, here is actually a bug, if power's group name has changed,
+        //the same power will be under two different groups (the old and new group)
+        //since the old power is not removed at anywhere, however this should
+        //not happen too often and it will not cause big enough problems to be worth it to fix for now
+
+
+        for(Spell s : powerGroups.get(spell.getGroupName())){
+            Log.d(TAG, "handleSpellFromDatabase: power group: " + s.getGroupName()
+                    + " power name: " + s.getName());
+        }
+
+        if(!(powerGroups.get(spell.getGroupName()).contains(spell))) {
+            //add the power to the list of powers in the powerGroups map
+            powerGroups.get(spell.getGroupName()).add(spell);
+            //pass the power to view to display it as it wishes
+            mPowerListActivity.addSpellToList(spell);
+        }
     }
 
     public static void handleSpellDeletion(Spell spell){
@@ -94,7 +111,7 @@ public class PowerListPresenter extends DrawerPresenter implements
 
     public static void handlePowerGroupListener(ChildEventListener childEventListener, String groupName) {
         Log.d(TAG, "handlePowerGroupListener: added new listener: " + childEventListener);
-        powerGroupListeners.put(childEventListener, groupName);
+        powerGroupListeners.put(groupName, childEventListener);
     }
 
     /**
@@ -104,7 +121,7 @@ public class PowerListPresenter extends DrawerPresenter implements
      * @return true if already listens to the group
      */
     public static boolean listeningToGroup(String powerGroupName) {
-        return powerGroups.containsKey(powerGroupName);
+        return powerGroupListeners.containsKey(powerGroupName);
     }
 
     // FROM POWERLISTCONTRACT
@@ -121,14 +138,15 @@ public class PowerListPresenter extends DrawerPresenter implements
         Log.d(TAG, "openPowerDetails: powerGroupListeners size: " + powerGroupListeners.size());
         for(int i = 0; i < powerGroupListeners.size(); i++) {
             Log.d(TAG, "openPowerDetails: removing group listener at index " + i);
-            ChildEventListener listener = powerGroupListeners.keyAt(i);
+            String groupName = powerGroupListeners.keyAt(i);
+            ChildEventListener listener = powerGroupListeners.get(groupName);
             Log.d(TAG, "openPowerDetails: listener removed is " + listener);
             DataSource.removePowerGroupListener(
-                    listener, powerGroupListeners.get(listener), powerListId);
+                    listener, groupName, powerListId);
         }
         powerGroupListeners.clear();
-        previousPowerGroups = powerGroups;
-        powerGroups.clear();
+        //save current data so it can be displayed if we return to this activity
+        previousPowerListId = powerListId;
 
         //decide if we open new power input screen or just show existing power details
         if(itemId.equals(PowerDetailsActivity.EXTRA_ADD_NEW_POWER_DETAILS)) {
@@ -141,19 +159,33 @@ public class PowerListPresenter extends DrawerPresenter implements
     }
 
     @Override
-    public void getSpellList(String powerListId) {
+    public void getPowersForDisplay(String powerListId) {
         //remove the old listener
         if(powerListListener != null) {
-            Log.d(TAG, "getSpellList: removing old power list listener");
+            Log.d(TAG, "getPowersForDisplay: removing old power list listener");
             DataSource.removePowerListPowerListener(powerListListener, powerListId);
         }
+
+        if(!powerListId.equals(previousPowerListId)) {
+            powerGroups.clear();
+        }
+        //check if we have old data cached
+        /*if(previousPowerGroups != null && previousPowerListId.equals(powerListId)){
+            //pass all the powers to the View
+            for(Map.Entry<String, ArrayList<Spell>> entry : previousPowerGroups.entrySet()){
+                for(Spell power : entry.getValue()){
+                    mPowerListActivity.addSpellToList(power);
+                }
+            }
+        }*/
+
         powerListListener = DataSource.attachPowerGroupListeners(powerListId);
-        Log.d(TAG, "getSpellList: added new listener: " + powerListListener.toString());
+        Log.d(TAG, "getPowersForDisplay: added new listener: " + powerListListener.toString());
     }
 
     @Override
     public void resumeActivity() {
-
+        //attach listeners again
     }
 
     @Override
@@ -161,10 +193,11 @@ public class PowerListPresenter extends DrawerPresenter implements
         Log.d(TAG, "pauseActivity: activity pausing, removing listener");
         DataSource.removePowerListPowerListener(powerListListener, powerListId);
         for(int i = 0; i < powerGroupListeners.size(); i++) {
-            ChildEventListener listener = powerGroupListeners.keyAt(i);
-            Log.d(TAG, "pauseActivity: group listener removed is " + listener);
+            String groupName = powerGroupListeners.keyAt(i);
+            ChildEventListener listener = powerGroupListeners.get(groupName);
+            Log.d(TAG, "pauseActivity: listener removed is " + listener);
             DataSource.removePowerGroupListener(
-                    listener, powerGroupListeners.get(listener), powerListId);
+                    listener, groupName, powerListId);
         }
         powerGroupListeners.clear();
         powerListListener = null;

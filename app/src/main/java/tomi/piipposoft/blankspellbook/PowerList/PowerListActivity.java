@@ -13,7 +13,6 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -27,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tomi.piipposoft.blankspellbook.ApplicationActivity;
-import tomi.piipposoft.blankspellbook.MainActivity.MainActivity;
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
 import tomi.piipposoft.blankspellbook.Utils.SharedPreferencesHandler;
 import tomi.piipposoft.blankspellbook.Utils.Spell;
@@ -128,15 +126,14 @@ public class PowerListActivity extends ApplicationActivity
         this.drawerActionListener = (DrawerContract.UserActionListener) myActionListener;
         this.drawerActionListener.powerListProfileSelected();
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        layoutManager = new LinearLayoutManager(this);
+        if(recyclerView == null) {
+            recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+            layoutManager = new LinearLayoutManager(this);
 
-        //initialize the drawer with the spell list
-        myActionListener.getSpellList(powerListId);
-
-
-        spellGroups = new ArrayList<>();
-        adapter = new PowerListRecyclerAdapter(this, spellGroups, myActionListener);
+            spellGroups = new ArrayList<>();
+            adapter = new PowerListRecyclerAdapter(this, spellGroups, myActionListener);
+        }
+        myActionListener.getPowersForDisplay(powerListId);
 
 //        adapter.setExpandCollapseListener(new ExpandableRecyclerAdapter.ExpandCollapseListener() {
 //            @Override
@@ -237,20 +234,23 @@ public class PowerListActivity extends ApplicationActivity
 
 
     @Override
-    public void addSpellToList(Spell spell) {
-        Log.d(TAG, "addSpellToList: Got a spell to be added to adapter: " + spell.getName());
+    public void addSpellToList(Spell power) {
+        Log.d(TAG, "addSpellToList: Got a spell to be added to adapter: " + power.getName());
 
-        String powerGroupName = spell.getGroupName();
+        String powerGroupName = power.getGroupName();
         Log.d(TAG, "addSpellToList: power group name " + powerGroupName);
-        if(!spellGroups.contains(new SpellGroup(powerGroupName, spell))) {
-            spellGroups.add(new SpellGroup(powerGroupName, spell));
-            //notify adapter that new parent was added so it can animate it in
+        //see if spellgroups already has this group
+        if(!spellGroups.contains(new SpellGroup(powerGroupName, power))) {
+            //add the power group, pass the power for SpellGroups in constructor
+            spellGroups.add(new SpellGroup(powerGroupName, power));
+            //notify adapter that new parent was added so it is added to list
             adapter.notifyParentItemInserted( spellGroups.size()-1 );
         }
         else {
-            //spellGroups.get(powerGroupName).add(spell);
-            int parentIndex = spellGroups.indexOf(new SpellGroup(powerGroupName, spell));
-            spellGroups.get(parentIndex).addSpell(spell);
+            //get index with a "dummy group", a needless object allocation here tbh
+            int parentIndex = spellGroups.indexOf(new SpellGroup(powerGroupName, power));
+            //add the spell to the SpellGroup's list of powers
+            spellGroups.get(parentIndex).addSpell(power);
             //notify adapter that new child was added so it can animate it in
             Log.d(TAG, "addSpellToList: parent index " + parentIndex);
             Log.d(TAG, "addSpellToList: parent list size: " + spellGroups.get(parentIndex).getListSize());
@@ -307,29 +307,31 @@ public class PowerListActivity extends ApplicationActivity
 
 
     @Override
-    public void removeSpellFromList(Spell spell) {
-        Log.d(TAG, "starting to remove spell with name " + spell.getName());
-        Log.d(TAG, "spell's group:" + spell.getGroupName());
+    public void removeSpellFromList(Spell power) {
+        Log.d(TAG, "starting to remove power with name " + power.getName());
+        Log.d(TAG, "power's group:" + power.getGroupName());
+
+        // TODO: 19.6.2017 re-implement this like above
 
         /*int spellGroupIndex;
-        //make sure spell has group name
-        if (spell.getGroupName() != null && !"".equals(spell.getGroupName())) {
-            Log.d(TAG, "spell grouped");
+        //make sure power has group name
+        if (power.getGroupName() != null && !"".equals(power.getGroupName())) {
+            Log.d(TAG, "power grouped");
             //sort of unnecessary object creation. Is there a better way?
-            //get index of the spell group the deletable spell is part of
-            spellGroupIndex = spellGroups.indexOf(new SpellGroup(spell.getGroupName(), new Spell()));
+            //get index of the power group the deletable power is part of
+            spellGroupIndex = spellGroups.indexOf(new SpellGroup(power.getGroupName(), new Spell()));
         } else {
-            //the spell is not in a group named by user, so it is in un grouped "group"
-            Log.d(TAG, "spell not grouped");
+            //the power is not in a group named by user, so it is in un grouped "group"
+            Log.d(TAG, "power not grouped");
             spellGroupIndex = spellGroups.indexOf(new SpellGroup(
-                    getString(R.string.spell_group_not_grouped), spell));
+                    getString(R.string.spell_group_not_grouped), power));
         }
         SpellGroup group = spellGroups.get(spellGroupIndex);
 
-        Log.d(TAG, "spell group index: " + spellGroupIndex + " group name: " + group.getGroupName());
+        Log.d(TAG, "power group index: " + spellGroupIndex + " group name: " + group.getGroupName());
 
         //SpellGroup.removeSpell returns the index of the child removed
-        int removedChildIndex = group.removeSpell(spell);
+        int removedChildIndex = group.removeSpell(power);
         Log.d(TAG, "removed child's index: " + removedChildIndex);
         adapter.notifyChildItemRemoved(spellGroupIndex, removedChildIndex);
         if (group.getListSize() == 0) {

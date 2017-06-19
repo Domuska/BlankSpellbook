@@ -53,7 +53,7 @@ public interface PowerListContract {
          * Get presenter to display the list of spells
          * @param powerListId ID of the power list
          */
-        void getSpellList(String powerListId);
+        void getPowersForDisplay(String powerListId);
 
         /**
          * User is opening the powerDetailsActivity
