@@ -887,11 +887,18 @@ public class DataSource {
     }
 
 
-    public static void removeSpellFromDailyPowerLists(ArrayList<String> powerLists, String powerId, String groupName) {
+    /**
+     * Remove a spell from list of daily powers, handles removing reference in
+     * daily_power_lists/$id/spells and in daily_spell_groups/$id/$groupName
+     * @param dailyPowerLists Ids of the daily power lists where reference to power should be removed
+     * @param powerId ID of the power that should be removed from the lists
+     * @param groupName name of the group the power belongs to
+     */
+    public static void removeSpellFromDailyPowerLists(ArrayList<String> dailyPowerLists, String powerId, String groupName) {
         HashMap<String, Object> childUpdates = new HashMap<>();
 
-        if(powerLists != null) {
-            for (String listId : powerLists) {
+        if(dailyPowerLists != null) {
+            for (String listId : dailyPowerLists) {
                 //remove the reference from the $daily_power_lists
                 childUpdates.put(
                         DB_DAILY_POWER_LIST_TREE_NAME + "/"
