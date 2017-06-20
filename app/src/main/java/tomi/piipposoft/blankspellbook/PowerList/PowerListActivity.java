@@ -126,10 +126,10 @@ public class PowerListActivity extends ApplicationActivity
         this.drawerActionListener = (DrawerContract.UserActionListener) myActionListener;
         this.drawerActionListener.powerListProfileSelected();
 
-        if(recyclerView == null) {
-            recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-            layoutManager = new LinearLayoutManager(this);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        layoutManager = new LinearLayoutManager(this);
 
+        if(adapter == null) {
             spellGroups = new ArrayList<>();
             adapter = new PowerListRecyclerAdapter(this, spellGroups, myActionListener);
         }
@@ -247,17 +247,21 @@ public class PowerListActivity extends ApplicationActivity
             adapter.notifyParentItemInserted( spellGroups.size()-1 );
         }
         else {
-            //get index with a "dummy group", a needless object allocation here tbh
+            //get index of the group with a "dummy group", a needless object allocation here tbh
             int parentIndex = spellGroups.indexOf(new SpellGroup(powerGroupName, power));
-            //add the spell to the SpellGroup's list of powers
-            spellGroups.get(parentIndex).addSpell(power);
-            //notify adapter that new child was added so it can animate it in
-            Log.d(TAG, "addSpellToList: parent index " + parentIndex);
-            Log.d(TAG, "addSpellToList: parent list size: " + spellGroups.get(parentIndex).getListSize());
-            adapter.notifyChildItemInserted(
-                    parentIndex,
-                    spellGroups.get(parentIndex).getListSize() - 1
-            );
+
+            //power might already be in the list, check for that
+            if(!spellGroups.get(parentIndex).containsSpell(power)) {
+                //add the spell to the SpellGroup's list of powers
+                spellGroups.get(parentIndex).addSpell(power);
+                //notify adapter that new child was added so it can animate it in
+                Log.d(TAG, "addSpellToList: parent index " + parentIndex);
+                Log.d(TAG, "addSpellToList: parent list size: " + spellGroups.get(parentIndex).getListSize());
+                adapter.notifyChildItemInserted(
+                        parentIndex,
+                        spellGroups.get(parentIndex).getListSize() - 1
+                );
+            }
         }
 
         /*

@@ -46,6 +46,10 @@ public class SpellGroup implements ParentListItem, Comparable<SpellGroup>{
         return spellIndex;
     }
 
+    boolean containsSpell(Spell power){
+        return spellsList.contains(power);
+    }
+
     public int getListSize(){
         return this.spellsList.size();
     }
