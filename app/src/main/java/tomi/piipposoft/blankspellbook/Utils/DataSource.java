@@ -888,27 +888,28 @@ public class DataSource {
 
 
     public static void removeSpellFromDailyPowerLists(ArrayList<String> powerLists, String powerId, String groupName) {
-        // TODO: 20.6.2017 this crashes if powerLists is null (can happen if user selects no lists)
         HashMap<String, Object> childUpdates = new HashMap<>();
 
-        for(String listId : powerLists) {
-            //remove the reference from the $daily_power_lists
-            childUpdates.put(
-                    DB_DAILY_POWER_LIST_TREE_NAME + "/"
-                    + listId + "/"
-                    + DB_DAILY_POWER_LIST_CHILD_SPELLS + "/"
-                    + powerId, null);
-
-            //remove the reference from $daily_spell_groups
-            if(groupName != null){
+        if(powerLists != null) {
+            for (String listId : powerLists) {
+                //remove the reference from the $daily_power_lists
                 childUpdates.put(
-                        DB_DAILY_SPELL_GROUPS_TREE_NAME + "/"
-                        + listId + "/"
-                        + groupName + "/"
-                        + powerId, null);
+                        DB_DAILY_POWER_LIST_TREE_NAME + "/"
+                                + listId + "/"
+                                + DB_DAILY_POWER_LIST_CHILD_SPELLS + "/"
+                                + powerId, null);
+
+                //remove the reference from $daily_spell_groups
+                if (groupName != null) {
+                    childUpdates.put(
+                            DB_DAILY_SPELL_GROUPS_TREE_NAME + "/"
+                                    + listId + "/"
+                                    + groupName + "/"
+                                    + powerId, null);
+                }
+                //push the updates
+                firebaseDatabase.getReference().updateChildren(childUpdates);
             }
-            //push the updates
-            firebaseDatabase.getReference().updateChildren(childUpdates);
         }
     }
 
