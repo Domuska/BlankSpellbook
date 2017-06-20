@@ -173,6 +173,7 @@ public class DataSource {
         });
     }
 
+
     /**
      * Used for gettin a spell object from DB
      * NOTE: used only by PowerDetailsPresenter at the moment
@@ -1202,7 +1203,7 @@ public class DataSource {
     }
 
     /**
-     * Remove a listener in Power Groups tree
+     * Remove a listener in spell_groups/$powerListId/$powerGroupName
      * @param listener the listener to be removed
      * @param powerGroupName Name of the power group where listener should be removed from
      * @param powerListId Name of the power list where power group is
@@ -1219,8 +1220,9 @@ public class DataSource {
 
 
     /**
-     * ValueEventListener used to get single spell from DB, at onDataChange there
-     * should be snapshot(s) that has an ID as key
+     * ChildEventListener for spell_groups/$id/$group_name,
+     * when it notices new children under there it launches single value event
+     * listener to fetch the actual power and passes it to PowerListPresenter
      */
     private static class powerValueListener implements ChildEventListener{
         @Override
@@ -1243,7 +1245,8 @@ public class DataSource {
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
-                            Log.e(TAG, "error at powerValueListener: " + databaseError.toString());
+                            Log.e(TAG, "error at powerValueListener addListenerForSingleValueEvent: "
+                                    + databaseError.toString());
                         }
                     });
         }
@@ -1255,7 +1258,23 @@ public class DataSource {
 
         @Override
         public void onChildRemoved(DataSnapshot dataSnapshot) {
-            // TODO: 16.6.2017 this should maybe be implemented
+            Log.d(TAG, "powerValueListener: onChildRemoved dataSnapshot key " + dataSnapshot.getKey());
+            Log.d(TAG, "powerValueListener: onChildRemoved dataSnapshot value " + dataSnapshot.getValue());
+            //get the whole power from DB
+            firebaseDatabase
+                    .getReference(DB_SPELL_TREE_NAME)
+                    .child(dataSnapshot.getKey())
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            PowerListPresenter.handleSpellDeletion(dataSnapshot.getValue(Spell.class));
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
         }
 
         @Override
@@ -1265,8 +1284,7 @@ public class DataSource {
 
         @Override
         public void onCancelled(DatabaseError databaseError) {
-
+            Log.e(TAG, "error at powerValueListener: " + databaseError.toString());
         }
     }
-
 }

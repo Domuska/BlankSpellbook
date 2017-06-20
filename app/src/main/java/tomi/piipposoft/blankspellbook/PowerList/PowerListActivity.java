@@ -164,9 +164,6 @@ public class PowerListActivity extends ApplicationActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
@@ -263,59 +260,26 @@ public class PowerListActivity extends ApplicationActivity
                 );
             }
         }
-
-        /*
-        String groupName = spell.getGroupName();
-
-        if (groupName != null) {
-            //extra object allocation, would be good to just use a string or somesuch
-            //to see if the spellgroup is already in the spellgroups list. see spellgroup .equals
-            SpellGroup testableGroup = new SpellGroup(groupName, new Spell());
-
-            if (spellGroups.contains(testableGroup)) {
-                Log.d(TAG, "spellgroups has the group " + groupName);
-                Log.d(TAG, "" + spellGroups.get(spellGroups.indexOf(testableGroup)));
-                //add the spell to the group
-                spellGroups.get(spellGroups.indexOf(testableGroup)).addSpell(spell);
-                //inform adapter that there is a change under the parent node
-                adapter.notifyChildItemInserted(
-                        spellGroups.indexOf(testableGroup),
-                        spellGroups.get(spellGroups.indexOf(testableGroup)).getListSize() - 1
-                );
-            } else {
-                Log.d(TAG, "spellgroups does not yet have group " + groupName);
-                SpellGroup group = new SpellGroup(spell.getGroupName(), spell);
-                spellGroups.add(group);
-                adapter.notifyParentItemInserted(spellGroups.size() - 1);
-            }
-
-        }
-        //if spell has no group, add it to "ungrouped" group
-        else {
-            SpellGroup emptyGroup = new SpellGroup(
-                    getString(R.string.spell_group_not_grouped), spell);
-            if (!spellGroups.contains(emptyGroup)) {
-                spellGroups.add(emptyGroup);
-                //notify adapter that there is a new group
-                adapter.notifyParentItemInserted(spellGroups.size() - 1);
-            } else {
-                spellGroups.get(spellGroups.indexOf(emptyGroup)).addSpell(spell);
-                //notify adapter there is new child in the "ungrouped" group
-                adapter.notifyChildItemInserted(
-                        spellGroups.indexOf(emptyGroup),
-                        spellGroups.get(spellGroups.indexOf(emptyGroup)).getListSize() - 1
-                );
-            }
-        }*/
     }
 
 
     @Override
-    public void removeSpellFromList(Spell power) {
-        Log.d(TAG, "starting to remove power with name " + power.getName());
-        Log.d(TAG, "power's group:" + power.getGroupName());
+    public void removeSpellFromList(Spell power, boolean isLastPowerInGroup) {
+        String powerGroupName = power.getGroupName();
+        Log.d(TAG, "removeSpellFromList: removing power " + power.getName() + " group " + powerGroupName);
+        int parentIndex = spellGroups.indexOf(new SpellGroup(powerGroupName, power));
 
-        // TODO: 19.6.2017 re-implement this like above
+        //remove the power
+        if(spellGroups.get(parentIndex).containsSpell(power)) {
+            int powerIndex = spellGroups.get(parentIndex).removeSpell(power);
+            //notify adapter of item changes
+            adapter.notifyChildItemRemoved(parentIndex, powerIndex);
+        }
+        //check if the group should be removed too
+        if(isLastPowerInGroup){
+            spellGroups.remove(power.getGroupName());
+            adapter.notifyParentItemRemoved(parentIndex);
+        }
 
         /*int spellGroupIndex;
         //make sure power has group name

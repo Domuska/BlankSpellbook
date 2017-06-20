@@ -40,6 +40,11 @@ public class SpellGroup implements ParentListItem, Comparable<SpellGroup>{
         spellsList.add(newSpell);
     }
 
+    /**
+     * remove a spell from the group
+     * @param spell the spell to be removed
+     * @return the index where the spell was
+     */
     public int removeSpell(Spell spell){
         int spellIndex = spellsList.indexOf(spell);
         spellsList.remove(spell);

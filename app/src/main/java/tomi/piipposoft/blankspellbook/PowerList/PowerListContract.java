@@ -38,8 +38,9 @@ public interface PowerListContract {
         /**
          * Remove a single spell from the currently displayed list of spells
          * @param spell an initialized Spell object to be removed
+         * @param isLastPowerInGroup if power was last in this group and group should be removed
          */
-        void removeSpellFromList(Spell spell);
+        void removeSpellFromList(Spell spell, boolean isLastPowerInGroup);
 
         /**
          * Show power the power deleted snackbar to user
