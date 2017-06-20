@@ -4,18 +4,18 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-
-    <!-- instead of this we could use the neat edittext thingy from design support library -->
-    <EditText
-        android:id="@+id/edittext_spellbookname"
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/createspellbook_hint"
-        android:inputType="text"
         android:layout_marginTop="16dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginBottom="16dp"
-        />
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp">
 
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/edittext_spellbookname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/createspellbook_hint"
+            style="@style/textInputLayoutEditTextMedium"/>
+    </android.support.design.widget.TextInputLayout>
 </LinearLayout>
