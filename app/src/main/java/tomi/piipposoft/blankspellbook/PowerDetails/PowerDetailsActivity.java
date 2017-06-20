@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.util.ArrayMap;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
@@ -764,12 +765,11 @@ public class PowerDetailsActivity extends ApplicationActivity
         for(int i = 0; i < listIds.size(); i++){
             Log.d(TAG, "onAddToListPositiveClick: selected item id: " + listIds.get(i));
         }
-
         if(listIds.size() != 0){
             mActionListener.userCopyingPowerToLists(listIds, addingToPowerLists);
         }
-        //Toast.makeText(this, getString(R.string.toast_powers_copied), Toast.LENGTH_SHORT).show();
-        Snackbar.make(findViewById(R.id.coordinatorLayout),
+
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinatorLayout),
                 getString(R.string.toast_powers_copied),
                 Snackbar.LENGTH_LONG)
                 .setAction(getString(R.string.action_undo),
@@ -778,8 +778,13 @@ public class PowerDetailsActivity extends ApplicationActivity
                             public void onClick(View v) {
                                 mActionListener.userPushingUndo();
                             }
-                        })
-                .show();
+                        });
+        //to set the text colour
+        int snackBarTextId = android.support.design.R.id.snackbar_text;
+        TextView snackBarText = (TextView) snackbar.getView().findViewById(snackBarTextId);
+        snackBarText.setTextColor(ContextCompat.getColor(this, R.color.myTextColorPrimary));
+
+        snackbar.show();
     }
 
     // From ConfirmDeletionDialog.ConfirmDeletionListener

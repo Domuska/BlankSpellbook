@@ -888,6 +888,7 @@ public class DataSource {
 
 
     public static void removeSpellFromDailyPowerLists(ArrayList<String> powerLists, String powerId, String groupName) {
+        // TODO: 20.6.2017 this crashes if powerLists is null (can happen if user selects no lists)
         HashMap<String, Object> childUpdates = new HashMap<>();
 
         for(String listId : powerLists) {

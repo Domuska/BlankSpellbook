@@ -313,7 +313,7 @@ public class PowerListActivity extends ApplicationActivity
 
     @Override
     public void showPowerDeletedSnackBar() {
-        Snackbar.make(
+        Snackbar snackbar = Snackbar.make(
                 findViewById(R.id.power_list_layout),
                 getString(R.string.power_list_snackbar_info),
                 Snackbar.LENGTH_LONG)
@@ -322,8 +322,14 @@ public class PowerListActivity extends ApplicationActivity
                     public void onClick(View v) {
                         myActionListener.userPushingUndo();
                     }
-                })
-                .show();
+                });
+
+        //to set the text colour
+        int snackBarTextId = android.support.design.R.id.snackbar_text;
+        TextView snackBarText = (TextView) snackbar.getView().findViewById(snackBarTextId);
+        snackBarText.setTextColor(ContextCompat.getColor(this, R.color.myTextColorPrimary));
+
+        snackbar.show();
     }
 
     /**

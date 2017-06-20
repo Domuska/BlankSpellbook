@@ -9,5 +9,6 @@
     <color name="my_color_primary_lighter">@color/md_deep_orange_400</color>
     <color name="primary_text_default_material_dark">#000000</color>
     <color name="primary_text_material_dark">#000000</color>
+    <color name="myTextColorPrimary">@color/md_white_1000</color>
 
 </resources>
