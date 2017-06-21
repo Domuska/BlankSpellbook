@@ -1,5 +1,6 @@
 package tomi.piipposoft.blankspellbook.PowerList;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v4.util.ArrayMap;
 import android.util.Log;
@@ -37,6 +38,7 @@ class PowerListRecyclerAdapter
     private final String TAG = "PowerListRecyclerAdapte";
     private LayoutInflater inflater;
     private PowerListContract.UserActionListener actionListener;
+    private PowerListActivity parentActivity;
 
     //map for keeping track which spells have been selected by user
     private ArrayList<Spell> selectedSpellsList = new ArrayList<>();
@@ -47,9 +49,10 @@ class PowerListRecyclerAdapter
     private boolean selectionMode;
 
     PowerListRecyclerAdapter(Context context, List<? extends ParentListItem> spellGroups,
-                                    PowerListContract.UserActionListener listener){
+                             PowerListContract.UserActionListener listener, PowerListActivity parentActivity){
         super(spellGroups);
         actionListener = listener;
+        this.parentActivity = parentActivity;
         inflater = LayoutInflater.from(context);
 
         rotateAnimation =
@@ -65,15 +68,22 @@ class PowerListRecyclerAdapter
         reverseRotateAnimation.setFillAfter(true);
     }
 
+    /**
+     * Get the currently selected powers
+     * @return ArrayList containing the selected powers
+     */
     ArrayList<Spell> getSelectedSpells(){
         return selectedSpellsList;
     }
 
-    void endSelectionMode(){
+    /**
+     * Used for ending the selection mode from outside of this class,
+     * for example when user has finished deleting powers that have been selected
+     */
+    void endSelectionMode() {
         selectionMode = false;
         selectedSpellsList = new ArrayList<>();
     }
-
 
     @Override
     public SpellGroupViewHolder onCreateParentViewHolder(ViewGroup parentViewGroup) {
@@ -115,7 +125,7 @@ class PowerListRecyclerAdapter
                     }
                     //if the list is empty, end selection mode
                     if (selectedSpellsList.size() < 1) {
-                        selectionMode = false;
+                        setSelectionMode(false);
                     }
                 } else
                     PowerListRecyclerAdapter.this.actionListener.openPowerDetails(
@@ -135,14 +145,14 @@ class PowerListRecyclerAdapter
                     //remove the selected item from map of selected items
                     selectedSpellsList.remove(spell);
                     //set off "selection mode"
-                    selectionMode = false;
+                    setSelectionMode(false);
                 } else {
                     //item not selected, set selected
                     childViewHolder.recyclerRowBackground.setSelected(true);
                     //add item to map of selected items
                     selectedSpellsList.add(spell);
                     //enable selection mode
-                    selectionMode = true;
+                    setSelectionMode(true);
                 }
                 return true;
             }
@@ -151,6 +161,11 @@ class PowerListRecyclerAdapter
         //set the onClickListener for the whole row to make clicking easier
         childViewHolder.recyclerRowBackground.setOnClickListener(onClickListener);
         childViewHolder.recyclerRowBackground.setOnLongClickListener(unSelectedLongClickListener);
+    }
+
+    private void setSelectionMode(boolean currentMode){
+        selectionMode = currentMode;
+        parentActivity.setPowerSelectionMode(currentMode);
     }
 
     // ADAPTERS

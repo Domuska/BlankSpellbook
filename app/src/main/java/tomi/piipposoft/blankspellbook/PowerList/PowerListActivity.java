@@ -20,6 +20,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -62,6 +64,9 @@ public class PowerListActivity extends ApplicationActivity
 
     List<SpellGroup> spellGroups;
 
+    private ImageButton deleteButton;
+    private ProgressBar progressBar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +84,8 @@ public class PowerListActivity extends ApplicationActivity
         Log.d(TAG, "ID got from extras: " + powerListId + " name got from extras: " + powerListName);
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
+        deleteButton = (ImageButton) findViewById(R.id.toolbar_delete);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         //use new fancy lambda functionality!
         //fab.setOnClickListener(view -> myActionListener.openPowerDetails(PowerDetailsActivity.EXTRA_ADD_NEW_POWER_DETAILS));
@@ -131,7 +138,7 @@ public class PowerListActivity extends ApplicationActivity
 
         if(adapter == null) {
             spellGroups = new ArrayList<>();
-            adapter = new PowerListRecyclerAdapter(this, spellGroups, myActionListener);
+            adapter = new PowerListRecyclerAdapter(this, spellGroups, myActionListener, this);
         }
         myActionListener.getPowersForDisplay(powerListId);
 
@@ -232,6 +239,10 @@ public class PowerListActivity extends ApplicationActivity
 
     @Override
     public void addSpellToList(Spell power) {
+        //first hide the loading icon
+        progressBar.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+
         Log.d(TAG, "addSpellToList: Got a spell to be added to adapter: " + power.getName());
 
         String powerGroupName = power.getGroupName();
@@ -332,6 +343,13 @@ public class PowerListActivity extends ApplicationActivity
         snackbar.show();
     }
 
+    void setPowerSelectionMode(boolean selectionMode){
+        if(selectionMode)
+            deleteButton.setVisibility(View.VISIBLE);
+        else
+            deleteButton.setVisibility(View.GONE);
+    }
+
     /**
      * Show user a popup asking if she wants to delete selected powers
      * On yes will defer to Presenter to do the job
@@ -347,6 +365,7 @@ public class PowerListActivity extends ApplicationActivity
                             public void onClick(DialogInterface dialog, int which) {
                                 myActionListener.userDeletingPowersFromList(
                                                 PowerListActivity.this.adapter.getSelectedSpells());
+                                deleteButton.setVisibility(View.GONE);
                                 //tell adapter to switch selection mode off
                                 PowerListActivity.this.adapter.endSelectionMode();
                             }
