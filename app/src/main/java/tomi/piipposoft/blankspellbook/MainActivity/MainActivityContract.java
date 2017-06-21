@@ -1,6 +1,9 @@
 package tomi.piipposoft.blankspellbook.MainActivity;
 
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import tomi.piipposoft.blankspellbook.Utils.Spell;
 
 /**
@@ -24,7 +27,8 @@ public interface MainActivityContract {
         void removePowerFromList(Spell power);
 
         //for starting the activities when fragment elements are clicked
-        void startPowerListActivity(String name, String id, android.view.View originView);
+        void startPowerListActivity(String name, String id,
+                                    android.view.View originView, int powerListColor);
         void startDailyPowerListActivity(String listName, String listId);
         void startPowerDetailsActivity(String powerId, String powerListId, android.view.View transitionOrigin);
     }
@@ -36,7 +40,15 @@ public interface MainActivityContract {
     }
 
     interface FragmentUserActionListener {
-        void onPowerListClicked(String listName, String listId, android.view.View originView);
+        /**
+         * Fragment telling presenter that user has clicked on a power list item
+         * @param listName Name of the list
+         * @param listId ID of the list
+         * @param originView View where transitionAnimation can start, can be null
+         * @param powerListColor Color that is displayed in the power list, can be null
+         */
+        void onPowerListClicked(@NonNull String listName, @ NonNull String listId,
+                                @Nullable android.view.View originView, int powerListColor);
         void onPowerClicked(String powerId, String powerListId, android.view.View originView);
     }
 

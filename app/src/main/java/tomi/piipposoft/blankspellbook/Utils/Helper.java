@@ -1,6 +1,11 @@
 package tomi.piipposoft.blankspellbook.Utils;
 
+import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.util.TypedValue;
+
+import tomi.piipposoft.blankspellbook.R;
 
 /**
  * Created by OMISTAJA on 7.6.2017.
@@ -53,5 +58,16 @@ public class Helper {
         /*red = (red + 153) / 2;
         green = (green + 204) / 2;
         blue = (blue + 153) / 2;*/
+    }
+
+    public static int getAccentColor(Context context) {
+        TypedValue typedValue = new TypedValue();
+
+        TypedArray a = context.obtainStyledAttributes(typedValue.data, new int[] { R.attr.colorAccent });
+        int color = a.getColor(0, 0);
+
+        a.recycle();
+
+        return color;
     }
 }

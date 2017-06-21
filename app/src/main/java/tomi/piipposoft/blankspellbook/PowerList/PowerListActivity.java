@@ -3,6 +3,7 @@ package tomi.piipposoft.blankspellbook.PowerList;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -20,6 +21,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -29,6 +32,7 @@ import java.util.List;
 
 import tomi.piipposoft.blankspellbook.ApplicationActivity;
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
+import tomi.piipposoft.blankspellbook.Utils.Helper;
 import tomi.piipposoft.blankspellbook.Utils.SharedPreferencesHandler;
 import tomi.piipposoft.blankspellbook.Utils.Spell;
 import tomi.piipposoft.blankspellbook.R;
@@ -50,6 +54,7 @@ public class PowerListActivity extends ApplicationActivity
     //TODO: put this field to preferences maybe?
     public static final String EXTRA_POWER_LIST_ID = "powerListId";
     public static final String EXTRA_POWER_LIST_NAME = "powerBookName";
+    public static final String EXTRA_POWER_LIST_COLOR = "powerListColor";
 
     private PowerListContract.UserActionListener myActionListener;
 
@@ -84,11 +89,15 @@ public class PowerListActivity extends ApplicationActivity
         Log.d(TAG, "ID got from extras: " + powerListId + " name got from extras: " + powerListName);
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
+        //set fab color to match the one in mainActivity or set it as accent color
+        fab.setBackgroundTintList(ColorStateList.valueOf(
+                thisIntent.getIntExtra(EXTRA_POWER_LIST_COLOR, Helper.getAccentColor(this))));
+        fab.setVisibility(View.VISIBLE);
         deleteButton = (ImageButton) findViewById(R.id.toolbar_delete);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
-        //use new fancy lambda functionality!
-        //fab.setOnClickListener(view -> myActionListener.openPowerDetails(PowerDetailsActivity.EXTRA_ADD_NEW_POWER_DETAILS));
+        final Animation anim = AnimationUtils.loadAnimation(this, R.anim.fab_scale_animation);
+        fab.startAnimation(anim);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

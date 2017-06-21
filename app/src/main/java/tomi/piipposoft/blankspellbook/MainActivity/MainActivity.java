@@ -389,7 +389,8 @@ public class MainActivity extends ApplicationActivity
     }
 
     @Override
-    public void startPowerListActivity(String name, String id, View transitionOrigin) {
+    public void startPowerListActivity(String name, String id,
+                                       View transitionOrigin, int powerListColor) {
         if (transitionOrigin != null){
             Intent i = new Intent(MainActivity.this, PowerListActivity.class);
             String transitionName = getString(R.string.transition_powerlist_name);
@@ -402,6 +403,7 @@ public class MainActivity extends ApplicationActivity
 
             i.putExtra(PowerListActivity.EXTRA_POWER_LIST_NAME, name);
             i.putExtra(PowerListActivity.EXTRA_POWER_LIST_ID, id);
+            i.putExtra(PowerListActivity.EXTRA_POWER_LIST_COLOR, powerListColor);
             ActivityCompat.startActivity(MainActivity.this, i, bundle);
         }
         else

@@ -154,9 +154,10 @@ public class MainActivityPresenter extends DrawerPresenter
 
 
     @Override
-    public void onPowerListClicked(String listName, String listId, View originView) {
+    public void onPowerListClicked(String listName, String listId,
+                                   View originView, int powerListColor) {
         if(currentlySelectedList == POWER_LISTS_SELECTED)
-            mMainActivityView.startPowerListActivity(listName, listId, originView);
+            mMainActivityView.startPowerListActivity(listName, listId, originView, powerListColor);
         else
             mMainActivityView.startDailyPowerListActivity(listName, listId);
     }

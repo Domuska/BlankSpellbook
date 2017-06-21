@@ -249,20 +249,10 @@ public class RecyclerListFragment extends Fragment {
                 holder.textViewTertiary.setVisibility(View.INVISIBLE);
             }
 
-            //call presenter, pass in the textView for activity transitions
-            holder.cardView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    myClickListener.onPowerListClicked(
-                            listNames.get(itemPosition),
-                            listIds.get(itemPosition),
-                            holder.textViewPrimary);
-                }
-            });
-
             //get the drawable and give it a random color
             Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.recycler_child_rectangle);
-            drawable.setColorFilter(Helper.getRandomColorFromString(groupName), PorterDuff.Mode.SRC_IN);
+            final int cardColor = Helper.getRandomColorFromString(groupName);
+            drawable.setColorFilter(cardColor, PorterDuff.Mode.SRC_IN);
 
             //set background for the splotch, seems like this really has to be done like this
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -271,6 +261,20 @@ public class RecyclerListFragment extends Fragment {
                 //we can call this since only on ancient devices we get here, those still have this method
                 holder.splotchView.setBackgroundDrawable(drawable);
             }
+
+            //call presenter, pass in the textView for activity transitions
+            holder.cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    myClickListener.onPowerListClicked(
+                            listNames.get(itemPosition),
+                            listIds.get(itemPosition),
+                            holder.textViewPrimary,
+                            cardColor);
+                }
+            });
+
+
 
         }
 
