@@ -22,6 +22,8 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -81,6 +83,9 @@ public class PowerDetailsActivity extends ApplicationActivity
 
     private Bundle savedState;
 
+    private Animation shrinkFabAnimation, expandFabAnimation, shrinkToSizeFabAnimation;
+    //flag for knowing if we should be playing the shrinking animation for fab
+    private boolean activityJustStarting = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +101,18 @@ public class PowerDetailsActivity extends ApplicationActivity
         toolbar.setTitle(getString(R.string.title_power_details));
         setSupportActionBar(toolbar);
         savedState = savedInstanceState;
+
+        //load animations for fab
+        shrinkFabAnimation =
+                AnimationUtils.loadAnimation(this, R.anim.fab_scale_animation_shrink_to_none);
+        shrinkFabAnimation.setAnimationListener(new shrinkAnimationListener());
+
+        expandFabAnimation =
+                AnimationUtils.loadAnimation(this, R.anim.fab_scale_animation_expand_over);
+        expandFabAnimation.setAnimationListener(new expandAnimationListener());
+
+        shrinkToSizeFabAnimation =
+                AnimationUtils.loadAnimation(this, R.anim.fab_scale_animation_shrink_to_size);
 
         //add cancel button to toolbar
         Log.d(TAG, "onCreate called");
@@ -393,11 +410,15 @@ public class PowerDetailsActivity extends ApplicationActivity
         //the textscrollview is not inflated unless it's needed
         textScrollView.setVisibility(View.VISIBLE);
 
+        //have to check if we are just starting this activity
+        if(!activityJustStarting)
+            fab.startAnimation(shrinkFabAnimation);
+        activityJustStarting = false;
+
         fab.setImageResource(R.drawable.ic_mode_edit_black_24dp);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: 11.5.2017 some animation here to show that we are editing spell
                 mActionListener.userEditingPower(spell);
             }
         });
@@ -574,6 +595,11 @@ public class PowerDetailsActivity extends ApplicationActivity
 
         textScrollView.setVisibility(View.GONE);
 
+        //have to check if we are just starting this activity
+        if(!activityJustStarting)
+            fab.startAnimation(shrinkFabAnimation);
+        activityJustStarting = false;
+
         fab.setImageResource(R.drawable.ic_done_black_24dp);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -584,7 +610,6 @@ public class PowerDetailsActivity extends ApplicationActivity
         });
         fab.setVisibility(View.VISIBLE);
 
-        //cancelItem.setVisible(true);
         fabCancel.setVisibility(View.VISIBLE);
 
         //set all field layouts as visible
@@ -792,5 +817,44 @@ public class PowerDetailsActivity extends ApplicationActivity
     public void onPositiveClick() {
         Log.d(TAG, "onPositiveClick: deleting power...");
         mActionListener.userPressingDeletePower();
+    }
+
+    /**
+     * Animation for
+     */
+    private class shrinkAnimationListener implements Animation.AnimationListener {
+
+        @Override
+        public void onAnimationStart(Animation animation) {
+
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+            fab.startAnimation(expandFabAnimation);
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    }
+
+    /**
+     *
+     */
+    private class expandAnimationListener implements Animation.AnimationListener{
+        @Override
+        public void onAnimationStart(Animation animation) {
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+            fab.startAnimation(shrinkToSizeFabAnimation);
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+        }
     }
 }
