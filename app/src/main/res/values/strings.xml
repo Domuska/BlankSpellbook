@@ -21,6 +21,7 @@
     <string name="action_remove">Remove</string>
     <string name="powerList_confirmRemoval_title">Confirm removal</string>
     <string name="power_list_snackbar_info">Powers removed</string>
+    <string name="power_list_toast_no_powers">This power list doesn\'t have anything to show… Add something!</string>
 
     <!-- Strings drawer's popup dialogs -->
     <string name="alertdialog_createspellbook">Create new spell book</string>

@@ -84,6 +84,15 @@
         android:layout_marginTop="60dp"
         android:layout_below="@+id/appbar"/>
 
+    <TextView
+        android:id="@+id/noPowersTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/power_list_toast_no_powers"
+        android:gravity="center"
+        android:visibility="gone"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:scrollbars="vertical"

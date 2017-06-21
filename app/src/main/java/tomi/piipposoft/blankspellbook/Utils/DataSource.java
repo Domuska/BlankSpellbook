@@ -111,6 +111,25 @@ public class DataSource {
      */
     public static ChildEventListener attachPowerGroupListeners(final String powerListId){
 
+        //we need to check if there are any children in the power list, if not show it in UI
+        firebaseDatabase
+                .getReference(DB_SPELL_GROUPS_TREE_NAME)
+                .child(powerListId)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.getChildrenCount() < 1){
+                            Log.d(TAG, "attachPowerGroupListeners: power list with ID has no groups");
+                            PowerListPresenter.noPowersToShow();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
         /*
         This method flows as follows:
         1) get power groups, ordered by name
@@ -773,6 +792,7 @@ public class DataSource {
                                 break;
 
                             case DataSource.MAINACTIVITYPRESENTER:
+                                //here we have all of the daily power lists
                                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                                     String dailyPowerListId = snapshot.getKey();
                                     //give presenter the new daily power list
@@ -1236,7 +1256,6 @@ public class DataSource {
     private static class powerValueListener implements ChildEventListener{
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-            //get the actual powers from DB, ordered by
             String powerId = dataSnapshot.getKey();
             Log.d(TAG, "powerValueListener: power ID " + powerId);
             //launch the query to get spell from spells with the ID

@@ -139,6 +139,11 @@ public class MainActivityPresenter extends DrawerPresenter
         mMainActivityView.removeDailyPowerListData(dailyPowerListName, id);
     }
 
+    /**
+     * Handle a new power from the database
+     * @param power an object of Spell class representing the power
+     * @param powerListName name of the power list this power belongs to, can be null
+     */
     public static void handleNewPower(@NonNull Spell power, @Nullable String powerListName) {
         Log.d(TAG, "got new power in handleNewPower: " + power.getName()
                 + " with power list name: " + powerListName);

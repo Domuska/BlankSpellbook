@@ -140,6 +140,13 @@ public class PowerListPresenter extends DrawerPresenter implements
         return powerGroupListeners.containsKey(powerGroupName);
     }
 
+    /**
+     * Called when there are no powers to show in the list
+     */
+    static public void noPowersToShow() {
+        mPowerListActivity.showEmptyPowersList();
+    }
+
     // FROM POWERLISTCONTRACT
 
     @Override

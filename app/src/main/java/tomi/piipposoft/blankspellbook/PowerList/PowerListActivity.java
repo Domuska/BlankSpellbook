@@ -26,6 +26,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -350,6 +351,12 @@ public class PowerListActivity extends ApplicationActivity
         snackBarText.setTextColor(ContextCompat.getColor(this, R.color.myTextColorPrimary));
 
         snackbar.show();
+    }
+
+    @Override
+    public void showEmptyPowersList() {
+        progressBar.setVisibility(View.GONE);
+        findViewById(R.id.noPowersTextView).setVisibility(View.VISIBLE);
     }
 
     void setPowerSelectionMode(boolean selectionMode){

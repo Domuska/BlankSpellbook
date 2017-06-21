@@ -47,6 +47,7 @@ public interface PowerListContract {
          */
         void showPowerDeletedSnackBar();
 
+        void showEmptyPowersList();
     }
 
     interface UserActionListener{
