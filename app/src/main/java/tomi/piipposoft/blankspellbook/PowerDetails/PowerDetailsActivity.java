@@ -815,11 +815,17 @@ public class PowerDetailsActivity extends ApplicationActivity
 
     @Override
     public void showErrorSavingEmptyFields() {
-        Snackbar.make(
+        Snackbar snackbar = Snackbar.make(
             findViewById(R.id.coordinatorLayout),
             R.string.error_empty_fields,
-            Snackbar.LENGTH_SHORT)
-        .show();
+            Snackbar.LENGTH_SHORT);
+
+        //to set the text colour
+        int snackBarTextId = android.support.design.R.id.snackbar_text;
+        TextView snackBarText = (TextView) snackbar.getView().findViewById(snackBarTextId);
+        snackBarText.setTextColor(ContextCompat.getColor(this, R.color.myTextColorPrimary));
+        
+        snackbar.show();
     }
 
     @Override
