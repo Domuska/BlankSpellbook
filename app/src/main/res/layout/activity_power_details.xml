@@ -6,7 +6,7 @@
     tools:context="tomi.piipposoft.blankspellbook.PowerDetails.PowerDetailsActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/coordinatorLayout">
+    android:id="@+id/coordinatorLayout" >
 
     <android.support.design.widget.AppBarLayout
         android:layout_height="wrap_content"
@@ -36,6 +36,7 @@
         app:layout_behavior="tomi.piipposoft.blankspellbook.PowerDetails.ScrollingFABBehavior"
         android:transitionName="fabTransition"/>
 
+    <!-- the cancel fab button, is set to be outside screen for the spring animation in the activity -->
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -43,7 +44,9 @@
         android:id="@+id/fabLeft"
         android:src="@drawable/ic_clear_black_24dp"
         android:clickable="true"
-        android:layout_margin="@dimen/fab_margin"
+        android:layout_marginBottom="@dimen/fab_margin"
+        android:layout_marginLeft="@dimen/fab_off_left_edge"
+        android:layout_marginStart="@dimen/fab_off_left_edge"
         android:visibility="gone"
         app:layout_behavior="tomi.piipposoft.blankspellbook.PowerDetails.ScrollingFABBehavior"/>
 

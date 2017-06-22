@@ -1,6 +1,9 @@
 package tomi.piipposoft.blankspellbook.PowerDetails;
 
 import android.content.Context;
+import android.support.animation.DynamicAnimation;
+import android.support.animation.SpringAnimation;
+import android.support.animation.SpringForce;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -18,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.ViewStubCompat;
 import android.text.method.KeyListener;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,6 +55,10 @@ public class PowerDetailsActivity extends ApplicationActivity
     public static final String EXTRA_ADD_NEW_POWER_DETAILS = "";
     public static final String EXTRA_POWER_LIST_ID = "powerListId";
 
+    private final float FAB_CANCEL_ANIMATION_SLIDE_IN_DP_PER_SECOND = 50;
+    private final float FAB_CANCEL_FINAL_POSITION_IN_SCREEN_DP = 128;
+    private final float FAB_CANCEL_FINAL_POSITION_OUTSIDE_SCREEN_DP = 0;
+    private float fabCancelPositionInScreen, fabCancelPositionOutsideScreen, pixelPerSecondSlideFab;
 
     private final String TAG = "PowerDetailsActivity";
     private final int MENU_ITEM_CANCEL = 1;
@@ -83,9 +91,12 @@ public class PowerDetailsActivity extends ApplicationActivity
 
     private Bundle savedState;
 
-    private Animation shrinkFabAnimation, expandFabAnimation, shrinkToSizeFabAnimation;
+    private Animation shrinkFabAnimation, expandFabAnimation,
+            shrinkToSizeFabAnimation;
     //flag for knowing if we should be playing the shrinking animation for fab
     private boolean activityJustStarting = true;
+
+    SpringAnimation fabSpringSlideInAnimation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +108,7 @@ public class PowerDetailsActivity extends ApplicationActivity
             SharedPreferencesHandler.setDatabasePersistance(true, this);
         }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        Toolbar toolbar = findViewById(R.id.my_toolbar);
         toolbar.setTitle(getString(R.string.title_power_details));
         setSupportActionBar(toolbar);
         savedState = savedInstanceState;
@@ -113,6 +124,23 @@ public class PowerDetailsActivity extends ApplicationActivity
 
         shrinkToSizeFabAnimation =
                 AnimationUtils.loadAnimation(this, R.anim.fab_scale_animation_shrink_to_size);
+
+        //final position for this screen size when cancel fab is in the screen
+        fabCancelPositionInScreen = TypedValue
+                .applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                        FAB_CANCEL_FINAL_POSITION_IN_SCREEN_DP,
+                        getResources().getDisplayMetrics());
+        //final position for this screen size when cancel fab is off screen
+        fabCancelPositionOutsideScreen = TypedValue
+                .applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                        FAB_CANCEL_FINAL_POSITION_OUTSIDE_SCREEN_DP,
+                        getResources().getDisplayMetrics());
+
+        //animation for sliding in fab cancel in for this screen size
+        pixelPerSecondSlideFab = TypedValue
+                .applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                        FAB_CANCEL_ANIMATION_SLIDE_IN_DP_PER_SECOND,
+                        getResources().getDisplayMetrics());
 
         //add cancel button to toolbar
         Log.d(TAG, "onCreate called");
@@ -139,6 +167,15 @@ public class PowerDetailsActivity extends ApplicationActivity
 
         fab = (FloatingActionButton)findViewById(R.id.fab);
         fabCancel = (FloatingActionButton)findViewById(R.id.fabLeft);
+
+        //animations for the fab cancel button
+
+        fabSpringSlideInAnimation = new SpringAnimation(fabCancel,
+                DynamicAnimation.TRANSLATION_X, 0);
+
+        fabSpringSlideInAnimation.getSpring().setStiffness(SpringForce.STIFFNESS_LOW);
+        fabSpringSlideInAnimation.getSpring().setDampingRatio(SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY);
+        fabSpringSlideInAnimation.setStartVelocity(pixelPerSecondSlideFab);
 
         fabCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -336,7 +373,6 @@ public class PowerDetailsActivity extends ApplicationActivity
         editingSpell = true;
         Log.d(TAG, "showing empty fields...");
 
-
         textScrollView.setVisibility(View.GONE);
 
         if(editTextScrollView == null) {
@@ -344,6 +380,9 @@ public class PowerDetailsActivity extends ApplicationActivity
                     ((ViewStubCompat) findViewById(R.id.editText_viewStub)).inflate();
         }
         editTextScrollView.setVisibility(View.VISIBLE);
+
+        fabSpringSlideInAnimation.getSpring().setFinalPosition(fabCancelPositionInScreen);
+        fabSpringSlideInAnimation.start();
 
 
         findViewById(R.id.input_layout_attackType).setVisibility(View.VISIBLE);
@@ -424,8 +463,9 @@ public class PowerDetailsActivity extends ApplicationActivity
         });
         fab.setVisibility(View.VISIBLE);
 
-        //cancelItem.setVisible(false);
-        fabCancel.setVisibility(View.GONE);
+        fabSpringSlideInAnimation.getSpring()
+                .setFinalPosition(fabCancelPositionOutsideScreen);
+        fabSpringSlideInAnimation.start();
 
         // All text fields are invisible if there is not data for them
         // this should work nicer than hiding ones that don't have data,
@@ -580,6 +620,17 @@ public class PowerDetailsActivity extends ApplicationActivity
             triggerTextEdit.setText(spell.getTrigger());
             triggerTextEdit.setKeyListener(null);*/
         }
+
+        /*FlingAnimation fabFlingAnimation = new FlingAnimation(fab, DynamicAnimation.SCROLL_X);
+        //get the fling speed as pixel/s for this device
+        float dpPerSecond = 100;
+        float pixelPerSecond = TypedValue
+                .applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                        dpPerSecond,
+                        getResources().getDisplayMetrics());
+        fabFlingAnimation.setStartVelocity(pixelPerSecond)
+                .setMaxValue(500)
+                .start();*/
     }
 
     @Override
@@ -611,6 +662,10 @@ public class PowerDetailsActivity extends ApplicationActivity
         fab.setVisibility(View.VISIBLE);
 
         fabCancel.setVisibility(View.VISIBLE);
+        //fabCancel.startAnimation(slideInFabAnimation);
+
+        fabSpringSlideInAnimation.getSpring().setFinalPosition(fabCancelPositionInScreen);
+        fabSpringSlideInAnimation.start();
 
         //set all field layouts as visible
         findViewById(R.id.input_layout_attackType).setVisibility(View.VISIBLE);
@@ -820,7 +875,9 @@ public class PowerDetailsActivity extends ApplicationActivity
     }
 
     /**
-     * Animation for
+     * Listener for the shrink to nothingness animation for main fab, after
+     * the fab has shrunk completely the expandFabAnimation is launched to bring back
+     * the fab to visibility
      */
     private class shrinkAnimationListener implements Animation.AnimationListener {
 
@@ -841,7 +898,9 @@ public class PowerDetailsActivity extends ApplicationActivity
     }
 
     /**
-     *
+     * Listener attached to the main fab's expansion animation,
+     * the animation extends a bit larger than the final fab size is so
+     * after it is finished the shrinkToSizeFabAnimation is launched
      */
     private class expandAnimationListener implements Animation.AnimationListener{
         @Override
