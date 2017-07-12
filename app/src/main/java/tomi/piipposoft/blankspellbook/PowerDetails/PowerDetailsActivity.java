@@ -824,7 +824,7 @@ public class PowerDetailsActivity extends ApplicationActivity
         int snackBarTextId = android.support.design.R.id.snackbar_text;
         TextView snackBarText = (TextView) snackbar.getView().findViewById(snackBarTextId);
         snackBarText.setTextColor(ContextCompat.getColor(this, R.color.myTextColorPrimary));
-        
+
         snackbar.show();
     }
 

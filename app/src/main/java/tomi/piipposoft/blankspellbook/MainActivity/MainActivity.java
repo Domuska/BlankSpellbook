@@ -84,10 +84,10 @@ public class MainActivity extends ApplicationActivity
                     .getInt(FRAGMENT_LAST_VISIBLE);
         }
 
-        secondaryToolbarText = (TextView) findViewById(R.id.toolar_secondary_text);
+        secondaryToolbarText = findViewById(R.id.toolar_secondary_text);
 
         //set the support library's toolbar as application toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        Toolbar toolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
     }
 
@@ -103,19 +103,27 @@ public class MainActivity extends ApplicationActivity
                 drawerHelper,
                 this);
 
-        fab = (FloatingActionButton) findViewById(R.id.mainactivity_fab);
+        fab = findViewById(R.id.mainactivity_fab);
         //fab listeners
         powersListener = new OnNewPowerClickListener();
         dailyPowerListListener = new OnNewDailyPowerListClickListener();
         powerListListener = new OnNewPowerListClickListener();
 
-        //create a new adapter and give it the actionListener to attach to the fragments
-        pagerAdapter = new MainActivityPagerAdapter(getSupportFragmentManager(),
-                (MainActivityContract.FragmentUserActionListener) mActionlistener,
-                (MainActivityContract.PagerAdapterListener) mActionlistener);
+        viewPager = findViewById(R.id.pager);
 
-        viewPager = (ViewPager) findViewById(R.id.pager);
+        // TODO: 12.7.2017 finish working pagerAdapter so it doesnt flash when activity resumes
+        if(pagerAdapter == null) {
+            Log.d(TAG, "pagerAdapter is null!");
+            //create a new adapter and give it the actionListener to attach to the fragments
+            pagerAdapter = new MainActivityPagerAdapter(
+                    getSupportFragmentManager(),
+                    (MainActivityContract.FragmentUserActionListener) mActionlistener,
+                    (MainActivityContract.PagerAdapterListener) mActionlistener);
+        }
+        
         viewPager.setAdapter(pagerAdapter);
+
+
         //set the number of screens that are away from currently focused screen
         //if this is smaller, the fragments are re-created and data needs to be re-fetched
         viewPager.setOffscreenPageLimit(2);

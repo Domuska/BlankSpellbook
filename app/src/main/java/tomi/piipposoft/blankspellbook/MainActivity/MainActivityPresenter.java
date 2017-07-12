@@ -2,6 +2,7 @@ package tomi.piipposoft.blankspellbook.MainActivity;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.util.ArrayMap;
 import android.util.Log;
 import android.view.View;
 
@@ -9,6 +10,7 @@ import android.view.View;
 import com.google.firebase.database.ChildEventListener;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerContract;
@@ -35,6 +37,12 @@ public class MainActivityPresenter extends DrawerPresenter
     private static ChildEventListener dailyPowerListListener;
     private static ChildEventListener powersListener;
     private int currentlySelectedList;
+
+    //for caching the data - prevent the list elements flashing in and out when returning to activity
+    private static ArrayMap<String, String> powerLists = new ArrayMap<>();
+    private static ArrayMap<String, ArrayList<String>> powersNamesInPowerLists = new ArrayMap<>();
+    private static ArrayMap<String, String> dailyPowerLists = new ArrayMap<>();
+
 
     public static final int DAILY_POWER_LISTS_SELECTED = 0;
     public static final int POWER_LISTS_SELECTED = 1;
@@ -103,10 +111,12 @@ public class MainActivityPresenter extends DrawerPresenter
      */
     public static void handleNewPowerList(String name, String id){
         Log.d(TAG, "handleNewPowerList: name: " + name + " id: " + id);
+        //if(powerLists.put(id, name) == null)
         mMainActivityView.addPowerListData(name, id);
     }
 
     public static void handleRemovedPowerList(String powerListName, String id) {
+        powerLists.remove(id);
         mMainActivityView.removePowerListData(powerListName, id);
     }
 
@@ -129,10 +139,22 @@ public class MainActivityPresenter extends DrawerPresenter
     public static void handleNewPowerNameForList(String powerName, String powerListId, boolean isPowerList) {
         Log.d(TAG, "handleNewPowerNameForList: powerName: " + powerName
                 + " powerListId: " + powerListId + " isPowerList: " + isPowerList);
-        if(isPowerList)
+        if(isPowerList) {
+            //add the power name to the cached list
+            if(powersNamesInPowerLists.get(powerListId) == null){
+                ArrayList<String> list = new ArrayList<>();
+                list.add(powerName);
+                powersNamesInPowerLists.put(powerListId, list);
+            }
+            else{
+                powersNamesInPowerLists.get(powerListId).add(powerName);
+            }
+            //give View the data to show
             mMainActivityView.addPowerNameToPowerList(powerName, powerListId);
-        else
+        }
+        else {
             mMainActivityView.addPowerNameToDailyPowerList(powerName, powerListId);
+        }
     }
 
     public static void handleRemovedDailyPowerList(String dailyPowerListName, String id) {
@@ -198,6 +220,12 @@ public class MainActivityPresenter extends DrawerPresenter
      */
     @Override
     public void onPowersFragmentCreated() {
+        //give view the cached data if we have it
+        for(Map.Entry<String, String> powerList : powerLists.entrySet()){
+            //pass view the single power list
+            mMainActivityView.addPowerListData(powerList.getValue(), powerList.getKey());
+        }
+
         //listener for powers
         if(powersListener == null)
             powersListener = DataSource.attachPowerListener(DataSource.MAINACTIVITYPRESENTER);
