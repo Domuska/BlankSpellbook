@@ -120,7 +120,7 @@ public class MainActivity extends ApplicationActivity
                     (MainActivityContract.FragmentUserActionListener) mActionlistener,
                     (MainActivityContract.PagerAdapterListener) mActionlistener);
         }
-        
+
         viewPager.setAdapter(pagerAdapter);
 
 
@@ -425,8 +425,9 @@ public class MainActivity extends ApplicationActivity
 
     @Override
     public void startPowerDetailsActivity(String powerId, String powerListId, View transitionOrigin) {
-
-        if(transitionOrigin != null){
+        //transition disabled for now since starting the powerDetails is choppy, maybe add transition
+        //if the activity start-up is made smoother
+        /*if(transitionOrigin != null){
             Intent i = new Intent(MainActivity.this, PowerDetailsActivity.class);
             String transitionName = getString(R.string.transition_powerDetails_name);
             ActivityOptionsCompat options =
@@ -440,7 +441,7 @@ public class MainActivity extends ApplicationActivity
             i.putExtra(PowerDetailsActivity.EXTRA_POWER_LIST_ID, powerListId);
             ActivityCompat.startActivity(MainActivity.this, i, bundle);
         }
-        else
+        else*/
             this.openPowerDetailsActivity(powerId, powerListId);
     }
 }
