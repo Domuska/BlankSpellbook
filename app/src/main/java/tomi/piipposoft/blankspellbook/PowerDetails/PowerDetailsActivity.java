@@ -32,6 +32,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -80,6 +81,8 @@ public class PowerDetailsActivity extends ApplicationActivity
     private TextView spellNameText, attackTypeText, rechargeText, castingTimeText, groupText,
             targetText, attackRollText, hitDamageEffectText, missDamageText, adventurerFeatText, championFeatText,
             epicFeatText, notesText, triggerText;
+
+    private ProgressBar progressBar;
 
     private NestedScrollView editTextScrollView, textScrollView;
 
@@ -142,6 +145,8 @@ public class PowerDetailsActivity extends ApplicationActivity
                         FAB_CANCEL_ANIMATION_SLIDE_IN_DP_PER_SECOND,
                         getResources().getDisplayMetrics());
 
+        progressBar = findViewById(R.id.progressBar);
+
         //add cancel button to toolbar
         Log.d(TAG, "onCreate called");
     }
@@ -165,8 +170,8 @@ public class PowerDetailsActivity extends ApplicationActivity
                 powerListId
         );
 
-        fab = (FloatingActionButton)findViewById(R.id.fab);
-        fabCancel = (FloatingActionButton)findViewById(R.id.fabLeft);
+        fab = findViewById(R.id.fab);
+        fabCancel = findViewById(R.id.fabLeft);
 
         //animations for the fab cancel button
 
@@ -187,13 +192,12 @@ public class PowerDetailsActivity extends ApplicationActivity
         this.drawerActionListener = (DrawerContract.UserActionListener)mActionListener;
         this.drawerActionListener.powerListProfileSelected();
 
-        textScrollView = (NestedScrollView) findViewById(R.id.scrollView_text);
+        textScrollView = findViewById(R.id.scrollView_text);
 
         //add name
         if(!"".equals(powerName)) {
             ((TextView) findViewById(R.id.text_spellName)).setText(powerName);
         }
-
 
         if(savedState == null)
             mActionListener.showPowerDetails(false);
@@ -374,6 +378,7 @@ public class PowerDetailsActivity extends ApplicationActivity
         Log.d(TAG, "showing empty fields...");
 
         textScrollView.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
 
         if(editTextScrollView == null) {
             editTextScrollView = (NestedScrollView)
@@ -446,6 +451,7 @@ public class PowerDetailsActivity extends ApplicationActivity
         if(editTextScrollView != null)
             editTextScrollView.setVisibility(View.GONE);
 
+        progressBar.setVisibility(View.GONE);
         //the textscrollview is not inflated unless it's needed
         textScrollView.setVisibility(View.VISIBLE);
 
@@ -638,6 +644,7 @@ public class PowerDetailsActivity extends ApplicationActivity
 
         editingSpell = true;
 
+        progressBar.setVisibility(View.GONE);
         if(editTextScrollView == null) {
             editTextScrollView = (NestedScrollView)
                     ((ViewStubCompat) findViewById(R.id.editText_viewStub)).inflate();

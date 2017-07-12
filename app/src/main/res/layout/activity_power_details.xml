@@ -64,5 +64,14 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout="@layout/activity_power_details_edittextviews" />
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="60dp"
+        android:visibility="gone"/>
+
 
 </android.support.design.widget.CoordinatorLayout>

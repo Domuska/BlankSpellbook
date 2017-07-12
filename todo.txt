@@ -24,7 +24,9 @@ korjaa bugi - kun lisäät powerin ilman grouppia johonkin toiseen listaan, täm
 
 kun power details activity alkaa mainactivitystä ja lisätään uus power ni ei laiteta fokusta suoraan
 
-kun power tallennetaan niin sen grouppeja ei varmaankaan lisätä powerDetailsin powerGroups tauluun
+PowerDetailsActivityn luominen pitää tehdä smoothimmaksi kun mainactivitystä sinne tullaan, laitetaan ehkä että ne powerin detailit UI luodaan vasta kun sitä tarvitaan samoin kuin tuo muokattavat detailit luodaan
+
+(kun power tallennetaan niin sen grouppeja ei varmaankaan lisätä powerDetailsin powerGroups tauluun) ei kovin iso juttu
 
 
 korjaa bugi - joskus appi kaatuu randomina kun palataan mainactivityyn, syy varmaan täällä:
@@ -54,7 +56,7 @@ mainactivityn alempaan toolbariin lisätään search & filtterit
 mieti powerdetailsin add to power listsiä
 	-kun power lisätään listalle, siitä tehdään kopio
 	-kun power lisätään daily listalle, ei tehdä kopiota
-	-teksti on nyt hämmentävä ainakin, muuta se jos ei muuta
+	-teksti on nyt hämmentävä ainakin, muuta se jos ei muuten tätä hommaa muuteta
 
 kun palataan mainactivityyn, pitää päivittää fragmentissa olevien korttien spell_groups
 
