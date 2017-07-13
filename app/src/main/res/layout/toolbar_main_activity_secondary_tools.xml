@@ -4,20 +4,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/groupFilterText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="?android:textColorPrimary"
-        android:layout_marginRight="10dp"
-        android:layout_marginEnd="10dp"
-        android:drawablePadding="4dp"
-        android:textSize="14sp"
-        android:drawableLeft="@drawable/ic_filter_list_white_24dp"
-        android:drawableStart="@drawable/ic_filter_list_white_24dp"
-        android:text="@string/mainactivity_filter_group" />
-
-    <TextView
-        android:id="@+id/classFilterText"
+        android:id="@+id/showFiltersView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="?android:textColorPrimary"

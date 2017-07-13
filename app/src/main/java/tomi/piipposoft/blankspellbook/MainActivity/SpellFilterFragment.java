@@ -60,15 +60,6 @@ public class SpellFilterFragment extends Fragment {
     }
 
     //https://developer.android.com/guide/components/fragments.html
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        /*setListAdapter(new ArrayAdapter<>(
-                getActivity(),
-                android.R.layout.simple_list_item_1,
-                list
-        ));*/
-    }
 
 
     private class ClassListAdapter extends
@@ -104,10 +95,10 @@ public class SpellFilterFragment extends Fragment {
             RecyclerView.Adapter<GroupListAdapter.ViewHolder>{
 
         class ViewHolder extends RecyclerView.ViewHolder{
-            private TextView className;
+            private TextView groupName;
             private ViewHolder(View view){
                 super(view);
-                className = view.findViewById(R.id.recycler_row_text);
+                groupName = view.findViewById(R.id.recycler_row_text);
             }
         }
 
@@ -120,7 +111,7 @@ public class SpellFilterFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.className.setText(groupNames.get(position));
+            holder.groupName.setText(groupNames.get(position));
         }
 
         @Override

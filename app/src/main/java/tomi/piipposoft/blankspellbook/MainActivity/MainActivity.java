@@ -53,7 +53,7 @@ public class MainActivity extends ApplicationActivity
     private MainActivityPagerAdapter pagerAdapter;
     private ViewPager viewPager;
     private View secondaryToolbarTools;
-    private TextView secondaryToolbarText, classFilterTextView, groupFilterTextView;
+    private TextView secondaryToolbarText, filterTextView;
 
     private boolean databasePersistanceSet = false;
 
@@ -212,17 +212,8 @@ public class MainActivity extends ApplicationActivity
      */
     private void initializeSecondaryToolbarTools() {
         secondaryToolbarTools = ((ViewStub) findViewById(R.id.toolbar_viewStub)).inflate();
-        classFilterTextView = findViewById(R.id.classFilterText);
-        groupFilterTextView = findViewById(R.id.groupFilterText);
-
-        classFilterTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // TODO: 13.7.2017 do things
-            }
-        });
-
-        groupFilterTextView.setOnClickListener(new OpenFilterClickListener());
+        filterTextView = findViewById(R.id.showFiltersView);
+        filterTextView.setOnClickListener(new OpenFilterClickListener());
 
     }
 
