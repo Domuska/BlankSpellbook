@@ -10,11 +10,11 @@
     <!-- the layout that has is the "main screen" of the activity, see
      http://developer.android.com/training/implementing-navigation/nav-drawer.html#OpenClose -->
     <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
 
-        <!-- ViewPager for displaying the swipable fragments -->
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appbar"
@@ -70,12 +70,21 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <!-- Viewpager for showing the list fragments -->
-        <android.support.v4.view.ViewPager
-            android:id="@+id/pager"
+        <!-- Frame in which the ViewPager and filter fragment is placed in -->
+        <FrameLayout
+            android:id="@+id/fragmentFrameLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            android:layout_height="wrap_content"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <!-- Viewpager for showing the list fragments -->
+            <android.support.v4.view.ViewPager
+                android:id="@+id/pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+
+        </FrameLayout>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/mainactivity_fab"
@@ -86,6 +95,14 @@
             app:layout_anchor="@id/toolbar_secondary_layout"
             app:layout_anchorGravity="start|bottom"
             android:transitionName="fabTransition"/>
+
+        <!-- not sure if this fragment should be inside the coordinatorlayout -->
+        <!-- <fragment
+            android:name="tomi.piipposoft.blankspellbook.MainActivity.SpellFilterFragment"
+            android:id="@+id/filterListFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        -->
 
     </android.support.design.widget.CoordinatorLayout>
 

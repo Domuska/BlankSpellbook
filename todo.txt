@@ -3,7 +3,6 @@ mitä pitää appiin tehä yleensä ottaen
 lisätään latausikoneita
 	-spells listaan
 		-crossfade myös latausikonille kun se lisätty
-	-spell details activityyn tekstikenttien sijaan
 	-spell details activityyn save nappulaan
 		-https://material.io/guidelines/components/progress-activity.html#progress-activity-types-of-indicators
 		-linkissä "circular with integration"

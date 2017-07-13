@@ -6,7 +6,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.os.Bundle;
@@ -18,11 +20,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewStub;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
 
 import tomi.piipposoft.blankspellbook.ApplicationActivity;
 import tomi.piipposoft.blankspellbook.Drawer.SetDailyPowerListNameDialog;
@@ -35,8 +34,6 @@ import tomi.piipposoft.blankspellbook.Drawer.DrawerContract;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerHelper;
 import tomi.piipposoft.blankspellbook.Utils.SharedPreferencesHandler;
 import tomi.piipposoft.blankspellbook.Utils.Spell;
-
-
 
 /**
  *
@@ -56,7 +53,7 @@ public class MainActivity extends ApplicationActivity
     private MainActivityPagerAdapter pagerAdapter;
     private ViewPager viewPager;
     private View secondaryToolbarTools;
-    private TextView secondaryToolbarText;
+    private TextView secondaryToolbarText, classFilterTextView, groupFilterTextView;
 
     private boolean databasePersistanceSet = false;
 
@@ -65,6 +62,7 @@ public class MainActivity extends ApplicationActivity
 
     //default selection is the spell lists fragment
     private int currentlySelectedList = MainActivityPresenter.POWER_LISTS_SELECTED;
+    Fragment filterFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,8 +154,9 @@ public class MainActivity extends ApplicationActivity
 
                     case MainActivityPresenter.SPELLS_SELECTED:
                         secondaryToolbarText.setText(getText(R.string.toolbar_text_spells));
-                        if (secondaryToolbarTools == null)
-                            secondaryToolbarTools = ((ViewStub) findViewById(R.id.toolbar_viewStub)).inflate();
+                        if (secondaryToolbarTools == null) {
+                            initializeSecondaryToolbarTools();
+                        }
                         else
                             secondaryToolbarTools.setVisibility(View.VISIBLE);
                         mActionlistener.userSwitchedTo(MainActivityPresenter.SPELLS_SELECTED);
@@ -196,7 +195,6 @@ public class MainActivity extends ApplicationActivity
                 super.onDrawerOpened(view);
                 getSupportActionBar().setTitle("Power lists");
             }
-
         };
 
         // Make the drawer initialize itself
@@ -207,6 +205,25 @@ public class MainActivity extends ApplicationActivity
         //set fab onclicklistener and possible icon
         setFabFunctionality(currentlySelectedList);
         mActionlistener.userSwitchedTo(currentlySelectedList);
+    }
+
+    /**
+     * Initialize the methods shown in spells section of the ViewPager
+     */
+    private void initializeSecondaryToolbarTools() {
+        secondaryToolbarTools = ((ViewStub) findViewById(R.id.toolbar_viewStub)).inflate();
+        classFilterTextView = findViewById(R.id.classFilterText);
+        groupFilterTextView = findViewById(R.id.groupFilterText);
+
+        classFilterTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO: 13.7.2017 do things
+            }
+        });
+
+        groupFilterTextView.setOnClickListener(new OpenFilterClickListener());
+
     }
 
     @Override
@@ -268,21 +285,26 @@ public class MainActivity extends ApplicationActivity
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        //back button functionality
         if(keyCode == KeyEvent.KEYCODE_BACK ) {
-            //pass builder our custom dialog fragment style
-            new AlertDialog.Builder(MainActivity.this, R.style.dialogFragment_title_style)
-                    .setTitle(R.string.mainactivity_back_button_popup_title)
-                    .setMessage(R.string.mainactivity_back_button_popup_info)
-                    .setPositiveButton(getString(R.string.action_yes)
-                            , new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    MainActivity.this.finish();
-                                }
-                            })
-                    .setNegativeButton(getString(R.string.action_no), null)
-                    .show();
+            //close the filter fragment if it's visible
+            if(filterFragment != null)
+                removeFilterFragment();
+            //ask if user wants to quit the app
+            else {
+                //pass builder our custom dialog fragment style
+                new AlertDialog.Builder(MainActivity.this, R.style.dialogFragment_title_style)
+                        .setTitle(R.string.mainactivity_back_button_popup_title)
+                        .setMessage(R.string.mainactivity_back_button_popup_info)
+                        .setPositiveButton(getString(R.string.action_yes)
+                                , new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        MainActivity.this.finish();
+                                    }
+                                })
+                        .setNegativeButton(getString(R.string.action_no), null)
+                        .show();
+            }
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -443,5 +465,42 @@ public class MainActivity extends ApplicationActivity
         }
         else*/
             this.openPowerDetailsActivity(powerId, powerListId);
+    }
+
+    private void removeFilterFragment(){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.setCustomAnimations(R.anim.filter_fragment_slide_in, R.anim.filter_fragment_slide_out);
+        transaction.remove(filterFragment);
+        transaction.commit();
+        filterFragment = null;
+    }
+
+    /**
+     * Click listener for the filter button, open if it is closed, close it if it is open
+     */
+    private class OpenFilterClickListener implements View.OnClickListener{
+
+        @Override
+        public void onClick(View view) {
+            if (filterFragment == null) {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.setCustomAnimations(R.anim.filter_fragment_slide_in, R.anim.filter_fragment_slide_out);
+                filterFragment = new SpellFilterFragment();
+                //add the group names to be displayed
+                Bundle bundle = new Bundle();
+                bundle.putStringArrayList(SpellFilterFragment.GROUP_NAMES_BUNDLE,
+                        mActionlistener.getGroupNamesForFilter());
+                bundle.putStringArrayList(SpellFilterFragment.CLASS_NAMES_BUNDLE,
+                        mActionlistener.getClassNamesForFilter());
+                filterFragment.setArguments(bundle);
+                transaction.add(R.id.fragmentFrameLayout, filterFragment);
+                transaction.commit();
+            }
+            else{
+                removeFilterFragment();
+            }
+        }
     }
 }

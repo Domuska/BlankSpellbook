@@ -4,6 +4,8 @@ package tomi.piipposoft.blankspellbook.MainActivity;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.ArrayList;
+
 import tomi.piipposoft.blankspellbook.Utils.Spell;
 
 /**
@@ -37,6 +39,8 @@ public interface MainActivityContract {
         void resumeActivity();
         void pauseActivity();
         void userSwitchedTo(int selectedList);
+        ArrayList<String> getGroupNamesForFilter();
+        ArrayList<String> getClassNamesForFilter();
     }
 
     interface FragmentUserActionListener {

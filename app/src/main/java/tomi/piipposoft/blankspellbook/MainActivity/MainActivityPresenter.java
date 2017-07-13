@@ -104,6 +104,24 @@ public class MainActivityPresenter extends DrawerPresenter
         currentlySelectedList = selectedList;
     }
 
+    @Override
+    public ArrayList<String> getGroupNamesForFilter() {
+        ArrayList<String> list = new ArrayList<>();
+        for(int i = 0; i < 10; i++){
+            list.add(i + "");
+        }
+        return list;
+    }
+
+    @Override
+    public ArrayList<String> getClassNamesForFilter() {
+        ArrayList<String> list = new ArrayList<>();
+        for(int i = 10; i < 20; i++){
+            list.add(i + "");
+        }
+        return list;
+    }
+
     /**
      * handle a new power list from DB, give it to View
      * @param name name of the power list

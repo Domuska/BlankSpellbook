@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
+    <TextView
+        android:id="@+id/groupFilterText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="OK!"/>
+        android:textColor="?android:textColorPrimary"
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
+        android:drawablePadding="4dp"
+        android:textSize="14sp"
+        android:drawableLeft="@drawable/ic_filter_list_white_24dp"
+        android:drawableStart="@drawable/ic_filter_list_white_24dp"
+        android:text="@string/mainactivity_filter_group" />
+
+    <TextView
+        android:id="@+id/classFilterText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="?android:textColorPrimary"
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
+        android:drawablePadding="4dp"
+        android:textSize="14sp"
+        android:drawableLeft="@drawable/ic_filter_list_white_24dp"
+        android:drawableStart="@drawable/ic_filter_list_white_24dp"
+        android:text="@string/mainactivity_filter_class"/>
+
+
 
 </LinearLayout>
