@@ -476,6 +476,7 @@ public class MainActivity extends ApplicationActivity
         @Override
         public void onClick(View view) {
             FragmentManager fragmentManager = getSupportFragmentManager();
+            //check if we have the fragment in the manager already
             if (fragmentManager.findFragmentByTag(FILTER_FRAGMENT_TAG) == null) {
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.setCustomAnimations(R.anim.filter_fragment_slide_in, R.anim.filter_fragment_slide_out);
