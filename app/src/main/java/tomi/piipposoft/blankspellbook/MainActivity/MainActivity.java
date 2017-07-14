@@ -46,6 +46,7 @@ public class MainActivity extends ApplicationActivity
     private final String DATABASE_PERSISTANCE_SET_KEY = "databasePersistanceSet";
     private final String TAG = "MainActivity";
     private final String FRAGMENT_LAST_VISIBLE = "lastVisibleFragment";
+    private final String FILTER_FRAGMENT_TAG = "filterFragment";
 
     private ActionBarDrawerToggle mDrawerToggle;
     private MainActivityContract.UserActionListener mActionlistener;
@@ -474,8 +475,8 @@ public class MainActivity extends ApplicationActivity
 
         @Override
         public void onClick(View view) {
-            if (filterFragment == null) {
-                FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            if (fragmentManager.findFragmentByTag(FILTER_FRAGMENT_TAG) == null) {
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.setCustomAnimations(R.anim.filter_fragment_slide_in, R.anim.filter_fragment_slide_out);
                 filterFragment = new SpellFilterFragment();
@@ -486,7 +487,7 @@ public class MainActivity extends ApplicationActivity
                 bundle.putStringArrayList(SpellFilterFragment.CLASS_NAMES_BUNDLE,
                         mActionlistener.getClassNamesForFilter());
                 filterFragment.setArguments(bundle);
-                transaction.add(R.id.fragmentFrameLayout, filterFragment);
+                transaction.add(R.id.fragmentFrameLayout, filterFragment, FILTER_FRAGMENT_TAG);
                 transaction.commit();
             }
             else{

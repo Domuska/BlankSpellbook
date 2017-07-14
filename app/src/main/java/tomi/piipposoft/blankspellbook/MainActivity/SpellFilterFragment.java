@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -27,8 +28,8 @@ public class SpellFilterFragment extends Fragment {
     public static final String CLASS_NAMES_BUNDLE = "classNames";
 
     private ArrayList<String> classNames, groupNames;
-
-
+    private ArrayMap<String, Boolean> classNamesMap = new ArrayMap<>();
+    private ArrayMap<String, Boolean> groupNamesMap = new ArrayMap<>();
 
     @Nullable
     @Override
@@ -38,6 +39,16 @@ public class SpellFilterFragment extends Fragment {
         if(getArguments() != null) {
             groupNames = getArguments().getStringArrayList(GROUP_NAMES_BUNDLE);
             classNames = getArguments().getStringArrayList(CLASS_NAMES_BUNDLE);
+            if(groupNames != null) {
+                for (String name : groupNames) {
+                    groupNamesMap.put(name, false);
+                }
+            }
+            if (classNames != null) {
+                for(String name : classNames){
+                    classNamesMap.put(name, false);
+                }
+            }
         }
         else
             Log.e(TAG, "Error in onCreateView, bundle is null");
@@ -55,7 +66,6 @@ public class SpellFilterFragment extends Fragment {
 
         RecyclerView.Adapter groupListAdapter = new FilterListAdapter(false);
         groupRecyclerView.setAdapter(groupListAdapter);
-
 
         return rootView;
     }
@@ -105,8 +115,9 @@ public class SpellFilterFragment extends Fragment {
 
             //color every other row with darker background
             if(position % 2 == 0) {
-                holder.rowBackground.setBackgroundColor(ContextCompat.getColor(
-                        getActivity(), R.color.my_color_filter_row_background_dark
+                holder.rowBackground.setBackground(ContextCompat.getDrawable(
+                        getActivity(),
+                        R.drawable.filter_row_background_dark
                 ));
             }
 
@@ -114,6 +125,15 @@ public class SpellFilterFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     Log.d(TAG, "row with text " + holder.rowText.getText().toString() + " was clicked");
+                    if(holder.rowBackground.isSelected()) {
+                        holder.rowBackground.setSelected(false);
+                        if(isClassAdapter){
+
+                        }
+                    }
+                    else{
+                        holder.rowBackground.setSelected(true);
+                    }
                 }
             });
         }
