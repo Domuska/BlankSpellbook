@@ -3,6 +3,7 @@ package tomi.piipposoft.blankspellbook.MainActivity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -45,14 +46,14 @@ public class SpellFilterFragment extends Fragment {
         LinearLayoutManager classLinearLayoutManager = new LinearLayoutManager(getActivity());
         classRecyclerView.setLayoutManager(classLinearLayoutManager);
 
-        RecyclerView.Adapter classAdapter = new ClassListAdapter();
+        RecyclerView.Adapter classAdapter = new FilterListAdapter(true);
         classRecyclerView.setAdapter(classAdapter);
 
         RecyclerView groupRecyclerView = rootView.findViewById(R.id.groupFilterRecyclerView);
         LinearLayoutManager groupLinearLayoutManager = new LinearLayoutManager(getActivity());
         groupRecyclerView.setLayoutManager(groupLinearLayoutManager);
 
-        RecyclerView.Adapter groupListAdapter = new GroupListAdapter();
+        RecyclerView.Adapter groupListAdapter = new FilterListAdapter(false);
         groupRecyclerView.setAdapter(groupListAdapter);
 
 
@@ -61,15 +62,28 @@ public class SpellFilterFragment extends Fragment {
 
     //https://developer.android.com/guide/components/fragments.html
 
+    /**
+     * Adapter for the classes and groups RecyclerViews
+     * The constructor is passed a boolean to indicate whether this is a classes adapter (true)
+     * or a groups adapter (false). The adapters are so similar that there is no point
+     * to make two separate, at least for now.
+     */
+    private class FilterListAdapter extends
+            RecyclerView.Adapter<FilterListAdapter.ViewHolder>{
 
-    private class ClassListAdapter extends
-            RecyclerView.Adapter<ClassListAdapter.ViewHolder>{
+        private boolean isClassAdapter;
+
+        private FilterListAdapter(boolean isClassAdapter){
+            this.isClassAdapter = isClassAdapter;
+        }
 
         class ViewHolder extends RecyclerView.ViewHolder{
-            private TextView className;
+            private TextView rowText;
+            private View rowBackground;
             private ViewHolder(View view){
                 super(view);
-                className = view.findViewById(R.id.recycler_row_text);
+                rowText = view.findViewById(R.id.recycler_row_text);
+                rowBackground = view;
             }
         }
 
@@ -81,42 +95,35 @@ public class SpellFilterFragment extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.className.setText(classNames.get(position));
-        }
-
-        @Override
-        public int getItemCount() {
-            return classNames.size();
-        }
-    }
-
-    private class GroupListAdapter extends
-            RecyclerView.Adapter<GroupListAdapter.ViewHolder>{
-
-        class ViewHolder extends RecyclerView.ViewHolder{
-            private TextView groupName;
-            private ViewHolder(View view){
-                super(view);
-                groupName = view.findViewById(R.id.recycler_row_text);
+        public void onBindViewHolder(final ViewHolder holder, int position) {
+            if(isClassAdapter) {
+                holder.rowText.setText(classNames.get(position));
             }
-        }
+            else {
+                holder.rowText.setText(groupNames.get(position));
+            }
 
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(
-                    R.layout.filter_list_row, parent, false);
-            return new ViewHolder(view);
-        }
+            //color every other row with darker background
+            if(position % 2 == 0) {
+                holder.rowBackground.setBackgroundColor(ContextCompat.getColor(
+                        getActivity(), R.color.my_color_filter_row_background_dark
+                ));
+            }
 
-        @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.groupName.setText(groupNames.get(position));
+            holder.rowBackground.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.d(TAG, "row with text " + holder.rowText.getText().toString() + " was clicked");
+                }
+            });
         }
 
         @Override
         public int getItemCount() {
-            return groupNames.size();
+            if(isClassAdapter)
+                return classNames.size();
+            else
+                return groupNames.size();
         }
     }
 }
