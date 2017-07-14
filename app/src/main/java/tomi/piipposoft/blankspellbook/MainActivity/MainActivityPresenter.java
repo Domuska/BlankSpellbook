@@ -107,7 +107,7 @@ public class MainActivityPresenter extends DrawerPresenter
     @Override
     public ArrayList<String> getGroupNamesForFilter() {
         ArrayList<String> list = new ArrayList<>();
-        for(int i = 0; i < 10; i++){
+        for(int i = 0; i < 50; i++){
             list.add(i + "");
         }
         return list;
@@ -116,7 +116,7 @@ public class MainActivityPresenter extends DrawerPresenter
     @Override
     public ArrayList<String> getClassNamesForFilter() {
         ArrayList<String> list = new ArrayList<>();
-        for(int i = 10; i < 20; i++){
+        for(int i = 50; i < 100; i++){
             list.add(i + "");
         }
         return list;

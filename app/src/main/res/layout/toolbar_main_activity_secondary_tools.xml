@@ -14,7 +14,7 @@
         android:textSize="14sp"
         android:drawableLeft="@drawable/ic_filter_list_white_24dp"
         android:drawableStart="@drawable/ic_filter_list_white_24dp"
-        android:text="@string/mainactivity_filter_class"/>
+        android:text="@string/mainactivity_filter_text"/>
 
 
 

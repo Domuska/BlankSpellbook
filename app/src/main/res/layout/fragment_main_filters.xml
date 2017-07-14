@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="150dp"
     android:background="@color/md_grey_100"
@@ -11,50 +12,75 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:background="?colorAccent" />
+        android:background="?colorAccent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/classInfoText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/mainactivity_filter_class"
+        android:textSize="12sp"
+        android:textColor="?colorAccent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="3dp"
+        android:layout_marginStart="3dp"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/classFilterRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintRight_toLeftOf="@+id/centerDivider"
+        app:layout_constraintTop_toBottomOf="@id/classInfoText"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:paddingTop="10dp"
+        android:clipToPadding="false"/>
+
+    <View
+        android:id="@+id/centerDivider"
+        android:layout_width="1dp"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        tools:layout_editor_absoluteY="2dp"
-        tools:layout_editor_absoluteX="0dp">
+        android:layout_gravity="center_horizontal"
+        android:background="@color/md_black_1000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline"
+        tools:layout_constraintLeft_creator="1"
+         />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/classFilterRecyclerView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintRight_toLeftOf="@+id/centerDivider"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent" />
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline"
+        app:layout_constraintGuide_percent="0.5"
+        android:orientation="vertical" />
 
-        <View
-            android:id="@+id/centerDivider"
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:background="@color/md_black_1000"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="@+id/guideline"
-            tools:layout_constraintLeft_creator="1"
-             />
+    <TextView
+        android:id="@+id/groupInfoText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/mainactivity_filter_group"
+        android:textSize="12sp"
+        android:textColor="?colorAccent"
+        app:layout_constraintLeft_toRightOf="@id/centerDivider"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="3dp"
+        android:layout_marginStart="3dp"
+        />
 
-        <android.support.constraint.Guideline
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/guideline"
-            app:layout_constraintGuide_percent="0.5"
-            android:orientation="vertical" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/groupFilterRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/centerDivider"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/groupInfoText"
+        android:paddingTop="10dp"
+        android:clipToPadding="false"/>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/groupFilterRecyclerView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toRightOf="@id/centerDivider"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+</android.support.constraint.ConstraintLayout>
 
-    </android.support.constraint.ConstraintLayout>
-
-</LinearLayout>
