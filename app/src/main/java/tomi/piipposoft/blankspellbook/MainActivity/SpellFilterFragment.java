@@ -25,11 +25,18 @@ public class SpellFilterFragment extends Fragment {
 
     private final String TAG = "SpellFilterFragment";
     public static final String GROUP_NAMES_BUNDLE = "groupNames";
-    public static final String CLASS_NAMES_BUNDLE = "classNames";
+    public static final String POWER_LIST_NAMES_BUNDLE = "powerLists";
 
-    private ArrayList<String> classNames, groupNames;
-    private ArrayMap<String, Boolean> classNamesMap = new ArrayMap<>();
+    //master lists of what groups and power lists in total are in db
+    private ArrayMap<String, Boolean> powerListNamesMap = new ArrayMap<>();
     private ArrayMap<String, Boolean> groupNamesMap = new ArrayMap<>();
+
+    //lists for displaying the items that should be actually be visible in the list
+    private ArrayList<String> displayedPowerListNames, displayedGroupNames;
+
+    private RecyclerView.Adapter powerListsAdapter, groupsAdapter;
+
+    private MainActivityContract.FilterFragmentUserActionListener mActionListener;
 
     @Nullable
     @Override
@@ -37,54 +44,58 @@ public class SpellFilterFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main_filters, container, false);
         if(getArguments() != null) {
-            groupNames = getArguments().getStringArrayList(GROUP_NAMES_BUNDLE);
-            classNames = getArguments().getStringArrayList(CLASS_NAMES_BUNDLE);
-            if(groupNames != null) {
-                for (String name : groupNames) {
+            displayedGroupNames = getArguments().getStringArrayList(GROUP_NAMES_BUNDLE);
+            displayedPowerListNames = getArguments().getStringArrayList(POWER_LIST_NAMES_BUNDLE);
+            if(displayedGroupNames != null) {
+                for (String name : displayedGroupNames) {
                     groupNamesMap.put(name, false);
                 }
             }
-            if (classNames != null) {
-                for(String name : classNames){
-                    classNamesMap.put(name, false);
+            if (displayedPowerListNames != null) {
+                for(String name : displayedPowerListNames){
+                    powerListNamesMap.put(name, false);
                 }
             }
         }
         else
             Log.e(TAG, "Error in onCreateView, bundle is null");
 
-        RecyclerView classRecyclerView = rootView.findViewById(R.id.classFilterRecyclerView);
-        LinearLayoutManager classLinearLayoutManager = new LinearLayoutManager(getActivity());
-        classRecyclerView.setLayoutManager(classLinearLayoutManager);
+        //recyclerview for displaying the power list filters
+        RecyclerView powerListRecyclerView = rootView.findViewById(R.id.powerListFilterRecyclerView);
+        LinearLayoutManager powerListLayoutManager = new LinearLayoutManager(getActivity());
+        powerListRecyclerView.setLayoutManager(powerListLayoutManager);
+        powerListsAdapter = new FilterListAdapter(true);
+        powerListRecyclerView.setAdapter(powerListsAdapter);
 
-        RecyclerView.Adapter classAdapter = new FilterListAdapter(true);
-        classRecyclerView.setAdapter(classAdapter);
-
+        //recyclerview for displaying the group filters
         RecyclerView groupRecyclerView = rootView.findViewById(R.id.groupFilterRecyclerView);
         LinearLayoutManager groupLinearLayoutManager = new LinearLayoutManager(getActivity());
         groupRecyclerView.setLayoutManager(groupLinearLayoutManager);
-
-        RecyclerView.Adapter groupListAdapter = new FilterListAdapter(false);
-        groupRecyclerView.setAdapter(groupListAdapter);
+        groupsAdapter = new FilterListAdapter(false);
+        groupRecyclerView.setAdapter(groupsAdapter);
 
         return rootView;
+    }
+
+    public void attachActionListener(MainActivityContract.FilterFragmentUserActionListener listener){
+        mActionListener = listener;
     }
 
     //https://developer.android.com/guide/components/fragments.html
 
     /**
-     * Adapter for the classes and groups RecyclerViews
-     * The constructor is passed a boolean to indicate whether this is a classes adapter (true)
+     * Adapter for the power lists and groups RecyclerViews
+     * The constructor is passed a boolean to indicate whether this is a power lists adapter (true)
      * or a groups adapter (false). The adapters are so similar that there is no point
      * to make two separate, at least for now.
      */
     private class FilterListAdapter extends
             RecyclerView.Adapter<FilterListAdapter.ViewHolder>{
 
-        private boolean isClassAdapter;
+        private boolean isPowerListAdapter;
 
-        private FilterListAdapter(boolean isClassAdapter){
-            this.isClassAdapter = isClassAdapter;
+        private FilterListAdapter(boolean isPowerListAdapter){
+            this.isPowerListAdapter = isPowerListAdapter;
         }
 
         class ViewHolder extends RecyclerView.ViewHolder{
@@ -106,33 +117,55 @@ public class SpellFilterFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            if(isClassAdapter) {
-                holder.rowText.setText(classNames.get(position));
+
+            final String rowText;
+            if(isPowerListAdapter) {
+                rowText = displayedPowerListNames.get(position);
+                //holder recycles the rows, they might be incorrectly "selected"
+                holder.rowBackground.setSelected(powerListNamesMap.get(rowText));
             }
             else {
-                holder.rowText.setText(groupNames.get(position));
+                rowText = displayedGroupNames.get(position);
+                //holder recycles the rows, they might be incorrectly "selected"
+                holder.rowBackground.setSelected(groupNamesMap.get(rowText));
             }
+            holder.rowText.setText(rowText);
 
             //color every other row with darker background
-            if(position % 2 == 0) {
-                holder.rowBackground.setBackground(ContextCompat.getDrawable(
-                        getActivity(),
-                        R.drawable.filter_row_background_dark
-                ));
+            if(position % 2 == 1) {
+                    holder.rowBackground.setBackground(ContextCompat.getDrawable(
+                            getActivity(),
+                            R.drawable.filter_row_background_dark
+                    ));
             }
 
             holder.rowBackground.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Log.d(TAG, "row with text " + holder.rowText.getText().toString() + " was clicked");
+                    //row is already selected, de-select it
                     if(holder.rowBackground.isSelected()) {
                         holder.rowBackground.setSelected(false);
-                        if(isClassAdapter){
-
+                        //set the selection boolean in the map of group/power list names
+                        if(isPowerListAdapter) {
+                            powerListNamesMap.put(rowText, false);
+                            //// TODO: 14.7.2017 remove the filtering 
+                        }
+                        else {
+                            groupNamesMap.put(rowText, false);
+                            //// TODO: 14.7.2017 remove the filtering
                         }
                     }
+                    //set the row as selected
                     else{
                         holder.rowBackground.setSelected(true);
+                        if(isPowerListAdapter) {
+                            powerListNamesMap.put(rowText, true);
+                            mActionListener.filterGroupsWithPowerList(rowText);
+                        }
+                        else {
+                            groupNamesMap.put(rowText, true);
+                            mActionListener.filterPowerListsWithGroup(rowText);
+                        }
                     }
                 }
             });
@@ -140,10 +173,10 @@ public class SpellFilterFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            if(isClassAdapter)
-                return classNames.size();
+            if(isPowerListAdapter)
+                return powerListNamesMap.size();
             else
-                return groupNames.size();
+                return groupNamesMap.size();
         }
     }
 }

@@ -56,6 +56,11 @@ public interface MainActivityContract {
         void onPowerClicked(String powerId, String powerListId, android.view.View originView);
     }
 
+    interface FilterFragmentUserActionListener{
+        void filterGroupsWithPowerList(String powerListName);
+        void filterPowerListsWithGroup(String groupName);
+    }
+
     /**
      * interface for informing presenter when certain fragments have been
      * created so presenter can supply the data to be shown

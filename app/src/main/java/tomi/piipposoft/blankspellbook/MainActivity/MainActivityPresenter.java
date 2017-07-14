@@ -26,6 +26,7 @@ public class MainActivityPresenter extends DrawerPresenter
         implements DrawerContract.UserActionListener,
         MainActivityContract.UserActionListener,
         MainActivityContract.FragmentUserActionListener,
+        MainActivityContract.FilterFragmentUserActionListener,
         MainActivityContract.PagerAdapterListener{
 
     private static MainActivityContract.View mMainActivityView;
@@ -211,6 +212,23 @@ public class MainActivityPresenter extends DrawerPresenter
     public void onPowerClicked(String powerId, String powerListId, View transitionOrigin) {
         mMainActivityView.startPowerDetailsActivity(powerId, powerListId, transitionOrigin);
     }
+
+    //from MainActivityContract.FilterFragmentUserActionListener
+
+    @Override
+    public void filterGroupsWithPowerList(String powerListName) {
+        //see what groups are under a power list
+        //tell View to show only spells that are under the power list
+        //and to tell filterFragment to show groups that are under the power list
+    }
+
+    @Override
+    public void filterPowerListsWithGroup(String groupName) {
+        //see what power lists have a group with groupName
+        //tell View to show only spells that have group with groupName
+        //and to tell filterFragment to show power lists that have group with groupName
+    }
+
 
     //from MainActivityContract.PagerAdapterListener
 

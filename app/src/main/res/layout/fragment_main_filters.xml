@@ -9,6 +9,7 @@
     android:background="@color/my_color_filter_row_background_light"
     android:clickable="true">
 
+    <!-- decoration above the lists -->
     <View
         android:id="@+id/topDivider"
         android:layout_width="match_parent"
@@ -31,8 +32,9 @@
         android:layout_marginStart="3dp"
         />
 
+    <!-- recycler view for displaying the power list names -->
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/classFilterRecyclerView"
+        android:id="@+id/powerListFilterRecyclerView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintRight_toLeftOf="@+id/centerDivider"
@@ -41,6 +43,7 @@
         android:paddingTop="10dp"
         android:clipToPadding="false"/>
 
+    <!-- middle divider in the fragment -->
     <View
         android:id="@+id/centerDivider"
         android:layout_width="1dp"
@@ -72,6 +75,7 @@
         android:layout_marginStart="3dp"
         />
 
+    <!-- recycler view for displaying the group names -->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/groupFilterRecyclerView"
         android:layout_width="0dp"

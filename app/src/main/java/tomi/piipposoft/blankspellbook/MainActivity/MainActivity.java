@@ -63,7 +63,7 @@ public class MainActivity extends ApplicationActivity
 
     //default selection is the spell lists fragment
     private int currentlySelectedList = MainActivityPresenter.POWER_LISTS_SELECTED;
-    Fragment filterFragment;
+    SpellFilterFragment filterFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -481,13 +481,17 @@ public class MainActivity extends ApplicationActivity
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.setCustomAnimations(R.anim.filter_fragment_slide_in, R.anim.filter_fragment_slide_out);
                 filterFragment = new SpellFilterFragment();
+                //give fragment the actionListener
+                filterFragment.attachActionListener(
+                        (MainActivityContract.FilterFragmentUserActionListener)mActionlistener);
                 //add the group names to be displayed
                 Bundle bundle = new Bundle();
                 bundle.putStringArrayList(SpellFilterFragment.GROUP_NAMES_BUNDLE,
                         mActionlistener.getGroupNamesForFilter());
-                bundle.putStringArrayList(SpellFilterFragment.CLASS_NAMES_BUNDLE,
+                bundle.putStringArrayList(SpellFilterFragment.POWER_LIST_NAMES_BUNDLE,
                         mActionlistener.getClassNamesForFilter());
                 filterFragment.setArguments(bundle);
+                //add the fragment and tag so we can find the fragment later
                 transaction.add(R.id.fragmentFrameLayout, filterFragment, FILTER_FRAGMENT_TAG);
                 transaction.commit();
             }
