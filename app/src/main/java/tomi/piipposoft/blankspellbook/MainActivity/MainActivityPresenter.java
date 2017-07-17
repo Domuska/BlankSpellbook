@@ -44,6 +44,11 @@ public class MainActivityPresenter extends DrawerPresenter
     private static ArrayMap<String, ArrayList<String>> powersNamesInPowerLists = new ArrayMap<>();
     private static ArrayMap<String, String> dailyPowerLists = new ArrayMap<>();
 
+    //for storing the powers to handle filtering
+    private static ArrayList<Spell> displayedPowers = new ArrayList<>();
+    private static ArrayMap<String, ArrayList<Spell>> powerGroupNames = new ArrayMap<>();
+    private static ArrayMap<String, ArrayList<Spell>> powerListNames = new ArrayMap<>();
+
 
     public static final int DAILY_POWER_LISTS_SELECTED = 0;
     public static final int POWER_LISTS_SELECTED = 1;
@@ -186,8 +191,33 @@ public class MainActivityPresenter extends DrawerPresenter
      * @param powerListName name of the power list this power belongs to, can be null
      */
     public static void handleNewPower(@NonNull Spell power, @Nullable String powerListName) {
-        Log.d(TAG, "got new power in handleNewPower: " + power.getName()
-                + " with power list name: " + powerListName);
+        //Log.d(TAG, "got new power in handleNewPower: " + power.getName() + " with power list name: " + powerListName);
+
+        //add power to a list of powers for filtering later
+        displayedPowers.add(power);
+
+        if(powerListName != null) {
+            //add the name of power list power is in to the map for filtering later
+            if (powerListNames.containsKey(powerListName))
+                powerListNames.get(powerListNames).add(power);
+            else {
+                ArrayList<Spell> list = new ArrayList<>();
+                list.add(power);
+                powerListNames.put(powerListName, list);
+            }
+        }
+
+        //add the power's group name to the map for filtering later
+        String groupName = power.getGroupName();
+        if (groupName != null && !groupName.equals("")) {
+            if (powerGroupNames.containsKey(groupName))
+                powerGroupNames.get(power.getGroupName()).add(power);
+            else {
+                ArrayList<Spell> list = new ArrayList<>();
+                list.add(power);
+                powerGroupNames.put(groupName, list);
+            }
+        }
         mMainActivityView.addNewPowerToList(power, powerListName);
     }
 
@@ -216,17 +246,29 @@ public class MainActivityPresenter extends DrawerPresenter
     //from MainActivityContract.FilterFragmentUserActionListener
 
     @Override
-    public void filterGroupsWithPowerList(String powerListName) {
+    public void filterGroupsAndPowersWithPowerListName(@NonNull String powerListName) {
         //see what groups are under a power list
+        ArrayList<Spell> powers = powerListNames.get(powerListName);
+        if(powers != null){
+            /*ArrayList<Spell> filteredPowers = new ArrayList<>();
+            for(Spell power : powers){
+                groupNames.add(power.getGroupName());
+            }*/
+            mMainActivityView.showFilteredPowers(powers);
+            mMainActivityView.showFilteredPowerGroups(powers);
+            // TODO: 17.7.2017 test 
+
+        }
         //tell View to show only spells that are under the power list
         //and to tell filterFragment to show groups that are under the power list
     }
 
     @Override
-    public void filterPowerListsWithGroup(String groupName) {
+    public void filterPowerListsAndPowersWithGroupName(@NonNull String groupName) {
         //see what power lists have a group with groupName
         //tell View to show only spells that have group with groupName
         //and to tell filterFragment to show power lists that have group with groupName
+        // TODO: 17.7.2017 do the same as above
     }
 
 

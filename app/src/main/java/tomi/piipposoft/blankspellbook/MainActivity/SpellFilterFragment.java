@@ -14,8 +14,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import tomi.piipposoft.blankspellbook.R;
+import tomi.piipposoft.blankspellbook.Utils.Spell;
 
 /**
  * Created by OMISTAJA on 13.7.2017.
@@ -79,6 +81,26 @@ public class SpellFilterFragment extends Fragment {
 
     public void attachActionListener(MainActivityContract.FilterFragmentUserActionListener listener){
         mActionListener = listener;
+    }
+
+    public void filterGroupNames(ArrayList<Spell> displayedPowers){
+        ArrayList<String> displayedGroupNames = new ArrayList<>();
+        for(Spell power : displayedPowers){
+            displayedGroupNames.add(power.getGroupName());
+        }
+
+        //iterate through the map entries
+        for(Map.Entry<String, Boolean> entry : groupNamesMap.entrySet()){
+            //if the key in entry (powerGroup's name) is not in the list of names that should be
+            //displayed, remove it from the map
+            if(!displayedGroupNames.contains(entry.getKey()))
+                groupNamesMap.remove(entry);
+        }
+
+    }
+
+    public void filterPowerListNames(ArrayList<Spell> displayedPowers){
+        // TODO: 17.7.2017 do the same as above
     }
 
     //https://developer.android.com/guide/components/fragments.html
@@ -148,7 +170,7 @@ public class SpellFilterFragment extends Fragment {
                         //set the selection boolean in the map of group/power list names
                         if(isPowerListAdapter) {
                             powerListNamesMap.put(rowText, false);
-                            //// TODO: 14.7.2017 remove the filtering 
+                            //// TODO: 14.7.2017 remove the filtering
                         }
                         else {
                             groupNamesMap.put(rowText, false);
@@ -160,11 +182,11 @@ public class SpellFilterFragment extends Fragment {
                         holder.rowBackground.setSelected(true);
                         if(isPowerListAdapter) {
                             powerListNamesMap.put(rowText, true);
-                            mActionListener.filterGroupsWithPowerList(rowText);
+                            mActionListener.filterGroupsAndPowersWithPowerListName(rowText);
                         }
                         else {
                             groupNamesMap.put(rowText, true);
-                            mActionListener.filterPowerListsWithGroup(rowText);
+                            mActionListener.filterPowerListsAndPowersWithGroupName(rowText);
                         }
                     }
                 }

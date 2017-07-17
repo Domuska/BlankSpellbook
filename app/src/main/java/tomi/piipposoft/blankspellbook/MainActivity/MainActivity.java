@@ -23,6 +23,8 @@ import android.view.ViewStub;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import tomi.piipposoft.blankspellbook.ApplicationActivity;
 import tomi.piipposoft.blankspellbook.Drawer.SetDailyPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.Drawer.SetPowerListNameDialog;
@@ -457,6 +459,22 @@ public class MainActivity extends ApplicationActivity
         }
         else*/
             this.openPowerDetailsActivity(powerId, powerListId);
+    }
+
+    @Override
+    public void showFilteredPowers(ArrayList<Spell> filteredPowers) {
+        //tell powersFragment to remove the powers not in the list
+        // TODO: 17.7.2017 finish
+    }
+
+    @Override
+    public void showFilteredPowerGroups(ArrayList<Spell> filteredPowers) {
+        filterFragment.filterGroupNames(filteredPowers);
+    }
+
+    @Override
+    public void showFilteredPowerLists(ArrayList<Spell> filteredPowers) {
+        filterFragment.filterPowerListNames(filteredPowers);
     }
 
     private void removeFilterFragment(){

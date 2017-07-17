@@ -33,6 +33,11 @@ public interface MainActivityContract {
                                     android.view.View originView, int powerListColor);
         void startDailyPowerListActivity(String listName, String listId);
         void startPowerDetailsActivity(String powerId, String powerListId, android.view.View transitionOrigin);
+
+        //showing powers filtered in the filter fragment
+        void showFilteredPowers(ArrayList<Spell> filteredPowers);
+        void showFilteredPowerGroups(ArrayList<Spell> filteredPowers);
+        void showFilteredPowerLists(ArrayList<Spell> filteredPowers);
     }
 
     interface UserActionListener{
@@ -57,8 +62,8 @@ public interface MainActivityContract {
     }
 
     interface FilterFragmentUserActionListener{
-        void filterGroupsWithPowerList(String powerListName);
-        void filterPowerListsWithGroup(String groupName);
+        void filterGroupsAndPowersWithPowerListName(String powerListName);
+        void filterPowerListsAndPowersWithGroupName(String groupName);
     }
 
     /**
