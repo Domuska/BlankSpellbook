@@ -34,7 +34,9 @@ public interface MainActivityContract {
         void startDailyPowerListActivity(String listName, String listId);
         void startPowerDetailsActivity(String powerId, String powerListId, android.view.View transitionOrigin);
 
-        //showing powers filtered in the filter fragment
+        //for showing, filtering and removing data from the filter fragment
+        //void givePowerListNamesForFilter(ArrayList<String> powerListNames);
+        //void givePowerGroupNamesForFilter(ArrayList<String> powerGroupNames);
         void showFilteredPowers(ArrayList<Spell> filteredPowers);
         void showFilteredPowerGroups(ArrayList<Spell> filteredPowers);
         void showFilteredPowerLists(ArrayList<Spell> filteredPowers);
@@ -45,7 +47,7 @@ public interface MainActivityContract {
         void pauseActivity();
         void userSwitchedTo(int selectedList);
         ArrayList<String> getGroupNamesForFilter();
-        ArrayList<String> getClassNamesForFilter();
+        ArrayList<String> getPowerListNamesForFilter();
     }
 
     interface FragmentUserActionListener {

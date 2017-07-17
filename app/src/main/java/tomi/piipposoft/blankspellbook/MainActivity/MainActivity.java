@@ -6,7 +6,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
@@ -507,7 +506,7 @@ public class MainActivity extends ApplicationActivity
                 bundle.putStringArrayList(SpellFilterFragment.GROUP_NAMES_BUNDLE,
                         mActionlistener.getGroupNamesForFilter());
                 bundle.putStringArrayList(SpellFilterFragment.POWER_LIST_NAMES_BUNDLE,
-                        mActionlistener.getClassNamesForFilter());
+                        mActionlistener.getPowerListNamesForFilter());
                 filterFragment.setArguments(bundle);
                 //add the fragment and tag so we can find the fragment later
                 transaction.add(R.id.fragmentFrameLayout, filterFragment, FILTER_FRAGMENT_TAG);

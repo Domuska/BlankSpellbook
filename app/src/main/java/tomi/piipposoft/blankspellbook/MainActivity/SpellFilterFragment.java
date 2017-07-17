@@ -76,6 +76,9 @@ public class SpellFilterFragment extends Fragment {
         groupsAdapter = new FilterListAdapter(false);
         groupRecyclerView.setAdapter(groupsAdapter);
 
+        Log.d(TAG, "groupNamesMap size: " + groupNamesMap.size()
+                + " powerListNames map size: " + powerListNamesMap.size());
+
         return rootView;
     }
 
@@ -83,20 +86,29 @@ public class SpellFilterFragment extends Fragment {
         mActionListener = listener;
     }
 
+
     public void filterGroupNames(ArrayList<Spell> displayedPowers){
         ArrayList<String> displayedGroupNames = new ArrayList<>();
         for(Spell power : displayedPowers){
             displayedGroupNames.add(power.getGroupName());
         }
+        Log.d(TAG, "names that should be displayed: " + displayedGroupNames);
 
         //iterate through the map entries
         for(Map.Entry<String, Boolean> entry : groupNamesMap.entrySet()){
             //if the key in entry (powerGroup's name) is not in the list of names that should be
             //displayed, remove it from the map
-            if(!displayedGroupNames.contains(entry.getKey()))
-                groupNamesMap.remove(entry);
+            if(!displayedGroupNames.contains(entry.getKey())) {
+                int removedItemIndex = groupNamesMap.indexOfKey(entry.getKey());
+                Log.d(TAG, "removing group name: " + entry.getKey() + " index: " + removedItemIndex);
+                if(removedItemIndex >= 0) {
+                    groupNamesMap.remove(entry.getKey());
+                    Log.d(TAG, "groupNamesMap size after removing entry: " + groupNamesMap.size());
+                    groupsAdapter.notifyItemRemoved(removedItemIndex);
+                }
+            }
         }
-
+        Log.d(TAG, "groupNamesMap size: " + groupNamesMap.size());
     }
 
     public void filterPowerListNames(ArrayList<Spell> displayedPowers){

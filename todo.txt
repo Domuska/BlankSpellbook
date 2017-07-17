@@ -52,6 +52,16 @@ mainactivityn alempaan toolbariin lisätään search & filtterit
 	https://github.com/google/guava#Android
 	
 	
+powerdetailsissa ei-muokattavissa tekstikentissä epic featissa on champion featin teksti
+
+kun tallennat uuden spellin (ainaki powers fragmenin kautta) ei ei-muokattavia kenttiä populoida tallennuksen jälkeen
+
+kun spelliä muokataan, ei spell_groups tauluun laiteta spellin nimeä sen id:n alle
+
+kun filtteri avataan niin pitäs laittaa onclicklisteneri niin että ku klikkaat filtterin ulkopuolelta filtterifragment suletaan
+
+powers fragmentissa ei väritetä color splotchia oikein jos power on alunperin ungrouped (?) tai ainakin välillä. Voi olla myös että kun lisätään uusi power ni se tallennetaan väärin tai jotain.
+	
 mieti powerdetailsin add to power listsiä
 	-kun power lisätään listalle, siitä tehdään kopio
 	-kun power lisätään daily listalle, ei tehdä kopiota
