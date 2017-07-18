@@ -52,10 +52,26 @@
   "spell_groups" : {
     "-KJFISOTESTI" : {
       "lvl 1" : {
-        "-KlsVjXz1r8_0_9njiVQ" : true
+        "-KlsVjXz1r8_0_9njiVQ" : {
+          "Breath of the  white wyrm" : true
+        }
       },
       "lvl 3" : {
-        "-KlsVlSuF6CPI6HoaG-E" : true
+        "-KlsVlSuF6CPI6HoaG-E" : {
+          "ahdin mahti" : true
+        }
+      }
+    },
+    "-Kjbt6C7TDjNsWCcxM-i" : {
+      "Ungrouped" : {
+        "-TESTI221" : {
+          "Abi zalim's hablibabli" : true
+        }
+      },
+      "lvl 2" : {
+        "-Kujfkojf7-21" : {
+          "Mind magic missile" : true
+        }
       }
     }
   },
@@ -70,6 +86,7 @@
     "-Kjbt6C7TDjNsWCcxM-i" : {
       "name" : "ukko",
       "spells" : {
+        "-Kujfkojf7-21" : true,
         "-TESTI221" : true
       }
     },
@@ -126,18 +143,18 @@
     },
     "-KlsVn94v2fIvDqXaObe" : {
       "adventurerFeat" : "kill gnomes instantly",
-      "attackRoll" : "d20 + Cha + level vs PD",
+      "attackRoll" : "d20 + dex vs AC",
       "castingTime" : "standard action",
       "championFeat" : "kill dorfs instantly",
       "epicFeat" : "this spell dont need feats",
       "groupName" : "lvl 534831",
-      "hitDamageOrEffect" : "lvl 1: 1d6+CHA \\n lvl 3: 3d6+CHA \\n This is a new line!",
+      "hitDamageOrEffect" : "maybe like.. 1d6.",
       "missDamage" : "5 per level",
       "name" : "puukko",
-      "playerNotes" : "Breath weapon! Roll 16+ at start of turn to use again. be ze white dorgan, baby! breath the ice! do it all!",
-      "rechargeTime" : "daily",
-      "target" : "1d2 nearby enemies in group",
-      "trigger" : "When enemy dares to be visible"
+      "playerNotes" : "Cyclic shit. Every other round do it!",
+      "rechargeTime" : "cyclic",
+      "target" : "ALL THE ENEMIES",
+      "trigger" : ""
     },
     "-KlsbH122rA1ECcdd0ae" : {
       "adventurerFeat" : "doesnt have really one",
@@ -164,13 +181,14 @@
       "missDamage" : "equal to level",
       "name" : "Mind magic missile",
       "playerNotes" : "This is homebrew. OP shit.",
+      "powerListId" : "-Kjbt6C7TDjNsWCcxM-i",
       "range" : "nearby or far away",
       "rechargeTime" : "at will",
-      "spellListId" : "-Kjbt6C7TDjNsWCcxM-i",
       "target" : "one"
     },
     "-TESTI221" : {
       "adventurerFeat" : "Do more damagez",
+      "groupName" : "Ungrouped",
       "name" : "Abi zalim's hablibabli",
       "powerListId" : "-Kjbt6C7TDjNsWCcxM-i"
     }

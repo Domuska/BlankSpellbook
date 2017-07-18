@@ -467,13 +467,13 @@ public class MainActivity extends ApplicationActivity
     }
 
     @Override
-    public void showFilteredPowerGroups(ArrayList<Spell> filteredPowers) {
-        filterFragment.filterGroupNames(filteredPowers);
+    public void showFilteredPowerGroups(ArrayList<String> displayedGroups) {
+        filterFragment.setDisplayedGroupNames(displayedGroups);
     }
 
     @Override
-    public void showFilteredPowerLists(ArrayList<Spell> filteredPowers) {
-        filterFragment.filterPowerListNames(filteredPowers);
+    public void showFilteredPowerLists(ArrayList<String> displayedPowerLists) {
+        filterFragment.setDisplayedPowerListNames(displayedPowerLists);
     }
 
     private void removeFilterFragment(){

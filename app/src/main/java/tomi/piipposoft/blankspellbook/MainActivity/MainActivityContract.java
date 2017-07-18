@@ -38,8 +38,8 @@ public interface MainActivityContract {
         //void givePowerListNamesForFilter(ArrayList<String> powerListNames);
         //void givePowerGroupNamesForFilter(ArrayList<String> powerGroupNames);
         void showFilteredPowers(ArrayList<Spell> filteredPowers);
-        void showFilteredPowerGroups(ArrayList<Spell> filteredPowers);
-        void showFilteredPowerLists(ArrayList<Spell> filteredPowers);
+        void showFilteredPowerGroups(ArrayList<String> filteredPowers);
+        void showFilteredPowerLists(ArrayList<String> filteredPowers);
     }
 
     interface UserActionListener{

@@ -117,6 +117,7 @@ public class MainActivityPresenter extends DrawerPresenter
         ArrayList<String> names = new ArrayList<>();
         for(Map.Entry<String, ArrayList<Spell>> groupName : powerGroupNamesMap.entrySet()){
             names.add(groupName.getKey());
+            Log.d(TAG, "getGroupNamesForFilter: group name " + groupName.getKey());
         }
         return names;
     }
@@ -212,18 +213,20 @@ public class MainActivityPresenter extends DrawerPresenter
                 list.add(power);
                 powerListNamesMap.put(powerListName, list);
             }
+            Log.d(TAG, "added power " + power.getName() + " with power list name " + powerListName);
         }
 
         //add the power's group name to the map for filtering later
         String groupName = power.getGroupName();
         if (groupName != null && !groupName.equals("")) {
             if (powerGroupNamesMap.containsKey(groupName))
-                powerGroupNamesMap.get(power.getGroupName()).add(power);
+                powerGroupNamesMap.get(groupName).add(power);
             else {
                 ArrayList<Spell> list = new ArrayList<>();
                 list.add(power);
                 powerGroupNamesMap.put(groupName, list);
             }
+            Log.d(TAG, "added power " + power.getName() + " with group name " + power.getGroupName());
         }
 
         mMainActivityView.addNewPowerToList(power, powerListName);
@@ -260,14 +263,19 @@ public class MainActivityPresenter extends DrawerPresenter
         Log.d(TAG, "filterGroupsAndPowersWithPowerListName: powerListName: " + powerListName);
         ArrayList<Spell> filteredPowers = powerListNamesMap.get(powerListName);
         Log.d(TAG, "filterGroupsAndPowersWithPowerListName: size of powers list: " + filteredPowers.size());
-        // TODO: 17.7.2017 something goes wrong in here when supplying powers to View, maybe at handleNewPower something is up? 
+        ArrayList<String> groupName = new ArrayList<>();
+        for(Spell power : filteredPowers){
+            groupName.add(power.getGroupName());
+        }
+        Log.d(TAG, "groups that should be shown: " + groupName);
+
         if(filteredPowers != null){
             /*ArrayList<Spell> filteredPowers = new ArrayList<>();
             for(Spell power : powers){
                 groupNames.add(power.getGroupName());
             }*/
             mMainActivityView.showFilteredPowers(filteredPowers);
-            mMainActivityView.showFilteredPowerGroups(filteredPowers);
+            mMainActivityView.showFilteredPowerGroups(groupName);
         }
         //tell View to show only spells that are under the power list
         //and to tell filterFragment to show groups that are under the power list
@@ -283,7 +291,7 @@ public class MainActivityPresenter extends DrawerPresenter
         // TODO: 17.7.2017 make a list of shown filtered powers that is further filtered here
         //so that we can apply both group name and power list name filters at same time
         mMainActivityView.showFilteredPowers(filteredPowers);
-        mMainActivityView.showFilteredPowerLists(filteredPowers);
+        //mMainActivityView.showFilteredPowerLists(filteredPowers);
 
         //see what power lists have a group with groupName
         //tell View to show only spells that have group with groupName

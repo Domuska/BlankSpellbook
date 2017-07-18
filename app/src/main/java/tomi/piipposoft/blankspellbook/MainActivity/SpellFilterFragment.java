@@ -1,6 +1,7 @@
 package tomi.piipposoft.blankspellbook.MainActivity;
 
 import android.os.Bundle;
+import android.support.annotation.BoolRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -13,7 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import tomi.piipposoft.blankspellbook.R;
@@ -33,6 +37,10 @@ public class SpellFilterFragment extends Fragment {
     private ArrayMap<String, Boolean> powerListNamesMap = new ArrayMap<>();
     private ArrayMap<String, Boolean> groupNamesMap = new ArrayMap<>();
 
+    //
+    private List<AbstractMap.SimpleEntry<String, Boolean>> powerListNamesMap2 = new ArrayList<>();
+    private List<AbstractMap.SimpleEntry<String, Boolean>> powerGroupNamesMap2 = new ArrayList<>();
+
     //lists for displaying the items that should be actually be visible in the list
     private ArrayList<String> displayedPowerListNames, displayedGroupNames;
 
@@ -50,12 +58,14 @@ public class SpellFilterFragment extends Fragment {
             displayedPowerListNames = getArguments().getStringArrayList(POWER_LIST_NAMES_BUNDLE);
             if(displayedGroupNames != null) {
                 for (String name : displayedGroupNames) {
-                    groupNamesMap.put(name, false);
+                    //groupNamesMap.put(name, false);
+                    powerGroupNamesMap2.add(createMapEntry(name, false));
                 }
             }
             if (displayedPowerListNames != null) {
                 for(String name : displayedPowerListNames){
                     powerListNamesMap.put(name, false);
+                    powerListNamesMap2.add(createMapEntry(name, false));
                 }
             }
         }
@@ -76,9 +86,6 @@ public class SpellFilterFragment extends Fragment {
         groupsAdapter = new FilterListAdapter(false);
         groupRecyclerView.setAdapter(groupsAdapter);
 
-        Log.d(TAG, "groupNamesMap size: " + groupNamesMap.size()
-                + " powerListNames map size: " + powerListNamesMap.size());
-
         return rootView;
     }
 
@@ -87,32 +94,42 @@ public class SpellFilterFragment extends Fragment {
     }
 
 
-    public void filterGroupNames(ArrayList<Spell> displayedPowers){
-        ArrayList<String> displayedGroupNames = new ArrayList<>();
-        for(Spell power : displayedPowers){
-            displayedGroupNames.add(power.getGroupName());
-        }
-        Log.d(TAG, "names that should be displayed: " + displayedGroupNames);
-
-        //iterate through the map entries
-        for(Map.Entry<String, Boolean> entry : groupNamesMap.entrySet()){
-            //if the key in entry (powerGroup's name) is not in the list of names that should be
-            //displayed, remove it from the map
-            if(!displayedGroupNames.contains(entry.getKey())) {
-                int removedItemIndex = groupNamesMap.indexOfKey(entry.getKey());
-                Log.d(TAG, "removing group name: " + entry.getKey() + " index: " + removedItemIndex);
-                if(removedItemIndex >= 0) {
-                    groupNamesMap.remove(entry.getKey());
-                    Log.d(TAG, "groupNamesMap size after removing entry: " + groupNamesMap.size());
-                    groupsAdapter.notifyItemRemoved(removedItemIndex);
-                }
+    /**
+     * Used for telling the fragment to update the list of group names visible in the list
+     * @param groupNames a list of group names that should be displayed
+     */
+    public void setDisplayedGroupNames(ArrayList<String> groupNames){
+        Log.d(TAG, "group names that should be displayed: " + groupNames);
+        //remove the
+        /*for(Iterator<AbstractMap.SimpleEntry<String, Boolean>> iterator
+                            = powerGroupNamesMap2.iterator(); iterator.hasNext();){
+            AbstractMap.SimpleEntry<String, Boolean> entry = iterator.next();
+            if(!groupNames.contains(entry.getKey()))
+                iterator.remove();
+        }*/
+        ArrayList<AbstractMap.SimpleEntry<String, Boolean>> temporaryList = new ArrayList<>();
+        //go through the new names and add them to temporary list
+        for(String name : groupNames){
+            AbstractMap.SimpleEntry<String, Boolean> entry = createMapEntry(name, true);
+            //if the group names list has elements that have been selected, remember the selections
+            if(powerGroupNamesMap2.contains(entry))
+                temporaryList.add(entry);
+            else {
+                entry.setValue(false);
+                temporaryList.add(entry);
             }
         }
-        Log.d(TAG, "groupNamesMap size: " + groupNamesMap.size());
+        powerGroupNamesMap2 = temporaryList;
+        groupsAdapter.notifyDataSetChanged();
     }
 
-    public void filterPowerListNames(ArrayList<Spell> displayedPowers){
+    public void setDisplayedPowerListNames(ArrayList<String> powerListNames){
         // TODO: 17.7.2017 do the same as above
+    }
+
+    //utility method for creating new entries for the group names and list names arrays
+    private AbstractMap.SimpleEntry<String, Boolean> createMapEntry(String left, Boolean right){
+        return new AbstractMap.SimpleEntry<>(left, right);
     }
 
     //https://developer.android.com/guide/components/fragments.html
@@ -150,23 +167,27 @@ public class SpellFilterFragment extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder holder, int position) {
+        public void onBindViewHolder(final ViewHolder holder, final int position) {
 
             final String rowText;
+            final int adapterPosition = holder.getAdapterPosition();
+            //adapter is for power list names
             if(isPowerListAdapter) {
-                rowText = displayedPowerListNames.get(position);
+                rowText = displayedPowerListNames.get(adapterPosition);
                 //holder recycles the rows, they might be incorrectly "selected"
                 holder.rowBackground.setSelected(powerListNamesMap.get(rowText));
             }
+            //adapter is for power group names
             else {
-                rowText = displayedGroupNames.get(position);
+                Log.d(TAG, "row: " + adapterPosition);
+                rowText = powerGroupNamesMap2.get(adapterPosition).getKey();
                 //holder recycles the rows, they might be incorrectly "selected"
-                holder.rowBackground.setSelected(groupNamesMap.get(rowText));
+                holder.rowBackground.setSelected(powerGroupNamesMap2.get(adapterPosition).getValue());
             }
             holder.rowText.setText(rowText);
 
             //color every other row with darker background
-            if(position % 2 == 1) {
+            if(adapterPosition % 2 == 1) {
                     holder.rowBackground.setBackground(ContextCompat.getDrawable(
                             getActivity(),
                             R.drawable.filter_row_background_dark
@@ -185,7 +206,8 @@ public class SpellFilterFragment extends Fragment {
                             //// TODO: 14.7.2017 remove the filtering
                         }
                         else {
-                            groupNamesMap.put(rowText, false);
+                            //groupNamesMap.put(rowText, false);
+                            powerGroupNamesMap2.get(adapterPosition).setValue(false);
                             //// TODO: 14.7.2017 remove the filtering
                         }
                     }
@@ -197,7 +219,8 @@ public class SpellFilterFragment extends Fragment {
                             mActionListener.filterGroupsAndPowersWithPowerListName(rowText);
                         }
                         else {
-                            groupNamesMap.put(rowText, true);
+                            //groupNamesMap.put(rowText, true);
+                            powerGroupNamesMap2.get(adapterPosition).setValue(true);
                             mActionListener.filterPowerListsAndPowersWithGroupName(rowText);
                         }
                     }
@@ -210,7 +233,7 @@ public class SpellFilterFragment extends Fragment {
             if(isPowerListAdapter)
                 return powerListNamesMap.size();
             else
-                return groupNamesMap.size();
+                return powerGroupNamesMap2.size();
         }
     }
 }
