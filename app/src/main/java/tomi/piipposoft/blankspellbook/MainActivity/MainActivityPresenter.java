@@ -290,13 +290,34 @@ public class MainActivityPresenter extends DrawerPresenter
 
         // TODO: 17.7.2017 make a list of shown filtered powers that is further filtered here
         //so that we can apply both group name and power list name filters at same time
-        mMainActivityView.showFilteredPowers(filteredPowers);
-        //mMainActivityView.showFilteredPowerLists(filteredPowers);
 
-        //see what power lists have a group with groupName
-        //tell View to show only spells that have group with groupName
-        //and to tell filterFragment to show power lists that have group with groupName
-
+        if(filteredPowers != null) {
+            //search in the power lists map the name of the power list this power belongs to
+            ArrayList<String> powerListNames = new ArrayList<>();
+            ArrayList<String> foundPowerListIds = new ArrayList<>();
+            //iterate through every power for every entry in the map that contains lists... Eh.
+            //Better than making a network call to get all the power list names and checking those?
+            for (Spell power : filteredPowers) {
+                //first check if we already have this power list id a list, no need to re-search the name
+                Log.d(TAG, "power " + power.getName() + " belongs to group with ID " + power.getPowerListId());
+                if (power.getPowerListId() != null && !foundPowerListIds.contains(power.getPowerListId())) {
+                    Log.d(TAG, "power list ID not list of found IDs");
+                    //if not, iterate the power list maps
+                    for (Map.Entry<String, ArrayList<Spell>> entry : powerListNamesMap.entrySet()) {
+                        String listName = entry.getKey();
+                        //the list has this power and the name of the list is not already in the known names list
+                        if (entry.getValue().contains(power) && !powerListNames.contains(listName)) {
+                            Log.d(TAG, "power found in list with name " + entry.getKey());
+                            powerListNames.add(listName);
+                            foundPowerListIds.add(power.getPowerListId());
+                        }
+                    }
+                }
+            }
+            Log.d(TAG, "power list names that should be shown: " + powerListNames);
+            mMainActivityView.showFilteredPowers(filteredPowers);
+            mMainActivityView.showFilteredPowerLists(powerListNames);
+        }
     }
 
 
