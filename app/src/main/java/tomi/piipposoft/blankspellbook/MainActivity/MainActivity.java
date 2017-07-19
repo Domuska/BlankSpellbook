@@ -412,6 +412,11 @@ public class MainActivity extends ApplicationActivity
     }
 
     @Override
+    public void setPowerListData(ArrayList<Spell> powers) {
+        pagerAdapter.setPowersData(powers);
+    }
+
+    @Override
     public void startPowerListActivity(String name, String id,
                                        View transitionOrigin, int powerListColor) {
         if (transitionOrigin != null){

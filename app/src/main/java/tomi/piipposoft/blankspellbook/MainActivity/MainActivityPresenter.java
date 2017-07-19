@@ -1,5 +1,6 @@
 package tomi.piipposoft.blankspellbook.MainActivity;
 
+import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.ArrayMap;
@@ -10,6 +11,7 @@ import android.view.View;
 import com.google.firebase.database.ChildEventListener;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map;
 
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
@@ -45,14 +47,19 @@ public class MainActivityPresenter extends DrawerPresenter
     private static ArrayMap<String, String> dailyPowerLists = new ArrayMap<>();
 
     //for storing the powers to handle filtering
-    private static ArrayList<Spell> displayedPowers = new ArrayList<>();
+    private static ArrayList<Spell> allPowers = new ArrayList<>();
+    private static ArrayList<Spell> displayedPowers;
     private static ArrayMap<String, ArrayList<Spell>> powerGroupNamesMap = new ArrayMap<>();
     private static ArrayMap<String, ArrayList<Spell>> powerListNamesMap = new ArrayMap<>();
+    private ArrayList<String> groupsSpellFilters = new ArrayList<>();
+    private ArrayList<String> powerListsSpellFilters = new ArrayList<>();
 
 
     public static final int DAILY_POWER_LISTS_SELECTED = 0;
     public static final int POWER_LISTS_SELECTED = 1;
     public static final int SPELLS_SELECTED = 2;
+
+
 
 
     private MainActivityPresenter(
@@ -202,7 +209,7 @@ public class MainActivityPresenter extends DrawerPresenter
         //Log.d(TAG, "got new power in handleNewPower: " + power.getName() + " with power list name: " + powerListName);
 
         //add power to a list of powers for filtering later
-        displayedPowers.add(power);
+        allPowers.add(power);
 
         if(powerListName != null) {
             //add the name of power list power is in to the map for filtering later
@@ -235,6 +242,51 @@ public class MainActivityPresenter extends DrawerPresenter
 
     public static void handlePowerRemoved(Spell power) {
         mMainActivityView.removePowerFromList(power);
+    }
+
+    //define the allowed values for filter categories
+    @IntDef({BY_GROUP_NAME, BY_POWER_LIST_NAME})
+    private @interface FilterType{}
+    private static final int BY_GROUP_NAME = 1;
+    private static final int BY_POWER_LIST_NAME = 2;
+    /**
+     * Private method for filtering the powers that should be displayed in View
+     * @param filterListName Name of the power list or group name that should be used as filter
+     * @param filterCategory BY_GROUP_NAME if filtering by group name, BY_POWER_LIST_NAME if filtering by power list name
+     */
+    private void filterDisplayedPowers(
+            @NonNull String filterListName, @FilterType int filterCategory){
+        if(displayedPowers == null)
+            displayedPowers = allPowers;
+
+        //save the groupName filter so we can restore the filtered list if needed
+
+        ArrayList<Spell> powersInList;
+        if(filterCategory == BY_GROUP_NAME) {
+            powersInList = powerGroupNamesMap.get(filterListName);
+            groupsSpellFilters.add(filterListName);
+        }
+        else if(filterCategory == BY_POWER_LIST_NAME) {
+            powersInList = powerListNamesMap.get(filterListName);
+            powerListsSpellFilters.add(filterListName);
+        }
+        else
+            throw new RuntimeException("Use either BY_GROUP_NAME or BY_POWER_LIST_NAME");
+
+
+        //remove the powers that are not in the list of powers with groupName
+        for(Iterator<Spell> iter = displayedPowers.iterator(); iter.hasNext();){
+            Spell power = iter.next();
+            if(!powersInList.contains(power)){
+                iter.remove();
+            }
+        }
+        Log.d(TAG, "powers that should be displayed:");
+        for(Spell power : displayedPowers){
+            Log.d(TAG, power.getName());
+        }
+        //mMainActivityView.showFilteredPowers(displayedPowers);
+        mMainActivityView.setPowerListData(displayedPowers);
     }
 
 
@@ -274,8 +326,9 @@ public class MainActivityPresenter extends DrawerPresenter
             for(Spell power : powers){
                 groupNames.add(power.getGroupName());
             }*/
-            mMainActivityView.showFilteredPowers(filteredPowers);
+            //mMainActivityView.showFilteredPowers(filteredPowers);
             mMainActivityView.showFilteredPowerGroups(groupName);
+            filterDisplayedPowers(powerListName, BY_POWER_LIST_NAME);
         }
         //tell View to show only spells that are under the power list
         //and to tell filterFragment to show groups that are under the power list
@@ -315,7 +368,8 @@ public class MainActivityPresenter extends DrawerPresenter
                 }
             }
             Log.d(TAG, "power list names that should be shown: " + powerListNames);
-            mMainActivityView.showFilteredPowers(filteredPowers);
+            //mMainActivityView.showFilteredPowers(filteredPowers);
+            filterDisplayedPowers(groupName, BY_GROUP_NAME);
             mMainActivityView.showFilteredPowerLists(powerListNames);
         }
     }

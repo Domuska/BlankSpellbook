@@ -8,6 +8,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 import android.view.ViewGroup;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 import tomi.piipposoft.blankspellbook.Utils.Spell;
 
 /**
@@ -216,6 +219,11 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
     void removeAllPowers(){
         if(powersFragment != null)
             powersFragment.removeAllPowers();
+    }
+
+    void setPowersData(ArrayList<Spell> powersData){
+        if(powersFragment != null)
+            powersFragment.setPowers(powersData);
     }
 
 }

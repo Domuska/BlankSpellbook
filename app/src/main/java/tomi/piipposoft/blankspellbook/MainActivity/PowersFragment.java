@@ -98,9 +98,16 @@ public class PowersFragment extends Fragment {
         adapter.notifyItemRangeRemoved(0, listSize);
     }
 
+    public void setPowers(ArrayList<Spell> powers) {
+        this.powers = powers;
+        adapter.notifyDataSetChanged();
+    }
+
     public void attachClickListener(MainActivityContract.FragmentUserActionListener fragmentListActionListener) {
         this.listener = fragmentListActionListener;
     }
+
+
 
     class PowerListAdapter extends RecyclerView.Adapter<PowerListAdapter.ViewHolder> {
 

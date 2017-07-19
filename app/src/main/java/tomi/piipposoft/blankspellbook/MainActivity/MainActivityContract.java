@@ -24,9 +24,10 @@ public interface MainActivityContract {
         void removeDailyPowerListData(String dailyPowerListName, String id);
         void addPowerNameToDailyPowerList(String powerName, String dailyPowerListId);
 
-        //add and remove data from powersFragment
+        //add, set and remove data from powersFragment
         void addNewPowerToList(Spell power, String powerListName);
         void removePowerFromList(Spell power);
+        void setPowerListData(ArrayList<Spell> powers);
 
         //for starting the activities when fragment elements are clicked
         void startPowerListActivity(String name, String id,
@@ -37,7 +38,6 @@ public interface MainActivityContract {
         //for showing, filtering and removing data from the filter fragment
         //void givePowerListNamesForFilter(ArrayList<String> powerListNames);
         //void givePowerGroupNamesForFilter(ArrayList<String> powerGroupNames);
-        void showFilteredPowers(ArrayList<Spell> filteredPowers);
         void showFilteredPowerGroups(ArrayList<String> filteredPowers);
         void showFilteredPowerLists(ArrayList<String> filteredPowers);
     }
