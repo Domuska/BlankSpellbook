@@ -466,12 +466,6 @@ public class MainActivity extends ApplicationActivity
     }
 
     @Override
-    public void showFilteredPowers(ArrayList<Spell> filteredPowers) {
-        //tell powersFragment to remove the powers not in the list
-        // TODO: 17.7.2017 finish
-    }
-
-    @Override
     public void showFilteredPowerGroups(ArrayList<String> displayedGroups) {
         filterFragment.setDisplayedGroupNames(displayedGroups);
     }

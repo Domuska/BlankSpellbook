@@ -54,6 +54,12 @@ public class MainActivityPresenter extends DrawerPresenter
     private ArrayList<String> groupsSpellFilters = new ArrayList<>();
     private ArrayList<String> powerListsSpellFilters = new ArrayList<>();
 
+    //define the allowed values for the spell filtering methods
+    @IntDef({BY_GROUP_NAME, BY_POWER_LIST_NAME})
+    private @interface FilterType{}
+    private static final int BY_GROUP_NAME = 1;
+    private static final int BY_POWER_LIST_NAME = 2;
+
 
     public static final int DAILY_POWER_LISTS_SELECTED = 0;
     public static final int POWER_LISTS_SELECTED = 1;
@@ -244,11 +250,7 @@ public class MainActivityPresenter extends DrawerPresenter
         mMainActivityView.removePowerFromList(power);
     }
 
-    //define the allowed values for filter categories
-    @IntDef({BY_GROUP_NAME, BY_POWER_LIST_NAME})
-    private @interface FilterType{}
-    private static final int BY_GROUP_NAME = 1;
-    private static final int BY_POWER_LIST_NAME = 2;
+
     /**
      * Private method for filtering the powers that should be displayed in View
      * @param filterListName Name of the power list or group name that should be used as filter
@@ -271,14 +273,14 @@ public class MainActivityPresenter extends DrawerPresenter
             powerListsSpellFilters.add(filterListName);
         }
         else
-            throw new RuntimeException("Use either BY_GROUP_NAME or BY_POWER_LIST_NAME");
+            throw new RuntimeException("Use either BY_GROUP_NAME or BY_POWER_LIST_NAME as filterType");
 
 
         //remove the powers that are not in the list of powers with groupName
-        for(Iterator<Spell> iter = displayedPowers.iterator(); iter.hasNext();){
-            Spell power = iter.next();
+        for(Iterator<Spell> iterator = displayedPowers.iterator(); iterator.hasNext();){
+            Spell power = iterator.next();
             if(!powersInList.contains(power)){
-                iter.remove();
+                iterator.remove();
             }
         }
         Log.d(TAG, "powers that should be displayed:");
@@ -289,6 +291,21 @@ public class MainActivityPresenter extends DrawerPresenter
         mMainActivityView.setPowerListData(displayedPowers);
     }
 
+
+    private void removeFilter(@NonNull String filterName, @FilterType int filterType){
+
+        if(filterType == BY_GROUP_NAME)
+            groupsSpellFilters.remove(filterName);
+        else if(filterType == BY_POWER_LIST_NAME)
+            powerListsSpellFilters.remove(filterName);
+        else
+            throw new RuntimeException("Use either BY_GROUP_NAME or BY_POWER_LIST_NAME as filterType");
+
+        displayedPowers = null;
+        // TODO: 19.7.2017 for loop to iterate through groupSpellFilters
+        // TODO: 19.7.2017 for loop to iterate through powerListSpellFilters
+        // TODO: 19.7.2017 set displayed powers
+    }
 
     //FROM MainActivityContract.FragmentUserActionListener
 
