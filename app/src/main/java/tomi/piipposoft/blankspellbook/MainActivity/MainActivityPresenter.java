@@ -118,6 +118,8 @@ public class MainActivityPresenter extends DrawerPresenter
         }
         powerGroupNamesMap = new ArrayMap<>();
         powerListNamesMap = new ArrayMap<>();
+        allPowers = new ArrayList<>();
+        displayedPowers = null;
     }
 
     @Override
@@ -266,20 +268,28 @@ public class MainActivityPresenter extends DrawerPresenter
         ArrayList<Spell> powersInList;
         if(filterCategory == BY_GROUP_NAME) {
             powersInList = powerGroupNamesMap.get(filterListName);
-            groupsSpellFilters.add(filterListName);
+            // TODO: 20.7.2017 remove this if when we actually restore filter state when resuming activity
+            if(!powerListsSpellFilters.contains(filterListName))
+                groupsSpellFilters.add(filterListName);
         }
         else if(filterCategory == BY_POWER_LIST_NAME) {
             powersInList = powerListNamesMap.get(filterListName);
-            powerListsSpellFilters.add(filterListName);
+            // TODO: 20.7.2017 remove this if when we actually restore filter state when resuming activity
+            if(!powerListsSpellFilters.contains(filterListName))
+                powerListsSpellFilters.add(filterListName);
         }
         else
             throw new RuntimeException("Use either BY_GROUP_NAME or BY_POWER_LIST_NAME as filterType");
 
 
-        //remove the powers that are not in the list of powers with groupName
+        //since we have a bad .equals method in spells, we need to check by power list ID aswell
+        String powerListId = powersInList.get(0).getPowerListId();
+        if (powerListId == null)
+            powerListId = "";
+        //remove the powers that are not in the list fetched earlier by the group or power list name
         for(Iterator<Spell> iterator = displayedPowers.iterator(); iterator.hasNext();){
             Spell power = iterator.next();
-            if(!powersInList.contains(power)){
+            if(!powersInList.contains(power) || !powerListId.equals(power.getPowerListId())){//!power.getPowerListId().equals(powerListId)){
                 iterator.remove();
             }
         }
