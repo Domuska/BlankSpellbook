@@ -40,6 +40,7 @@ public interface MainActivityContract {
         //void givePowerGroupNamesForFilter(ArrayList<String> powerGroupNames);
         void showFilteredPowerGroups(ArrayList<String> filteredPowers);
         void showFilteredPowerLists(ArrayList<String> filteredPowers);
+
     }
 
     interface UserActionListener{
@@ -66,6 +67,7 @@ public interface MainActivityContract {
     interface FilterFragmentUserActionListener{
         void filterGroupsAndPowersWithPowerListName(String powerListName);
         void filterPowerListsAndPowersWithGroupName(String groupName);
+        void removeFilter(String filterName, int filterType);
     }
 
     /**

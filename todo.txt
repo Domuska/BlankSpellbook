@@ -60,7 +60,11 @@ kun spelliä muokataan, ei spell_groups tauluun laiteta spellin nimeä sen id:n 
 
 kun filtteri avataan niin pitäs laittaa onclicklisteneri niin että ku klikkaat filtterin ulkopuolelta filtterifragment suletaan
 
-powers fragmentissa ei väritetä color splotchia oikein jos power on alunperin ungrouped (?) tai ainakin välillä. Voi olla myös että kun lisätään uusi power ni se tallennetaan väärin tai jotain.
+powers fragmentissa ei väritetä color splotchia oikein jos power on alunperin ungrouped (?) tai ainakin välillä. Voi olla myös että kun lisätään uusi power ni se tallennetaan väärin tai jotain
+
+tehdään settari joko settingseihin tai filtterifragmentiin jossa voi valita otetaanko cross-section vai join filttereillä (metodit molempia varten jo tehty)
+
+korjaa powers fragmentin lista - groupnamet, värisplotchit ja powerlistnamet on väärin ku tuloksia filtteröidään
 	
 mieti powerdetailsin add to power listsiä
 	-kun power lisätään listalle, siitä tehdään kopio

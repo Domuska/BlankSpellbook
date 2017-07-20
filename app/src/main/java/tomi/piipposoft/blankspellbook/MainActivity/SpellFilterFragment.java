@@ -221,12 +221,12 @@ public class SpellFilterFragment extends Fragment {
                         if(isPowerListAdapter) {
                             //powerListNamesMap.put(rowText, false);
                             powerListNamesMap2.get(adapterPosition).setValue(false);
-                            //// TODO: 14.7.2017 remove the filtering
+                            mActionListener.removeFilter(rowText, MainActivityPresenter.FILTER_BY_POWER_LIST_NAME);
                         }
                         else {
                             //groupNamesMap.put(rowText, false);
                             powerGroupNamesMap2.get(adapterPosition).setValue(false);
-                            //// TODO: 14.7.2017 remove the filtering
+                            mActionListener.removeFilter(rowText, MainActivityPresenter.FILTER_BY_GROUP_NAME);
                         }
                     }
                     //set the row as selected
