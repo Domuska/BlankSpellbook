@@ -269,7 +269,7 @@ public class MainActivityPresenter extends DrawerPresenter
         if(filterCategory == BY_GROUP_NAME) {
             powersInList = powerGroupNamesMap.get(filterListName);
             // TODO: 20.7.2017 remove this if when we actually restore filter state when resuming activity
-            if(!powerListsSpellFilters.contains(filterListName))
+            if(!groupsSpellFilters.contains(filterListName))
                 groupsSpellFilters.add(filterListName);
         }
         else if(filterCategory == BY_POWER_LIST_NAME) {
@@ -289,14 +289,12 @@ public class MainActivityPresenter extends DrawerPresenter
         //remove the powers that are not in the list fetched earlier by the group or power list name
         for(Iterator<Spell> iterator = displayedPowers.iterator(); iterator.hasNext();){
             Spell power = iterator.next();
-            if(!powersInList.contains(power) || !powerListId.equals(power.getPowerListId())){//!power.getPowerListId().equals(powerListId)){
+            if(!powersInList.contains(power) ||
+                    (filterCategory == BY_POWER_LIST_NAME && !powerListId.equals(power.getPowerListId()))){
                 iterator.remove();
             }
         }
-        Log.d(TAG, "powers that should be displayed:");
-        for(Spell power : displayedPowers){
-            Log.d(TAG, power.getName());
-        }
+
         //mMainActivityView.showFilteredPowers(displayedPowers);
         mMainActivityView.setPowerListData(displayedPowers);
     }
