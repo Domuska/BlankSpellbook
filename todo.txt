@@ -64,7 +64,9 @@ powers fragmentissa ei väritetä color splotchia oikein jos power on alunperin 
 
 tehdään settari joko settingseihin tai filtterifragmentiin jossa voi valita otetaanko cross-section vai join filttereillä (metodit molempia varten jo tehty)
 
-korjaa powers fragmentin lista - groupnamet, värisplotchit ja powerlistnamet on väärin ku tuloksia filtteröidään
+
+korjaa apin kaatuminen kun se stopataan(?) ja filttereitä on päällä ja niitä koitetaan laittaa pois. Varmaan korjaantuu
+kun onSavessa tallennetaan tila ja palautetaan onResumessa.
 	
 mieti powerdetailsin add to power listsiä
 	-kun power lisätään listalle, siitä tehdään kopio

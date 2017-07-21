@@ -92,6 +92,8 @@ public class SpellFilterFragment extends Fragment {
         return rootView;
     }
 
+
+
     public void attachActionListener(MainActivityContract.FilterFragmentUserActionListener listener){
         mActionListener = listener;
     }

@@ -117,8 +117,6 @@ public class PowersFragment extends Fragment {
 
 
     class PowerListAdapter extends RecyclerView.Adapter<PowerListAdapter.ViewHolder> {
-
-
         class ViewHolder extends RecyclerView.ViewHolder {
 
             TextView powerName, powerListName, groupName;
@@ -133,7 +131,6 @@ public class PowersFragment extends Fragment {
                 parentView = v;
             }
         }
-
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

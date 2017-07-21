@@ -85,10 +85,10 @@ public class MainActivity extends ApplicationActivity
         }
 
         secondaryToolbarText = findViewById(R.id.toolar_secondary_text);
-
         //set the support library's toolbar as application toolbar
         Toolbar toolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
+
     }
 
 
@@ -128,7 +128,7 @@ public class MainActivity extends ApplicationActivity
         //if this is smaller, the fragments are re-created and data needs to be re-fetched
         viewPager.setOffscreenPageLimit(2);
 
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        final ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -145,6 +145,7 @@ public class MainActivity extends ApplicationActivity
                             secondaryToolbarTools.setVisibility(View.GONE);
                         //tell presenter which page was switched to
                         mActionlistener.userSwitchedTo(MainActivityPresenter.DAILY_POWER_LISTS_SELECTED);
+                        removeFilterFragment();
                         break;
 
                     case MainActivityPresenter.POWER_LISTS_SELECTED:
@@ -152,6 +153,7 @@ public class MainActivity extends ApplicationActivity
                         if (secondaryToolbarTools != null)
                             secondaryToolbarTools.setVisibility(View.GONE);
                         mActionlistener.userSwitchedTo(MainActivityPresenter.POWER_LISTS_SELECTED);
+                        removeFilterFragment();
                         break;
 
                     case MainActivityPresenter.SPELLS_SELECTED:
@@ -177,7 +179,8 @@ public class MainActivity extends ApplicationActivity
             public void onPageScrollStateChanged(int state) {
 
             }
-        });
+        };
+        viewPager.addOnPageChangeListener(onPageChangeListener);
 
         if(this.drawerActionListener == null) {
             this.drawerActionListener = (DrawerContract.UserActionListener) mActionlistener;
@@ -202,8 +205,16 @@ public class MainActivity extends ApplicationActivity
         // Make the drawer initialize itself
         this.drawerActionListener.powerListProfileSelected();
         mActionlistener.resumeActivity();
+
         //set the list that was previously selected
         viewPager.setCurrentItem(currentlySelectedList);
+        //make sure the onPageChangeListener is called after fragments are ready so UI for the fragment is initialized
+        viewPager.post(new Runnable() {
+            @Override
+            public void run() {
+                onPageChangeListener.onPageSelected(viewPager.getCurrentItem());
+            }
+        });
         //set fab onclicklistener and possible icon
         setFabFunctionality(currentlySelectedList);
         mActionlistener.userSwitchedTo(currentlySelectedList);
@@ -302,7 +313,6 @@ public class MainActivity extends ApplicationActivity
         }
         return super.onKeyDown(keyCode, event);
     }
-
 
     //click listeners for the FAB
     private class OnNewDailyPowerListClickListener implements View.OnClickListener{
@@ -477,11 +487,13 @@ public class MainActivity extends ApplicationActivity
 
     private void removeFilterFragment(){
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.setCustomAnimations(R.anim.filter_fragment_slide_in, R.anim.filter_fragment_slide_out);
-        transaction.remove(filterFragment);
-        transaction.commit();
-        filterFragment = null;
+        if(fragmentManager.findFragmentByTag(FILTER_FRAGMENT_TAG) != null) {
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.setCustomAnimations(R.anim.filter_fragment_slide_in, R.anim.filter_fragment_slide_out);
+            transaction.remove(filterFragment);
+            transaction.commit();
+            filterFragment = null;
+        }
     }
 
     /**
