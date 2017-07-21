@@ -466,7 +466,7 @@ public class MainActivity extends ApplicationActivity
     }
 
     @Override
-    public void showFilteredPowerGroups(ArrayList<String> displayedGroups) {
+    public void showFilteredGroups(ArrayList<String> displayedGroups) {
         filterFragment.setDisplayedGroupNames(displayedGroups);
     }
 
@@ -504,8 +504,12 @@ public class MainActivity extends ApplicationActivity
                 Bundle bundle = new Bundle();
                 bundle.putStringArrayList(SpellFilterFragment.GROUP_NAMES_BUNDLE,
                         mActionlistener.getGroupNamesForFilter());
+                bundle.putStringArrayList(SpellFilterFragment.GROUP_NAMES_SELECTED_BUNDLE,
+                        mActionlistener.getSelectedGroupsForFilter());
                 bundle.putStringArrayList(SpellFilterFragment.POWER_LIST_NAMES_BUNDLE,
                         mActionlistener.getPowerListNamesForFilter());
+                bundle.putStringArrayList(SpellFilterFragment.POWER_LIST_NAMES_SELECTED_BUNDLE,
+                        mActionlistener.getSelectedPowerListsForFilter());
                 filterFragment.setArguments(bundle);
                 //add the fragment and tag so we can find the fragment later
                 transaction.add(R.id.fragmentFrameLayout, filterFragment, FILTER_FRAGMENT_TAG);

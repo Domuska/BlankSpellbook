@@ -55,16 +55,24 @@ public class MainActivityPresenter extends DrawerPresenter
     //for storing the powers to handle filtering
     private static ArrayList<Spell> allPowers = new ArrayList<>();
     private static ArrayList<Spell> displayedPowers;
+
+    //for storing which powers are under which power list or power group
     private static ArrayMap<String, ArrayList<Spell>> powerGroupNamesMap = new ArrayMap<>();
     private static ArrayMap<String, ArrayList<Spell>> powerListNamesMap = new ArrayMap<>();
+
+    //selected group names and power list names, needed when removing a filter to re-calculate shown powers
     private ArrayList<String> groupsSpellFilters = new ArrayList<>();
     private ArrayList<String> powerListsSpellFilters = new ArrayList<>();
 
+    //for storing the currently displayed power list names and group names
+    private ArrayList<String> displayedGroupNames;
+    private ArrayList<String> displayedPowerListNames;
+
     //define the allowed values for the spell filtering methods
     @IntDef({FILTER_BY_GROUP_NAME, FILTER_BY_POWER_LIST_NAME})
-    public @interface FilterType{}
-    public static final int FILTER_BY_GROUP_NAME = 1;
-    public static final int FILTER_BY_POWER_LIST_NAME = 2;
+    @interface FilterType{}
+    static final int FILTER_BY_GROUP_NAME = 1;
+    static final int FILTER_BY_POWER_LIST_NAME = 2;
 
     //boolean for whether we take cross-section or join when filtering powers in powersFragment
     private boolean filterByCrossSection;
@@ -78,6 +86,7 @@ public class MainActivityPresenter extends DrawerPresenter
         //get filter type user has set in settings
         filterByCrossSection =
                 SharedPreferencesHandler.getFilterSPellByCrossSection((Activity)mainActivityView);
+
     }
 
 
@@ -133,26 +142,35 @@ public class MainActivityPresenter extends DrawerPresenter
 
     @Override
     public ArrayList<String> getGroupNamesForFilter() {
-        ArrayList<String> names = new ArrayList<>();
-        for(Map.Entry<String, ArrayList<Spell>> groupName : powerGroupNamesMap.entrySet()){
-            names.add(groupName.getKey());
-            Log.d(TAG, "getGroupNamesForFilter: group name " + groupName.getKey());
+        if(displayedGroupNames == null) {
+            displayedGroupNames = new ArrayList<>();
+            for (Map.Entry<String, ArrayList<Spell>> groupName : powerGroupNamesMap.entrySet()) {
+                displayedGroupNames.add(groupName.getKey());
+                Log.d(TAG, "getGroupNamesForFilter: group name " + groupName.getKey());
+            }
         }
-        return names;
+        return displayedGroupNames;
+    }
+
+    @Override
+    public ArrayList<String> getSelectedGroupsForFilter() {
+        return groupsSpellFilters;
     }
 
     @Override
     public ArrayList<String> getPowerListNamesForFilter() {
-        /*ArrayList<String> list = new ArrayList<>();
-        for(int i = 50; i < 100; i++){
-            list.add(i + "");
+        if(displayedPowerListNames == null) {
+            displayedPowerListNames = new ArrayList<>();
+            for(Map.Entry<String, ArrayList<Spell>> groupName : powerListNamesMap.entrySet()){
+                displayedPowerListNames.add(groupName.getKey());
+            }
         }
-        return list;*/
-        ArrayList<String> names = new ArrayList<>();
-        for(Map.Entry<String, ArrayList<Spell>> groupName : powerListNamesMap.entrySet()){
-            names.add(groupName.getKey());
-        }
-        return names;
+        return displayedPowerListNames;
+    }
+
+    @Override
+    public ArrayList<String> getSelectedPowerListsForFilter() {
+        return powerListsSpellFilters;
     }
 
     /**
@@ -362,26 +380,36 @@ public class MainActivityPresenter extends DrawerPresenter
 
         displayedPowers.clear();
         displayedPowers.addAll(allPowers);
+        displayedGroupNames = null;
+        displayedGroupNames = getGroupNamesForFilter();
+        displayedPowerListNames = null;
+        displayedPowerListNames = getPowerListNamesForFilter();
 
         //re-calculate the powers that should be shown by applying all filters again. Might be not too optimal.
-        if(filterByCrossSection) {
+        if(groupsSpellFilters.size() > 0) {
             for (String filter : groupsSpellFilters) {
-                filterDisplayedPowersCrossSection(filter, FILTER_BY_GROUP_NAME);
-            }
-            for(String filter: powerListsSpellFilters){
-                filterDisplayedPowersCrossSection(filter, FILTER_BY_POWER_LIST_NAME);
+                //filterDisplayedPowersCrossSection(filter, FILTER_BY_GROUP_NAME);
+                filterPowerListsAndPowersWithGroupName(filter);
             }
         }
-        else{
-            for(String filter: groupsSpellFilters){
-                filterDisplayedPowersJoin(filter, FILTER_BY_GROUP_NAME);
-            }
-            for(String filter: powerListsSpellFilters){
-                filterDisplayedPowersJoin(filter, FILTER_BY_POWER_LIST_NAME);
-            }
-        }
+        else
+            mMainActivityView.showFilteredPowerLists(displayedPowerListNames);
 
-        mMainActivityView.setPowerListData(displayedPowers);
+        //if we have filters, apply them and let the method tell mainActivity to show data
+        if(powerListsSpellFilters.size() > 0) {
+            for (String filter : powerListsSpellFilters) {
+                //filterDisplayedPowersCrossSection(filter, FILTER_BY_POWER_LIST_NAME);
+                filterGroupsAndPowersWithPowerListName(filter);
+            }
+        }
+        //otherwise just show the unfiltered groups
+        else
+            mMainActivityView.showFilteredGroups(displayedGroupNames);
+
+        //if both filters are empty, show all the powers in the list anyway
+        if(groupsSpellFilters.size() < 1 && powerListsSpellFilters.size() < 1)
+            mMainActivityView.setPowerListData(displayedPowers);
+
     }
 
     //FROM MainActivityContract.FragmentUserActionListener
@@ -406,29 +434,24 @@ public class MainActivityPresenter extends DrawerPresenter
     @Override
     public void filterGroupsAndPowersWithPowerListName(@NonNull String powerListName) {
         //see what groups are under a power list
-        Log.d(TAG, "filterGroupsAndPowersWithPowerListName: powerListName: " + powerListName);
         ArrayList<Spell> filteredPowers = powerListNamesMap.get(powerListName);
         Log.d(TAG, "filterGroupsAndPowersWithPowerListName: size of powers list: " + filteredPowers.size());
-        ArrayList<String> groupName = new ArrayList<>();
+        ArrayList<String> groupNames = new ArrayList<>();
         for(Spell power : filteredPowers){
-            groupName.add(power.getGroupName());
+            groupNames.add(power.getGroupName());
         }
-        Log.d(TAG, "groups that should be shown: " + groupName);
 
-        if(filteredPowers != null){
-            /*ArrayList<Spell> filteredPowers = new ArrayList<>();
-            for(Spell power : powers){
-                groupNames.add(power.getGroupName());
-            }*/
-            //mMainActivityView.showFilteredPowers(filteredPowers);
-            mMainActivityView.showFilteredPowerGroups(groupName);
-            if(filterByCrossSection)
-                filterDisplayedPowersCrossSection(powerListName, FILTER_BY_POWER_LIST_NAME);
-            else
-                filterDisplayedPowersJoin(powerListName, FILTER_BY_POWER_LIST_NAME);
+        //check if the new group names are also in the list of currently displayed group names (take cross-section)
+        for(Iterator<String> iterator = displayedGroupNames.iterator(); iterator.hasNext();){
+            String groupName = iterator.next();
+            if(!groupNames.contains(groupName))
+                iterator.remove();
         }
-        //tell View to show only spells that are under the power list
-        //and to tell filterFragment to show groups that are under the power list
+        mMainActivityView.showFilteredGroups(displayedGroupNames);
+        if(filterByCrossSection)
+            filterDisplayedPowersCrossSection(powerListName, FILTER_BY_POWER_LIST_NAME);
+        else
+            filterDisplayedPowersJoin(powerListName, FILTER_BY_POWER_LIST_NAME);
     }
 
     @Override
@@ -438,10 +461,15 @@ public class MainActivityPresenter extends DrawerPresenter
         ArrayList<Spell> filteredPowers = powerGroupNamesMap.get(groupName);
         Log.d(TAG, "filterPowerListsAndPowersWithGroupName: size of powers list: " + filteredPowers.size());
 
-        // TODO: 17.7.2017 make a list of shown filtered powers that is further filtered here
-        //so that we can apply both group name and power list name filters at same time
+        for(Iterator<String> iterator = displayedPowerListNames.iterator(); iterator.hasNext();){
+            String powerListName = iterator.next();
+            if(!displayedPowerListNames.contains(powerListName))
+                iterator.remove();
+        }
 
         if(filteredPowers != null) {
+            //first remove from list powers that don't satisfy the current power list name filters
+
             //search in the power lists map the name of the power list this power belongs to
             ArrayList<String> powerListNames = new ArrayList<>();
             ArrayList<String> foundPowerListIds = new ArrayList<>();
@@ -464,8 +492,13 @@ public class MainActivityPresenter extends DrawerPresenter
                     }
                 }
             }
-            Log.d(TAG, "power list names that should be shown: " + powerListNames);
-            //mMainActivityView.showFilteredPowers(filteredPowers);
+
+            /*for(Iterator<String> iterator = displayedPowerListNames.iterator(); iterator.hasNext();){
+                String powerListName = iterator.next();
+                if(!powerListNames.contains(powerListName))
+                    iterator.remove();
+            }*/
+
             if(filterByCrossSection)
                 filterDisplayedPowersCrossSection(groupName, FILTER_BY_GROUP_NAME);
             else

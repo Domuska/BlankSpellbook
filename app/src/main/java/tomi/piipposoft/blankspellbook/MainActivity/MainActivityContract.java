@@ -38,9 +38,8 @@ public interface MainActivityContract {
         //for showing, filtering and removing data from the filter fragment
         //void givePowerListNamesForFilter(ArrayList<String> powerListNames);
         //void givePowerGroupNamesForFilter(ArrayList<String> powerGroupNames);
-        void showFilteredPowerGroups(ArrayList<String> filteredPowers);
+        void showFilteredGroups(ArrayList<String> filteredPowers);
         void showFilteredPowerLists(ArrayList<String> filteredPowers);
-
     }
 
     interface UserActionListener{
@@ -48,9 +47,14 @@ public interface MainActivityContract {
         void pauseActivity();
         void userSwitchedTo(int selectedList);
         ArrayList<String> getGroupNamesForFilter();
+        ArrayList<String> getSelectedGroupsForFilter();
         ArrayList<String> getPowerListNamesForFilter();
+        ArrayList<String> getSelectedPowerListsForFilter();
     }
 
+    /**
+     * Interface for communication between PowersFragment/RecyclerListFragment and presenter
+     */
     interface FragmentUserActionListener {
         /**
          * Fragment telling presenter that user has clicked on a power list item
@@ -64,6 +68,9 @@ public interface MainActivityContract {
         void onPowerClicked(String powerId, String powerListId, android.view.View originView);
     }
 
+    /**
+     * Interface for communication between presenter and SpellFilterFragment
+     */
     interface FilterFragmentUserActionListener{
         void filterGroupsAndPowersWithPowerListName(String powerListName);
         void filterPowerListsAndPowersWithGroupName(String groupName);
