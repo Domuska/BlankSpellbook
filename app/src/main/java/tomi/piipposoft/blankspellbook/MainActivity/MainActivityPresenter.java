@@ -250,7 +250,18 @@ public class MainActivityPresenter extends DrawerPresenter
                 list.add(power);
                 powerListNamesMap.put(powerListName, list);
             }
+            /*not sure if powerlistname should be set at all. Maybe re-work so
+             we can just use the .equals method properly? This comes as a problem with the
+             "poor" .equals method in in filterDisplayedPowersCrossSection & filterDisplayedPowersJoin.
+             As it is, in those methods we need to do convoluted for-loops to get the power list name
+             from the powerListNamesMap.
+             Another solution might be that we re-work the map so we store spell-powerlistname instead
+             of what we do now. This might even be a better idea.*/
+            power.setPowerListName(powerListName);
             Log.d(TAG, "added power " + power.getName() + " with power list name " + powerListName);
+        }
+        else{
+            power.setPowerListName("");
         }
 
         //add the power's group name to the map for filtering later
@@ -307,7 +318,6 @@ public class MainActivityPresenter extends DrawerPresenter
         else
             throw new RuntimeException("Use either FILTER_BY_GROUP_NAME or FILTER_BY_POWER_LIST_NAME as filterType");
 
-
         //since we have a bad .equals method in spells, we need to check by power list ID aswell
         String powerListId = powersInList.get(0).getPowerListId();
         if (powerListId == null)
@@ -319,9 +329,21 @@ public class MainActivityPresenter extends DrawerPresenter
                     (filterCategory == FILTER_BY_POWER_LIST_NAME && !powerListId.equals(power.getPowerListId()))){
                 iterator.remove();
             }
+            //get the power list name... Three layers of for loops? Eh..
+            /*for (Map.Entry<String, ArrayList<Spell>> entry : powerListNamesMap.entrySet()) {
+                String listName = entry.getKey();
+                for(Spell power2 : entry.getValue()){
+                    if(entry.getValue().contains(power) && power.getPowerListId().equals(power2.getPowerListId()))
+                        powersForMainActivity.put(power, listName);
+                }
+            }*/
         }
-        allPowers.size();
-        //mMainActivityView.showFilteredPowers(displayedPowers);
+
+        /*ArrayMap<Spell, String> powersForMainActivity = new ArrayMap<>();
+        for(Spell power : displayedPowers){
+            powersForMainActivity.put(power, power.getPowerListName());
+        }*/
+
         mMainActivityView.setPowerListData(displayedPowers);
     }
 
@@ -362,6 +384,7 @@ public class MainActivityPresenter extends DrawerPresenter
                     iterator.remove();
             }
         }
+
 
         displayedPowers.addAll(powersInList);
         mMainActivityView.setPowerListData(displayedPowers);

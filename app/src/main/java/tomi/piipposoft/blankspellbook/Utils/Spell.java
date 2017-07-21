@@ -26,6 +26,9 @@ public class Spell {
     private String epicFeat;
     private String trigger;
 
+    //powerListName for MainActivity, should never be saved to database
+    private String powerListName;
+
     private String powerListId;
     private HashMap<String, Boolean> dailyPowerLists;
 
@@ -190,6 +193,14 @@ public class Spell {
 
     public void setDailyPowerLists(HashMap<String, Boolean> dailypowerLists) {
         this.dailyPowerLists = dailypowerLists;
+    }
+
+    public String getPowerListName() {
+        return powerListName;
+    }
+
+    public void setPowerListName(String powerListName) {
+        this.powerListName = powerListName;
     }
 
     /**

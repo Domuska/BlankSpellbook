@@ -54,11 +54,8 @@ public class PowersFragment extends Fragment {
         View rootView = inflater.inflate(
                 R.layout.fragment_main_activity_powers, container, false);
 
-        //Bundle args = getArguments();
-        //Log.d(TAG, "got args: " + args.getString("key"));
-
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.main_activity_powers_recyclerview);
-        progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+        recyclerView = rootView.findViewById(R.id.main_activity_powers_recyclerview);
+        progressBar = rootView.findViewById(R.id.progressBar);
         adapter = new PowerListAdapter();
         recyclerView.setAdapter(adapter);
 
@@ -100,6 +97,16 @@ public class PowersFragment extends Fragment {
 
     public void setPowers(ArrayList<Spell> powers) {
         this.powers = powers;
+        this.powerListNames.clear();
+        for(Spell power : powers){
+            String powerListName = power.getPowerListName();
+            if(powerListName != null)
+                powerListNames.add(power.getPowerListName());
+            else {
+                throw new RuntimeException("error at setPowers, powerListName is null! " +
+                        "Power in question: " + power.getName() + " ID: " + power.getSpellId());
+            }
+        }
         adapter.notifyDataSetChanged();
     }
 
@@ -119,9 +126,9 @@ public class PowersFragment extends Fragment {
 
             ViewHolder(View v){
                 super(v);
-                powerName = (TextView) v.findViewById(R.id.power_name);
-                powerListName = (TextView) v.findViewById(R.id.power_list_name);
-                groupName = (TextView) v.findViewById(R.id.power_group_name);
+                powerName = v.findViewById(R.id.power_name);
+                powerListName = v.findViewById(R.id.power_list_name);
+                groupName = v.findViewById(R.id.power_group_name);
                 splotchView = v.findViewById(R.id.splotchView);
                 parentView = v;
             }
