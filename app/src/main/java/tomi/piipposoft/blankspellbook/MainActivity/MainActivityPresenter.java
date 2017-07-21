@@ -493,18 +493,19 @@ public class MainActivityPresenter extends DrawerPresenter
                 }
             }
 
-            /*for(Iterator<String> iterator = displayedPowerListNames.iterator(); iterator.hasNext();){
+            //remove from displayedPowers the names that shouldn't be visible any more
+            for(Iterator<String> iterator = displayedPowerListNames.iterator(); iterator.hasNext();){
                 String powerListName = iterator.next();
                 if(!powerListNames.contains(powerListName))
                     iterator.remove();
-            }*/
+            }
 
             if(filterByCrossSection)
                 filterDisplayedPowersCrossSection(groupName, FILTER_BY_GROUP_NAME);
             else
                 filterDisplayedPowersJoin(groupName, FILTER_BY_GROUP_NAME);
 
-            mMainActivityView.showFilteredPowerLists(powerListNames);
+            mMainActivityView.showFilteredPowerLists(displayedPowerListNames);
         }
     }
 
