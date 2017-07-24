@@ -402,57 +402,38 @@ public class MainActivityPresenter extends DrawerPresenter
         else
             throw new RuntimeException("Use either FILTER_BY_GROUP_NAME or FILTER_BY_POWER_LIST_NAME as filterType");
 
+        //remove all powers from the list since we apply the filters again
         displayedPowers.clear();
         //filtering by cross-section will remove powers that should not be displayed,
         //while filtering by joining will add more powers to the list, so for the joining
         //function to work properly we will need an empty list to start with
         if(filterByCrossSection )
             displayedPowers.addAll(allPowers);
+
+        //get the group and power list names again, they will be filtered later on again
         displayedGroupNames = null;
         displayedGroupNames = getGroupNamesForFilter();
         displayedPowerListNames = null;
         displayedPowerListNames = getPowerListNamesForFilter();
 
         if(groupsSpellFilters.size() > 0 || powerListsSpellFilters.size() > 0){
+            //apply the filters again
             for (String filter : groupsSpellFilters) {
-                //filterDisplayedPowersCrossSection(filter, FILTER_BY_GROUP_NAME);
                 filterPowerListsAndPowersWithGroupName(filter);
             }
 
             for (String filter : powerListsSpellFilters) {
-                //filterDisplayedPowersCrossSection(filter, FILTER_BY_POWER_LIST_NAME);
                 filterGroupsAndPowersWithPowerListName(filter);
             }
-
-            mMainActivityView.showFilteredPowerLists(displayedPowerListNames);
-            mMainActivityView.showFilteredGroups(displayedGroupNames);
         }
         else{
+            //if filtering by join, we need to add all the powers to the list (since they were not added earlier)
             if(!filterByCrossSection)
                 displayedPowers.addAll(allPowers);
-            //mMainActivityView.showFilteredGroups(displayedPowers);
         }
-
-        /*//re-calculate the powers that should be shown by applying all filters again. Might be not too optimal.
-        if(groupsSpellFilters.size() > 0) {
-            for (String filter : groupsSpellFilters) {
-                //filterDisplayedPowersCrossSection(filter, FILTER_BY_GROUP_NAME);
-                filterPowerListsAndPowersWithGroupName(filter);
-            }
-        }
-        else
-            mMainActivityView.showFilteredPowerLists(displayedPowerListNames);
-
-        //if we have filters, apply them and let the method tell mainActivity to show data
-        if(powerListsSpellFilters.size() > 0) {
-            for (String filter : powerListsSpellFilters) {
-                //filterDisplayedPowersCrossSection(filter, FILTER_BY_POWER_LIST_NAME);
-                filterGroupsAndPowersWithPowerListName(filter);
-            }
-        }
-        //otherwise just show the unfiltered groups
-        else
-            mMainActivityView.showFilteredGroups(displayedGroupNames);*/
+        //show the power list names and group names in the fragment
+        mMainActivityView.showFilteredPowerLists(displayedPowerListNames);
+        mMainActivityView.showFilteredGroups(displayedGroupNames);
 
         //if both filters are empty, show all the powers in the list anyway
         if(groupsSpellFilters.size() < 1 && powerListsSpellFilters.size() < 1) {
