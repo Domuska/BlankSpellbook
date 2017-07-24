@@ -100,4 +100,13 @@
     <!-- activity transition strings -->
     <string name="transition_powerlist_name">powerListTransition</string>
     <string name="transition_powerDetails_name">powerDetailsNameTransition</string>
+
+
+    <!-- preferences -->
+    <string name="title_preferences_activity">Preferences</string>
+    <string name="preferences_filter_category">Settings for power list filters</string>
+    <string name="preferences_filter_by_cross_section">myPreferencesFilterByCrossSection</string>
+    <string name="preferences_filter_by_cross_section_title">Filter powers by cross section</string>
+    <string name="preferences_filter_by_cross_section_summary">Toggle on to show powers that satisfy both of the filters. Toggle off to show powers that satisfy any of the filters.</string>
+
 </resources>

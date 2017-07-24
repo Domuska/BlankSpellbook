@@ -86,4 +86,8 @@ public interface MainActivityContract {
         void onPowerListFragmentCreated();
         void onPowersFragmentCreated();
     }
+
+    interface preferencesInterface{
+        void filterStyleChanged(boolean newValue);
+    }
 }

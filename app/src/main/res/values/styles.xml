@@ -30,5 +30,11 @@
     <style name="textInputLayoutEditTextMedium" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textColor">?android:textColorPrimaryInverse</item>
     </style>
+
+
+    <!-- custom theme so we get proper text colours in settings -->
+    <style name="SettingsFragmentStyle">
+        <item name="android:textColor">?android:textColorPrimaryInverse</item>
+    </style>
     
 </resources>

@@ -2,6 +2,7 @@ package tomi.piipposoft.blankspellbook.MainActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -30,6 +31,7 @@ import tomi.piipposoft.blankspellbook.Drawer.SetPowerListNameDialog;
 import tomi.piipposoft.blankspellbook.PowerDetails.PowerDetailsActivity;
 import tomi.piipposoft.blankspellbook.PowerList.PowerListActivity;
 import tomi.piipposoft.blankspellbook.R;
+import tomi.piipposoft.blankspellbook.SettingsActivity;
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerContract;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerHelper;
@@ -42,7 +44,8 @@ import tomi.piipposoft.blankspellbook.Utils.Spell;
  */
 
 public class MainActivity extends ApplicationActivity
-        implements MainActivityContract.View{
+        implements MainActivityContract.View,
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     private final String DATABASE_PERSISTANCE_SET_KEY = "databasePersistanceSet";
     private final String TAG = "MainActivity";
@@ -218,6 +221,7 @@ public class MainActivity extends ApplicationActivity
         //set fab onclicklistener and possible icon
         setFabFunctionality(currentlySelectedList);
         mActionlistener.userSwitchedTo(currentlySelectedList);
+        setPresenterFilterMode();
     }
 
     /**
@@ -227,7 +231,12 @@ public class MainActivity extends ApplicationActivity
         secondaryToolbarTools = ((ViewStub) findViewById(R.id.toolbar_viewStub)).inflate();
         filterTextView = findViewById(R.id.showFiltersView);
         filterTextView.setOnClickListener(new OpenFilterClickListener());
+    }
 
+    private void setPresenterFilterMode() {
+        ((MainActivityContract.preferencesInterface) mActionlistener).filterStyleChanged(
+                SharedPreferencesHandler.getFilterSPellByCrossSection(this)
+        );
     }
 
     @Override
@@ -265,6 +274,8 @@ public class MainActivity extends ApplicationActivity
 
         switch(id){
             case R.id.action_settings:
+                Intent i = new Intent(this, SettingsActivity.class);
+                startActivity(i);
                 return true;
 
             case R.id.action_about:
@@ -530,6 +541,15 @@ public class MainActivity extends ApplicationActivity
             else{
                 removeFilterFragment();
             }
+        }
+    }
+
+    //interface OnSharedPreferenceChangeListener
+    //needed if later we add capability for large screen that might have the settings visible as additional fragment
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if(key.equals(getString(R.string.preferences_filter_by_cross_section))) {
+            setPresenterFilterMode();
         }
     }
 }

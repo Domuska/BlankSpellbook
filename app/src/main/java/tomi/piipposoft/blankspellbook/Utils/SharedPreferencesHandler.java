@@ -3,6 +3,10 @@ package tomi.piipposoft.blankspellbook.Utils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.util.Log;
+
+import tomi.piipposoft.blankspellbook.R;
 
 /**
  * Created by OMISTAJA on 8.6.2017.
@@ -12,7 +16,7 @@ public class SharedPreferencesHandler {
 
     public static final String PREFERENCES = "preferences";
     public static final String DATABASE_PERSISTANCE = "databasePersistance";
-    static final String FILTER_BY_CROSS_SECTION = "filterByCrossSection";
+
 
     public static boolean isDatabasePersistanceSet(Context context){
         SharedPreferences prefs = context.getSharedPreferences(PREFERENCES, 0);
@@ -33,11 +37,11 @@ public class SharedPreferencesHandler {
      * @param type true for cross-section, false for join
      * @param c context for shared preferences
      */
-    public static void setFilterSpellByCrossSection(boolean type, Context c){
+    /*public static void setFilterSpellByCrossSection(boolean type, Context c){
         SharedPreferences.Editor editor = c.getSharedPreferences(PREFERENCES, 0).edit();
         editor.putBoolean(FILTER_BY_CROSS_SECTION, type);
         editor.apply();
-    }
+    }*/
 
     /**
      *
@@ -45,7 +49,7 @@ public class SharedPreferencesHandler {
      * @return true if spells should be filtered by cross-section, false if filtering by join. Default is true.
      */
     public static boolean getFilterSPellByCrossSection(Context c){
-        SharedPreferences prefs = c.getSharedPreferences(PREFERENCES, 0);
-        return prefs.getBoolean(FILTER_BY_CROSS_SECTION, true);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c);
+        return prefs.getBoolean(c.getString(R.string.preferences_filter_by_cross_section), true);
     }
 }

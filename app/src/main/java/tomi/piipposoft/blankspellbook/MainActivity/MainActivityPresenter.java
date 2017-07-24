@@ -1,9 +1,11 @@
 package tomi.piipposoft.blankspellbook.MainActivity;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.util.ArrayMap;
 import android.util.Log;
 import android.view.View;
@@ -31,7 +33,8 @@ public class MainActivityPresenter extends DrawerPresenter
         MainActivityContract.UserActionListener,
         MainActivityContract.FragmentUserActionListener,
         MainActivityContract.FilterFragmentUserActionListener,
-        MainActivityContract.PagerAdapterListener{
+        MainActivityContract.PagerAdapterListener,
+        MainActivityContract.preferencesInterface{
 
     static final int DAILY_POWER_LISTS_SELECTED = 0;
     static final int POWER_LISTS_SELECTED = 1;
@@ -83,10 +86,6 @@ public class MainActivityPresenter extends DrawerPresenter
             @NonNull DrawerHelper drawerHelper){
         super(dbHelper, drawerHelper, (DrawerContract.ViewActivity) mainActivityView);
         mMainActivityView = mainActivityView;
-        //get filter type user has set in settings
-        filterByCrossSection =
-                SharedPreferencesHandler.getFilterSPellByCrossSection((Activity)mainActivityView);
-
     }
 
 
@@ -588,5 +587,12 @@ public class MainActivityPresenter extends DrawerPresenter
             Log.d(TAG, "onPowerListFragmentCreated: powerListListener is not null");
             DataSource.getPowerLists(DataSource.MAINACTIVITYPRESENTER);
         }
+    }
+
+    //interface MainActivityContract.preferencesInterface
+
+    @Override
+    public void filterStyleChanged(boolean newValue) {
+        filterByCrossSection = newValue;
     }
 }

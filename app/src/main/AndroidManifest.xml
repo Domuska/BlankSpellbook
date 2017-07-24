@@ -25,6 +25,9 @@
         <activity
             android:name=".PowerDetails.PowerDetailsActivity"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_preferences_activity" />
     </application>
 
 </manifest>
