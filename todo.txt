@@ -59,11 +59,9 @@ kun tallennat uuden spellin (ainaki powers fragmenin kautta) ei ei-muokattavia k
 kun spelliä muokataan, ei spell_groups tauluun laiteta spellin nimeä sen id:n alle
 
 kun filtteri avataan niin pitäs laittaa onclicklisteneri niin että ku klikkaat filtterin ulkopuolelta filtterifragment suletaan
+	-voi olla että tämä ei ole tarpeellista tai järkevää. Vaikutti hankalalta toteuttaa ainakin, eikä välttämättä ole hyödyllinen
 
 powers fragmentissa ei väritetä color splotchia oikein jos power on alunperin ungrouped (?) tai ainakin välillä. Voi olla myös että kun lisätään uusi power ni se tallennetaan väärin tai jotain
-
-tehdään settari joko settingseihin tai filtterifragmentiin jossa voi valita otetaanko cross-section vai join filttereillä (metodit molempia varten jo tehty)
-
 
 korjaa apin kaatuminen kun se stopataan(?) ja filttereitä on päällä ja niitä koitetaan laittaa pois. Varmaan korjaantuu
 kun onSavessa tallennetaan tila ja palautetaan onResumessa.

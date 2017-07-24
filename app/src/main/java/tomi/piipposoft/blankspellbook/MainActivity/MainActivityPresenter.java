@@ -88,7 +88,6 @@ public class MainActivityPresenter extends DrawerPresenter
         mMainActivityView = mainActivityView;
     }
 
-
     static MainActivityPresenter getInstance(@NonNull BlankSpellBookContract.DBHelper dbHelper,
                                              @NonNull DrawerHelper drawerHelper,
                                              @NonNull MainActivityContract.View mainActivityView){
@@ -356,7 +355,11 @@ public class MainActivityPresenter extends DrawerPresenter
     private void filterDisplayedPowersJoin(
             @NonNull String filterText, @FilterType int filterCategory){
 
-        if(displayedPowers == null)
+        //if filters are empty, we should be displaying all powers and we need an empty list
+        //to which we start adding new items to display.
+        //Otherwise, we just add more items to be displayed in a list that already has something.
+        if(displayedPowers == null ||
+                (groupsSpellFilters).size() < 1 && powerListsSpellFilters.size() < 1)
             displayedPowers = new ArrayList<>();
 
         ArrayList<Spell> powersInList;
@@ -375,7 +378,7 @@ public class MainActivityPresenter extends DrawerPresenter
         else
             throw new RuntimeException("Use either FILTER_BY_GROUP_NAME or FILTER_BY_POWER_LIST_NAME as filterType");
 
-        //since we have a bad Spell.equals method, have to make sure we don't add duplicates
+        //since we have a bad Spell.equals method, have to make sure we don't add duplicates in this way
         for(Iterator<Spell> iterator = powersInList.iterator(); iterator.hasNext();){
             Spell power = iterator.next();
             for(Spell displayedPower : displayedPowers){
@@ -383,7 +386,6 @@ public class MainActivityPresenter extends DrawerPresenter
                     iterator.remove();
             }
         }
-
 
         displayedPowers.addAll(powersInList);
         mMainActivityView.setPowerListData(displayedPowers);
@@ -401,13 +403,37 @@ public class MainActivityPresenter extends DrawerPresenter
             throw new RuntimeException("Use either FILTER_BY_GROUP_NAME or FILTER_BY_POWER_LIST_NAME as filterType");
 
         displayedPowers.clear();
-        displayedPowers.addAll(allPowers);
+        //filtering by cross-section will remove powers that should not be displayed,
+        //while filtering by joining will add more powers to the list, so for the joining
+        //function to work properly we will need an empty list to start with
+        if(filterByCrossSection )
+            displayedPowers.addAll(allPowers);
         displayedGroupNames = null;
         displayedGroupNames = getGroupNamesForFilter();
         displayedPowerListNames = null;
         displayedPowerListNames = getPowerListNamesForFilter();
 
-        //re-calculate the powers that should be shown by applying all filters again. Might be not too optimal.
+        if(groupsSpellFilters.size() > 0 || powerListsSpellFilters.size() > 0){
+            for (String filter : groupsSpellFilters) {
+                //filterDisplayedPowersCrossSection(filter, FILTER_BY_GROUP_NAME);
+                filterPowerListsAndPowersWithGroupName(filter);
+            }
+
+            for (String filter : powerListsSpellFilters) {
+                //filterDisplayedPowersCrossSection(filter, FILTER_BY_POWER_LIST_NAME);
+                filterGroupsAndPowersWithPowerListName(filter);
+            }
+
+            mMainActivityView.showFilteredPowerLists(displayedPowerListNames);
+            mMainActivityView.showFilteredGroups(displayedGroupNames);
+        }
+        else{
+            if(!filterByCrossSection)
+                displayedPowers.addAll(allPowers);
+            //mMainActivityView.showFilteredGroups(displayedPowers);
+        }
+
+        /*//re-calculate the powers that should be shown by applying all filters again. Might be not too optimal.
         if(groupsSpellFilters.size() > 0) {
             for (String filter : groupsSpellFilters) {
                 //filterDisplayedPowersCrossSection(filter, FILTER_BY_GROUP_NAME);
@@ -426,11 +452,13 @@ public class MainActivityPresenter extends DrawerPresenter
         }
         //otherwise just show the unfiltered groups
         else
-            mMainActivityView.showFilteredGroups(displayedGroupNames);
+            mMainActivityView.showFilteredGroups(displayedGroupNames);*/
 
         //if both filters are empty, show all the powers in the list anyway
-        if(groupsSpellFilters.size() < 1 && powerListsSpellFilters.size() < 1)
+        if(groupsSpellFilters.size() < 1 && powerListsSpellFilters.size() < 1) {
             mMainActivityView.setPowerListData(displayedPowers);
+        }
+
 
     }
 
@@ -483,6 +511,8 @@ public class MainActivityPresenter extends DrawerPresenter
         ArrayList<Spell> filteredPowers = powerGroupNamesMap.get(groupName);
         Log.d(TAG, "filterPowerListsAndPowersWithGroupName: size of powers list: " + filteredPowers.size());
 
+        //remove duplicates...? Check out later if this is necessary.
+        // TODO: 24.7.2017 check out if this is necessary
         for(Iterator<String> iterator = displayedPowerListNames.iterator(); iterator.hasNext();){
             String powerListName = iterator.next();
             if(!displayedPowerListNames.contains(powerListName))
