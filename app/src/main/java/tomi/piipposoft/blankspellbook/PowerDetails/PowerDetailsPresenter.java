@@ -296,9 +296,10 @@ public class PowerDetailsPresenter extends DrawerPresenter
                 spell.setPlayerNotes(powerData.get(PowerDetailsContract.playerNotes));
             if (powerData.containsKey(PowerDetailsContract.trigger))
                 spell.setTrigger(powerData.get(PowerDetailsContract.trigger));
+
+            //set the power list ID that we have saved
+            spell.setPowerListId(powerListId);
         }
-
-
         return spell;
     }
 }

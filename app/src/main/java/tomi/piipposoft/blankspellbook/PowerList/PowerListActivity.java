@@ -238,7 +238,7 @@ public class PowerListActivity extends ApplicationActivity
     }
 
     @Override
-    public void showNewPowerUI(String powerListName) {
+    public void showNewPowerUI(String powerListId, String powerListName) {
         Intent i = new Intent(this, PowerDetailsActivity.class);
         Log.d(TAG, "opening new power details UI");
         i.putExtra(PowerDetailsActivity.EXTRA_POWER_DETAIL_ID,

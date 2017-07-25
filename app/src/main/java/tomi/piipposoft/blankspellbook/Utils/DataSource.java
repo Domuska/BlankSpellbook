@@ -284,7 +284,9 @@ public class DataSource {
                             + "/"
                             + spell.getGroupName()
                             + "/"
-                            + spellId, true);
+                            + spellId
+                            + "/"
+                            + spell.getName(), true);
                 }
             }
         }

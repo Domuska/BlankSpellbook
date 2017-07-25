@@ -180,7 +180,7 @@ public class PowerListPresenter extends DrawerPresenter implements
         //decide if we open new power input screen or just show existing power details
         if(itemId.equals(PowerDetailsActivity.EXTRA_ADD_NEW_POWER_DETAILS)) {
             Log.d(TAG, "openPowerDetails: removing listener: " + groupsListener.toString());
-            mPowerListActivity.showNewPowerUI(powerListName);
+            mPowerListActivity.showNewPowerUI(powerListId, powerListName);
         }
         else {
             mPowerListActivity.showPowerDetailsUI(itemId, itemName, powerListId,

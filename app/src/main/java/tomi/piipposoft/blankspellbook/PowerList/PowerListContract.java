@@ -28,7 +28,7 @@ public interface PowerListContract {
          * Indicate that the PowerDetailsActivity should be started
          * called when a new power is to be added
          */
-        void showNewPowerUI(String powerListName);
+        void showNewPowerUI(String powerListId, String powerListName);
 
         /**
          * Add a single Spell object to the currently displayed list
