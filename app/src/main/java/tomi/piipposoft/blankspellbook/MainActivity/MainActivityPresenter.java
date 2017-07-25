@@ -108,7 +108,18 @@ public class MainActivityPresenter extends DrawerPresenter
 
     @Override
     public void resumeActivity() {
-        //listeners used to be added here, now handled after fragments have been created in PagerAdapter
+        //re-populate the list with data we should have
+        allPowers.size();
+        if(displayedPowers != null){
+            for(Spell power : displayedPowers)
+                mMainActivityView.addNewPowerToList(power, power.getPowerListName());
+        }
+        else {
+            for(Spell power : allPowers){
+                Log.d(TAG, "adding power " + power.getName() + " to view from allPowers");
+                mMainActivityView.addNewPowerToList(power, power.getPowerListName());
+            }
+        }
     }
 
     @Override
@@ -127,10 +138,10 @@ public class MainActivityPresenter extends DrawerPresenter
             DataSource.removePowersListener(powersListener);
             powersListener = null;
         }
-        powerGroupNamesMap = new ArrayMap<>();
-        powerListNamesMap = new ArrayMap<>();
-        allPowers = new ArrayList<>();
-        displayedPowers = null;
+        //powerGroupNamesMap = new ArrayMap<>();
+        //powerListNamesMap = new ArrayMap<>();
+        //allPowers = new ArrayList<>();
+        //displayedPowers = null;
     }
 
     @Override
@@ -236,18 +247,26 @@ public class MainActivityPresenter extends DrawerPresenter
     public static void handleNewPower(@NonNull Spell power, @Nullable String powerListName) {
         //Log.d(TAG, "got new power in handleNewPower: " + power.getName() + " with power list name: " + powerListName);
 
+        //since Spell.equals is badly defined, go through the list like this to see if spell is already in it
+        boolean spellAlreadyInList = false;
+        for(Spell power1 : allPowers){
+            if (power1.getSpellId().equals(power.getSpellId()))
+                    spellAlreadyInList = true;
+        }
+        Log.d(TAG, "handleNewPower is power already in allPowers? " + spellAlreadyInList);
         //add power to a list of powers for filtering later
-        allPowers.add(power);
+        if(!spellAlreadyInList) {
+            allPowers.add(power);
 
-        if(powerListName != null) {
-            //add the name of power list power is in to the map for filtering later
-            if (powerListNamesMap.containsKey(powerListName))
-                powerListNamesMap.get(powerListName).add(power);
-            else {
-                ArrayList<Spell> list = new ArrayList<>();
-                list.add(power);
-                powerListNamesMap.put(powerListName, list);
-            }
+            if (powerListName != null) {
+                //add the name of power list power is in to the map for filtering later
+                if (powerListNamesMap.containsKey(powerListName))
+                    powerListNamesMap.get(powerListName).add(power);
+                else {
+                    ArrayList<Spell> list = new ArrayList<>();
+                    list.add(power);
+                    powerListNamesMap.put(powerListName, list);
+                }
             /*not sure if powerlistname should be set at all. Maybe re-work so
              we can just use the .equals method properly? This comes as a problem with the
              "poor" .equals method in in filterDisplayedPowersCrossSection & filterDisplayedPowersJoin.
@@ -255,28 +274,28 @@ public class MainActivityPresenter extends DrawerPresenter
              from the powerListNamesMap.
              Another solution might be that we re-work the map so we store spell-powerlistname instead
              of what we do now. This might even be a better idea.*/
-            power.setPowerListName(powerListName);
-            Log.d(TAG, "added power " + power.getName() + " with power list name " + powerListName);
-        }
-        else{
-            power.setPowerListName("");
-        }
-
-        //add the power's group name to the map for filtering later
-        String groupName = power.getGroupName();
-        if (groupName != null && !groupName.equals("")) {
-            if (powerGroupNamesMap.containsKey(groupName))
-                powerGroupNamesMap.get(groupName).add(power);
-            else {
-                ArrayList<Spell> list = new ArrayList<>();
-                list.add(power);
-                powerGroupNamesMap.put(groupName, list);
+                power.setPowerListName(powerListName);
+                Log.d(TAG, "added power " + power.getName() + " with power list name " + powerListName);
+            } else {
+                power.setPowerListName("");
             }
-            Log.d(TAG, "added power " + power.getName() + " with group name " + power.getGroupName());
+
+            //add the power's group name to the map for filtering later
+            String groupName = power.getGroupName();
+            if (groupName != null && !groupName.equals("")) {
+                if (powerGroupNamesMap.containsKey(groupName))
+                    powerGroupNamesMap.get(groupName).add(power);
+                else {
+                    ArrayList<Spell> list = new ArrayList<>();
+                    list.add(power);
+                    powerGroupNamesMap.put(groupName, list);
+                }
+                Log.d(TAG, "added power " + power.getName() + " with group name " + power.getGroupName());
+            }
+
+            mMainActivityView.addNewPowerToList(power, powerListName);
+
         }
-
-        mMainActivityView.addNewPowerToList(power, powerListName);
-
     }
 
     public static void handlePowerRemoved(Spell power) {

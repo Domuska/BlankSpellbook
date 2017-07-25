@@ -115,14 +115,14 @@ public class MainActivity extends ApplicationActivity
         viewPager = findViewById(R.id.pager);
 
         // TODO: 12.7.2017 finish working pagerAdapter so it doesnt flash when activity resumes
-        if(pagerAdapter == null) {
+        //if(pagerAdapter == null) {
             Log.d(TAG, "pagerAdapter is null!");
             //create a new adapter and give it the actionListener to attach to the fragments
             pagerAdapter = new MainActivityPagerAdapter(
                     getSupportFragmentManager(),
                     (MainActivityContract.FragmentUserActionListener) mActionlistener,
                     (MainActivityContract.PagerAdapterListener) mActionlistener);
-        }
+        //}
 
         viewPager.setAdapter(pagerAdapter);
 
@@ -241,12 +241,19 @@ public class MainActivity extends ApplicationActivity
 
     @Override
     protected void onPause() {
+        Log.d(TAG, "onPause called");
         mActionlistener.pauseActivity();
         //remove the data from the fragments since it's re-fetched on resume
         pagerAdapter.removePowerListsFromFragment();
         pagerAdapter.removeDailyPowerListsFromFragment();
         pagerAdapter.removeAllPowers();
         super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        Log.d(TAG, "onStop called");
+        super.onStop();
     }
 
     @Override
@@ -502,7 +509,7 @@ public class MainActivity extends ApplicationActivity
         if(fragmentManager.findFragmentByTag(FILTER_FRAGMENT_TAG) != null) {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.setCustomAnimations(R.anim.filter_fragment_slide_in, R.anim.filter_fragment_slide_out);
-            transaction.remove(filterFragment);
+            transaction.remove(fragmentManager.findFragmentByTag(FILTER_FRAGMENT_TAG));
             transaction.commit();
             filterFragment = null;
         }

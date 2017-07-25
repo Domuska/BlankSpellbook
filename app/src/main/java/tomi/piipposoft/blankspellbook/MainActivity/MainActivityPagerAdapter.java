@@ -38,6 +38,8 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
     //listener for telling presenter when fragments have been created so it can supply the data
     private MainActivityContract.PagerAdapterListener pagerAdapterListener;
 
+    //list for powers that are added before fragment is ready
+    private ArrayList<Spell> powersInQueue = new ArrayList<>();
 
     public MainActivityPagerAdapter(FragmentManager manager,
                                     MainActivityContract.FragmentUserActionListener actionListener,
@@ -76,7 +78,10 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
                 powersFragment.attachClickListener(fragmentListActionListener);
                 //inform presenter that powers fragment has been created
                 pagerAdapterListener.onPowersFragmentCreated();
-                Log.d(TAG, "instantiateItem: powers fragment created");
+                Log.d(TAG, "instantiateItem: powers fragment created. Queue size: " + powersInQueue.size());
+                for(Spell power : powersInQueue){
+                    powersFragment.handleNewPower(power, power.getPowerListName());
+                }
                 break;
         }
         return createdFragment;
@@ -200,8 +205,14 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
      * @param powerListName name of the power list this power belongs to, can be null
      */
     void addPowerToFragment(@NonNull Spell power, @Nullable String powerListName){
+        Log.d(TAG, "adding new power " + power.getName() + " to fragment");
         if(powersFragment != null)
             powersFragment.handleNewPower(power, powerListName);
+        else{
+            //add the power into the queue, they will be added to fragment when it is created
+            Log.d(TAG, "adding power " + power.getName() + " to queue");
+            powersInQueue.add(power);
+        }
     }
 
     /**

@@ -66,6 +66,11 @@ public class PowersFragment extends Fragment {
                 recyclerView.getContext(),
                 DividerItemDecoration.VERTICAL
         );
+
+        if(powers.size() > 0){
+            progressBar.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
         recyclerView.addItemDecoration(divider);
         return rootView;
     }
