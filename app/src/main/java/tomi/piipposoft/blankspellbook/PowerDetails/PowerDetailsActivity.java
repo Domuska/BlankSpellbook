@@ -479,160 +479,56 @@ public class PowerDetailsActivity extends ApplicationActivity
 
         if(!powerListName.equals("")) {
             ((TextView) findViewById(R.id.text_powerListName)).setText(powerListName);
+            //colour the divider under power list name with the colour we use elsewhere in the application
             findViewById(R.id.powerDetails_mainDivider).setBackgroundColor(
                     Helper.getRandomColorFromString(powerListName)
             );
         }
 
-        //wonder if this is the smartest way to go about this? would some switchcase work better?
-        if(!spell.getAttackType().equals("")){
-            attackTypeText = findViewById(R.id.text_attackType);
-            attackTypeText.setText(spell.getAttackType());
-            /*attackTypeLayout = (TextInputLayout)findViewById(R.id.input_layout_attackType);
-            attackTypeTextEdit = (TextInputEditText)findViewById(R.id.editText_attackType);
-            attackTypeLayout.setVisibility(View.VISIBLE);
-            attackTypeTextEdit.setText(spell.getAttackType());
-            //set keylistener as null so we have elements that can't be edited, this is re-set in edit view
-            attackTypeTextEdit.setKeyListener(null);
-            Log.d(TAG, "spell attack type: " + spell.getAttackType());*/
-        }
 
-        if(!spell.getAttackRoll().equals("")){
-            attackRollText = findViewById(R.id.text_attackRoll);
-            attackRollText.setText(spell.getAttackRoll());
-            /*attackRollLayout = (TextInputLayout)findViewById(R.id.input_layout_attackRoll);
-            attackRollTextEdit = (TextInputEditText)findViewById(R.id.editText_attackRoll);
-            attackRollLayout.setVisibility(View.VISIBLE);
-            attackRollTextEdit.setText(spell.getAttackRoll());
-            attackRollTextEdit.setKeyListener(null);
-            Log.d(TAG, "spell attack roll: " + spell.getAttackRoll());*/
-        }
+        attackTypeText = findViewById(R.id.text_attackType);
+        attackTypeText.setText(spell.getAttackType());
 
-        if(!"".equals(spell.getCastingTime())){
-            castingTimeText = findViewById(R.id.text_castingTime);
-            castingTimeText.setText(spell.getCastingTime());
-            /*castingTimeLayout = (TextInputLayout)findViewById(R.id.input_layout_castingTime);
-            castingTimeTextEdit = (TextInputEditText)findViewById(R.id.editText_castingTime);
-            castingTimeLayout.setVisibility(View.VISIBLE);
-            castingTimeTextEdit.setText(spell.getCastingTime());
-            castingTimeTextEdit.setKeyListener(null);*/
-        }
+        attackRollText = findViewById(R.id.text_attackRoll);
+        attackRollText.setText(spell.getAttackRoll());
 
-        if(!spell.getGroupName().equals("")){
-            groupText = findViewById(R.id.text_group);
-            groupText.setText(spell.getGroupName());
-            /*groupLayout = (TextInputLayout)findViewById(R.id.input_layout_group);
-            groupTextEdit = (AutoCompleteTextView) findViewById(R.id.editText_group);
-            groupLayout.setVisibility(View.VISIBLE);
-            groupTextEdit.setText(spell.getGroupName());
-            groupTextEdit.setKeyListener(null);
-            //hide the dropdown menu, if user has focus on it it will pop visible
-            groupTextEdit.dismissDropDown();*/
-        }
+        castingTimeText = findViewById(R.id.text_castingTime);
+        castingTimeText.setText(spell.getCastingTime());
 
-        if(!spell.getHitDamageOrEffect().equals("")){
-            hitDamageEffectText = findViewById(R.id.text_hitDamage_effect);
-            hitDamageEffectText.setText(spell.getHitDamageOrEffect());
-            /*hitDamageEffectLayout = (TextInputLayout)findViewById(R.id.input_layout_damage_effect);
-            hitDamageEffectTextEdit = (TextInputEditText)findViewById(R.id.editText_hitDamage_effect);
-            hitDamageEffectLayout.setVisibility(View.VISIBLE);
-            hitDamageEffectTextEdit.setText(spell.getHitDamageOrEffect());
-            hitDamageEffectTextEdit.setKeyListener(null);*/
-        }
+        groupText = findViewById(R.id.text_group);
+        groupText.setText(spell.getGroupName());
 
-        if(!spell.getMissDamage().equals("")){
-            missDamageText = findViewById(R.id.text_miss_damage);
-            missDamageText.setText(spell.getMissDamage());
-            /*missDamageLayout = (TextInputLayout)findViewById(R.id.input_layout_miss_damage);
-            missDamageTextEdit = (TextInputEditText)findViewById(R.id.editText_miss_damage);
-            missDamageLayout.setVisibility(View.VISIBLE);
-            missDamageTextEdit.setText(spell.getMissDamage());
-            missDamageTextEdit.setKeyListener(null);*/
-        }
+        hitDamageEffectText = findViewById(R.id.text_hitDamage_effect);
+        hitDamageEffectText.setText(spell.getHitDamageOrEffect());
 
-        if(!spell.getName().equals("")){
-            spellNameText = findViewById(R.id.text_spellName);
-            spellNameText.setText(spell.getName());
-            /*spellNameLayout = (TextInputLayout)findViewById(R.id.input_layout_spell_name);
-            spellNameTextEdit = (TextInputEditText)findViewById(R.id.editText_spellName);
-            spellNameLayout.setVisibility(View.VISIBLE);
-            //spellNameTextEdit.setFocusable(false);
-            spellNameTextEdit.setText(spell.getName());
-            spellNameTextEdit.setKeyListener(null);*/
-            //spellNameTextEdit.setFocusable(true);
-            //InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            //imm.hideSoftInputFromWindow(spellNameTextEdit.getWindowToken(), 0);
-        }
+        missDamageText = findViewById(R.id.text_miss_damage);
+        missDamageText.setText(spell.getMissDamage());
 
-        if(!spell.getPlayerNotes().equals("")){
-            notesText = findViewById(R.id.text_notes);
-            notesText.setText(spell.getPlayerNotes());
-            /*notesLayout = (TextInputLayout)findViewById(R.id.input_layout_notes);
-            notesTextEdit = (TextInputEditText)findViewById(R.id.editText_notes);
-            notesLayout.setVisibility(View.VISIBLE);
-            notesTextEdit.setText(spell.getPlayerNotes());
-            notesTextEdit.setKeyListener(null);*/
-        }
+        spellNameText = findViewById(R.id.text_spellName);
+        spellNameText.setText(spell.getName());
 
-        if(!spell.getRechargeTime().equals("")){
-            rechargeText = findViewById(R.id.text_recharge);
-            rechargeText.setText(spell.getRechargeTime());
-            /*rechargeLayout = (TextInputLayout)findViewById(R.id.input_layout_recharge);
-            rechargeTextEdit = (TextInputEditText)findViewById(R.id.editText_recharge);
-            rechargeLayout.setVisibility(View.VISIBLE);
-            rechargeTextEdit.setText(spell.getRechargeTime());
-            rechargeTextEdit.setKeyListener(null);*/
-        }
+        notesText = findViewById(R.id.text_notes);
+        notesText.setText(spell.getPlayerNotes());
 
-        if(!spell.getTarget().equals("")){
-            targetText = findViewById(R.id.text_target);
-            targetText.setText(spell.getTarget());
-            /*targetLayout = (TextInputLayout)findViewById(R.id.input_layout_target);
-            targetTextEdit = (TextInputEditText)findViewById(R.id.editText_target);
-            targetLayout.setVisibility(View.VISIBLE);
-            targetTextEdit.setText(spell.getTarget());
-            targetTextEdit.setKeyListener(null);*/
-        }
+        rechargeText = findViewById(R.id.text_recharge);
+        rechargeText.setText(spell.getRechargeTime());
 
-        if(!spell.getAdventurerFeat().equals("")){
-            adventurerFeatText = findViewById(R.id.text_adventurer_feat);
-            adventurerFeatText.setText(spell.getAdventurerFeat());
-            /*adventurerFeatLayout = (TextInputLayout)findViewById(R.id.input_layout_adventurer_feat);
-            adventurerFeatTextEdit = (TextInputEditText)findViewById(R.id.editText_adventurer_feat);
-            adventurerFeatLayout.setVisibility(View.VISIBLE);
-            adventurerFeatTextEdit.setText(spell.getAdventurerFeat());
-            adventurerFeatTextEdit.setKeyListener(null);*/
-        }
+        targetText = findViewById(R.id.text_target);
+        targetText.setText(spell.getTarget());
 
-        if(!spell.getChampionFeat().equals("")){
-            championFeatText = findViewById(R.id.text_champion_feat);
-            championFeatText.setText(spell.getChampionFeat());
-            /*championFeatLayout = (TextInputLayout)findViewById(R.id.input_layout_champion_feat);
-            championFeatTextEdit = (TextInputEditText)findViewById(R.id.editText_champion_feat);
-            championFeatLayout.setVisibility(View.VISIBLE);
-            championFeatTextEdit.setText(spell.getChampionFeat());
-            championFeatTextEdit.setKeyListener(null);*/
-        }
+        adventurerFeatText = findViewById(R.id.text_adventurer_feat);
+        adventurerFeatText.setText(spell.getAdventurerFeat());
 
-        if(!spell.getEpicFeat().equals("")){
-            epicFeatText = findViewById(R.id.text_epic_feat);
-            epicFeatText.setText(spell.getChampionFeat());
-            /*epicFeatLayout = (TextInputLayout)findViewById(R.id.input_layout_epic_feat);
-            epicFeatTextEdit = (TextInputEditText)findViewById(R.id.editText_epic_feat);
-            epicFeatLayout.setVisibility(View.VISIBLE);
-            epicFeatTextEdit.setText(spell.getEpicFeat());
-            epicFeatTextEdit.setKeyListener(null);*/
-        }
+        championFeatText = findViewById(R.id.text_champion_feat);
+        championFeatText.setText(spell.getChampionFeat());
 
-        if(!spell.getTrigger().equals("")){
-            triggerText = findViewById(R.id.text_trigger);
-            triggerText.setText(spell.getTrigger());
-            /*triggerLayout = (TextInputLayout)findViewById(R.id.input_layout_trigger);
-            triggerTextEdit = (TextInputEditText)findViewById(R.id.editText_trigger);
-            triggerLayout.setVisibility(View.VISIBLE);
-            triggerTextEdit.setText(spell.getTrigger());
-            triggerTextEdit.setKeyListener(null);*/
-        }
+        epicFeatText = findViewById(R.id.text_epic_feat);
+        epicFeatText.setText(spell.getEpicFeat());
+
+        triggerText = findViewById(R.id.text_trigger);
+        triggerText.setText(spell.getTrigger());
+
+
 
         /*FlingAnimation fabFlingAnimation = new FlingAnimation(fab, DynamicAnimation.SCROLL_X);
         //get the fling speed as pixel/s for this device
