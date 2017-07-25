@@ -152,7 +152,8 @@ public class PowersFragment extends Fragment {
                     listener.onPowerClicked(
                             power.getSpellId(),
                             power.getPowerListId(),
-                            holder.powerName);
+                            holder.powerName,
+                            powerListNames.get(itemPosition));
                 }
             });
 

@@ -30,7 +30,7 @@ public interface PowerDetailsContract {
 
     interface View {
         void showEmptyFields();
-        void showNonEditableFilledFields(Spell spell);
+        void showNonEditableFilledFields(Spell spell, String powerListName);
         void showEditableFilledFields(Spell spell);
         void setCancelAsGoBack(boolean b);
         void hideUnUsedFields(Spell spell);

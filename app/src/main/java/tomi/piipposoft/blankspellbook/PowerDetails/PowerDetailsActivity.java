@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import tomi.piipposoft.blankspellbook.ApplicationActivity;
 import tomi.piipposoft.blankspellbook.R;
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
+import tomi.piipposoft.blankspellbook.Utils.Helper;
 import tomi.piipposoft.blankspellbook.Utils.SharedPreferencesHandler;
 import tomi.piipposoft.blankspellbook.Utils.Spell;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerContract;
@@ -55,6 +56,7 @@ public class PowerDetailsActivity extends ApplicationActivity
     public static final String EXTRA_POWER_DETAIL_NAME = "powerDetailName";
     public static final String EXTRA_ADD_NEW_POWER_DETAILS = "";
     public static final String EXTRA_POWER_LIST_ID = "powerListId";
+    public static final String EXTRA_POWER_LIST_NAME = "powerListName";
 
     private final float FAB_CANCEL_ANIMATION_SLIDE_IN_DP_PER_SECOND = 50;
     private final float FAB_CANCEL_FINAL_POSITION_IN_SCREEN_DP = 128;
@@ -160,6 +162,7 @@ public class PowerDetailsActivity extends ApplicationActivity
         String powerListId = getIntent().getStringExtra(EXTRA_POWER_LIST_ID);
         Log.d(TAG, "onResume: power list id got: " + powerListId);
         String powerName = getIntent().getStringExtra(EXTRA_POWER_DETAIL_NAME);
+        String powerListName = getIntent().getStringExtra(EXTRA_POWER_LIST_NAME);
 
         this.drawerHelper = DrawerHelper.getInstance(this, (Toolbar)findViewById(R.id.my_toolbar));
         mActionListener = new PowerDetailsPresenter(
@@ -167,7 +170,8 @@ public class PowerDetailsActivity extends ApplicationActivity
                 this,
                 this.drawerHelper,
                 powerId,
-                powerListId
+                powerListId,
+                powerListName
         );
 
         fab = findViewById(R.id.fab);
@@ -444,7 +448,7 @@ public class PowerDetailsActivity extends ApplicationActivity
     }
 
     @Override
-    public void showNonEditableFilledFields(final Spell spell) {
+    public void showNonEditableFilledFields(final Spell spell, String powerListName) {
 
         Log.d(TAG, "starting method call showNonEditableFilledFields");
 
@@ -473,13 +477,16 @@ public class PowerDetailsActivity extends ApplicationActivity
                 .setFinalPosition(fabCancelPositionOutsideScreen);
         fabSpringSlideInAnimation.start();
 
-        // All text fields are invisible if there is not data for them
-        // this should work nicer than hiding ones that don't have data,
-        // network call might take a while to arrive and it would cause UI to jump around
+        if(!powerListName.equals("")) {
+            ((TextView) findViewById(R.id.text_powerListName)).setText(powerListName);
+            findViewById(R.id.powerDetails_mainDivider).setBackgroundColor(
+                    Helper.getRandomColorFromString(powerListName)
+            );
+        }
 
         //wonder if this is the smartest way to go about this? would some switchcase work better?
         if(!spell.getAttackType().equals("")){
-            attackTypeText = (TextView) findViewById(R.id.text_attackType);
+            attackTypeText = findViewById(R.id.text_attackType);
             attackTypeText.setText(spell.getAttackType());
             /*attackTypeLayout = (TextInputLayout)findViewById(R.id.input_layout_attackType);
             attackTypeTextEdit = (TextInputEditText)findViewById(R.id.editText_attackType);
@@ -491,7 +498,7 @@ public class PowerDetailsActivity extends ApplicationActivity
         }
 
         if(!spell.getAttackRoll().equals("")){
-            attackRollText = (TextView) findViewById(R.id.text_attackRoll);
+            attackRollText = findViewById(R.id.text_attackRoll);
             attackRollText.setText(spell.getAttackRoll());
             /*attackRollLayout = (TextInputLayout)findViewById(R.id.input_layout_attackRoll);
             attackRollTextEdit = (TextInputEditText)findViewById(R.id.editText_attackRoll);
@@ -502,7 +509,7 @@ public class PowerDetailsActivity extends ApplicationActivity
         }
 
         if(!"".equals(spell.getCastingTime())){
-            castingTimeText = (TextView) findViewById(R.id.text_castingTime);
+            castingTimeText = findViewById(R.id.text_castingTime);
             castingTimeText.setText(spell.getCastingTime());
             /*castingTimeLayout = (TextInputLayout)findViewById(R.id.input_layout_castingTime);
             castingTimeTextEdit = (TextInputEditText)findViewById(R.id.editText_castingTime);
@@ -512,7 +519,7 @@ public class PowerDetailsActivity extends ApplicationActivity
         }
 
         if(!spell.getGroupName().equals("")){
-            groupText = (TextView) findViewById(R.id.text_group);
+            groupText = findViewById(R.id.text_group);
             groupText.setText(spell.getGroupName());
             /*groupLayout = (TextInputLayout)findViewById(R.id.input_layout_group);
             groupTextEdit = (AutoCompleteTextView) findViewById(R.id.editText_group);
@@ -524,7 +531,7 @@ public class PowerDetailsActivity extends ApplicationActivity
         }
 
         if(!spell.getHitDamageOrEffect().equals("")){
-            hitDamageEffectText = (TextView) findViewById(R.id.text_hitDamage_effect);
+            hitDamageEffectText = findViewById(R.id.text_hitDamage_effect);
             hitDamageEffectText.setText(spell.getHitDamageOrEffect());
             /*hitDamageEffectLayout = (TextInputLayout)findViewById(R.id.input_layout_damage_effect);
             hitDamageEffectTextEdit = (TextInputEditText)findViewById(R.id.editText_hitDamage_effect);
@@ -534,7 +541,7 @@ public class PowerDetailsActivity extends ApplicationActivity
         }
 
         if(!spell.getMissDamage().equals("")){
-            missDamageText = (TextView) findViewById(R.id.text_miss_damage);
+            missDamageText = findViewById(R.id.text_miss_damage);
             missDamageText.setText(spell.getMissDamage());
             /*missDamageLayout = (TextInputLayout)findViewById(R.id.input_layout_miss_damage);
             missDamageTextEdit = (TextInputEditText)findViewById(R.id.editText_miss_damage);
@@ -544,7 +551,7 @@ public class PowerDetailsActivity extends ApplicationActivity
         }
 
         if(!spell.getName().equals("")){
-            spellNameText = (TextView) findViewById(R.id.text_spellName);
+            spellNameText = findViewById(R.id.text_spellName);
             spellNameText.setText(spell.getName());
             /*spellNameLayout = (TextInputLayout)findViewById(R.id.input_layout_spell_name);
             spellNameTextEdit = (TextInputEditText)findViewById(R.id.editText_spellName);
@@ -558,7 +565,7 @@ public class PowerDetailsActivity extends ApplicationActivity
         }
 
         if(!spell.getPlayerNotes().equals("")){
-            notesText = (TextView) findViewById(R.id.text_notes);
+            notesText = findViewById(R.id.text_notes);
             notesText.setText(spell.getPlayerNotes());
             /*notesLayout = (TextInputLayout)findViewById(R.id.input_layout_notes);
             notesTextEdit = (TextInputEditText)findViewById(R.id.editText_notes);
@@ -568,7 +575,7 @@ public class PowerDetailsActivity extends ApplicationActivity
         }
 
         if(!spell.getRechargeTime().equals("")){
-            rechargeText = (TextView) findViewById(R.id.text_recharge);
+            rechargeText = findViewById(R.id.text_recharge);
             rechargeText.setText(spell.getRechargeTime());
             /*rechargeLayout = (TextInputLayout)findViewById(R.id.input_layout_recharge);
             rechargeTextEdit = (TextInputEditText)findViewById(R.id.editText_recharge);
@@ -578,7 +585,7 @@ public class PowerDetailsActivity extends ApplicationActivity
         }
 
         if(!spell.getTarget().equals("")){
-            targetText = (TextView) findViewById(R.id.text_target);
+            targetText = findViewById(R.id.text_target);
             targetText.setText(spell.getTarget());
             /*targetLayout = (TextInputLayout)findViewById(R.id.input_layout_target);
             targetTextEdit = (TextInputEditText)findViewById(R.id.editText_target);
@@ -588,7 +595,7 @@ public class PowerDetailsActivity extends ApplicationActivity
         }
 
         if(!spell.getAdventurerFeat().equals("")){
-            adventurerFeatText = (TextView) findViewById(R.id.text_adventurer_feat);
+            adventurerFeatText = findViewById(R.id.text_adventurer_feat);
             adventurerFeatText.setText(spell.getAdventurerFeat());
             /*adventurerFeatLayout = (TextInputLayout)findViewById(R.id.input_layout_adventurer_feat);
             adventurerFeatTextEdit = (TextInputEditText)findViewById(R.id.editText_adventurer_feat);
@@ -598,7 +605,7 @@ public class PowerDetailsActivity extends ApplicationActivity
         }
 
         if(!spell.getChampionFeat().equals("")){
-            championFeatText = (TextView) findViewById(R.id.text_champion_feat);
+            championFeatText = findViewById(R.id.text_champion_feat);
             championFeatText.setText(spell.getChampionFeat());
             /*championFeatLayout = (TextInputLayout)findViewById(R.id.input_layout_champion_feat);
             championFeatTextEdit = (TextInputEditText)findViewById(R.id.editText_champion_feat);
@@ -608,7 +615,7 @@ public class PowerDetailsActivity extends ApplicationActivity
         }
 
         if(!spell.getEpicFeat().equals("")){
-            epicFeatText = (TextView) findViewById(R.id.text_epic_feat);
+            epicFeatText = findViewById(R.id.text_epic_feat);
             epicFeatText.setText(spell.getChampionFeat());
             /*epicFeatLayout = (TextInputLayout)findViewById(R.id.input_layout_epic_feat);
             epicFeatTextEdit = (TextInputEditText)findViewById(R.id.editText_epic_feat);
@@ -618,7 +625,7 @@ public class PowerDetailsActivity extends ApplicationActivity
         }
 
         if(!spell.getTrigger().equals("")){
-            triggerText = (TextView) findViewById(R.id.text_trigger);
+            triggerText = findViewById(R.id.text_trigger);
             triggerText.setText(spell.getTrigger());
             /*triggerLayout = (TextInputLayout)findViewById(R.id.input_layout_trigger);
             triggerTextEdit = (TextInputEditText)findViewById(R.id.editText_trigger);

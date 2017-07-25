@@ -26,6 +26,7 @@ public class PowerDetailsPresenter extends DrawerPresenter
     private static String powerId;
     private String powerListId;
     private static Spell thisPower;
+    private static String powerListName;
 
     private ArrayList<String> previouslySavedPowerListIds;
     private String[] savedPowerIds;
@@ -41,13 +42,18 @@ public class PowerDetailsPresenter extends DrawerPresenter
             @NonNull PowerDetailsContract.View powerDetailsView,
             @NonNull DrawerHelper drawerHelper,
             String spellId,
-            String powerLIstId){
+            String powerListId,
+            String powerListName){
         super(dbHelper, drawerHelper, (DrawerContract.ViewActivity) powerDetailsView);
         mPowerDetailsView = powerDetailsView;
         powerId = spellId;
-        this.powerListId = powerLIstId;
+        this.powerListId = powerListId;
         thisPower = new Spell();
         powerGroups = null;
+        if(powerListName != null)
+            PowerDetailsPresenter.powerListName = powerListName;
+        else
+            PowerDetailsPresenter.powerListName = "";
     }
 
     /**
@@ -97,7 +103,7 @@ public class PowerDetailsPresenter extends DrawerPresenter
                 wasUserEditingPower = false;
             }
             else
-                mPowerDetailsView.showNonEditableFilledFields(spell);
+                mPowerDetailsView.showNonEditableFilledFields(spell, powerListName);
         }
     }
 
@@ -165,7 +171,7 @@ public class PowerDetailsPresenter extends DrawerPresenter
 
     @Override
     public void userCancelingEdits() {
-        mPowerDetailsView.showNonEditableFilledFields(thisPower);
+        mPowerDetailsView.showNonEditableFilledFields(thisPower, powerListName);
         mPowerDetailsView.hideUnUsedFields(thisPower);
     }
 

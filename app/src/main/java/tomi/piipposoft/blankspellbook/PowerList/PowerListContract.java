@@ -21,13 +21,14 @@ public interface PowerListContract {
          * called when an existing power is to be shown
          * @param itemId the ID of the power that is opened
          */
-        void showPowerDetailsUI(String itemId, String itemName, String powerListId, android.view.View transitioningView);
+        void showPowerDetailsUI(String itemId, String itemName, String powerListId,
+                                android.view.View transitioningView, String powerListName);
 
         /**
          * Indicate that the PowerDetailsActivity should be started
          * called when a new power is to be added
          */
-        void showNewPowerUI();
+        void showNewPowerUI(String powerListName);
 
         /**
          * Add a single Spell object to the currently displayed list

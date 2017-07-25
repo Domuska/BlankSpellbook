@@ -20,10 +20,12 @@
 
         <TextView
             android:id="@+id/text_spellName"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="30dp"
             android:textSize="20sp"
             android:gravity="center_horizontal"
@@ -31,34 +33,35 @@
             android:lines="1"
             android:textColor="?android:textColorPrimaryInverse"
             android:transitionName="@string/transition_powerDetails_name"
-            app:layout_constraintLeft_toLeftOf="@+id/guideline3"
-            app:layout_constraintRight_toRightOf="@+id/guideline5"
             app:layout_constraintTop_toTopOf="parent"
-            tools:layout_constraintRight_creator="1"
             tools:text="spell name" />
 
         <TextView
             android:id="@+id/text_group"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginRight="8dp"
             android:layout_marginTop="8dp"
             android:textColor="?android:textColorPrimaryInverse"
-            app:layout_constraintLeft_toLeftOf="@+id/text_spellName"
-            app:layout_constraintRight_toRightOf="@+id/text_spellName"
+            android:gravity="center_horizontal"
             app:layout_constraintTop_toBottomOf="@+id/text_spellName"
-            tools:layout_constraintLeft_creator="1"
-            tools:text="group"
-            android:layout_marginEnd="8dp" />
+            tools:text="group" />
+
+        <TextView
+            android:id="@+id/text_powerListName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textColor="?android:textColorPrimaryInverse"
+            app:layout_constraintTop_toBottomOf="@id/text_group"
+            />
 
         <View
+            android:id="@+id/powerDetails_mainDivider"
             android:layout_width="0dp"
             android:layout_height="3dp"
             android:background="?colorAccent"
             android:layout_marginTop="4dp"
-            app:layout_constraintTop_toBottomOf="@+id/text_group"
+            app:layout_constraintTop_toBottomOf="@+id/text_powerListName"
             app:layout_constraintLeft_toLeftOf="@+id/guideline3"
             app:layout_constraintRight_toRightOf="@+id/guideline5"
             android:layout_marginLeft="4dp"

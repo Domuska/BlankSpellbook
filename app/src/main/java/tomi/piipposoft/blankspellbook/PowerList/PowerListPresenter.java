@@ -33,6 +33,7 @@ public class PowerListPresenter extends DrawerPresenter implements
     private static final String TAG = "PowerListPresenter";
     private static PowerListContract.View mPowerListActivity;
     private static String powerListId;
+    private static String powerListName;
 
     private String[] deletedPowerIds;
 
@@ -52,25 +53,30 @@ public class PowerListPresenter extends DrawerPresenter implements
             @NonNull BlankSpellBookContract.DBHelper dbHelper,
             @NonNull PowerListContract.View powerListActivity,
             @NonNull DrawerHelper drawerHelper,
-            @NonNull String listId){
+            @NonNull String listId,
+            @NonNull String powerListName){
         // TODO: 8.5.2017 remove the sql database requirement when FireBase implementation complete
         super(dbHelper, drawerHelper, (DrawerContract.ViewActivity) powerListActivity);
         mPowerListActivity = powerListActivity;
         powerListId = listId;
+        PowerListPresenter.powerListName = powerListName;
     }
 
     static PowerListPresenter getInstance(@NonNull BlankSpellBookContract.DBHelper dbHelper,
-                                                 @NonNull PowerListContract.View powerListActivity,
-                                                 @NonNull DrawerHelper drawerHelper,
-                                                 @NonNull String listId){
+                                          @NonNull PowerListContract.View powerListActivity,
+                                          @NonNull DrawerHelper drawerHelper,
+                                          @NonNull String listId,
+                                          @NonNull String listName){
 
         if(thisInstance == null)
-            thisInstance = new PowerListPresenter(dbHelper, powerListActivity, drawerHelper, listId);
+            thisInstance = new PowerListPresenter(dbHelper, powerListActivity, drawerHelper,
+                    listId, listName);
         else {
             //Instance already exists, just save references to activity and drawer views
             mPowerListActivity = powerListActivity;
             mDrawerView = drawerHelper;
             powerListId = listId;
+            powerListName = listName;
         }
         return thisInstance;
     }
@@ -174,10 +180,11 @@ public class PowerListPresenter extends DrawerPresenter implements
         //decide if we open new power input screen or just show existing power details
         if(itemId.equals(PowerDetailsActivity.EXTRA_ADD_NEW_POWER_DETAILS)) {
             Log.d(TAG, "openPowerDetails: removing listener: " + groupsListener.toString());
-            mPowerListActivity.showNewPowerUI();
+            mPowerListActivity.showNewPowerUI(powerListName);
         }
         else {
-            mPowerListActivity.showPowerDetailsUI(itemId, itemName, powerListId, transitioningView);
+            mPowerListActivity.showPowerDetailsUI(itemId, itemName, powerListId,
+                    transitioningView, powerListName);
         }
     }
 

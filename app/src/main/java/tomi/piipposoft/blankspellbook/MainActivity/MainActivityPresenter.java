@@ -456,8 +456,9 @@ public class MainActivityPresenter extends DrawerPresenter
     }
 
     @Override
-    public void onPowerClicked(String powerId, String powerListId, View transitionOrigin) {
-        mMainActivityView.startPowerDetailsActivity(powerId, powerListId, transitionOrigin);
+    public void onPowerClicked(String powerId, String powerListId,
+                               View transitionOrigin, String powerListName) {
+        mMainActivityView.startPowerDetailsActivity(powerId, powerListId, transitionOrigin, powerListName);
     }
 
     //from MainActivityContract.FilterFragmentUserActionListener

@@ -61,7 +61,6 @@ public class PowerListActivity extends ApplicationActivity
 
     private final String TAG = "PowerListActivity";
     private String powerListId;
-    private String powerListName;
 
     private FloatingActionButton fab;
     private RecyclerView recyclerView;
@@ -86,16 +85,16 @@ public class PowerListActivity extends ApplicationActivity
 
         Intent thisIntent = getIntent();
         powerListId = thisIntent.getStringExtra(EXTRA_POWER_LIST_ID);
-        powerListName = thisIntent.getStringExtra(EXTRA_POWER_LIST_NAME);
+        String powerListName = thisIntent.getStringExtra(EXTRA_POWER_LIST_NAME);
         Log.d(TAG, "ID got from extras: " + powerListId + " name got from extras: " + powerListName);
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = findViewById(R.id.fab);
         //set fab color to match the one in mainActivity or set it as accent color
         fab.setBackgroundTintList(ColorStateList.valueOf(
                 thisIntent.getIntExtra(EXTRA_POWER_LIST_COLOR, Helper.getAccentColor(this))));
         fab.setVisibility(View.VISIBLE);
-        deleteButton = (ImageButton) findViewById(R.id.toolbar_delete);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        deleteButton = findViewById(R.id.toolbar_delete);
+        progressBar = findViewById(R.id.progressBar);
 
         final Animation anim = AnimationUtils.loadAnimation(this, R.anim.fab_scale_animation);
         fab.startAnimation(anim);
@@ -118,7 +117,7 @@ public class PowerListActivity extends ApplicationActivity
 
         ((TextView)findViewById(R.id.powerlist_name_text)).setText(powerListName);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        Toolbar toolbar = findViewById(R.id.my_toolbar);
         if (toolbar != null) {
             toolbar.setTitle("");
             //((AppCompatTextView)toolbar.findViewById(R.id.toolbar_title)).setText(powerListName);
@@ -137,13 +136,14 @@ public class PowerListActivity extends ApplicationActivity
                 DataSource.getDatasource(this),
                 this,
                 this.drawerHelper,
-                powerListId
+                powerListId,
+                getIntent().getStringExtra(EXTRA_POWER_LIST_NAME)
         );
 
         this.drawerActionListener = (DrawerContract.UserActionListener) myActionListener;
         this.drawerActionListener.powerListProfileSelected();
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView = findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(this);
 
         if(adapter == null) {
@@ -215,7 +215,8 @@ public class PowerListActivity extends ApplicationActivity
     // FROM POWER LIST CONTRACT INTERFACE
 
     @Override
-    public void showPowerDetailsUI(String itemId, String itemName, String powerListId, View transitioningView) {
+    public void showPowerDetailsUI(String itemId, String itemName,
+                                   String powerListId, View transitioningView, String powerListName) {
         if (transitioningView != null){
             Intent i = new Intent(PowerListActivity.this, PowerDetailsActivity.class);
             String transitionName = getString(R.string.transition_powerDetails_name);
@@ -229,20 +230,22 @@ public class PowerListActivity extends ApplicationActivity
             i.putExtra(PowerDetailsActivity.EXTRA_POWER_DETAIL_ID, itemId);
             i.putExtra(PowerDetailsActivity.EXTRA_POWER_LIST_ID, powerListId);
             i.putExtra(PowerDetailsActivity.EXTRA_POWER_DETAIL_NAME, itemName);
+            i.putExtra(PowerDetailsActivity.EXTRA_POWER_LIST_NAME, powerListName);
             ActivityCompat.startActivity(PowerListActivity.this, i, bundle);
         }
         else
-            this.openPowerDetailsActivity(itemId, powerListId);
+            this.openPowerDetailsActivity(itemId, powerListId, powerListName);
     }
 
     @Override
-    public void showNewPowerUI() {
+    public void showNewPowerUI(String powerListName) {
         Intent i = new Intent(this, PowerDetailsActivity.class);
         Log.d(TAG, "opening new power details UI");
         i.putExtra(PowerDetailsActivity.EXTRA_POWER_DETAIL_ID,
                 PowerDetailsActivity.EXTRA_ADD_NEW_POWER_DETAILS);
         i.putExtra(PowerDetailsActivity.EXTRA_POWER_LIST_ID,
                 powerListId);
+        i.putExtra(PowerDetailsActivity.EXTRA_POWER_LIST_NAME, powerListName);
         startActivity(i);
     }
 

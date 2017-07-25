@@ -33,7 +33,8 @@ public interface MainActivityContract {
         void startPowerListActivity(String name, String id,
                                     android.view.View originView, int powerListColor);
         void startDailyPowerListActivity(String listName, String listId);
-        void startPowerDetailsActivity(String powerId, String powerListId, android.view.View transitionOrigin);
+        void startPowerDetailsActivity(String powerId, String powerListId,
+                                       android.view.View transitionOrigin, String powerListName);
 
         //for showing, filtering and removing data from the filter fragment
         //void givePowerListNamesForFilter(ArrayList<String> powerListNames);
@@ -65,7 +66,8 @@ public interface MainActivityContract {
          */
         void onPowerListClicked(@NonNull String listName, @ NonNull String listId,
                                 @Nullable android.view.View originView, int powerListColor);
-        void onPowerClicked(String powerId, String powerListId, android.view.View originView);
+        void onPowerClicked(String powerId, String powerListId,
+                            android.view.View originView, String powerListName);
     }
 
     /**

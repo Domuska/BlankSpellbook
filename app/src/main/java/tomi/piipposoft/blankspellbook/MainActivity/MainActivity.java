@@ -465,7 +465,8 @@ public class MainActivity extends ApplicationActivity
     }
 
     @Override
-    public void startPowerDetailsActivity(String powerId, String powerListId, View transitionOrigin) {
+    public void startPowerDetailsActivity(String powerId, String powerListId,
+                                          View transitionOrigin, String powerListName) {
         //transition disabled for now since starting the powerDetails is choppy, maybe add transition
         //if the activity start-up is made smoother
         /*if(transitionOrigin != null){
@@ -483,7 +484,7 @@ public class MainActivity extends ApplicationActivity
             ActivityCompat.startActivity(MainActivity.this, i, bundle);
         }
         else*/
-            this.openPowerDetailsActivity(powerId, powerListId);
+            this.openPowerDetailsActivity(powerId, powerListId, powerListName);
     }
 
     @Override

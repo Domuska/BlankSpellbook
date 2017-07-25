@@ -44,12 +44,13 @@ public class ApplicationActivity extends AppCompatActivity
         startActivity(i);
     }
 
-    protected void openPowerDetailsActivity(String powerId, String powerListId){
+    protected void openPowerDetailsActivity(String powerId, String powerListId, String powerListName){
         Intent i = new Intent(this, PowerDetailsActivity.class);
         Log.d(TAG, "setting spell ID as extra: " + powerId);
         i.putExtra(PowerDetailsActivity.EXTRA_POWER_DETAIL_ID, powerId);
         i.putExtra(PowerDetailsActivity.EXTRA_POWER_LIST_ID,
                 powerListId);
+        i.putExtra(PowerDetailsActivity.EXTRA_POWER_LIST_NAME, powerListName);
         startActivity(i);
     }
 
