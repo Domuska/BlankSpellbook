@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/preferences_filter_category" />
+        <SwitchPreference
+            android:key="@string/preferences_filter_by_cross_section"
+            android:title="@string/preferences_filter_by_cross_section_title"
+            android:summary="@string/preferences_filter_by_cross_section_summary"
+            android:defaultValue="true" />
+</PreferenceScreen>
