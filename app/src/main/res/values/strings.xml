@@ -57,8 +57,9 @@
             <string name="spellbook_hitDamageFifth">Damage at fifth level</string>
             <string name="spellbook_hitDamageSeventh">Damage at seventh level</string>
             <string name="spellbook_hitDamageNinth">Damage at ninth level</string>
-            <string name="spellbook_damageEffect">Spell\'s damage or other effect</string>
-            <string name="spellbook_missdamage">Miss damage</string>
+            <string name="spellbook_damageEffect">Spell\'s damage or effect</string>
+            <string name="spellbook_missdamage">Spell\'s miss damage or effect</string>
+            <string name="spellbook_special">Special rules</string>
             <string name="spellbook_name">Spell name</string>
             <string name="spellbook_playerNotes">Notes</string>
             <string name="spellbook_rechargeTime">Recharge time</string>
