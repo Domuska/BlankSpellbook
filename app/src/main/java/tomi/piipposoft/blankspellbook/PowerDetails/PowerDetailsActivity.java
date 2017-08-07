@@ -78,7 +78,7 @@ public class PowerDetailsActivity extends ApplicationActivity
 
     private TextInputEditText spellNameTextEdit, attackTypeTextEdit, rechargeTextEdit, castingTimeTextEdit,
             targetTextEdit, attackRollTextEdit, hitDamageEffectTextEdit, missDamageTextEdit, adventurerFeatTextEdit, championFeatTextEdit,
-            epicFeatTextEdit, notesTextEdit, triggerTextEdit;
+            epicFeatTextEdit, notesTextEdit, triggerTextEdit, specialTextEdit;
 
     private TextView spellNameText, attackTypeText, rechargeText, castingTimeText, groupText,
             targetText, attackRollText, hitDamageEffectText, missDamageText, adventurerFeatText, championFeatText,
@@ -298,6 +298,8 @@ public class PowerDetailsActivity extends ApplicationActivity
             map.put(PowerDetailsContract.playerNotes, notesTextEdit.getText().toString());
         if(fieldHasText(triggerTextEdit))
             map.put(PowerDetailsContract.trigger, triggerTextEdit.getText().toString());
+        if(fieldHasText(specialTextEdit))
+            map.put(PowerDetailsContract.special, specialTextEdit.getText().toString());
 
         return map;
     }
@@ -408,6 +410,7 @@ public class PowerDetailsActivity extends ApplicationActivity
         findViewById(R.id.input_layout_champion_feat).setVisibility(View.VISIBLE);
         findViewById(R.id.input_layout_epic_feat).setVisibility(View.VISIBLE);
         findViewById(R.id.input_layout_trigger).setVisibility(View.VISIBLE);
+        findViewById(R.id.input_layout_special_rules).setVisibility(View.VISIBLE);
 
 
         triggerTextEdit = (TextInputEditText)findViewById(R.id.editText_trigger);
@@ -424,6 +427,8 @@ public class PowerDetailsActivity extends ApplicationActivity
         castingTimeTextEdit = (TextInputEditText)findViewById(R.id.editText_castingTime);
         attackRollTextEdit = (TextInputEditText)findViewById(R.id.editText_attackRoll);
         attackTypeTextEdit = (TextInputEditText)findViewById(R.id.editText_attackType);
+        specialTextEdit = findViewById(R.id.editText_special);
+
 
         fab.setImageResource(R.drawable.ic_done_black_24dp);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -598,6 +603,7 @@ public class PowerDetailsActivity extends ApplicationActivity
         findViewById(R.id.input_layout_champion_feat).setVisibility(View.VISIBLE);
         findViewById(R.id.input_layout_epic_feat).setVisibility(View.VISIBLE);
         findViewById(R.id.input_layout_trigger).setVisibility(View.VISIBLE);
+        findViewById(R.id.input_layout_special_rules).setVisibility(View.VISIBLE);
 
         //set text fields as editable, save variables since constructDataFromFields needs them to be initialized
         KeyListener newListener = new TextInputEditText(getApplicationContext()).getKeyListener();
@@ -656,6 +662,10 @@ public class PowerDetailsActivity extends ApplicationActivity
         triggerTextEdit = (TextInputEditText)findViewById(R.id.editText_trigger);
         triggerTextEdit.setText(spell.getTrigger());
         triggerTextEdit.setKeyListener(newListener);
+
+        specialTextEdit = findViewById(R.id.editText_special);
+        specialTextEdit.setText(spell.getSpecial());
+        specialTextEdit.setKeyListener(newListener);
 
         //make sure keyboard does not pop up
         View currentFocus = getCurrentFocus();

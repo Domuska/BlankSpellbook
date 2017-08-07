@@ -30,10 +30,9 @@
         </android.support.design.widget.TextInputLayout>
 
 
-
-        <!-- attack type -->
+        <!-- group name field -->
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/input_layout_attackType"
+            android:id="@+id/input_layout_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/input_layout_spell_name"
@@ -42,6 +41,46 @@
             android:layout_marginEnd="10dp"
             android:visibility="gone">
 
+            <AutoCompleteTextView
+                android:id="@+id/editText_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/spellbook_group"
+                style="@android:style/TextAppearance.Small"
+                android:completionThreshold="1" />
+        </android.support.design.widget.TextInputLayout>
+
+        <!-- attack roll -->
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_attackRoll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/input_layout_group"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:visibility="gone">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/editText_attackRoll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/spellbook_attackroll"
+                style="@android:style/TextAppearance.Small"
+                />
+        </android.support.design.widget.TextInputLayout>
+
+
+        <!-- attack type -->
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_attackType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/input_layout_attackRoll"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:visibility="gone">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/editText_attackType"
@@ -52,54 +91,12 @@
                 />
         </android.support.design.widget.TextInputLayout>
 
-        <!-- recharge time-->
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/input_layout_recharge"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/input_layout_attackType"
-            android:layout_marginTop="15dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:visibility="gone">
-
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/editText_recharge"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/spellbook_rechargeTime"
-                style="@android:style/TextAppearance.Small"
-                />
-        </android.support.design.widget.TextInputLayout>
-
-        <!-- casting time -->
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/input_layout_castingTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/input_layout_recharge"
-            android:layout_marginTop="15dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:visibility="gone">
-
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/editText_castingTime"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/spellbook_castingtime"
-                style="@android:style/TextAppearance.Small"
-                />
-        </android.support.design.widget.TextInputLayout>
-
         <!-- target -->
         <android.support.design.widget.TextInputLayout
             android:id="@+id/input_layout_target"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/input_layout_castingTime"
+            android:layout_below="@+id/input_layout_attackType"
             android:layout_marginTop="15dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
@@ -115,9 +112,9 @@
                 />
         </android.support.design.widget.TextInputLayout>
 
-        <!-- attack roll -->
+        <!-- casting time -->
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/input_layout_attackRoll"
+            android:id="@+id/input_layout_castingTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/input_layout_target"
@@ -126,43 +123,22 @@
             android:layout_marginEnd="10dp"
             android:visibility="gone">
 
-
             <android.support.design.widget.TextInputEditText
-                android:id="@+id/editText_attackRoll"
+                android:id="@+id/editText_castingTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/spellbook_attackroll"
+                android:hint="@string/spellbook_castingtime"
                 style="@android:style/TextAppearance.Small"
                 />
         </android.support.design.widget.TextInputLayout>
 
-        <!-- trigger -->
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/input_layout_trigger"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/input_layout_attackRoll"
-            android:layout_marginTop="15dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:visibility="gone">
-
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/editText_trigger"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/spellbook_trigger"
-                style="@android:style/TextAppearance.Small"
-                />
-        </android.support.design.widget.TextInputLayout>
 
         <!--  damage or effect -->
         <android.support.design.widget.TextInputLayout
             android:id="@+id/input_layout_damage_effect"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/input_layout_trigger"
+            android:layout_below="@+id/input_layout_castingTime"
             android:layout_marginTop="15dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
@@ -199,12 +175,73 @@
                 />
         </android.support.design.widget.TextInputLayout>
 
+        <!-- special rules-->
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_special_rules"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/input_layout_miss_damage"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:visibility="gone">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/editText_special"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/spellbook_special"
+                style="@android:style/TextAppearance.Small"
+                />
+        </android.support.design.widget.TextInputLayout>
+
+        <!-- recharge time-->
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_recharge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/input_layout_special_rules"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:visibility="gone">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/editText_recharge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/spellbook_rechargeTime"
+                style="@android:style/TextAppearance.Small"
+                />
+        </android.support.design.widget.TextInputLayout>
+
+        <!-- trigger -->
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_trigger"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/input_layout_recharge"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:visibility="gone">
+
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/editText_trigger"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/spellbook_trigger"
+                style="@android:style/TextAppearance.Small"
+                />
+        </android.support.design.widget.TextInputLayout>
+
         <!-- Adventurer feat -->
         <android.support.design.widget.TextInputLayout
             android:id="@+id/input_layout_adventurer_feat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/input_layout_miss_damage"
+            android:layout_below="@+id/input_layout_trigger"
             android:layout_marginTop="15dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
@@ -265,31 +302,10 @@
 
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/input_layout_group"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/input_layout_epic_feat"
-            android:layout_marginTop="15dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:visibility="gone">
-
-
-            <AutoCompleteTextView
-                android:id="@+id/editText_group"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/spellbook_group"
-                style="@android:style/TextAppearance.Small"
-                android:completionThreshold="1" />
-        </android.support.design.widget.TextInputLayout>
-
-
-        <android.support.design.widget.TextInputLayout
             android:id="@+id/input_layout_notes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/input_layout_group"
+            android:layout_below="@+id/input_layout_epic_feat"
             android:layout_marginTop="15dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"

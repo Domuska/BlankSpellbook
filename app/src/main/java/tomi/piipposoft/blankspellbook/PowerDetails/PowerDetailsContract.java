@@ -27,6 +27,7 @@ public interface PowerDetailsContract {
     String groupName = "groupName";
     String playerNotes = "playerNotes";
     String trigger = "trigger";
+    String special = "special";
 
     interface View {
         void showEmptyFields();

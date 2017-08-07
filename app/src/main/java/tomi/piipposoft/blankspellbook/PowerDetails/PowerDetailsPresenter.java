@@ -284,6 +284,8 @@ public class PowerDetailsPresenter extends DrawerPresenter
                 spell.setChampionFeat(powerData.get(PowerDetailsContract.championFeat));
             if (powerData.containsKey(PowerDetailsContract.epicFeat))
                 spell.setEpicFeat(powerData.get(PowerDetailsContract.epicFeat));
+            if (powerData.containsKey(PowerDetailsContract.special))
+                spell.setSpecial(powerData.get(PowerDetailsContract.special));
 
             //spell must always have a group name, otherwise we can't order by group name at DB side
             //when the spells are fetched, or it would become difficult
