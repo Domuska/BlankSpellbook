@@ -25,6 +25,7 @@ public class Spell {
     private String championFeat;
     private String epicFeat;
     private String trigger;
+    private String special;
 
     //powerListName for MainActivity, should never be saved to database
     private String powerListName;
@@ -187,6 +188,14 @@ public class Spell {
         this.powerListId = powerListId;
     }
 
+    public String getSpecial() {
+        return special;
+    }
+
+    public void setSpecial(String specialRule) {
+        this.special = specialRule;
+    }
+
     public HashMap<String, Boolean> getDailyPowerLists() {
         return dailyPowerLists;
     }
@@ -236,9 +245,11 @@ public class Spell {
             this.setEpicFeat("");
         if (this.getTrigger() == null)
             this.setTrigger("");
+        if (this.getSpecial() == null)
+            this.setSpecial("");
         return new String[]{attackType, attackRoll,
                 castingTime, groupName, hitDamageOrEffect, missDamage, name, playerNotes,
-                rechargeTime, target, adventurerFeat, championFeat, epicFeat, trigger};
+                rechargeTime, target, adventurerFeat, championFeat, epicFeat, trigger, special};
     }
 
     @Override

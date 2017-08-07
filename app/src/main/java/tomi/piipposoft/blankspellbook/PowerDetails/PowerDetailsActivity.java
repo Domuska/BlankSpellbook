@@ -82,7 +82,7 @@ public class PowerDetailsActivity extends ApplicationActivity
 
     private TextView spellNameText, attackTypeText, rechargeText, castingTimeText, groupText,
             targetText, attackRollText, hitDamageEffectText, missDamageText, adventurerFeatText, championFeatText,
-            epicFeatText, notesText, triggerText;
+            epicFeatText, notesText, triggerText, specialText;
 
     private ProgressBar progressBar;
 
@@ -527,6 +527,11 @@ public class PowerDetailsActivity extends ApplicationActivity
 
         triggerText = findViewById(R.id.text_trigger);
         triggerText.setText(spell.getTrigger());
+
+        specialText = findViewById(R.id.text_special_rule);
+        specialText.setText(spell.getSpecial());
+
+
 
 
 
