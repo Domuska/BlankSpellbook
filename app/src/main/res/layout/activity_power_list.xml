@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -10,37 +10,23 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/double_toolbar_size"
-        android:fitsSystemWindows="true">
+        android:layout_height="@dimen/double_toolbar_size">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/my_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            android:layout_weight="1">
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:layout_scrollFlags="enterAlways|scroll"/>
 
-            <!-- this view is not actually used any more, it used to be the way to have
-             activity transition to fly up to toolbar but that is not done any more -->
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/toolbar_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="?android:textColorPrimary"
-                android:textSize="20sp"
-                android:maxLines="1"
-                android:ellipsize="end"
-                />
-
-        </android.support.v7.widget.Toolbar>
-
+        <!-- second row below the actual toolbar -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/my_color_primary_lighter"
-            android:layout_weight="1">
+            app:layout_scrollFlags="enterAlways|scroll">
 
             <TextView
                 android:id="@+id/powerlist_name_text"
@@ -98,19 +84,19 @@
         android:id="@+id/recycler_view"
         android:scrollbars="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/appbar"
+        android:layout_height="wrap_content"
         android:paddingTop="@dimen/activity_vertical_margin"
+        android:layout_marginTop="1dp"
         android:clipToPadding="false"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
 
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
+        app:layout_anchorGravity="end|bottom"
+        app:layout_anchor="@id/recycler_view"
         android:id="@+id/fab"
         android:src="@drawable/ic_add_black_48dp"
         android:clickable="true"
@@ -118,4 +104,4 @@
         android:visibility="invisible" />
 
 
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>
