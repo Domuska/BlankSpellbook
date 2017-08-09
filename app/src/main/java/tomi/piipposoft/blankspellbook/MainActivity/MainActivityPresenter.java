@@ -589,10 +589,10 @@ public class MainActivityPresenter extends DrawerPresenter
         //attach listener for daily power lists
         if(dailyPowerListListener == null)
             dailyPowerListListener = DataSource.attachDailyPowerListListener(DataSource.MAINACTIVITYPRESENTER);
-        else{
+        /*else{
             Log.d(TAG, "startListeningForDailyPowerLists: dailyPowerListListener is not null");
             DataSource.getDailyPowerLists(DataSource.MAINACTIVITYPRESENTER);
-        }
+        }*/
     }
 
 
