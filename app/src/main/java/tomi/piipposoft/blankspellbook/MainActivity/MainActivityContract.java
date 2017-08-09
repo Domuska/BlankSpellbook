@@ -88,7 +88,6 @@ public interface MainActivityContract {
     interface ListeningStateInterface {
         void startListeningForDailyPowerLists();
         void startListeningForPowerLists();
-        void stopListeningForPowerLists();
         void startListeningForPowers();
     }
 

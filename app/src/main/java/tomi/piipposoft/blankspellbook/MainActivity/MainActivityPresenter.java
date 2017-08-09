@@ -640,12 +640,7 @@ public class MainActivityPresenter extends DrawerPresenter
         if(powerListListener == null)
             powerListListener = DataSource.attachPowerListListener(DataSource.MAINACTIVITYPRESENTER);
     }
-
-    @Override
-    public void stopListeningForPowerLists() {
-        //could be that we dont need this. The listener is nulled at pauseActivity
-        throw new RuntimeException("not implemented");
-    }
+    
 
     //interface MainActivityContract.preferencesInterface
 
