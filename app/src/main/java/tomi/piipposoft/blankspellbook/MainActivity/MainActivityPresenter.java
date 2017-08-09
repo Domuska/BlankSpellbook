@@ -48,8 +48,8 @@ public class MainActivityPresenter extends DrawerPresenter
 
     //for caching the data - prevent the list elements flashing in and out when returning to activity
     private static ArrayMap<String, String> powerLists = new ArrayMap<>();
-    private static ArrayMap<String, ArrayList<String>> powerNamesForPowerLists = new ArrayMap<>();
     private static ArrayMap<String, String> dailyPowerLists = new ArrayMap<>();
+    private static ArrayMap<String, ArrayList<String>> powerNamesForPowerLists = new ArrayMap<>();
 
     //for storing the powers to handle filtering
     private static ArrayList<Spell> allPowers = new ArrayList<>();
@@ -206,7 +206,10 @@ public class MainActivityPresenter extends DrawerPresenter
      */
     public static void handleNewDailyPowerList(String name, String id){
         Log.d(TAG, "handleNewDailyPowerList: name: " + name + " id: " + id);
-        mMainActivityView.addDailyPowerListData(name, id);
+        if(!dailyPowerLists.containsKey(id)) {
+            dailyPowerLists.put(id, name);
+            mMainActivityView.addDailyPowerListData(name, id);
+        }
     }
 
     /**
@@ -579,6 +582,10 @@ public class MainActivityPresenter extends DrawerPresenter
      */
     @Override
     public void startListeningForDailyPowerLists() {
+
+        for(Map.Entry<String, String> powerList : dailyPowerLists.entrySet()){
+            mMainActivityView.addDailyPowerListData(powerList.getValue(), powerList.getKey());
+        }
         //attach listener for daily power lists
         if(dailyPowerListListener == null)
             dailyPowerListListener = DataSource.attachDailyPowerListListener(DataSource.MAINACTIVITYPRESENTER);
@@ -640,7 +647,7 @@ public class MainActivityPresenter extends DrawerPresenter
         if(powerListListener == null)
             powerListListener = DataSource.attachPowerListListener(DataSource.MAINACTIVITYPRESENTER);
     }
-    
+
 
     //interface MainActivityContract.preferencesInterface
 
