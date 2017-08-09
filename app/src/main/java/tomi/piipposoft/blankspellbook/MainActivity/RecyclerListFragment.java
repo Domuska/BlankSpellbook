@@ -93,11 +93,18 @@ public class RecyclerListFragment extends Fragment {
 
     public void handleNewListItem(String listName, String id) {
         Log.d(TAG, "handleNewListItem: new item: " + listName);
-        listNames.add(listName);
-        listIds.add(id);
-        adapter.notifyItemInserted(listNames.size()-1);
-        progressBar.setVisibility(View.GONE);
-        recyclerView.setVisibility(View.VISIBLE);
+        //see if we have the power list already.
+        //for some reason, when activity is destroyed and resumed, the data gets
+        //passed in twice, the cached data and new data gotten over network.
+        //was not able to figure out why this is (see MainActivityPresenter.startListeningForPowerLists
+        // and MainActivityPresenter.handleNewPowerList for reference).
+        if(!listIds.contains(id)) {
+            listIds.add(id);
+            listNames.add(listName);
+            adapter.notifyItemInserted(listNames.size()-1);
+            progressBar.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
     }
 
     /**

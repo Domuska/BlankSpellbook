@@ -54,6 +54,7 @@ public class MainActivity extends ApplicationActivity
 
     private ActionBarDrawerToggle mDrawerToggle;
     private MainActivityContract.UserActionListener mActionlistener;
+    private MainActivityContract.ListeningStateInterface listeningStateInterface;
 
     private MainActivityPagerAdapter pagerAdapter;
     private ViewPager viewPager;
@@ -105,6 +106,7 @@ public class MainActivity extends ApplicationActivity
                 DataSource.getDatasource(this),
                 drawerHelper,
                 this);
+        listeningStateInterface = (MainActivityContract.ListeningStateInterface) mActionlistener;
 
         fab = findViewById(R.id.mainactivity_fab);
         //fab listeners
@@ -112,19 +114,20 @@ public class MainActivity extends ApplicationActivity
         dailyPowerListListener = new OnNewDailyPowerListClickListener();
         powerListListener = new OnNewPowerListClickListener();
 
-        viewPager = findViewById(R.id.pager);
 
-        // TODO: 12.7.2017 finish working pagerAdapter so it doesnt flash when activity resumes
-        //if(pagerAdapter == null) {
-            Log.d(TAG, "pagerAdapter is null!");
+        if(viewPager == null) {
+            viewPager = findViewById(R.id.pager);
+            Log.d(TAG, "viewPager is null, creating new: " + viewPager);
             //create a new adapter and give it the actionListener to attach to the fragments
             pagerAdapter = new MainActivityPagerAdapter(
                     getSupportFragmentManager(),
                     (MainActivityContract.FragmentUserActionListener) mActionlistener,
-                    (MainActivityContract.PagerAdapterListener) mActionlistener);
-        //}
-
-        viewPager.setAdapter(pagerAdapter);
+                    (MainActivityContract.ListeningStateInterface) mActionlistener);
+            viewPager.setAdapter(pagerAdapter);
+        }
+        else {
+            //listeningStateInterface.startListeningForPowerLists();
+        }
 
 
         //set the number of screens that are away from currently focused screen
@@ -233,6 +236,9 @@ public class MainActivity extends ApplicationActivity
         filterTextView.setOnClickListener(new OpenFilterClickListener());
     }
 
+    /**
+     * Get the filtering mode (join or cross-section) from shared preferences and pass it to presenter
+     */
     private void setPresenterFilterMode() {
         ((MainActivityContract.preferencesInterface) mActionlistener).filterStyleChanged(
                 SharedPreferencesHandler.getFilterSPellByCrossSection(this)
@@ -243,10 +249,6 @@ public class MainActivity extends ApplicationActivity
     protected void onPause() {
         Log.d(TAG, "onPause called");
         mActionlistener.pauseActivity();
-        //remove the data from the fragments since it's re-fetched on resume
-        pagerAdapter.removePowerListsFromFragment();
-        pagerAdapter.removeDailyPowerListsFromFragment();
-        pagerAdapter.removeAllPowers();
         super.onPause();
     }
 
@@ -401,6 +403,7 @@ public class MainActivity extends ApplicationActivity
 
     @Override
     public void addPowerListData(String name, String id) {
+        Log.d(TAG, "addPowerListData: got new power list, name: " + name);
         pagerAdapter.addPowerListToFragment(name, id);
     }
 

@@ -41,6 +41,8 @@ public interface MainActivityContract {
         //void givePowerGroupNamesForFilter(ArrayList<String> powerGroupNames);
         void showFilteredGroups(ArrayList<String> filteredPowers);
         void showFilteredPowerLists(ArrayList<String> filteredPowers);
+
+
     }
 
     interface UserActionListener{
@@ -83,10 +85,11 @@ public interface MainActivityContract {
      * interface for informing presenter when certain fragments have been
      * created so presenter can supply the data to be shown
      */
-    interface PagerAdapterListener{
-        void onDailyPowerListFragmentCreated();
-        void onPowerListFragmentCreated();
-        void onPowersFragmentCreated();
+    interface ListeningStateInterface {
+        void startListeningForDailyPowerLists();
+        void startListeningForPowerLists();
+        void stopListeningForPowerLists();
+        void startListeningForPowers();
     }
 
     interface preferencesInterface{

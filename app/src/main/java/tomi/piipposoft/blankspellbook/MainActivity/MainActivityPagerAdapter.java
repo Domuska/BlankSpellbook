@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 import android.view.ViewGroup;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import tomi.piipposoft.blankspellbook.Utils.Spell;
@@ -36,17 +35,17 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
     //attached to those fragments on creation
     private MainActivityContract.FragmentUserActionListener fragmentListActionListener;
     //listener for telling presenter when fragments have been created so it can supply the data
-    private MainActivityContract.PagerAdapterListener pagerAdapterListener;
+    private MainActivityContract.ListeningStateInterface listeningStateInterface;
 
     //list for powers that are added before fragment is ready
     private ArrayList<Spell> powersInQueue = new ArrayList<>();
 
     public MainActivityPagerAdapter(FragmentManager manager,
                                     MainActivityContract.FragmentUserActionListener actionListener,
-                                    MainActivityContract.PagerAdapterListener pagerAdapterListener){
+                                    MainActivityContract.ListeningStateInterface listeningStateInterface){
         super(manager);
         this.fragmentListActionListener = actionListener;
-        this.pagerAdapterListener = pagerAdapterListener;
+        this.listeningStateInterface = listeningStateInterface;
     }
 
     //override this, so we can save the references to the fragments safely, we can call methods on them later
@@ -61,7 +60,7 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
                 //attach presenter as listener
                 dailyPowerListsFragment.attachClickListener(fragmentListActionListener);
                 //inform presenter that fragment has been created
-                pagerAdapterListener.onDailyPowerListFragmentCreated();
+                listeningStateInterface.startListeningForDailyPowerLists();
                 Log.d(TAG, "instantiateItem: daily power list fragment created");
                 break;
             case 1:
@@ -69,7 +68,7 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
                 //attach the presenter as listener
                 powerListsFragment.attachClickListener(fragmentListActionListener);
                 //inform presenter fragment has been created
-                pagerAdapterListener.onPowerListFragmentCreated();
+                listeningStateInterface.startListeningForPowerLists();
                 Log.d(TAG, "instantiateItem: power list fragment created");
                 break;
             case 2:
@@ -77,7 +76,7 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
                 //attach the presenter as listener
                 powersFragment.attachClickListener(fragmentListActionListener);
                 //inform presenter that powers fragment has been created
-                pagerAdapterListener.onPowersFragmentCreated();
+                listeningStateInterface.startListeningForPowers();
                 Log.d(TAG, "instantiateItem: powers fragment created. Queue size: " + powersInQueue.size());
                 for(Spell power : powersInQueue){
                     powersFragment.handleNewPower(power, power.getPowerListName());
@@ -134,8 +133,11 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
      */
     void addPowerNameToPowerList(String powerName, String powerListId){
         if(powerListsFragment != null){
+            Log.d(TAG, "addPowerNameToPowerList: adding power with name " + powerName + " to power list " + powerListId);
             powerListsFragment.handleNewPowerName(powerName, powerListId);
         }
+        else
+            Log.d(TAG, "addPowerNameToPowerList: power list fragment still null");
     }
 
     /**
@@ -232,10 +234,13 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter{
             powersFragment.removeAllPowers();
     }
 
+    /**
+     * Set the powers that should be shown in the fragment - used when filtering powers
+     * @param powersData list of Spells that should be displayed
+     */
     void setPowersData(ArrayList<Spell> powersData){
         if(powersFragment != null)
             powersFragment.setPowers(powersData);
     }
-
 }
 
