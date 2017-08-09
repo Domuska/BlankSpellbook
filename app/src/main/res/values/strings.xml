@@ -22,6 +22,7 @@
     <string name="powerList_confirmRemoval_title">Confirm removal</string>
     <string name="power_list_snackbar_info">Powers removed</string>
     <string name="power_list_toast_no_powers">This power list doesn\'t have anything to show… Add something!</string>
+    <string name="content_description_delete_button">Delete the selected element</string>
 
     <!-- Strings drawer's popup dialogs -->
     <string name="alertdialog_createspellbook">Create new spell book</string>
@@ -110,4 +111,6 @@
     <string name="preferences_filter_by_cross_section_title">Filter powers by cross section</string>
     <string name="preferences_filter_by_cross_section_summary">Toggle on to show powers that satisfy both of the filters. Toggle off to show powers that satisfy any of the filters.</string>
 
+
+    <!-- -->
 </resources>

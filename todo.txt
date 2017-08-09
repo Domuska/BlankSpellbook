@@ -58,11 +58,12 @@ kun tallennat uuden spellin (ainaki powers fragmenin kautta) ei ei-muokattavia k
 
 kun spelliä muokataan, ei spell_groups tauluun laiteta spellin nimeä sen id:n alle
 
-!!!!!!!!!!!!!! --------- lisätään special teksti UI:hin power detailsiin --------------- !!!!!!!!!!!!!!!!
 
-spell list fragmentissa mainactivityssä pitää korttien leveys asettaa joksiki muuksi ku wrap_contentiksi
+spell list fragmentissa mainactivityssä pitää korttien leveys asettaa joksiki muuksi ku wrap_contentiksi, tekstit näyttää huonolta
 
 spellit power list activityyn pitäisi palauttaa järjestyksessä nimen perusteella (jokaisen spellin levelin sisällä)
+
+fab hyppelee eri paikkoihin power lists activityssä, animaatio ja visibility pitäisi asettaa vasta ku recyclerview on laitettu näkyviin
 
 kun filtteri avataan niin pitäs laittaa onclicklisteneri niin että ku klikkaat filtterin ulkopuolelta filtterifragment suletaan
 	-voi olla että tämä ei ole tarpeellista tai järkevää. Vaikutti hankalalta toteuttaa ainakin, eikä välttämättä ole hyödyllinen
