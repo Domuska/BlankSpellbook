@@ -1034,7 +1034,11 @@ public class DataSource {
         };
 
         //attach the listener and return it
-        firebaseDatabase.getReference().child(DB_SPELL_TREE_NAME).addChildEventListener(listener);
+        //firebaseDatabase.getReference().child(DB_SPELL_TREE_NAME).addChildEventListener(listener);
+        Query query = firebaseDatabase.getReference()
+                .child(DB_SPELL_TREE_NAME)
+                .orderByChild(DB_SPELLS_CHILD_NAME);
+        query.addChildEventListener(listener);
         return listener;
     }
 
@@ -1043,34 +1047,42 @@ public class DataSource {
      * @param presenterCalling DataSource.MAINACTIVITYPRESENTER to signify it is calling for the data
      */
     public static void getPowers(final int presenterCalling) {
-        firebaseDatabase.getReference().child(DB_SPELL_TREE_NAME)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if(presenterCalling == MAINACTIVITYPRESENTER){
-                            for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                Spell power = snapshot.getValue(Spell.class);
-                                //save spell id since it might be needed if starting spellDetailsActivity of this spell
-                                power.setSpellId(snapshot.getKey());
-                                //if power is associated with a power list, get the list's name
-                                if(power.getPowerListId() != null && !"".equals(power.getPowerListId()))
-                                    getListPowerBelongsTo(power);
-                                else
-                                    MainActivityPresenter.handleNewPower(power, null);
-                            }
-                        }
-                        else{
-                            Log.e(TAG, "unknown caller in getPowers onDataChange: " + presenterCalling);
-                            throw new RuntimeException("unknown caller in getPowers," +
-                                    "use DataSource.MAINACTIVITYPRESENTER");
-                        }
+        //create a new listener for getting all spells
+        ValueEventListener listener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(presenterCalling == MAINACTIVITYPRESENTER){
+                    for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        Spell power = snapshot.getValue(Spell.class);
+                        //save spell id since it might be needed if starting spellDetailsActivity of this spell
+                        power.setSpellId(snapshot.getKey());
+                        //if power is associated with a power list, get the list's name
+                        if(power.getPowerListId() != null && !"".equals(power.getPowerListId()))
+                            getListPowerBelongsTo(power);
+                        else
+                            MainActivityPresenter.handleNewPower(power, null);
                     }
+                }
+                else{
+                    Log.e(TAG, "unknown caller in getPowers onDataChange: " + presenterCalling);
+                    throw new RuntimeException("unknown caller in getPowers," +
+                            "use DataSource.MAINACTIVITYPRESENTER");
+                }
+            }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Log.d(TAG, "something went wrong at getPowers, canceling: " + databaseError.toString());
-                    }
-                });
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, "something went wrong at getPowers, canceling: " + databaseError.toString());
+            }
+        };
+
+        //add a query to order the elements by spell's name
+        Query query = firebaseDatabase.getReference()
+                .child(DB_SPELL_TREE_NAME)
+                .orderByChild(DB_SPELLS_CHILD_NAME);
+        //launch the query
+        query.addListenerForSingleValueEvent(listener);
+
     }
 
     public static void removePowersListener(ChildEventListener powersListener) {

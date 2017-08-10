@@ -617,6 +617,8 @@ public class MainActivityPresenter extends DrawerPresenter
         if(powersListener == null)
             powersListener = DataSource.attachPowerListener(DataSource.MAINACTIVITYPRESENTER);
         else{
+            //is this even ever reached? Think this is called only once when the fragment is
+            //initialized, and then powersListener is null.
             Log.d(TAG, "startListeningForPowers: powersListener is not null");
             DataSource.getPowers(DataSource.MAINACTIVITYPRESENTER);
         }
