@@ -13,6 +13,7 @@ import com.google.firebase.database.ChildEventListener;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.TreeSet;
 
@@ -106,20 +107,37 @@ public class MainActivityPresenter extends DrawerPresenter
 
     @Override
     public void resumeActivity() {
+
         //re-populate the powers list with data we should have
         //if we had filters, filterFragment will call us to apply the filters (and then show the data)
         //if we try to show the powers here and filterfragment wants to filter, concurrentmodificationexception
-        if(groupsSpellFilters.size() < 0 && powerListsSpellFilters.size() < 0) {
-            if (displayedPowers != null) {
-                for (Spell power : displayedPowers)
+
+        // TODO: 10.8.2017 there's an odd bug here, fix
+        //when the app is stopped and launched again with some filters applied,
+        // the displayedPowers appends itself into itself,
+        //making we every spell that fits the filter two times instead of once.
+        //this is however better than the app crashing!
+        //not sure why this happends or how to fix it. If commented out lines below are
+        //uncommented, this bug does not appear but then when we rotate device with filters on
+        //the list will stay empty since the filter fragment never calls this class to display something
+        //if((groupsSpellFilters.size() < 0 && powerListsSpellFilters.size() < 0 ))  {
+            if (displayedPowers != null ) {
+                ArrayList<Spell> powers = new ArrayList<>();
+                powers.addAll(displayedPowers);
+
+                for (Spell power : powers) {
+                    //for(Iterator<Spell> iterator = displayedPowers.iterator(); iterator.hasNext();) {
+                    //Spell power = iterator.next();
                     mMainActivityView.addNewPowerToList(power, power.getPowerListName());
+                }
+
             } else {
                 for (Spell power : allPowers) {
                     //Log.d(TAG, "adding power " + power.getName() + " to view from allPowers");
                     mMainActivityView.addNewPowerToList(power, power.getPowerListName());
                 }
             }
-        }
+        //}
     }
 
     @Override
@@ -146,6 +164,7 @@ public class MainActivityPresenter extends DrawerPresenter
 
     @Override
     public void saveInstanceState(Bundle outState) {
+
     }
 
     @Override
@@ -330,6 +349,7 @@ public class MainActivityPresenter extends DrawerPresenter
      */
     private void filterDisplayedPowersCrossSection(
             @NonNull String filterText, @FilterType int filterCategory){
+
         if(displayedPowers == null && allPowers != null) {
             displayedPowers = new ArrayList<>();
             displayedPowers.addAll(allPowers);
@@ -444,7 +464,7 @@ public class MainActivityPresenter extends DrawerPresenter
         //filtering by cross-section will remove powers that should not be displayed,
         //while filtering by joining will add more powers to the list, so for the joining
         //function to work properly we will need an empty list to start with
-        if(filterByCrossSection )
+        if(filterByCrossSection)
             displayedPowers.addAll(allPowers);
 
         //get the group and power list names again, they will be filtered later on again
@@ -613,13 +633,13 @@ public class MainActivityPresenter extends DrawerPresenter
     public void startListeningForPowers() {
         //give view the cached data if we have it
         Log.d(TAG, "startListeningForPowers: powerLists size " + powerLists.size());
-        for(Map.Entry<String, String> powerList : powerLists.entrySet()){
+        /*for(Map.Entry<String, String> powerList : powerLists.entrySet()){
             //pass view the single power list
             String powerListId = powerList.getKey();
             mMainActivityView.addPowerListData(powerList.getValue(), powerListId);
             Log.d(TAG, "startListeningForPowers: power list " + powerListId + " added to mainActivity");
 
-        }
+        }*/
 
         //listener for powers
         if(powersListener == null)
