@@ -14,7 +14,7 @@ import tomi.piipposoft.blankspellbook.Utils.Spell;
  * Created by Domu on 17-Apr-16.
  */
 public interface MainActivityContract {
-    
+
     interface View{
         //add and remove data from the powerLists fragment
         void addPowerListData(String name, String id);

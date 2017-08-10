@@ -105,7 +105,7 @@ public class MainActivityPresenter extends DrawerPresenter
     // FROM MAINACTIVITYCONTRACT
 
     @Override
-    public void resumeActivity(boolean hadFilters) {
+    public void resumeActivity() {
         //re-populate the powers list with data we should have
         //if we had filters, filterFragment will call us to apply the filters (and then show the data)
         //if we try to show the powers here and filterfragment wants to filter, concurrentmodificationexception
