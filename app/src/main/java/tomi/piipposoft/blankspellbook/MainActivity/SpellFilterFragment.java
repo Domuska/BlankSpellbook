@@ -16,6 +16,8 @@ import java.lang.reflect.Array;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import tomi.piipposoft.blankspellbook.R;
 
@@ -103,7 +105,7 @@ public class SpellFilterFragment extends Fragment {
      * Used for telling the fragment to update the list of group names visible in the list
      * @param groupNames a list of group names that should be displayed
      */
-    public void setDisplayedGroupNames(ArrayList<String> groupNames){
+    public void setDisplayedGroupNames(TreeSet<String> groupNames){
         Log.d(TAG, "group names that should be displayed: " + groupNames);
         //remove the
         /*for(Iterator<AbstractMap.SimpleEntry<String, Boolean>> iterator
@@ -112,7 +114,6 @@ public class SpellFilterFragment extends Fragment {
             if(!groupNames.contains(entry.getKey()))
                 iterator.remove();
         }*/
-
         powerGroupNamesMap = createNewList(powerGroupNamesMap, groupNames);
         groupsAdapter.notifyDataSetChanged();
     }
@@ -121,7 +122,7 @@ public class SpellFilterFragment extends Fragment {
      * Used for setting which power lists should be visible in the list
      * @param powerListNames Names of the power lists that should be displayed
      */
-    public void setDisplayedPowerListNames(ArrayList<String> powerListNames){
+    public void setDisplayedPowerListNames(TreeSet<String> powerListNames){
         Log.d(TAG, "power lists that should be displayed: " + powerListNames);
         powerListNamesMap = createNewList(powerListNamesMap, powerListNames);
         powerListsAdapter.notifyDataSetChanged();
@@ -130,7 +131,7 @@ public class SpellFilterFragment extends Fragment {
 
     private ArrayList<AbstractMap.SimpleEntry<String, Boolean>> createNewList(
             List<AbstractMap.SimpleEntry<String, Boolean>> originalList,
-            ArrayList<String> newListEntries) {
+            TreeSet<String> newListEntries) {
 
         ArrayList<AbstractMap.SimpleEntry<String, Boolean>> temporaryList = new ArrayList<>();
         //go through the new names and add them to temporary list

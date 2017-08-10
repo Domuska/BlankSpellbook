@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.TreeSet;
 
 import tomi.piipposoft.blankspellbook.ApplicationActivity;
 import tomi.piipposoft.blankspellbook.Drawer.SetDailyPowerListNameDialog;
@@ -504,12 +505,12 @@ public class MainActivity extends ApplicationActivity
     }
 
     @Override
-    public void showFilteredGroups(ArrayList<String> displayedGroups) {
+    public void showFilteredGroups(TreeSet<String> displayedGroups) {
         filterFragment.setDisplayedGroupNames(displayedGroups);
     }
 
     @Override
-    public void showFilteredPowerLists(ArrayList<String> displayedPowerLists) {
+    public void showFilteredPowerLists(TreeSet<String> displayedPowerLists) {
         filterFragment.setDisplayedPowerListNames(displayedPowerLists);
     }
 
@@ -543,11 +544,11 @@ public class MainActivity extends ApplicationActivity
                 //add the group names to be displayed
                 Bundle bundle = new Bundle();
                 bundle.putStringArrayList(SpellFilterFragment.GROUP_NAMES_BUNDLE,
-                        mActionlistener.getGroupNamesForFilter());
+                        new ArrayList<>(mActionlistener.getGroupNamesForFilter()));
                 bundle.putStringArrayList(SpellFilterFragment.GROUP_NAMES_SELECTED_BUNDLE,
                         mActionlistener.getSelectedGroupsForFilter());
                 bundle.putStringArrayList(SpellFilterFragment.POWER_LIST_NAMES_BUNDLE,
-                        mActionlistener.getPowerListNamesForFilter());
+                        new ArrayList<>(mActionlistener.getPowerListNamesForFilter()));
                 bundle.putStringArrayList(SpellFilterFragment.POWER_LIST_NAMES_SELECTED_BUNDLE,
                         mActionlistener.getSelectedPowerListsForFilter());
                 filterFragment.setArguments(bundle);

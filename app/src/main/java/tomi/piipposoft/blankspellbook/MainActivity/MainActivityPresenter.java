@@ -13,6 +13,7 @@ import com.google.firebase.database.ChildEventListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.TreeSet;
 
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerContract;
@@ -64,8 +65,8 @@ public class MainActivityPresenter extends DrawerPresenter
     private ArrayList<String> powerListsSpellFilters = new ArrayList<>();
 
     //for storing the currently displayed power list names and group names
-    private ArrayList<String> displayedGroupNames;
-    private ArrayList<String> displayedPowerListNames;
+    private TreeSet<String> displayedGroupNames;
+    private TreeSet<String> displayedPowerListNames;
 
     //define the allowed values for the spell filtering methods
     @IntDef({FILTER_BY_GROUP_NAME, FILTER_BY_POWER_LIST_NAME})
@@ -146,9 +147,9 @@ public class MainActivityPresenter extends DrawerPresenter
     }
 
     @Override
-    public ArrayList<String> getGroupNamesForFilter() {
+    public TreeSet<String> getGroupNamesForFilter() {
         if(displayedGroupNames == null) {
-            displayedGroupNames = new ArrayList<>();
+            displayedGroupNames = new TreeSet<>();
             for (Map.Entry<String, ArrayList<Spell>> groupName : powerGroupNamesMap.entrySet()) {
                 displayedGroupNames.add(groupName.getKey());
                 Log.d(TAG, "getGroupNamesForFilter: group name " + groupName.getKey());
@@ -163,9 +164,9 @@ public class MainActivityPresenter extends DrawerPresenter
     }
 
     @Override
-    public ArrayList<String> getPowerListNamesForFilter() {
+    public TreeSet<String> getPowerListNamesForFilter() {
         if(displayedPowerListNames == null) {
-            displayedPowerListNames = new ArrayList<>();
+            displayedPowerListNames = new TreeSet<>();
             for(Map.Entry<String, ArrayList<Spell>> groupName : powerListNamesMap.entrySet()){
                 displayedPowerListNames.add(groupName.getKey());
             }

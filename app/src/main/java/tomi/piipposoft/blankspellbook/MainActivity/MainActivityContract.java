@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.TreeSet;
 
 import tomi.piipposoft.blankspellbook.Utils.Spell;
 
@@ -39,8 +40,8 @@ public interface MainActivityContract {
         //for showing, filtering and removing data from the filter fragment
         //void givePowerListNamesForFilter(ArrayList<String> powerListNames);
         //void givePowerGroupNamesForFilter(ArrayList<String> powerGroupNames);
-        void showFilteredGroups(ArrayList<String> filteredPowers);
-        void showFilteredPowerLists(ArrayList<String> filteredPowers);
+        void showFilteredGroups(TreeSet<String> filteredPowers);
+        void showFilteredPowerLists(TreeSet<String> filteredPowers);
 
 
     }
@@ -49,9 +50,9 @@ public interface MainActivityContract {
         void resumeActivity();
         void pauseActivity();
         void userSwitchedTo(int selectedList);
-        ArrayList<String> getGroupNamesForFilter();
+        TreeSet<String> getGroupNamesForFilter();
         ArrayList<String> getSelectedGroupsForFilter();
-        ArrayList<String> getPowerListNamesForFilter();
+        TreeSet<String> getPowerListNamesForFilter();
         ArrayList<String> getSelectedPowerListsForFilter();
     }
 
