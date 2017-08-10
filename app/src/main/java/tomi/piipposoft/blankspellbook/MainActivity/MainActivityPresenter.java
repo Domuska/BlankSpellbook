@@ -104,7 +104,7 @@ public class MainActivityPresenter extends DrawerPresenter
 
     @Override
     public void resumeActivity() {
-        //re-populate the list with data we should have
+        //re-populate the powers list with data we should have
         allPowers.size();
         if(displayedPowers != null){
             for(Spell power : displayedPowers)

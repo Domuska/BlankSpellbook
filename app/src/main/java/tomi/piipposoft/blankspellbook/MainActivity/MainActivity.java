@@ -39,7 +39,13 @@ import tomi.piipposoft.blankspellbook.Utils.SharedPreferencesHandler;
 import tomi.piipposoft.blankspellbook.Utils.Spell;
 
 /**
+ *  Activity that hosts three fragments - daily power lists, power lists and spells fragments.
+ *  These are contained in a ViewPager.
+ *  Activity has a presenter that takes care of communication with the back-end, holding the data
+ *  and filtering the data when user uses the filters in powers fragment.
  *
+ *  PagerAdapter takes care of telling presenter when data should be fetched - it knows when
+ *  it's ready to receive it.
  *
  */
 

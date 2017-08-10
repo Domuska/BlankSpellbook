@@ -36,7 +36,7 @@ public class DataSource {
 
     // TODO: 6.6.2017 sort these in some sensible way
 
-    public static final String DB_POWER_LISTS_REFERENCE = "spell_lists";
+
     public static final String DB_DAILY_POWER_LIST_TREE_NAME = "daily_power_lists";
     public static final String DB_DAILY_POWER_LIST_CHILD_SPELLS = "spells";
     public static final String DB_DAILY_POWER_LIST_CHILD_NAME = "name";
@@ -55,6 +55,10 @@ public class DataSource {
     public static final String DB_SPELLS_CHILD_DAILY_POWER_LISTS = "dailyPowerLists";
     private static final String DB_SPELLS_CHILD_POWER_LIST = "powerListId";
     public static final String DB_SPELLS_CHILD_NAME = "name";
+
+    //for spell_lists table
+    public static final String DB_POWER_LISTS_REFERENCE = "spell_lists";
+    private static final String DB_POWER_LISTS_CHILD_NAME = "name";
 
 
 
@@ -459,7 +463,7 @@ public class DataSource {
     /**
      * Attach a listener to the spell_lists portion of database to get informed of child changes
      * @param presenterCalling The code of the listener, use either DataSource.DRAWERPRESENTER or DataSource.MAINACTIVITYPRESENTER
-     * @return the listner that was attached, so this listener can be detached later
+     * @return the listener that was attached, so this listener can be detached later
      */
     public static ChildEventListener attachPowerListListener(final int presenterCalling){
         //first create the childEventListener
@@ -517,7 +521,12 @@ public class DataSource {
         };
 
         //attach the listener to "spell_lists/" and return it
-        firebaseDatabase.getReference(DB_POWER_LISTS_REFERENCE).addChildEventListener(spellListChildListener);
+        /*firebaseDatabase.getReference(DB_POWER_LISTS_REFERENCE)
+                .addChildEventListener(spellListChildListener);*/
+        Query query = firebaseDatabase.getReference()
+                .child(DB_POWER_LISTS_REFERENCE)
+                .orderByChild(DB_POWER_LISTS_CHILD_NAME);
+        query.addChildEventListener(spellListChildListener);
         return spellListChildListener;
     }
 
