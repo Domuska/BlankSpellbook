@@ -37,9 +37,8 @@ public class DataSource {
     // TODO: 6.6.2017 sort these in some sensible way
 
 
-    public static final String DB_DAILY_POWER_LIST_TREE_NAME = "daily_power_lists";
-    public static final String DB_DAILY_POWER_LIST_CHILD_SPELLS = "spells";
-    public static final String DB_DAILY_POWER_LIST_CHILD_NAME = "name";
+
+
     public static final String DB_SPELL_GROUPS_TREE_NAME = "spell_groups";
     public static final String DB_DAILY_SPELL_GROUPS_TREE_NAME = "daily_spell_groups";
 
@@ -59,6 +58,11 @@ public class DataSource {
     //for spell_lists table
     public static final String DB_POWER_LISTS_REFERENCE = "spell_lists";
     private static final String DB_POWER_LISTS_CHILD_NAME = "name";
+
+    //daily_power_lists
+    public static final String DB_DAILY_POWER_LIST_TREE_NAME = "daily_power_lists";
+    public static final String DB_DAILY_POWER_LIST_CHILD_SPELLS = "spells";
+    public static final String DB_DAILY_POWER_LIST_CHILD_NAME = "name";
 
 
 
@@ -673,8 +677,10 @@ public class DataSource {
             }
         };
 
-        firebaseDatabase.getReference(DB_DAILY_POWER_LIST_TREE_NAME)
-                .addChildEventListener(dailyPowerListChildListener);
+        Query query = firebaseDatabase
+                .getReference(DB_DAILY_POWER_LIST_TREE_NAME)
+                .orderByChild(DB_DAILY_POWER_LIST_CHILD_NAME);
+        query.addChildEventListener(dailyPowerListChildListener);
         return dailyPowerListChildListener;
     }
 
