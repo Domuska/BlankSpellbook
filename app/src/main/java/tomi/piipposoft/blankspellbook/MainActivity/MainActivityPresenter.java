@@ -1,5 +1,6 @@
 package tomi.piipposoft.blankspellbook.MainActivity;
 
+import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -104,17 +105,19 @@ public class MainActivityPresenter extends DrawerPresenter
     // FROM MAINACTIVITYCONTRACT
 
     @Override
-    public void resumeActivity() {
+    public void resumeActivity(boolean hadFilters) {
         //re-populate the powers list with data we should have
-        allPowers.size();
-        if(displayedPowers != null){
-            for(Spell power : displayedPowers)
-                mMainActivityView.addNewPowerToList(power, power.getPowerListName());
-        }
-        else {
-            for(Spell power : allPowers){
-                //Log.d(TAG, "adding power " + power.getName() + " to view from allPowers");
-                mMainActivityView.addNewPowerToList(power, power.getPowerListName());
+        //if we had filters, filterFragment will call us to apply the filters (and then show the data)
+        //if we try to show the powers here and filterfragment wants to filter, concurrentmodificationexception
+        if(groupsSpellFilters.size() < 0 && powerListsSpellFilters.size() < 0) {
+            if (displayedPowers != null) {
+                for (Spell power : displayedPowers)
+                    mMainActivityView.addNewPowerToList(power, power.getPowerListName());
+            } else {
+                for (Spell power : allPowers) {
+                    //Log.d(TAG, "adding power " + power.getName() + " to view from allPowers");
+                    mMainActivityView.addNewPowerToList(power, power.getPowerListName());
+                }
             }
         }
     }
@@ -139,6 +142,10 @@ public class MainActivityPresenter extends DrawerPresenter
         //powerListNamesMap = new ArrayMap<>();
         //allPowers = new ArrayList<>();
         //displayedPowers = null;
+    }
+
+    @Override
+    public void saveInstanceState(Bundle outState) {
     }
 
     @Override

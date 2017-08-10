@@ -77,6 +77,7 @@ public class MainActivity extends ApplicationActivity
     private int currentlySelectedList = MainActivityPresenter.POWER_LISTS_SELECTED;
     SpellFilterFragment filterFragment;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -303,6 +304,8 @@ public class MainActivity extends ApplicationActivity
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        //let presenter save its' state
+        mActionlistener.saveInstanceState(outState);
         outState.putBoolean(DATABASE_PERSISTANCE_SET_KEY, databasePersistanceSet);
         outState.putInt(FRAGMENT_LAST_VISIBLE, viewPager.getCurrentItem());
         super.onSaveInstanceState(outState);

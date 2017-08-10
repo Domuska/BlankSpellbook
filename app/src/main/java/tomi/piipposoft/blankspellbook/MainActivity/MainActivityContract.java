@@ -1,6 +1,7 @@
 package tomi.piipposoft.blankspellbook.MainActivity;
 
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -13,7 +14,7 @@ import tomi.piipposoft.blankspellbook.Utils.Spell;
  * Created by Domu on 17-Apr-16.
  */
 public interface MainActivityContract {
-
+    
     interface View{
         //add and remove data from the powerLists fragment
         void addPowerListData(String name, String id);
@@ -49,6 +50,7 @@ public interface MainActivityContract {
     interface UserActionListener{
         void resumeActivity();
         void pauseActivity();
+        void saveInstanceState(Bundle outState);
         void userSwitchedTo(int selectedList);
         TreeSet<String> getGroupNamesForFilter();
         ArrayList<String> getSelectedGroupsForFilter();
