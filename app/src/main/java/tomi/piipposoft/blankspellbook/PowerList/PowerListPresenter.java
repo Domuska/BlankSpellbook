@@ -95,7 +95,7 @@ public class PowerListPresenter extends DrawerPresenter implements
         //the same power will be under two different groups (the old and new group)
         //since the old power is not removed at anywhere, however this should
         //not happen too often and it will not cause big enough problems to be worth it to fix for now
-        
+
         //add power if it's not already in the list
         if(!(powerGroups.get(spellGroupName).contains(spell))) {
             //add the power to the list of powers in the powerGroups map

@@ -54,10 +54,9 @@ mainactivityn alempaan toolbariin lisätään search & filtterit
 
 kun tallennat uuden spellin (ainaki powers fragmenin kautta) ei ei-muokattavia kenttiä populoida tallennuksen jälkeen
 
+filter fragmentin rivien värjäys menee sekaisin ajoittain (taustan harmaa-tummempi harmaa väritys)
 
 spell list fragmentissa mainactivityssä pitää korttien leveys asettaa joksiki muuksi ku wrap_contentiksi, tekstit näyttää huonolta
-
-spellit power list activityyn pitäisi palauttaa järjestyksessä nimen perusteella (jokaisen spellin levelin sisällä)
 
 lisää searchibari powers fragmentiin
 
