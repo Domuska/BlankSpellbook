@@ -10,6 +10,7 @@ import com.google.firebase.database.ChildEventListener;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.TreeSet;
 
 import tomi.piipposoft.blankspellbook.Database.BlankSpellBookContract;
 import tomi.piipposoft.blankspellbook.PowerDetails.PowerDetailsActivity;
@@ -18,6 +19,7 @@ import tomi.piipposoft.blankspellbook.Utils.Spell;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerContract;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerHelper;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerPresenter;
+import tomi.piipposoft.blankspellbook.Utils.SpellNameComparator;
 
 /**
  * Created by Domu on 17-Apr-16.
@@ -44,10 +46,8 @@ public class PowerListPresenter extends DrawerPresenter implements
     //map of listeners to individual spells under spell_groups
     private static ArrayMap<String, ChildEventListener> powerGroupListeners = new ArrayMap<>();
     //power group name - list of powers under it
-    private static ArrayMap<String, ArrayList<Spell>> powerGroups = new ArrayMap<>();
+    private static ArrayMap<String, TreeSet<Spell>> powerGroups = new ArrayMap<>();
     private static String previousPowerListId;
-
-
 
     private PowerListPresenter(
             @NonNull BlankSpellBookContract.DBHelper dbHelper,
@@ -85,21 +85,21 @@ public class PowerListPresenter extends DrawerPresenter implements
         Log.d(TAG, "handleSpellFromDatabase: name: " + spell.getName()
                 + " group: " + spell.getGroupName());
 
+        String spellGroupName = spell.getGroupName();
+        //check if the spell's group is already in the map
+        if(!powerGroups.containsKey(spellGroupName))
+            powerGroups.put(spellGroupName, new TreeSet<Spell>(new SpellNameComparator()));
+
         //we simply check if power is already in this group, if it is, discard it
         //note, here is actually a bug, if power's group name has changed,
         //the same power will be under two different groups (the old and new group)
         //since the old power is not removed at anywhere, however this should
         //not happen too often and it will not cause big enough problems to be worth it to fix for now
-
-
-        /*for(Spell s : powerGroups.get(spell.getGroupName())){
-            Log.d(TAG, "handleSpellFromDatabase: power group: " + s.getGroupName()
-                    + " power name: " + s.getName());
-        }*/
-
-        if(!(powerGroups.get(spell.getGroupName()).contains(spell))) {
+        
+        //add power if it's not already in the list
+        if(!(powerGroups.get(spellGroupName).contains(spell))) {
             //add the power to the list of powers in the powerGroups map
-            powerGroups.get(spell.getGroupName()).add(spell);
+            powerGroups.get(spellGroupName).add(spell);
             //pass the power to view to display it as it wishes
             mPowerListActivity.addSpellToList(spell);
         }
@@ -108,7 +108,7 @@ public class PowerListPresenter extends DrawerPresenter implements
     public static void handleSpellDeletion(Spell spell){
         Log.d(TAG, "handleSpellDeletion: removing power " + spell.getName());
 
-        ArrayList<Spell> powerGroup = powerGroups.get(spell.getGroupName());
+        TreeSet<Spell> powerGroup = powerGroups.get(spell.getGroupName());
         powerGroup.remove(spell);
 
         //check if power was last one in its' group
@@ -128,7 +128,7 @@ public class PowerListPresenter extends DrawerPresenter implements
         //add the power group name to the map if it's not there yet
         Log.d(TAG, "handlePowerGroup: got a new group " + powerGroupName);
         if(!powerGroups.containsKey(powerGroupName))
-            powerGroups.put(powerGroupName, new ArrayList<Spell>());
+            powerGroups.put(powerGroupName, new TreeSet<>(new SpellNameComparator()));
     }
 
     public static void handlePowerGroupListener(ChildEventListener childEventListener, String groupName) {
@@ -203,7 +203,7 @@ public class PowerListPresenter extends DrawerPresenter implements
 
         //pass View the cached data so it can display it immediately (unless it was cleared above),
         //previously unknown powers will be added later when listener is attached
-        for(Map.Entry<String, ArrayList<Spell>> powerGroup : powerGroups.entrySet()){
+        for(Map.Entry<String, TreeSet<Spell>> powerGroup : powerGroups.entrySet()){
             //here we have a single map entry (a list of powers) that is iterated
             for(Spell power : powerGroup.getValue()){
                 mPowerListActivity.addSpellToList(power);

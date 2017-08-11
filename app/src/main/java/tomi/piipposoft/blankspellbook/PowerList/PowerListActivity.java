@@ -260,13 +260,14 @@ public class PowerListActivity extends ApplicationActivity
 
         String powerGroupName = power.getGroupName();
         Log.d(TAG, "addSpellToList: power group name " + powerGroupName);
-        //see if spellgroups already has this group
+        //see if spellgroups already has the group this spell belongs to
         if(!spellGroups.contains(new SpellGroup(powerGroupName, power))) {
             //add the power group, pass the power for SpellGroups in constructor
             spellGroups.add(new SpellGroup(powerGroupName, power));
             //notify adapter that new parent was added so it is added to list
             adapter.notifyParentItemInserted( spellGroups.size()-1 );
         }
+        //otherwise just add the spell to the existing spell group
         else {
             //get index of the group with a "dummy group", a needless object allocation here tbh
             int parentIndex = spellGroups.indexOf(new SpellGroup(powerGroupName, power));
@@ -274,13 +275,14 @@ public class PowerListActivity extends ApplicationActivity
             //power might already be in the list, check for that
             if(!spellGroups.get(parentIndex).containsSpell(power)) {
                 //add the spell to the SpellGroup's list of powers
-                spellGroups.get(parentIndex).addSpell(power);
+                int spellIndex = spellGroups.get(parentIndex).addSpell(power);
                 //notify adapter that new child was added so it can animate it in
                 Log.d(TAG, "addSpellToList: parent index " + parentIndex);
                 Log.d(TAG, "addSpellToList: parent list size: " + spellGroups.get(parentIndex).getListSize());
                 adapter.notifyChildItemInserted(
                         parentIndex,
-                        spellGroups.get(parentIndex).getListSize() - 1
+                        spellIndex
+                        //spellGroups.get(parentIndex).getListSize() - 1
                 );
             }
         }

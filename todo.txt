@@ -51,34 +51,31 @@ mainactivityn alempaan toolbariin lisätään search & filtterit
 	https://github.com/google/guava/wiki/CommonObjectUtilitiesExplained#compare/compareTo.md
 	https://github.com/google/guava#Android
 	
-	
-powerdetailsissa ei-muokattavissa tekstikentissä epic featissa on champion featin teksti
 
 kun tallennat uuden spellin (ainaki powers fragmenin kautta) ei ei-muokattavia kenttiä populoida tallennuksen jälkeen
-
-kun spelliä muokataan, ei spell_groups tauluun laiteta spellin nimeä sen id:n alle
 
 
 spell list fragmentissa mainactivityssä pitää korttien leveys asettaa joksiki muuksi ku wrap_contentiksi, tekstit näyttää huonolta
 
 spellit power list activityyn pitäisi palauttaa järjestyksessä nimen perusteella (jokaisen spellin levelin sisällä)
 
-fab hyppelee eri paikkoihin power lists activityssä, animaatio ja visibility pitäisi asettaa vasta ku recyclerview on laitettu näkyviin
+lisää searchibari powers fragmentiin
+
+kato crossfadeja tai jotain ku siirrytään power lists activitysät power detailsiin - fab värjäytyy hömelösti nyt uusiksi. ehkä joku aaltovärjäysefekti?
+
+ois kiva ku mainactivity -> power lists activity välillä ois joku activity transition, spell book ikään kuin avautuisi ruudulle tms tms
+
+korjaa ruudun scrollaus powers activityssä ku filter on auki, nyt vähä outo
 
 kun filtteri avataan niin pitäs laittaa onclicklisteneri niin että ku klikkaat filtterin ulkopuolelta filtterifragment suletaan
 	-voi olla että tämä ei ole tarpeellista tai järkevää. Vaikutti hankalalta toteuttaa ainakin, eikä välttämättä ole hyödyllinen
 
 powers fragmentissa ei väritetä color splotchia oikein jos power on alunperin ungrouped (?) tai ainakin välillä. Voi olla myös että kun lisätään uusi power ni se tallennetaan väärin tai jotain
-
-korjaa apin kaatuminen kun se stopataan(?) ja filttereitä on päällä ja niitä koitetaan laittaa pois. Varmaan korjaantuu
-kun onSavessa tallennetaan tila ja palautetaan onResumessa.
 	
 mieti powerdetailsin add to power listsiä
 	-kun power lisätään listalle, siitä tehdään kopio
 	-kun power lisätään daily listalle, ei tehdä kopiota
 	-teksti on nyt hämmentävä ainakin, muuta se jos ei muuten tätä hommaa muuteta
-
-kun palataan mainactivityyn, pitää päivittää fragmentissa olevien korttien spell_groups
 
 
 implementoidaan powersFragment

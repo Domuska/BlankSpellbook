@@ -7,9 +7,10 @@ import com.bignerdranch.expandablerecyclerview.Model.ParentListItem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
 import tomi.piipposoft.blankspellbook.Utils.Spell;
-
+import tomi.piipposoft.blankspellbook.Utils.SpellNameComparator;
 
 
 /**
@@ -17,18 +18,19 @@ import tomi.piipposoft.blankspellbook.Utils.Spell;
  */
 public class SpellGroup implements ParentListItem, Comparable<SpellGroup>{
 
-    private List<Spell> spellsList;
+    private TreeSet<Spell> spellsList;
     private String groupName;
     private final String TAG = "SpellGroup";
 
-    public SpellGroup(String groupName, List<Spell> spell){
+    public SpellGroup(String groupName, List<Spell> spells){
         this.groupName = groupName;
-        spellsList = spell;
+        spellsList = new TreeSet<>(new SpellNameComparator());
+        spellsList.addAll(spells);
     }
 
-    public SpellGroup(String groupName, Spell spell){
+    SpellGroup(String groupName, Spell spell){
         this.groupName = groupName;
-        spellsList = new ArrayList<>();
+        spellsList = new TreeSet<>(new SpellNameComparator());
         spellsList.add(spell);
     }
 
@@ -36,8 +38,14 @@ public class SpellGroup implements ParentListItem, Comparable<SpellGroup>{
         return groupName;
     }
 
-    public void addSpell(Spell newSpell){
+    /**
+     * Add a new spell to this spell group
+     * @param newSpell a spell that is to be added
+     * @return the index where the spell was added
+     */
+    int addSpell(Spell newSpell){
         spellsList.add(newSpell);
+        return spellsList.contains(newSpell)? spellsList.headSet(newSpell).size(): -1;
     }
 
     /**
@@ -45,8 +53,10 @@ public class SpellGroup implements ParentListItem, Comparable<SpellGroup>{
      * @param spell the spell to be removed
      * @return the index where the spell was
      */
-    public int removeSpell(Spell spell){
-        int spellIndex = spellsList.indexOf(spell);
+    int removeSpell(Spell spell){
+        //convoluted way of getting index of the spell, see here
+        //https://stackoverflow.com/questions/7911621/how-to-find-the-index-of-an-element-in-a-treeset
+        int spellIndex = spellsList.contains(spell)? spellsList.headSet(spell).size(): -1;
         spellsList.remove(spell);
         return spellIndex;
     }
@@ -55,7 +65,7 @@ public class SpellGroup implements ParentListItem, Comparable<SpellGroup>{
         return spellsList.contains(power);
     }
 
-    public int getListSize(){
+    int getListSize(){
         return this.spellsList.size();
     }
 
@@ -66,7 +76,7 @@ public class SpellGroup implements ParentListItem, Comparable<SpellGroup>{
 
     @Override
     public List<?> getChildItemList() {
-        return spellsList;
+        return new ArrayList<>(spellsList);
     }
 
     @Override
