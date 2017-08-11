@@ -33,7 +33,7 @@
         android:clickable="true"
         android:layout_margin="@dimen/fab_margin"
         android:visibility="gone"
-        app:layout_behavior="tomi.piipposoft.blankspellbook.PowerDetails.ScrollingFABBehavior"
+        app:layout_behavior="tomi.piipposoft.blankspellbook.Utils.ScrollingFABBehavior"
         android:transitionName="fabTransition"/>
 
     <!-- the cancel fab button, is set to be outside screen for the spring animation in the activity -->
@@ -48,7 +48,7 @@
         android:layout_marginLeft="@dimen/fab_off_left_edge"
         android:layout_marginStart="@dimen/fab_off_left_edge"
         android:visibility="gone"
-        app:layout_behavior="tomi.piipposoft.blankspellbook.PowerDetails.ScrollingFABBehavior"/>
+        app:layout_behavior="tomi.piipposoft.blankspellbook.Utils.ScrollingFABBehavior"/>
 
     <!-- include layout for the text fields that display details -->
     <include layout="@layout/activity_power_details_textviews"/>

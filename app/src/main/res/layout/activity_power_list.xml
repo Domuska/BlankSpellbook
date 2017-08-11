@@ -101,8 +101,7 @@
             android:layout_height="match_parent"
             android:paddingTop="@dimen/activity_vertical_margin"
             android:clipToPadding="false"
-            android:visibility="gone"
-            />
+            android:visibility="gone"/>
 
     </LinearLayout>
 
@@ -115,7 +114,8 @@
         android:src="@drawable/ic_add_black_48dp"
         android:clickable="true"
         android:layout_margin="@dimen/fab_margin"
-        android:visibility="invisible" />
+        android:visibility="invisible"
+        app:layout_behavior="tomi.piipposoft.blankspellbook.Utils.ScrollingFABBehavior"/>
 
 
 </android.support.design.widget.CoordinatorLayout>

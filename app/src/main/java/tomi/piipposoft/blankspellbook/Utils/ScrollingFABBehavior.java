@@ -1,4 +1,4 @@
-package tomi.piipposoft.blankspellbook.PowerDetails;
+package tomi.piipposoft.blankspellbook.Utils;
 
 import android.content.Context;
 import android.content.res.TypedArray;
