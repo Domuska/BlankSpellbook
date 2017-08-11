@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- layout for a parent row in power list activity, holds name of a group of powers -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -11,11 +12,13 @@
 
     <TextView
         android:id="@+id/recycler_parent_text_view"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="24sp"
         android:textColor="?android:textColorPrimaryInverse"
-        />
+        android:layout_toStartOf="@+id/recycler_parent_expand_arrow"
+        android:layout_toLeftOf="@+id/recycler_parent_expand_arrow"
+        android:gravity="start" />
 
     <ImageButton
         android:id="@+id/recycler_parent_expand_arrow"
@@ -26,14 +29,12 @@
         android:background="@android:color/transparent"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        />
+        android:layout_centerVertical="true" />
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:src="@drawable/recycler_divider"
-        android:layout_below="@id/recycler_parent_text_view"
-        />
+        android:layout_below="@id/recycler_parent_text_view" />
 
 </RelativeLayout>
