@@ -1,5 +1,7 @@
 package tomi.piipposoft.blankspellbook.MainActivity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,9 +21,14 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewStub;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bowyer.app.fabtoolbar.FabToolbar;
+import com.konifar.fab_transformation.FabTransformation;
 
 import java.util.ArrayList;
 import java.util.TreeSet;
@@ -67,10 +74,12 @@ public class MainActivity extends ApplicationActivity
     private ViewPager viewPager;
     private View secondaryToolbarTools;
     private TextView secondaryToolbarText, filterTextView;
+    private LinearLayout bottomSearchBar;
+    private FabToolbar fabToolbar;
 
     private boolean databasePersistanceSet = false;
 
-    private FloatingActionButton fab;
+    private FloatingActionButton mainToolbarFab, searchFab;
     View.OnClickListener powersListener, dailyPowerListListener, powerListListener;
 
     //default selection is the spell lists fragment
@@ -101,6 +110,7 @@ public class MainActivity extends ApplicationActivity
         Toolbar toolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
 
+
     }
 
 
@@ -116,8 +126,8 @@ public class MainActivity extends ApplicationActivity
                 this);
         listeningStateInterface = (MainActivityContract.ListeningStateInterface) mActionlistener;
 
-        fab = findViewById(R.id.mainactivity_fab);
-        //fab listeners
+        mainToolbarFab = findViewById(R.id.mainactivity_fab);
+        //mainToolbarFab listeners
         powersListener = new OnNewPowerClickListener();
         dailyPowerListListener = new OnNewDailyPowerListClickListener();
         powerListListener = new OnNewPowerListClickListener();
@@ -145,7 +155,6 @@ public class MainActivity extends ApplicationActivity
         final ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
@@ -160,6 +169,8 @@ public class MainActivity extends ApplicationActivity
                         //tell presenter which page was switched to
                         mActionlistener.userSwitchedTo(MainActivityPresenter.DAILY_POWER_LISTS_SELECTED);
                         removeFilterFragment();
+                        searchFab.setVisibility(View.GONE);
+                        bottomSearchBar.setVisibility(View.GONE);
                         break;
 
                     case MainActivityPresenter.POWER_LISTS_SELECTED:
@@ -168,6 +179,8 @@ public class MainActivity extends ApplicationActivity
                             secondaryToolbarTools.setVisibility(View.GONE);
                         mActionlistener.userSwitchedTo(MainActivityPresenter.POWER_LISTS_SELECTED);
                         removeFilterFragment();
+                        searchFab.setVisibility(View.GONE);
+                        bottomSearchBar.setVisibility(View.GONE);
                         break;
 
                     case MainActivityPresenter.SPELLS_SELECTED:
@@ -177,6 +190,9 @@ public class MainActivity extends ApplicationActivity
                         }
                         else
                             secondaryToolbarTools.setVisibility(View.VISIBLE);
+
+                        searchFab.setVisibility(View.VISIBLE);
+
                         mActionlistener.userSwitchedTo(MainActivityPresenter.SPELLS_SELECTED);
                         break;
                     default:
@@ -216,6 +232,8 @@ public class MainActivity extends ApplicationActivity
             }
         };
 
+        initializeSearchFabAndToolBar();
+
         // Make the drawer initialize itself
         this.drawerActionListener.powerListProfileSelected();
         mActionlistener.resumeActivity();
@@ -229,10 +247,25 @@ public class MainActivity extends ApplicationActivity
                 onPageChangeListener.onPageSelected(viewPager.getCurrentItem());
             }
         });
-        //set fab onclicklistener and possible icon
+        //set mainToolbarFab onclicklistener and possible icon
         setFabFunctionality(currentlySelectedList);
         mActionlistener.userSwitchedTo(currentlySelectedList);
         setPresenterFilterMode();
+    }
+
+    private void initializeSearchFabAndToolBar(){
+        //search bar & search fab
+        bottomSearchBar = findViewById(R.id.bottom_search_toolbar);
+        searchFab = findViewById(R.id.search_fab);
+        fabToolbar = findViewById(R.id.fabtoolbar);
+        fabToolbar.setFab(searchFab);
+        searchFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fabToolbar.expandFab();
+            }
+        });
+
     }
 
     /**
@@ -243,6 +276,8 @@ public class MainActivity extends ApplicationActivity
         filterTextView = findViewById(R.id.showFiltersView);
         filterTextView.setOnClickListener(new OpenFilterClickListener());
     }
+
+
 
     /**
      * Get the filtering mode (join or cross-section) from shared preferences and pass it to presenter
@@ -379,7 +414,7 @@ public class MainActivity extends ApplicationActivity
             ActivityOptionsCompat options =
                     ActivityOptionsCompat.makeSceneTransitionAnimation(
                             MainActivity.this,
-                            fab,
+                            mainToolbarFab,
                             transitionName);
             Bundle bundle = options.toBundle();
 
@@ -396,13 +431,13 @@ public class MainActivity extends ApplicationActivity
     private void setFabFunctionality(int selectedFragment){
         switch(selectedFragment){
             case 0:
-                fab.setOnClickListener(dailyPowerListListener);
+                mainToolbarFab.setOnClickListener(dailyPowerListListener);
                 break;
             case 1:
-                fab.setOnClickListener(powerListListener);
+                mainToolbarFab.setOnClickListener(powerListListener);
                 break;
             case 2:
-                fab.setOnClickListener(powersListener);
+                mainToolbarFab.setOnClickListener(powersListener);
                 break;
             default:
                 throw new RuntimeException("Unknown value in setFabFunctionality: use 0, 1 or 2");
@@ -527,6 +562,13 @@ public class MainActivity extends ApplicationActivity
             filterFragment = null;
         }
     }
+
+    @Override
+    public void showSearchBar() {
+        bottomSearchBar.setVisibility(View.VISIBLE);
+    }
+
+
 
     /**
      * Click listener for the filter button, open if it is closed, close it if it is open

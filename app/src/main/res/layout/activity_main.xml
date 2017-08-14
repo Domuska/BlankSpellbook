@@ -70,22 +70,55 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <!-- Frame in which the ViewPager and filter fragment is placed in -->
+        <!-- Frame in which the ViewPager and filter fragment is placed in,
+                filter fragment needs a container -->
         <FrameLayout
             android:id="@+id/fragmentFrameLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <!-- Viewpager for showing the list fragments -->
             <android.support.v4.view.ViewPager
                 android:id="@+id/pager"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                />
+                android:layout_height="match_parent"/>
 
         </FrameLayout>
 
+        <!-- search bottom bar shown in spells fragment. Should rather be in the
+         fragment_main_activity_powers(?) but we don't want scrolling behaviour for it-->
+        <com.bowyer.app.fabtoolbar.FabToolbar
+            android:id="@+id/fabtoolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            app:tb_color="?attr/colorPrimary"
+            app:tb_container_gravity="center"
+            app:tb_anim_duration="200"
+            app:tb_fab_type="normal">
+
+            <android.support.v7.widget.SearchView
+                android:id="@+id/search_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/searchViewStyle"/>
+
+        </com.bowyer.app.fabtoolbar.FabToolbar>
+
+        <!-- fab for the search button -->
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/search_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fab_margin"
+            android:src="@drawable/ic_search_black_24dp"
+            app:layout_anchor="@id/fragmentFrameLayout"
+            app:layout_anchorGravity="bottom|end"
+            app:layout_behavior="tomi.piipposoft.blankspellbook.Utils.ScrollingFABBehavior"
+            />
+
+        <!-- FAB in the toolbar at top -->
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/mainactivity_fab"
             android:layout_width="wrap_content"

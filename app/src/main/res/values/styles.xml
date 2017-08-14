@@ -37,4 +37,9 @@
         <item name="android:textColor">?android:textColorPrimaryInverse</item>
     </style>
     
+    <!-- style for the search view -->
+    <style name="searchViewStyle" parent="Widget.AppCompat.SearchView">
+        <item name="searchIcon">@drawable/ic_search_black_18dp</item>
+    </style>
+    
 </resources>

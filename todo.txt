@@ -59,6 +59,7 @@ filter fragmentin rivien värjäys menee sekaisin ajoittain (taustan harmaa-tumm
 spell list fragmentissa mainactivityssä pitää korttien leveys asettaa joksiki muuksi ku wrap_contentiksi, tekstit näyttää huonolta
 
 lisää searchibari powers fragmentiin
+	-https://stackoverflow.com/questions/29678675/floating-action-button-expansion
 
 kato crossfadeja tai jotain ku siirrytään power lists activitysät power detailsiin - fab värjäytyy hömelösti nyt uusiksi. ehkä joku aaltovärjäysefekti?
 

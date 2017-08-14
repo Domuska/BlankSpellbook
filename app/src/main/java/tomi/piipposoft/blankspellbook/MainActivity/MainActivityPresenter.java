@@ -518,6 +518,13 @@ public class MainActivityPresenter extends DrawerPresenter
         mMainActivityView.startPowerDetailsActivity(powerId, powerListId, transitionOrigin, powerListName);
     }
 
+    @Override
+    public void searchFabClicked() {
+        mMainActivityView.showSearchBar();
+    }
+
+
+
     //from MainActivityContract.FilterFragmentUserActionListener
 
     @Override

@@ -44,7 +44,7 @@ public interface MainActivityContract {
         void showFilteredGroups(TreeSet<String> filteredPowers);
         void showFilteredPowerLists(TreeSet<String> filteredPowers);
 
-
+        void showSearchBar();
     }
 
     interface UserActionListener{
@@ -73,6 +73,11 @@ public interface MainActivityContract {
                                 @Nullable android.view.View originView, int powerListColor);
         void onPowerClicked(String powerId, String powerListId,
                             android.view.View originView, String powerListName);
+
+        /**
+         * User has clicked the search fab button in the fragment
+         */
+        void searchFabClicked();
     }
 
     /**
