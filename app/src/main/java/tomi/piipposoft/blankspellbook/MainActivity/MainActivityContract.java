@@ -44,7 +44,10 @@ public interface MainActivityContract {
         void showFilteredGroups(TreeSet<String> filteredPowers);
         void showFilteredPowerLists(TreeSet<String> filteredPowers);
 
-        void showSearchBar();
+        /**
+         * Retract the bottom toolbar if it has been expanded
+         */
+        void retractBottomToolbar();
     }
 
     interface UserActionListener{
@@ -75,9 +78,9 @@ public interface MainActivityContract {
                             android.view.View originView, String powerListName);
 
         /**
-         * User has clicked the search fab button in the fragment
+         * Power list has been scrolled, bottom toolbar might have to be hidden
          */
-        void searchFabClicked();
+        void powerListScrolled();
     }
 
     /**

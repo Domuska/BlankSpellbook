@@ -39,7 +39,10 @@
     
     <!-- style for the search view -->
     <style name="searchViewStyle" parent="Widget.AppCompat.SearchView">
-        <item name="searchIcon">@drawable/ic_search_black_18dp</item>
+        <item name="searchIcon">@drawable/ic_search_black_24dp</item>
+        <item name="searchHintIcon">@drawable/ic_search_black_24dp</item>
+        <item name="closeIcon">@drawable/ic_clear_black_24dp</item>
+        <item name="queryBackground">@color/md_black_1000</item>
     </style>
     
 </resources>

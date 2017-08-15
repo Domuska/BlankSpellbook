@@ -67,6 +67,15 @@ public class PowersFragment extends Fragment {
                 DividerItemDecoration.VERTICAL
         );
 
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(newState == RecyclerView.SCROLL_STATE_DRAGGING)
+                    listener.powerListScrolled();
+            }
+        });
+
         if(powers.size() > 0){
             progressBar.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);

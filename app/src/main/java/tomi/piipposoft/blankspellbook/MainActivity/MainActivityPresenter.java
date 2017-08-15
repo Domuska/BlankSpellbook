@@ -519,8 +519,8 @@ public class MainActivityPresenter extends DrawerPresenter
     }
 
     @Override
-    public void searchFabClicked() {
-        mMainActivityView.showSearchBar();
+    public void powerListScrolled() {
+        mMainActivityView.retractBottomToolbar();
     }
 
 

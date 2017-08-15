@@ -67,8 +67,13 @@ dependencies {
     // Mockito framework
     testCompile 'org.mockito:mockito-core:1.10.19'
 
+    compile ('com.github.ozodrukh:CircularReveal:2.0.1@aar') {
+        transitive = true;
+    }
+
     //for search bar in mainActivity, https://github.com/bowyer-app/fab-toolbar
     compile 'com.bowyer.app:fab-toolbar:1.1.0@aar'
+
 }
 
 //for firebase

@@ -1,7 +1,5 @@
 package tomi.piipposoft.blankspellbook.MainActivity;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,14 +19,12 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.ViewStub;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import com.bowyer.app.fabtoolbar.FabToolbar;
-import com.konifar.fab_transformation.FabTransformation;
 
 import java.util.ArrayList;
 import java.util.TreeSet;
@@ -74,8 +70,7 @@ public class MainActivity extends ApplicationActivity
     private ViewPager viewPager;
     private View secondaryToolbarTools;
     private TextView secondaryToolbarText, filterTextView;
-    private LinearLayout bottomSearchBar;
-    private FabToolbar fabToolbar;
+    private FabToolbar bottomToolbar;
 
     private boolean databasePersistanceSet = false;
 
@@ -170,7 +165,7 @@ public class MainActivity extends ApplicationActivity
                         mActionlistener.userSwitchedTo(MainActivityPresenter.DAILY_POWER_LISTS_SELECTED);
                         removeFilterFragment();
                         searchFab.setVisibility(View.GONE);
-                        bottomSearchBar.setVisibility(View.GONE);
+                        bottomToolbar.setVisibility(View.GONE);
                         break;
 
                     case MainActivityPresenter.POWER_LISTS_SELECTED:
@@ -180,7 +175,7 @@ public class MainActivity extends ApplicationActivity
                         mActionlistener.userSwitchedTo(MainActivityPresenter.POWER_LISTS_SELECTED);
                         removeFilterFragment();
                         searchFab.setVisibility(View.GONE);
-                        bottomSearchBar.setVisibility(View.GONE);
+                        bottomToolbar.setVisibility(View.GONE);
                         break;
 
                     case MainActivityPresenter.SPELLS_SELECTED:
@@ -191,8 +186,8 @@ public class MainActivity extends ApplicationActivity
                         else
                             secondaryToolbarTools.setVisibility(View.VISIBLE);
 
+                        bottomToolbar.setVisibility(View.VISIBLE);
                         searchFab.setVisibility(View.VISIBLE);
-
                         mActionlistener.userSwitchedTo(MainActivityPresenter.SPELLS_SELECTED);
                         break;
                     default:
@@ -254,17 +249,45 @@ public class MainActivity extends ApplicationActivity
     }
 
     private void initializeSearchFabAndToolBar(){
-        //search bar & search fab
-        bottomSearchBar = findViewById(R.id.bottom_search_toolbar);
+
         searchFab = findViewById(R.id.search_fab);
-        fabToolbar = findViewById(R.id.fabtoolbar);
-        fabToolbar.setFab(searchFab);
+        bottomToolbar = findViewById(R.id.fabtoolbar);
+        bottomToolbar.setFab(searchFab);
         searchFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fabToolbar.expandFab();
+                bottomToolbar.expandFab();
             }
         });
+
+        /*searchToolbar2 = findViewById(R.id.bottomToolbar);
+        searchFab = findViewById(R.id.search_fab);
+        searchFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FabTransformation.with(searchFab).transformTo(searchToolbar2);
+            }
+        });*/
+
+
+
+        //search bar & search fab
+        /*searchFab = findViewById(R.id.search_fab);
+        bottomToolbar = findViewById(R.id.fabtoolbar);
+        bottomToolbar.setFab(searchFab);
+        final FrameLayout layout = findViewById(R.id.ASDF);
+        searchFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG,"onClick: toolbar x : " + layout.getX()
+                        + " toolbar y: " + layout.getY());
+                bottomToolbar.expandFab();
+                Log.d(TAG,"onClick: toolbar x : " + layout.getX()
+                        + " toolbar y: " + layout.getY());
+
+
+            }
+        });*/
 
     }
 
@@ -429,6 +452,7 @@ public class MainActivity extends ApplicationActivity
      * @param selectedFragment fragment that is currently visible
      */
     private void setFabFunctionality(int selectedFragment){
+        // TODO: 15.8.2017 use enums or something to actually tell which fragment is which
         switch(selectedFragment){
             case 0:
                 mainToolbarFab.setOnClickListener(dailyPowerListListener);
@@ -438,6 +462,12 @@ public class MainActivity extends ApplicationActivity
                 break;
             case 2:
                 mainToolbarFab.setOnClickListener(powersListener);
+                /*mainToolbarFab.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        bottomToolbar.slideOutFab();
+                    }
+                });*/
                 break;
             default:
                 throw new RuntimeException("Unknown value in setFabFunctionality: use 0, 1 or 2");
@@ -564,8 +594,9 @@ public class MainActivity extends ApplicationActivity
     }
 
     @Override
-    public void showSearchBar() {
-        bottomSearchBar.setVisibility(View.VISIBLE);
+    public void retractBottomToolbar() {
+        if(bottomToolbar.isFabExpanded())
+            bottomToolbar.slideOutFab();
     }
 
 

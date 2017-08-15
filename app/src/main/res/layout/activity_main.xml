@@ -86,23 +86,64 @@
 
         </FrameLayout>
 
-        <!-- search bottom bar shown in spells fragment. Should rather be in the
-         fragment_main_activity_powers(?) but we don't want scrolling behaviour for it-->
         <com.bowyer.app.fabtoolbar.FabToolbar
             android:id="@+id/fabtoolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            app:tb_color="?attr/colorPrimary"
+            app:tb_color="?attr/colorAccent"
             app:tb_container_gravity="center"
-            app:tb_anim_duration="200"
+            app:tb_anim_duration="400"
             app:tb_fab_type="normal">
 
-            <android.support.v7.widget.SearchView
-                android:id="@+id/search_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/searchViewStyle"/>
+            <RelativeLayout
+                android:id="@+id/searchToolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.v7.widget.SearchView
+                    android:id="@+id/search_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/searchViewStyle"
+                    android:visibility="gone"/>
+
+
+                <ImageButton
+                    android:id="@+id/bottombar_searchbutton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:layout_toStartOf="@+id/bottombar_addSpellButton"
+                    android:layout_toLeftOf="@+id/bottombar_addSpellButton"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:src="@drawable/ic_search_black_24dp"
+                    />
+
+                <ImageButton
+                    android:id="@+id/bottombar_addSpellButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:background="@android:color/transparent"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:src="@drawable/ic_add_list_24dp"/>
+
+                <ImageButton
+                    android:id="@+id/bottombar_filterButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:layout_toEndOf="@+id/bottombar_addSpellButton"
+                    android:layout_toRightOf="@+id/bottombar_addSpellButton"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:src="@drawable/ic_filter_list_white_24dp"/>
+
+            </RelativeLayout>
 
         </com.bowyer.app.fabtoolbar.FabToolbar>
 
@@ -115,7 +156,6 @@
             android:src="@drawable/ic_search_black_24dp"
             app:layout_anchor="@id/fragmentFrameLayout"
             app:layout_anchorGravity="bottom|end"
-            app:layout_behavior="tomi.piipposoft.blankspellbook.Utils.ScrollingFABBehavior"
             />
 
         <!-- FAB in the toolbar at top -->
