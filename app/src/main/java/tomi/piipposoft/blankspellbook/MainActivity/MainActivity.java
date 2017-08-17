@@ -778,19 +778,21 @@ public class MainActivity extends ApplicationActivity
     }
 
     private void animateToolbarToBottomOfScreen(){
+        /*Log.d(TAG, "animateToolbarToBottomOfScreen: bottom frame y coord: " + bottomToolbar.getY());
         View fragmentFrame = findViewById(R.id.fragmentFrameLayout);
-
         float animationTarget = fragmentFrame.getBottom() - bottomToolbar.getHeight();
         Log.d(TAG, "animateToolbarToBottomOfScreen: animationtarget " + animationTarget);
         float animateTo = animationTarget - bottomToolbar.getTop();
-        Log.d(TAG, "animateToolbarToBottomOfScreen: animateto" + animateTo);
+        Log.d(TAG, "animateToolbarToBottomOfScreen: animateto " + animateTo);*/
 
-        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(bottomToolbar, "translationY", 20);
+        //for some reason, if we give 0 as target for the animation it is animated to its' original place
+        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(bottomToolbar, "translationY", 0);
         objectAnimator.setDuration(getResources().getInteger(R.integer.filter_slide_out_animation_length));
         objectAnimator.start();
+        Log.d(TAG, "animateToolbarToBottomOfScreen: toolbar y after animation " + bottomToolbar.getY());
     }
 
-    
+
     /**
      * Click listener for the filter button, open if it is closed, close it if it is open
      */
