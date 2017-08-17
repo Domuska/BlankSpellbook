@@ -80,6 +80,7 @@ public class MainActivity extends ApplicationActivity
     private FabToolbar bottomToolbar;
 
     private boolean databasePersistanceSet = false;
+    private ViewPager.OnPageChangeListener onPageChangeListener;
 
     private FloatingActionButton mainToolbarFab, secondaryFab;
     View.OnClickListener powersListener, dailyPowerListListener, powerListListener;
@@ -98,6 +99,8 @@ public class MainActivity extends ApplicationActivity
     float fabBottomYPosition = NOT_INITIALIZED;
 
     ObjectAnimator bottomToolbarAnimator;
+
+    boolean isFabExpanded;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,99 +145,7 @@ public class MainActivity extends ApplicationActivity
         dailyPowerListListener = new OnNewDailyPowerListClickListener();
         powerListListener = new OnNewPowerListClickListener();
 
-
-        if(viewPager == null) {
-            viewPager = findViewById(R.id.pager);
-            Log.d(TAG, "viewPager is null, creating new: " + viewPager);
-            //create a new adapter and give it the actionListener to attach to the fragments
-            pagerAdapter = new MainActivityPagerAdapter(
-                    getSupportFragmentManager(),
-                    (MainActivityContract.FragmentUserActionListener) mActionlistener,
-                    (MainActivityContract.ListeningStateInterface) mActionlistener);
-            viewPager.setAdapter(pagerAdapter);
-        }
-        else {
-            //listeningStateInterface.startListeningForPowerLists();
-        }
-
-
-        //set the number of screens that are away from currently focused screen
-        //if this is smaller, the fragments are re-created and data needs to be re-fetched
-        viewPager.setOffscreenPageLimit(2);
-
-        final ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                currentlySelectedList = position;
-                setFabFunctionality(position);
-                switch (position) {
-                    case MainActivityPresenter.DAILY_POWER_LISTS_SELECTED:
-                        secondaryToolbarText.setText(getString(R.string.toolbar_text_daily_power_lists));
-                        if (secondaryToolbarTools != null)
-                            secondaryToolbarTools.setVisibility(View.GONE);
-                        //tell presenter which page was switched to
-                        mActionlistener.userSwitchedTo(MainActivityPresenter.DAILY_POWER_LISTS_SELECTED);
-                        removeFilterFragment();
-                        secondaryFab.setVisibility(View.GONE);
-                        bottomToolbar.setVisibility(View.GONE);
-                        break;
-
-                    case MainActivityPresenter.POWER_LISTS_SELECTED:
-                        secondaryToolbarText.setText(getString(R.string.toolbar_text_power_lists));
-                        if (secondaryToolbarTools != null)
-                            secondaryToolbarTools.setVisibility(View.GONE);
-                        mActionlistener.userSwitchedTo(MainActivityPresenter.POWER_LISTS_SELECTED);
-                        removeFilterFragment();
-                        //calculate where the fab should be animated to
-                        if(fabToolbarXPosition == NOT_INITIALIZED && fabToolbarYPosition == NOT_INITIALIZED)
-                            calculateFabToolbarPosition();
-                        //set the drawable back to plus icon if it has been changed
-                        mainToolbarFab.setImageResource(R.drawable.ic_add_black_36dp);
-                        animateFABToToolbar();
-                        //hide the toolbar and secondary fab if they are visible
-                        secondaryFab.setVisibility(View.INVISIBLE);
-                        bottomToolbar.setVisibility(View.GONE);
-                        break;
-
-                    case MainActivityPresenter.SPELLS_SELECTED:
-                        secondaryToolbarText.setText(getText(R.string.toolbar_text_spells));
-                        if (secondaryToolbarTools == null) {
-                            initializeSecondaryToolbarTools();
-                        }
-                        else
-                            secondaryToolbarTools.setVisibility(View.VISIBLE);
-
-                        //set the bottom bar and visible (fab does not need to be set, test and remove)
-                        bottomToolbar.setVisibility(View.VISIBLE);
-                        secondaryFab.setVisibility(View.INVISIBLE);
-                        //calculate where the fab should be animated to
-                        if(fabBottomXPosition == NOT_INITIALIZED && fabBottomYPosition == NOT_INITIALIZED)
-                            calculateFabBottomPosition();
-                        //set drawable for the fab, looks better than setting it after animation
-                        mainToolbarFab.setImageResource(R.drawable.ic_expand_more_black_36dp);
-                        animateFABToBottom();
-                        mActionlistener.userSwitchedTo(MainActivityPresenter.SPELLS_SELECTED);
-                        break;
-                    default:
-                        Log.e(TAG, "onPageSelected: something went terribly wrong, position: " + position);
-                        Toast.makeText(getApplicationContext(),
-                                "Something went really wrong, please inform the developer, position" +
-                                        "in onPageSelected: " + position + ". Restart the application.",
-                                Toast.LENGTH_LONG).show();
-                        break;
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        };
-        viewPager.addOnPageChangeListener(onPageChangeListener);
+        initializeViewPager();
 
         if(this.drawerActionListener == null) {
             this.drawerActionListener = (DrawerContract.UserActionListener) mActionlistener;
@@ -272,6 +183,7 @@ public class MainActivity extends ApplicationActivity
                 onPageChangeListener.onPageSelected(viewPager.getCurrentItem());
             }
         });
+
         //set mainToolbarFab onclicklistener and possible icon
         setFabFunctionality(currentlySelectedList);
         mActionlistener.userSwitchedTo(currentlySelectedList);
@@ -331,6 +243,106 @@ public class MainActivity extends ApplicationActivity
                 - fabMargin;*/
 
         //Log.d(TAG, "fab final x: " + mainToolbarFab.getX() + " fab final y: " + mainToolbarFab.getY());
+    }
+
+    private void initializeViewPager(){
+        if(viewPager == null) {
+            viewPager = findViewById(R.id.pager);
+            Log.d(TAG, "viewPager is null, creating new: " + viewPager);
+            //create a new adapter and give it the actionListener to attach to the fragments
+            pagerAdapter = new MainActivityPagerAdapter(
+                    getSupportFragmentManager(),
+                    (MainActivityContract.FragmentUserActionListener) mActionlistener,
+                    (MainActivityContract.ListeningStateInterface) mActionlistener);
+            viewPager.setAdapter(pagerAdapter);
+        }
+        else {
+            //listeningStateInterface.startListeningForPowerLists();
+        }
+
+
+        //set the number of screens that are away from currently focused screen
+        //if this is smaller, the fragments are re-created and data needs to be re-fetched
+        viewPager.setOffscreenPageLimit(2);
+
+        onPageChangeListener = new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                currentlySelectedList = position;
+                setFabFunctionality(position);
+                switch (position) {
+                    case MainActivityPresenter.DAILY_POWER_LISTS_SELECTED:
+                        secondaryToolbarText.setText(getString(R.string.toolbar_text_daily_power_lists));
+                        if (secondaryToolbarTools != null)
+                            secondaryToolbarTools.setVisibility(View.GONE);
+                        //tell presenter which page was switched to
+                        mActionlistener.userSwitchedTo(MainActivityPresenter.DAILY_POWER_LISTS_SELECTED);
+                        removeFilterFragment();
+                        secondaryFab.setVisibility(View.GONE);
+                        bottomToolbar.setVisibility(View.GONE);
+                        break;
+
+                    case MainActivityPresenter.POWER_LISTS_SELECTED:
+                        secondaryToolbarText.setText(getString(R.string.toolbar_text_power_lists));
+                        if (secondaryToolbarTools != null)
+                            secondaryToolbarTools.setVisibility(View.GONE);
+                        mActionlistener.userSwitchedTo(MainActivityPresenter.POWER_LISTS_SELECTED);
+                        removeFilterFragment();
+                        //calculate where the fab should be animated to
+                        if(fabToolbarXPosition == NOT_INITIALIZED && fabToolbarYPosition == NOT_INITIALIZED)
+                            calculateFabToolbarPosition();
+                        //set the drawable back to plus icon if it has been changed
+                        mainToolbarFab.setImageResource(R.drawable.ic_add_black_36dp);
+                        animateFABToToolbar();
+                        //hide the toolbar and secondary fab if they are visible
+                        secondaryFab.setVisibility(View.INVISIBLE);
+                        bottomToolbar.setVisibility(View.GONE);
+                        break;
+
+                    case MainActivityPresenter.SPELLS_SELECTED:
+                        secondaryToolbarText.setText(getText(R.string.toolbar_text_spells));
+                        if (secondaryToolbarTools == null) {
+                            initializeSecondaryToolbarTools();
+                        }
+                        else
+                            secondaryToolbarTools.setVisibility(View.VISIBLE);
+
+                        //set the bottom bar and visible (fab does not need to be set, test and remove)
+                        bottomToolbar.setVisibility(View.VISIBLE);
+                        secondaryFab.setVisibility(View.INVISIBLE);
+
+                        //if fab is already expanded, no need to animate it (can happen when resuming activity)
+                        if(!bottomToolbar.isFabExpanded()) {
+                            //calculate where the fab should be animated to
+                            if (fabBottomXPosition == NOT_INITIALIZED && fabBottomYPosition == NOT_INITIALIZED)
+                                calculateFabBottomPosition();
+                            //set drawable for the fab, looks better than setting it after animation
+                            mainToolbarFab.setImageResource(R.drawable.ic_expand_more_black_36dp);
+                            animateFABToBottom();
+                        }
+                        mActionlistener.userSwitchedTo(MainActivityPresenter.SPELLS_SELECTED);
+                        break;
+                    default:
+                        Log.e(TAG, "onPageSelected: something went terribly wrong, position: " + position);
+                        Toast.makeText(getApplicationContext(),
+                                "Something went really wrong, please inform the developer, position" +
+                                        "in onPageSelected: " + position + ". Restart the application.",
+                                Toast.LENGTH_LONG).show();
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        };
+        viewPager.addOnPageChangeListener(onPageChangeListener);
+
     }
 
 
