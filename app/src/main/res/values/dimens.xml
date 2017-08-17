@@ -14,5 +14,7 @@
 
     <!-- activity_power_details_textviews padding between texts -->
     <dimen name="padding_power_details_text_views">12dp</dimen>
+    
+    <dimen name="margin_top_filter_fragment">150dp</dimen>
 
 </resources>

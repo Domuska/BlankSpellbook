@@ -1,5 +1,6 @@
 package tomi.piipposoft.blankspellbook.MainActivity;
 
+import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -753,8 +754,43 @@ public class MainActivity extends ApplicationActivity
             bottomToolbar.slideOutFab();
     }
 
+    private void animateBottomToolbarToTopOfFilter(){
+        Log.d(TAG, "animateBottomToolbarToTopOfFilter: bottom frame y coord: " + bottomToolbar.getY());
+        //request the top coordinates of layout where filter fragment is in (fragment bound by it)
+        float frameTop = findViewById(R.id.fragmentFrameLayout).getY();
+        //calculate the top coordinates of the filter, remove the toolbar height
+        float toolbarTop = frameTop
+                + getResources().getDimension(R.dimen.margin_top_filter_fragment)
+                - bottomToolbar.getHeight();
+        //calculate the movement needed based on toolbar current location
+        float animationTarget = toolbarTop - bottomToolbar.getY();
 
+        /*TranslateAnimation animation = new TranslateAnimation(0, 0, 0, animationTarget);
+        animation.setDuration(getResources().getInteger(R.integer.filter_slide_in_animation_length));
+        //have toolbar stay where it is afte animation
+        animation.setFillAfter(true);
+        bottomToolbar.startAnimation(animation);*/
 
+        //create the animation and run it
+        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(bottomToolbar, "translationY", animationTarget);
+        objectAnimator.setDuration(getResources().getInteger(R.integer.filter_slide_in_animation_length));
+        objectAnimator.start();
+    }
+
+    private void animateToolbarToBottomOfScreen(){
+        View fragmentFrame = findViewById(R.id.fragmentFrameLayout);
+
+        float animationTarget = fragmentFrame.getBottom() - bottomToolbar.getHeight();
+        Log.d(TAG, "animateToolbarToBottomOfScreen: animationtarget " + animationTarget);
+        float animateTo = animationTarget - bottomToolbar.getTop();
+        Log.d(TAG, "animateToolbarToBottomOfScreen: animateto" + animateTo);
+
+        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(bottomToolbar, "translationY", 20);
+        objectAnimator.setDuration(getResources().getInteger(R.integer.filter_slide_out_animation_length));
+        objectAnimator.start();
+    }
+
+    
     /**
      * Click listener for the filter button, open if it is closed, close it if it is open
      */
@@ -785,9 +821,11 @@ public class MainActivity extends ApplicationActivity
                 //add the fragment and tag so we can find the fragment later
                 transaction.add(R.id.fragmentFrameLayout, filterFragment, FILTER_FRAGMENT_TAG);
                 transaction.commit();
+                animateBottomToolbarToTopOfFilter();
             }
             else{
                 removeFilterFragment();
+                animateToolbarToBottomOfScreen();
             }
         }
     }

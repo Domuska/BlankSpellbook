@@ -112,5 +112,6 @@
     <string name="preferences_filter_by_cross_section_summary">Toggle on to show powers that satisfy both of the filters. Toggle off to show powers that satisfy any of the filters.</string>
 
 
-    <!-- -->
+    <!-- numeric values not displayed for user -->
+
 </resources>

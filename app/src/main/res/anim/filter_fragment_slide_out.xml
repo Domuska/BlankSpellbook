@@ -4,5 +4,5 @@
         android:fromYDelta="0"
         android:toYDelta="100%"
         android:interpolator="@android:anim/decelerate_interpolator"
-        android:duration="200"/>
+        android:duration="@integer/filter_slide_out_animation_length"/>
 </set>
