@@ -97,6 +97,7 @@ public class MainActivity extends ApplicationActivity
     float fabBottomXPosition = NOT_INITIALIZED;
     float fabBottomYPosition = NOT_INITIALIZED;
 
+    ObjectAnimator bottomToolbarAnimator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -765,16 +766,10 @@ public class MainActivity extends ApplicationActivity
         //calculate the movement needed based on toolbar current location
         float animationTarget = toolbarTop - bottomToolbar.getY();
 
-        /*TranslateAnimation animation = new TranslateAnimation(0, 0, 0, animationTarget);
-        animation.setDuration(getResources().getInteger(R.integer.filter_slide_in_animation_length));
-        //have toolbar stay where it is afte animation
-        animation.setFillAfter(true);
-        bottomToolbar.startAnimation(animation);*/
-
         //create the animation and run it
-        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(bottomToolbar, "translationY", animationTarget);
-        objectAnimator.setDuration(getResources().getInteger(R.integer.filter_slide_in_animation_length));
-        objectAnimator.start();
+        bottomToolbarAnimator = ObjectAnimator.ofFloat(bottomToolbar, "translationY", animationTarget);
+        bottomToolbarAnimator.setDuration(getResources().getInteger(R.integer.filter_slide_in_animation_length));
+        bottomToolbarAnimator.start();
     }
 
     private void animateToolbarToBottomOfScreen(){
@@ -786,9 +781,15 @@ public class MainActivity extends ApplicationActivity
         Log.d(TAG, "animateToolbarToBottomOfScreen: animateto " + animateTo);*/
 
         //for some reason, if we give 0 as target for the animation it is animated to its' original place
-        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(bottomToolbar, "translationY", 0);
-        objectAnimator.setDuration(getResources().getInteger(R.integer.filter_slide_out_animation_length));
-        objectAnimator.start();
+        //might be that if we saved the objectAnimator in animateBottomToolbarToTopOfFilter we could just
+        //call .reverse on it.
+        if(bottomToolbarAnimator != null)
+            bottomToolbarAnimator.reverse();
+        else {
+            ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(bottomToolbar, "translationY", 0);
+            objectAnimator.setDuration(getResources().getInteger(R.integer.filter_slide_out_animation_length));
+            objectAnimator.start();
+        }
         Log.d(TAG, "animateToolbarToBottomOfScreen: toolbar y after animation " + bottomToolbar.getY());
     }
 
