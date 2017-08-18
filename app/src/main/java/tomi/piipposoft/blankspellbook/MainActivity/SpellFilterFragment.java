@@ -12,11 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.lang.reflect.Array;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeMap;
 import java.util.TreeSet;
 
 import tomi.piipposoft.blankspellbook.R;
@@ -33,6 +31,7 @@ public class SpellFilterFragment extends Fragment {
     public static final String POWER_LIST_NAMES_BUNDLE = "powerLists";
     public static final String POWER_LIST_NAMES_SELECTED_BUNDLE = "selectedPowerListNames";
 
+    private final int HEADER_VIEW = -1;
 
     //store names of the power lists and groups visible, boolean to tell if list is selected currently
     private List<AbstractMap.SimpleEntry<String, Boolean>> powerListNamesMap = new ArrayList<>();
@@ -166,7 +165,7 @@ public class SpellFilterFragment extends Fragment {
      * to make two separate, at least for now.
      */
     private class FilterListAdapter extends
-            RecyclerView.Adapter<FilterListAdapter.ViewHolder>{
+            RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
         private boolean isPowerListAdapter;
 
@@ -174,92 +173,130 @@ public class SpellFilterFragment extends Fragment {
             this.isPowerListAdapter = isPowerListAdapter;
         }
 
-        class ViewHolder extends RecyclerView.ViewHolder{
+        class NormalViewHolder extends RecyclerView.ViewHolder{
             private TextView rowText;
             private View rowBackground;
-            private ViewHolder(View view){
+            private NormalViewHolder(View view){
                 super(view);
                 rowText = view.findViewById(R.id.recycler_row_text);
                 rowBackground = view;
             }
         }
 
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(
-                    R.layout.filter_list_row, parent, false);
-            return new ViewHolder(view);
+        class HeaderViewHolder extends RecyclerView.ViewHolder{
+
+            public HeaderViewHolder(View itemView) {
+                super(itemView);
+                TextView tx = itemView.findViewById(R.id.filter_list_header_textview);
+                if(isPowerListAdapter)
+                    tx.setText(getString(R.string.mainactivity_filter_power_list));
+                else
+                    tx.setText(getString(R.string.mainactivity_filter_group));
+            }
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder holder, final int position) {
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-            final String rowText;
-            final int adapterPosition = holder.getAdapterPosition();
-            //adapter is for power list names
-            if(isPowerListAdapter) {
-                rowText = powerListNamesMap.get(adapterPosition).getKey();
-                //holder recycles the rows, they might be incorrectly "selected"
-                holder.rowBackground.setSelected(powerListNamesMap.get(adapterPosition).getValue());
+            View view;
+            if(viewType == HEADER_VIEW){
+                view = LayoutInflater.from(parent.getContext()).inflate(
+                        R.layout.filter_list_header, parent, false);
+                return new HeaderViewHolder(view);
             }
-            //adapter is for power group names
             else {
-                rowText = powerGroupNamesMap.get(adapterPosition).getKey();
-                //holder recycles the rows, they might be incorrectly "selected"
-                holder.rowBackground.setSelected(powerGroupNamesMap.get(adapterPosition).getValue());
+                view = LayoutInflater.from(parent.getContext()).inflate(
+                        R.layout.filter_list_row, parent, false);
+                return new NormalViewHolder(view);
             }
-            holder.rowText.setText(rowText);
 
-            //color every other row with darker background
-            if(adapterPosition % 2 == 1) {
+        }
+
+        @Override
+        public void onBindViewHolder(final RecyclerView.ViewHolder vh, final int position) {
+
+            //don't do anything if the row is the first row (the header)
+            if(position != 0) {
+                final NormalViewHolder holder = (NormalViewHolder)vh;
+                final String rowText;
+                final int adapterPosition = holder.getAdapterPosition() -1;
+                //adapter is for power list names
+                if (isPowerListAdapter) {
+                    rowText = powerListNamesMap.get(adapterPosition).getKey();
+                    //holder recycles the rows, they might be incorrectly "selected"
+                    holder.rowBackground.setSelected(powerListNamesMap.get(adapterPosition).getValue());
+
+                }
+                //adapter is for power group names
+                else {
+                    rowText = powerGroupNamesMap.get(adapterPosition).getKey();
+                    //holder recycles the rows, they might be incorrectly "selected"
+                    holder.rowBackground.setSelected(powerGroupNamesMap.get(adapterPosition).getValue());
+                }
+                holder.rowText.setText(rowText);
+
+                //color every other row with darker background
+                /*if (adapterPosition % 2 == 1) {
                     holder.rowBackground.setBackground(ContextCompat.getDrawable(
                             getActivity(),
                             R.drawable.filter_row_background_dark
                     ));
-            }
+                }*/
 
-            holder.rowBackground.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //row is already selected, de-select it
-                    if(holder.rowBackground.isSelected()) {
-                        holder.rowBackground.setSelected(false);
-                        //set the selection boolean in the map of group/power list names
-                        if(isPowerListAdapter) {
-                            //powerListNamesMap.put(rowText, false);
-                            powerListNamesMap.get(adapterPosition).setValue(false);
-                            mActionListener.removeFilter(rowText, MainActivityPresenter.FILTER_BY_POWER_LIST_NAME);
+                holder.rowBackground.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //row is already selected, de-select it
+                        if (holder.rowBackground.isSelected()) {
+                            holder.rowBackground.setSelected(false);
+                            //set the selection boolean in the map of group/power list names
+                            if (isPowerListAdapter) {
+                                //powerListNamesMap.put(rowText, false);
+                                powerListNamesMap.get(adapterPosition).setValue(false);
+                                mActionListener.removeFilter(rowText, MainActivityPresenter.FILTER_BY_POWER_LIST_NAME);
+                            } else {
+                                //groupNamesMap.put(rowText, false);
+                                powerGroupNamesMap.get(adapterPosition).setValue(false);
+                                mActionListener.removeFilter(rowText, MainActivityPresenter.FILTER_BY_GROUP_NAME);
+                            }
                         }
+                        //set the row as selected
                         else {
-                            //groupNamesMap.put(rowText, false);
-                            powerGroupNamesMap.get(adapterPosition).setValue(false);
-                            mActionListener.removeFilter(rowText, MainActivityPresenter.FILTER_BY_GROUP_NAME);
+                            holder.rowBackground.setSelected(true);
+                            if (isPowerListAdapter) {
+                                //powerListNamesMap.put(rowText, true);
+                                powerListNamesMap.get(adapterPosition).setValue(true);
+                                mActionListener.filterGroupsAndPowersWithPowerListName(rowText);
+                            } else {
+                                //groupNamesMap.put(rowText, true);
+                                powerGroupNamesMap.get(adapterPosition).setValue(true);
+                                mActionListener.filterPowerListsAndPowersWithGroupName(rowText);
+                            }
                         }
                     }
-                    //set the row as selected
-                    else{
-                        holder.rowBackground.setSelected(true);
-                        if(isPowerListAdapter) {
-                            //powerListNamesMap.put(rowText, true);
-                            powerListNamesMap.get(adapterPosition).setValue(true);
-                            mActionListener.filterGroupsAndPowersWithPowerListName(rowText);
-                        }
-                        else {
-                            //groupNamesMap.put(rowText, true);
-                            powerGroupNamesMap.get(adapterPosition).setValue(true);
-                            mActionListener.filterPowerListsAndPowersWithGroupName(rowText);
-                        }
-                    }
-                }
-            });
+                });
+            }
         }
 
         @Override
         public int getItemCount() {
+            //account for the headers -> size +1
             if(isPowerListAdapter)
-                return powerListNamesMap.size();
+                return powerListNamesMap.size() + 1;
             else
-                return powerGroupNamesMap.size();
+                return powerGroupNamesMap.size() + 1;
+
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            //if we are looking at first item, it's the header
+            if(position == 0)
+                return HEADER_VIEW;
+            else
+                return super.getItemViewType(position);
         }
     }
+
+
 }

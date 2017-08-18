@@ -16,4 +16,6 @@
     <color name="my_color_filter_row_selected_light">@color/md_teal_100</color>
     <color name="my_color_filter_row_selected_dark">@color/md_teal_200</color>
 
+    <color name="my_color_text_color_secondary">@color/md_grey_600</color>
+
 </resources>

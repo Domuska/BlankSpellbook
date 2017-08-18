@@ -9,27 +9,18 @@
     android:background="@color/my_color_filter_row_background_light"
     android:clickable="true">
 
-    <!-- decoration above the lists -->
-    <View
-        android:id="@+id/topDivider"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="?colorAccent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-
     <TextView
         android:id="@+id/classInfoText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/mainactivity_filter_class"
+        android:text="@string/mainactivity_filter_power_list"
         android:textSize="12sp"
         android:textColor="?colorAccent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginLeft="3dp"
         android:layout_marginStart="3dp"
+        android:visibility="gone"
         />
 
     <!-- recycler view for displaying the power list names -->
@@ -38,9 +29,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintRight_toLeftOf="@+id/centerDivider"
-        app:layout_constraintTop_toBottomOf="@id/classInfoText"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:clipToPadding="false"/>
 
@@ -52,7 +42,7 @@
         android:layout_gravity="center_horizontal"
         android:background="@color/md_black_1000"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/topDivider"
+        app:layout_constraintTop_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="@+id/guideline"
         tools:layout_constraintLeft_creator="1" />
 
@@ -74,6 +64,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginLeft="3dp"
         android:layout_marginStart="3dp"
+        android:visibility="gone"
         />
 
     <!-- recycler view for displaying the group names -->
@@ -83,8 +74,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toRightOf="@id/centerDivider"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/groupInfoText"
-        android:paddingTop="10dp"
+        app:layout_constraintTop_toTopOf="parent"
         android:paddingBottom="10dp"
         android:clipToPadding="false"/>
 

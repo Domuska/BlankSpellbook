@@ -36,8 +36,8 @@
     <string name="mainactivity_back_button_popup_title">Confirm quit</string>
     <string name="mainactivity_back_button_popup_info">Do you want to quit?</string>
     <string name="mainactivity_filter_text">Filters</string>
-    <string name="mainactivity_filter_class">Power lists:</string>
-    <string name="mainactivity_filter_group">Power groups:</string>
+    <string name="mainactivity_filter_power_list">Power lists</string>
+    <string name="mainactivity_filter_group">Groups</string>
 
     <!-- Strings for power details activity & Fragments -->
         <string name="title_power_details">Details</string>
