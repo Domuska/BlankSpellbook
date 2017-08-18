@@ -8,4 +8,8 @@
     <integer name="filter_slide_in_animation_length">150</integer>
     <integer name="filter_slide_out_animation_length">150</integer>
 
+    <integer name="card_flip_time_full">300</integer>
+    <integer name="card_flip_time_half">150</integer>
+    <integer name="card_flip_time_one_and_half">450</integer>
+
 </resources>

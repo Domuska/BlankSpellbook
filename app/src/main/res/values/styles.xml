@@ -41,8 +41,9 @@
     <style name="searchViewStyle" parent="Widget.AppCompat.SearchView">
         <item name="searchIcon">@drawable/ic_search_black_24dp</item>
         <item name="searchHintIcon">@drawable/ic_search_black_24dp</item>
-        <item name="closeIcon">@drawable/ic_clear_black_24dp</item>
-        <item name="queryBackground">@color/md_black_1000</item>
+        <!-- set the close icon as transparent, we have different close button that works differently -->
+        <item name="closeIcon">@android:color/transparent</item>
+        <!-- <item name="queryBackground">@color/md_black_1000</item>-->
     </style>
     
 </resources>

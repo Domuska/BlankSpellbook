@@ -1,5 +1,7 @@
 package tomi.piipposoft.blankspellbook.MainActivity;
 
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,6 +19,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
@@ -90,7 +93,8 @@ public class MainActivity extends ApplicationActivity
     SpellFilterFragment filterFragment;
     FragmentManager fragmentManager;
 
-    private ImageButton searchButton, filterButton, addSpellButton;
+    private ImageButton searchButton, filterButton, addSpellButton, stopSearchButton;
+    private SearchView searchView;
 
     SpringAnimation springXAnimation, springYAnimation;
     DynamicAnimation.OnAnimationEndListener fabMoveAnimationEndListener;
@@ -423,9 +427,22 @@ public class MainActivity extends ApplicationActivity
         filterButton = findViewById(R.id.bottombar_filterButton);
         searchButton = findViewById(R.id.bottombar_searchbutton);
         addSpellButton = findViewById(R.id.bottombar_addSpellButton);
+        searchView = findViewById(R.id.search_view);
+        stopSearchButton = findViewById(R.id.close_search);
+
+
+        /*searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                Log.d(TAG, "closing search view");
+                return false;
+            }
+        });*/
 
         filterButton.setOnClickListener(new OpenFilterClickListener());
         addSpellButton.setOnClickListener(new OnNewPowerClickListener());
+        searchButton.setOnClickListener(new SearchViewClickListener());
+        stopSearchButton.setOnClickListener(new StopSearchClickListener());
 
         secondaryFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -599,32 +616,6 @@ public class MainActivity extends ApplicationActivity
         public void onClick(View v) {
             DialogFragment dialog = new SetPowerListNameDialog();
             dialog.show(MainActivity.this.getSupportFragmentManager(), "SetSpellBookNameDialogFragment");
-        }
-    }
-
-    private class OnNewPowerClickListener implements View.OnClickListener{
-
-        //https://android-developers.googleblog.com/2014/10/implementing-material-design-in-your.html
-        // Activity + Fragment Transitions
-        //https://github.com/codepath/android_guides/wiki/Shared-Element-Activity-Transition
-        @Override
-        public void onClick(View v) {
-            //activity transition stuff when starting activity. Commented out since they
-            //make the fab (where transition is bound to now) visible when it shouldnt be. The transition
-            //is not too useful either so...
-            Intent i = new Intent(MainActivity.this, PowerDetailsActivity.class);
-            /*String transitionName = "fabTransition";
-            ActivityOptionsCompat options =
-                    ActivityOptionsCompat.makeSceneTransitionAnimation(
-                            MainActivity.this,
-                            mainToolbarFab,
-                            transitionName);
-            Bundle bundle = options.toBundle();*/
-
-            i.putExtra(PowerDetailsActivity.EXTRA_POWER_DETAIL_ID,
-                    PowerDetailsActivity.EXTRA_ADD_NEW_POWER_DETAILS);
-            //ActivityCompat.startActivity(MainActivity.this, i, bundle);
-            ActivityCompat.startActivity(MainActivity.this, i, null);
         }
     }
 
@@ -892,6 +883,58 @@ public class MainActivity extends ApplicationActivity
             }
         }
     }
+
+    private class OnNewPowerClickListener implements View.OnClickListener{
+
+        //https://android-developers.googleblog.com/2014/10/implementing-material-design-in-your.html
+        // Activity + Fragment Transitions
+        //https://github.com/codepath/android_guides/wiki/Shared-Element-Activity-Transition
+        @Override
+        public void onClick(View v) {
+            //activity transition stuff when starting activity. Commented out since they
+            //make the fab (where transition is bound to now) visible when it shouldnt be. The transition
+            //is not too useful either so...
+            Intent i = new Intent(MainActivity.this, PowerDetailsActivity.class);
+            /*String transitionName = "fabTransition";
+            ActivityOptionsCompat options =
+                    ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            MainActivity.this,
+                            mainToolbarFab,
+                            transitionName);
+            Bundle bundle = options.toBundle();*/
+
+            i.putExtra(PowerDetailsActivity.EXTRA_POWER_DETAIL_ID,
+                    PowerDetailsActivity.EXTRA_ADD_NEW_POWER_DETAILS);
+            //ActivityCompat.startActivity(MainActivity.this, i, bundle);
+            ActivityCompat.startActivity(MainActivity.this, i, null);
+        }
+    }
+
+    private class SearchViewClickListener implements View.OnClickListener{
+        @Override
+        public void onClick(View view) {
+            //hide the buttons and bring searchView visible
+            filterButton.setVisibility(View.GONE);
+            searchButton.setVisibility(View.GONE);
+            addSpellButton.setVisibility(View.GONE);
+            searchView.setVisibility(View.VISIBLE);
+            stopSearchButton.setVisibility(View.VISIBLE);
+            searchView.onActionViewExpanded();
+        }
+    }
+
+    private class StopSearchClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            filterButton.setVisibility(View.VISIBLE);
+            searchButton.setVisibility(View.VISIBLE);
+            addSpellButton.setVisibility(View.VISIBLE);
+            stopSearchButton.setVisibility(View.GONE);
+            searchView.setVisibility(View.GONE);
+            searchView.setQuery("", false);
+        }
+    }
+
 
     //interface OnSharedPreferenceChangeListener
     //needed if later we add capability for large screen that might have the settings visible as additional fragment
