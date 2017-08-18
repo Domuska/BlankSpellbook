@@ -155,7 +155,9 @@
             app:layout_anchorGravity="start|bottom"
             android:transitionName="fabTransition"/>
 
-        <!-- fab in bottom of powers fragment, appears to user to be the same fab as above -->
+        <!-- fab in bottom of powers fragment, appears to user to be the same fab as above.
+         We have two FABs since it's easiest to calculate where we need to animate the fab from
+         toolbar if we already have another fab in the correct location. Lazy, I know. -->
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/mainactivity_fab2"
             android:layout_width="wrap_content"

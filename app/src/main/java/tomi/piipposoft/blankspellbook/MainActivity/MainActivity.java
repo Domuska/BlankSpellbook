@@ -596,22 +596,22 @@ public class MainActivity extends ApplicationActivity
         //https://github.com/codepath/android_guides/wiki/Shared-Element-Activity-Transition
         @Override
         public void onClick(View v) {
-            //Intent i = new Intent(MainActivity.this, PowerDetailsActivity.class);
-            /*i.putExtra(PowerDetailsActivity.EXTRA_POWER_DETAIL_ID,
-                    PowerDetailsActivity.EXTRA_ADD_NEW_POWER_DETAILS);*/
-            //MainActivity.this.startActivity(i);
+            //activity transition stuff when starting activity. Commented out since they
+            //make the fab (where transition is bound to now) visible when it shouldnt be. The transition
+            //is not too useful either so...
             Intent i = new Intent(MainActivity.this, PowerDetailsActivity.class);
-            String transitionName = "fabTransition";
+            /*String transitionName = "fabTransition";
             ActivityOptionsCompat options =
                     ActivityOptionsCompat.makeSceneTransitionAnimation(
                             MainActivity.this,
                             mainToolbarFab,
                             transitionName);
-            Bundle bundle = options.toBundle();
+            Bundle bundle = options.toBundle();*/
 
             i.putExtra(PowerDetailsActivity.EXTRA_POWER_DETAIL_ID,
                     PowerDetailsActivity.EXTRA_ADD_NEW_POWER_DETAILS);
-            ActivityCompat.startActivity(MainActivity.this, i, bundle);
+            //ActivityCompat.startActivity(MainActivity.this, i, bundle);
+            ActivityCompat.startActivity(MainActivity.this, i, null);
         }
     }
 
