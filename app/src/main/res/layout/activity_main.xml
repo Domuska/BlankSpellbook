@@ -73,7 +73,7 @@
         <!-- Frame in which the ViewPager and filter fragment is placed in,
                 filter fragment needs a container -->
         <FrameLayout
-            android:id="@+id/fragmentFrameLayout"
+            android:id="@+id/viewPagerLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -84,6 +84,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
         </FrameLayout>
+
+        <!-- framelayout where the filter fragment is placed in. Does not have layout
+         behaviour so the filter lists dont get scrolled if the list behind (powers list) is scrolled-->
+        <FrameLayout
+            android:id="@+id/fragmentFrameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/double_toolbar_size"/>
+
 
         <com.bowyer.app.fabtoolbar.FabToolbar
             android:id="@+id/fabtoolbar"
@@ -163,7 +172,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
             android:src="@drawable/ic_expand_more_black_36dp"
-            app:layout_anchor="@id/fragmentFrameLayout"
+            app:layout_anchor="@id/viewPagerLayout"
             app:layout_anchorGravity="bottom|end"
             android:visibility="visible" />
 

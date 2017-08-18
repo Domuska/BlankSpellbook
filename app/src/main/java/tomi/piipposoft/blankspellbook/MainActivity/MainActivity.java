@@ -791,6 +791,8 @@ public class MainActivity extends ApplicationActivity
             //add the fragment and tag so we can find the fragment later
             transaction.add(R.id.fragmentFrameLayout, filterFragment, FILTER_FRAGMENT_TAG);
 
+
+
         }
         else{
             transaction.show(filterFragment);
@@ -835,7 +837,7 @@ public class MainActivity extends ApplicationActivity
     private void animateBottomToolbarToTopOfFilter(){
         Log.d(TAG, "animateBottomToolbarToTopOfFilter: bottom frame y coord: " + bottomToolbar.getY());
         //request the top coordinates of layout where filter fragment is in (fragment bound by it)
-        float frameTop = findViewById(R.id.fragmentFrameLayout).getY();
+        float frameTop = findViewById(R.id.viewPagerLayout).getY();
         //calculate the top coordinates of the filter, remove the toolbar height
         float toolbarTop = frameTop
                 + getResources().getDimension(R.dimen.margin_top_filter_fragment)

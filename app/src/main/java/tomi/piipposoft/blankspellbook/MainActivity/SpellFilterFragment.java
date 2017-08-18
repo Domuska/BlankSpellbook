@@ -88,6 +88,10 @@ public class SpellFilterFragment extends Fragment {
         groupsAdapter = new FilterListAdapter(false);
         groupRecyclerView.setAdapter(groupsAdapter);
 
+        //disable nested scrolling so the list behind is not scrolled when this list is
+        groupRecyclerView.setNestedScrollingEnabled(false);
+        powerListRecyclerView.setNestedScrollingEnabled(false);
+
         Log.d(TAG, "power list names size: " + powerListNamesMap.size());
         Log.d(TAG, "group names list size: " + powerGroupNamesMap.size());
 
