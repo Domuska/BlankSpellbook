@@ -828,7 +828,7 @@ public class MainActivity extends ApplicationActivity
 
     @Override
     public void retractBottomToolbar() {
-        if(bottomToolbar.isFabExpanded())
+        if(bottomToolbar.isFabExpanded() && filterFragment == null)
             bottomToolbar.slideOutFab();
     }
 
