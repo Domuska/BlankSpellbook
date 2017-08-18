@@ -88,6 +88,7 @@ public class MainActivity extends ApplicationActivity
     //default selection is the spell lists fragment
     private int currentlySelectedList = MainActivityPresenter.POWER_LISTS_SELECTED;
     SpellFilterFragment filterFragment;
+    FragmentManager fragmentManager;
 
     private ImageButton searchButton, filterButton, addSpellButton;
 
@@ -99,8 +100,6 @@ public class MainActivity extends ApplicationActivity
     float fabBottomYPosition = NOT_INITIALIZED;
 
     ObjectAnimator bottomToolbarAnimator;
-
-    boolean isFabExpanded;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -274,24 +273,28 @@ public class MainActivity extends ApplicationActivity
             public void onPageSelected(int position) {
                 currentlySelectedList = position;
                 setFabFunctionality(position);
+                fragmentManager = getSupportFragmentManager();
                 switch (position) {
+
+
                     case MainActivityPresenter.DAILY_POWER_LISTS_SELECTED:
                         secondaryToolbarText.setText(getString(R.string.toolbar_text_daily_power_lists));
                         if (secondaryToolbarTools != null)
                             secondaryToolbarTools.setVisibility(View.GONE);
                         //tell presenter which page was switched to
                         mActionlistener.userSwitchedTo(MainActivityPresenter.DAILY_POWER_LISTS_SELECTED);
-                        removeFilterFragment();
+                        hideFilterFragment(fragmentManager);
                         secondaryFab.setVisibility(View.GONE);
                         bottomToolbar.setVisibility(View.GONE);
                         break;
+
 
                     case MainActivityPresenter.POWER_LISTS_SELECTED:
                         secondaryToolbarText.setText(getString(R.string.toolbar_text_power_lists));
                         if (secondaryToolbarTools != null)
                             secondaryToolbarTools.setVisibility(View.GONE);
                         mActionlistener.userSwitchedTo(MainActivityPresenter.POWER_LISTS_SELECTED);
-                        removeFilterFragment();
+                        hideFilterFragment(fragmentManager);
                         //calculate where the fab should be animated to
                         if(fabToolbarXPosition == NOT_INITIALIZED && fabToolbarYPosition == NOT_INITIALIZED)
                             calculateFabToolbarPosition();
@@ -302,6 +305,7 @@ public class MainActivity extends ApplicationActivity
                         secondaryFab.setVisibility(View.INVISIBLE);
                         bottomToolbar.setVisibility(View.GONE);
                         break;
+
 
                     case MainActivityPresenter.SPELLS_SELECTED:
                         secondaryToolbarText.setText(getText(R.string.toolbar_text_spells));
@@ -315,7 +319,11 @@ public class MainActivity extends ApplicationActivity
                         bottomToolbar.setVisibility(View.VISIBLE);
                         secondaryFab.setVisibility(View.INVISIBLE);
 
-                        //if fab is already expanded, no need to animate it (can happen when resuming activity)
+                        //if filter fragment created, it should be re-opened
+                        if(fragmentManager.findFragmentByTag(FILTER_FRAGMENT_TAG) != null){
+                            addFilterFragment(fragmentManager);
+                        }
+                        //else see if fab was expanded earlier
                         if(!bottomToolbar.isFabExpanded()) {
                             //calculate where the fab should be animated to
                             if (fabBottomXPosition == NOT_INITIALIZED && fabBottomYPosition == NOT_INITIALIZED)
@@ -323,6 +331,11 @@ public class MainActivity extends ApplicationActivity
                             //set drawable for the fab, looks better than setting it after animation
                             mainToolbarFab.setImageResource(R.drawable.ic_expand_more_black_36dp);
                             animateFABToBottom();
+                        }
+                        else{
+                            //if bottom fab is expanded, hide the toolbar fab anyway since animation end listener
+                            //is not run
+                            mainToolbarFab.setVisibility(View.INVISIBLE);
                         }
                         mActionlistener.userSwitchedTo(MainActivityPresenter.SPELLS_SELECTED);
                         break;
@@ -548,7 +561,7 @@ public class MainActivity extends ApplicationActivity
         if(keyCode == KeyEvent.KEYCODE_BACK ) {
             //close the filter fragment if it's visible
             if(filterFragment != null)
-                removeFilterFragment();
+                removeFilterFragment(fragmentManager);
             //ask if user wants to quit the app
             else {
                 //pass builder our custom dialog fragment style
@@ -722,6 +735,7 @@ public class MainActivity extends ApplicationActivity
                                           View transitionOrigin, String powerListName) {
         //transition disabled for now since starting the powerDetails is choppy, maybe add transition
         //if the activity start-up is made smoother
+
         /*if(transitionOrigin != null){
             Intent i = new Intent(MainActivity.this, PowerDetailsActivity.class);
             String transitionName = getString(R.string.transition_powerDetails_name);
@@ -750,14 +764,65 @@ public class MainActivity extends ApplicationActivity
         filterFragment.setDisplayedPowerListNames(displayedPowerLists);
     }
 
-    private void removeFilterFragment(){
-        FragmentManager fragmentManager = getSupportFragmentManager();
+    /**
+     * Add the filter fragment to R.id.fragmentFrameLayout layout. If the fragment is already in
+     * the activity, will show it instead.
+     * @param fragmentManager The fragment manager for the activity
+     */
+    private void addFilterFragment(FragmentManager fragmentManager) {
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        if(fragmentManager.findFragmentByTag(FILTER_FRAGMENT_TAG) == null) {
+            transaction.setCustomAnimations(R.anim.filter_fragment_slide_in, R.anim.filter_fragment_slide_out);
+            filterFragment = new SpellFilterFragment();
+            //give fragment the actionListener
+            filterFragment.attachActionListener(
+                    (MainActivityContract.FilterFragmentUserActionListener) mActionlistener);
+            //add the group names to be displayed
+            Bundle bundle = new Bundle();
+            bundle.putStringArrayList(SpellFilterFragment.GROUP_NAMES_BUNDLE,
+                    new ArrayList<>(mActionlistener.getGroupNamesForFilter()));
+            bundle.putStringArrayList(SpellFilterFragment.GROUP_NAMES_SELECTED_BUNDLE,
+                    mActionlistener.getSelectedGroupsForFilter());
+            bundle.putStringArrayList(SpellFilterFragment.POWER_LIST_NAMES_BUNDLE,
+                    new ArrayList<>(mActionlistener.getPowerListNamesForFilter()));
+            bundle.putStringArrayList(SpellFilterFragment.POWER_LIST_NAMES_SELECTED_BUNDLE,
+                    mActionlistener.getSelectedPowerListsForFilter());
+            filterFragment.setArguments(bundle);
+            //add the fragment and tag so we can find the fragment later
+            transaction.add(R.id.fragmentFrameLayout, filterFragment, FILTER_FRAGMENT_TAG);
+
+        }
+        else{
+            transaction.show(filterFragment);
+        }
+
+        transaction.commit();
+    }
+
+    /**
+     * Removes the filter fragment in the screen, will do nothing if it is not actually
+     * added to the activity
+     * @param fragmentManager fragmentManager for the current activity
+     */
+    private void removeFilterFragment(FragmentManager fragmentManager){
         if(fragmentManager.findFragmentByTag(FILTER_FRAGMENT_TAG) != null) {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.setCustomAnimations(R.anim.filter_fragment_slide_in, R.anim.filter_fragment_slide_out);
             transaction.remove(fragmentManager.findFragmentByTag(FILTER_FRAGMENT_TAG));
             transaction.commit();
             filterFragment = null;
+        }
+    }
+
+    /**
+     * Hide the filter fragment from view
+     * @param fragmentManager FragmentManager for this activity
+     */
+    private void hideFilterFragment(FragmentManager fragmentManager){
+        if(fragmentManager.findFragmentByTag(FILTER_FRAGMENT_TAG) != null) {
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.hide(filterFragment);
+            transaction.commit();
         }
     }
 
@@ -816,30 +881,11 @@ public class MainActivity extends ApplicationActivity
             FragmentManager fragmentManager = getSupportFragmentManager();
             //check if we have the fragment in the manager already
             if (fragmentManager.findFragmentByTag(FILTER_FRAGMENT_TAG) == null) {
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.setCustomAnimations(R.anim.filter_fragment_slide_in, R.anim.filter_fragment_slide_out);
-                filterFragment = new SpellFilterFragment();
-                //give fragment the actionListener
-                filterFragment.attachActionListener(
-                        (MainActivityContract.FilterFragmentUserActionListener)mActionlistener);
-                //add the group names to be displayed
-                Bundle bundle = new Bundle();
-                bundle.putStringArrayList(SpellFilterFragment.GROUP_NAMES_BUNDLE,
-                        new ArrayList<>(mActionlistener.getGroupNamesForFilter()));
-                bundle.putStringArrayList(SpellFilterFragment.GROUP_NAMES_SELECTED_BUNDLE,
-                        mActionlistener.getSelectedGroupsForFilter());
-                bundle.putStringArrayList(SpellFilterFragment.POWER_LIST_NAMES_BUNDLE,
-                        new ArrayList<>(mActionlistener.getPowerListNamesForFilter()));
-                bundle.putStringArrayList(SpellFilterFragment.POWER_LIST_NAMES_SELECTED_BUNDLE,
-                        mActionlistener.getSelectedPowerListsForFilter());
-                filterFragment.setArguments(bundle);
-                //add the fragment and tag so we can find the fragment later
-                transaction.add(R.id.fragmentFrameLayout, filterFragment, FILTER_FRAGMENT_TAG);
-                transaction.commit();
+                addFilterFragment(fragmentManager);
                 animateBottomToolbarToTopOfFilter();
             }
             else{
-                removeFilterFragment();
+                removeFilterFragment(fragmentManager);
                 animateToolbarToBottomOfScreen();
             }
         }
