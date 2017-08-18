@@ -5,7 +5,7 @@
     <!-- padding to activity_power_details_textviews between the views vertically -->
     <attr name="textView_padding_top">10dp</attr>
 
-    <integer name="filter_slide_in_animation_length">300</integer>
-    <integer name="filter_slide_out_animation_length">200</integer>
+    <integer name="filter_slide_in_animation_length">150</integer>
+    <integer name="filter_slide_out_animation_length">150</integer>
 
 </resources>
