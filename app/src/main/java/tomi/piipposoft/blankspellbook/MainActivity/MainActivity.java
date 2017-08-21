@@ -820,11 +820,6 @@ public class MainActivity extends ApplicationActivity
         }
     }
 
-    @Override
-    public void powerListScrolled() {
-
-    }
-
     private void animateBottomToolbarToTopOfFilter(){
         Log.d(TAG, "animateBottomToolbarToTopOfFilter: bottom frame y coord: " + bottomToolbar.getY());
         //request the top coordinates of layout where filter fragment is in (fragment bound by it)
