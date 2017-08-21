@@ -122,25 +122,16 @@
 
                 <android.support.v7.widget.SearchView
                     android:id="@+id/search_view"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal"
+                    android:paddingStart="20dp"
+                    android:paddingLeft="20dp"
+                    android:paddingEnd="20dp"
+                    android:paddingRight="20dp"
                     android:layout_weight="1"
                     style="@style/searchViewStyle"
                     android:visibility="gone"/>
-
-                <ImageButton
-                    android:id="@+id/close_search"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/ic_clear_black_24dp"
-                    android:layout_weight="1"
-                    android:visibility="gone"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:background="@android:color/transparent"
-                    android:foreground="?android:attr/selectableItemBackground"
-                    />
 
                 <ImageButton
                     android:id="@+id/bottombar_searchbutton"

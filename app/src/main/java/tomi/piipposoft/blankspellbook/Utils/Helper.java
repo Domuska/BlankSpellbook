@@ -1,9 +1,14 @@
 package tomi.piipposoft.blankspellbook.Utils;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import tomi.piipposoft.blankspellbook.R;
 
@@ -69,5 +74,38 @@ public class Helper {
         a.recycle();
 
         return color;
+    }
+
+    /**
+     * Helper method for changing the search view colour. Ugly but it should work even if Google
+     * decides to change the ID of the search view.
+     * @param view
+     */
+    public static void changeSearchViewTextColor(View view, Context c) {
+        //get the primary colour from styles. It has to be done in this hard way...? Really?
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = c.getTheme();
+        theme.resolveAttribute(android.R.attr.textColorPrimaryInverse, typedValue, true);
+        TypedArray arr =
+                c.obtainStyledAttributes(typedValue.data, new int[]{
+                        android.R.attr.textColorPrimaryInverse});
+        int textColor = arr.getColor(0, -1);
+        arr.recycle();
+
+        if (view != null) {
+            //if we get TextView (the user's inputted text goes in one), set the text colour
+            if (view instanceof TextView) {
+                //this does not work because... Why?
+                /*((TextView) view).setTextColor(
+                        ContextCompat.getColor(c, R.color.my_color_dark_gray));*/
+                ((TextView) view).setTextColor(textColor);
+                return;
+            } else if (view instanceof ViewGroup) {
+                ViewGroup viewGroup = (ViewGroup) view;
+                for (int i = 0; i < viewGroup.getChildCount(); i++) {
+                    changeSearchViewTextColor(viewGroup.getChildAt(i), c);
+                }
+            }
+        }
     }
 }

@@ -18,7 +18,8 @@
     </style>
 
     <style name="dialogFragment_title_style" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <!-- if we were on Lollipop (23) upwards, we could just use the following line -->
+        <!-- if we were on Lollipop (23) upwards, we could just use the following line,
+         but since we go lower we also need the dialogfragment_title below -->
         <!-- <item name="android:titleTextColor">?android:textColorPrimaryInverse</item> -->
         <item name="android:titleTextStyle">@style/dialogfragment_title</item>
     </style>
@@ -41,8 +42,12 @@
     <style name="searchViewStyle" parent="Widget.AppCompat.SearchView">
         <item name="searchIcon">@drawable/ic_search_black_24dp</item>
         <item name="searchHintIcon">@drawable/ic_search_black_24dp</item>
+        <item name="queryBackground">@color/my_color_app_accent_lighter</item>
+        <item name="android:textColor">@color/md_black_1000</item>
+        <item name="android:editTextColor">@color/md_black_1000</item>
+        <item name="android:textColorHint">@color/md_black_1000</item>
         <!-- set the close icon as transparent, we have different close button that works differently -->
-        <item name="closeIcon">@android:color/transparent</item>
+        <!-- <item name="closeIcon">@android:color/transparent</item> -->
         <!-- <item name="queryBackground">@color/md_black_1000</item>-->
     </style>
     

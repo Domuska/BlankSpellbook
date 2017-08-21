@@ -1,7 +1,5 @@
 package tomi.piipposoft.blankspellbook.MainActivity;
 
-import android.animation.AnimatorInflater;
-import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,6 +13,7 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.os.Bundle;
@@ -48,6 +47,7 @@ import tomi.piipposoft.blankspellbook.SettingsActivity;
 import tomi.piipposoft.blankspellbook.Utils.DataSource;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerContract;
 import tomi.piipposoft.blankspellbook.Drawer.DrawerHelper;
+import tomi.piipposoft.blankspellbook.Utils.Helper;
 import tomi.piipposoft.blankspellbook.Utils.SharedPreferencesHandler;
 import tomi.piipposoft.blankspellbook.Utils.Spell;
 
@@ -94,8 +94,9 @@ public class MainActivity extends ApplicationActivity
     SpellFilterFragment filterFragment;
     FragmentManager fragmentManager;
 
-    private ImageButton searchButton, filterButton, addSpellButton, stopSearchButton;
+    private ImageButton searchButton, filterButton, addSpellButton;
     private SearchView searchView;
+    private int bottomToolbarDefaultColor, bottomToolbarSearchColor;
 
     SpringAnimation springXAnimation, springYAnimation;
     DynamicAnimation.OnAnimationEndListener fabMoveAnimationEndListener;
@@ -173,6 +174,9 @@ public class MainActivity extends ApplicationActivity
 
         initializeBottomToolbar();
         initializeFabAnimations();
+
+        bottomToolbarDefaultColor = ContextCompat.getColor(this, R.color.my_color_app_accent);
+        bottomToolbarSearchColor = ContextCompat.getColor(this, R.color.my_color_app_accent_lighter);
 
         // Make the drawer initialize itself
         this.drawerActionListener.powerListProfileSelected();
@@ -429,21 +433,22 @@ public class MainActivity extends ApplicationActivity
         searchButton = findViewById(R.id.bottombar_searchbutton);
         addSpellButton = findViewById(R.id.bottombar_addSpellButton);
         searchView = findViewById(R.id.search_view);
-        stopSearchButton = findViewById(R.id.close_search);
 
+        //have to use a helper method to set the text color - using styles or such does not seem to work
+        Helper.changeSearchViewTextColor(searchView, this);
 
-        /*searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-                Log.d(TAG, "closing search view");
+                showBottomBarButtons();
                 return false;
             }
-        });*/
+        });
+
 
         filterButton.setOnClickListener(new OpenFilterClickListener());
         addSpellButton.setOnClickListener(new OnNewPowerClickListener());
         searchButton.setOnClickListener(new SearchViewClickListener());
-        stopSearchButton.setOnClickListener(new StopSearchClickListener());
 
         secondaryFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -908,12 +913,13 @@ public class MainActivity extends ApplicationActivity
     private class SearchViewClickListener implements View.OnClickListener{
         @Override
         public void onClick(View view) {
+            bottomToolbar.setColor(bottomToolbarSearchColor);
             //hide the buttons and bring searchView visible
             filterButton.setVisibility(View.GONE);
             searchButton.setVisibility(View.GONE);
             addSpellButton.setVisibility(View.GONE);
             searchView.setVisibility(View.VISIBLE);
-            stopSearchButton.setVisibility(View.VISIBLE);
+            //stopSearchButton.setVisibility(View.VISIBLE);
             searchView.onActionViewExpanded();
         }
     }
@@ -926,10 +932,10 @@ public class MainActivity extends ApplicationActivity
     }
 
     private void showBottomBarButtons(){
+        bottomToolbar.setColor(bottomToolbarDefaultColor);
         filterButton.setVisibility(View.VISIBLE);
         searchButton.setVisibility(View.VISIBLE);
         addSpellButton.setVisibility(View.VISIBLE);
-        stopSearchButton.setVisibility(View.GONE);
         searchView.setVisibility(View.GONE);
         searchView.setQuery("", false);
     }
