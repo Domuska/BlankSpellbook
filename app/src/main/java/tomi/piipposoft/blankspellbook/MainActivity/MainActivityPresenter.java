@@ -13,7 +13,6 @@ import com.google.firebase.database.ChildEventListener;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.TreeSet;
 
@@ -517,12 +516,6 @@ public class MainActivityPresenter extends DrawerPresenter
                                View transitionOrigin, String powerListName) {
         mMainActivityView.startPowerDetailsActivity(powerId, powerListId, transitionOrigin, powerListName);
     }
-
-    @Override
-    public void powerListScrolled() {
-        mMainActivityView.retractBottomToolbar();
-    }
-
 
 
     //from MainActivityContract.FilterFragmentUserActionListener

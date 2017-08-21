@@ -1,5 +1,6 @@
 package tomi.piipposoft.blankspellbook.MainActivity;
 
+import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -11,7 +12,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +36,7 @@ public class PowersFragment extends Fragment {
     private RecyclerView.Adapter adapter;
     private ProgressBar progressBar;
 
-    private MainActivityContract.FragmentUserActionListener listener;
+    private MainActivityContract.FragmentUserActionListener userActionListener;
 
     //private ArrayMap<String, Spell> powers = new ArrayMap<>();
     //just use two arraylists for this, map would be preferred but maps either put
@@ -45,6 +45,11 @@ public class PowersFragment extends Fragment {
     ArrayList<Spell> powers = new ArrayList<>();
     ArrayList<String> powerListNames = new ArrayList<>();
 
+    //interface for telling MainActivity when the power list has been scrolled - it does something when this happens
+    interface ListScrolledInterface{
+        void listScrolled();
+    }
+    PowersFragment.ListScrolledInterface listScrolledListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -72,7 +77,7 @@ public class PowersFragment extends Fragment {
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if(newState == RecyclerView.SCROLL_STATE_DRAGGING)
-                    listener.powerListScrolled();
+                    listScrolledListener.listScrolled();
             }
         });
 
@@ -82,6 +87,20 @@ public class PowersFragment extends Fragment {
         }
         recyclerView.addItemDecoration(divider);
         return rootView;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        // Verify that the host activity implements the callback interface
+        try {
+            // Instantiate the NoticeDialogListener so we can send events to the host
+            listScrolledListener = (PowersFragment.ListScrolledInterface) context;
+        } catch (ClassCastException e) {
+            // The activity doesn't implement the interface, throw exception
+            throw new ClassCastException(context.toString()
+                    + " must implement NoticeDialogListener");
+        }
     }
 
     public void handleNewPower(@NonNull Spell power, @Nullable String powerListName){
@@ -125,7 +144,7 @@ public class PowersFragment extends Fragment {
     }
 
     public void attachClickListener(MainActivityContract.FragmentUserActionListener fragmentListActionListener) {
-        this.listener = fragmentListActionListener;
+        this.userActionListener = fragmentListActionListener;
     }
 
 
@@ -163,7 +182,7 @@ public class PowersFragment extends Fragment {
             holder.parentView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onPowerClicked(
+                    userActionListener.onPowerClicked(
                             power.getSpellId(),
                             power.getPowerListId(),
                             holder.powerName,

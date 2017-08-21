@@ -44,10 +44,6 @@ public interface MainActivityContract {
         void showFilteredGroups(TreeSet<String> filteredPowers);
         void showFilteredPowerLists(TreeSet<String> filteredPowers);
 
-        /**
-         * Retract the bottom toolbar if it has been expanded
-         */
-        void retractBottomToolbar();
     }
 
     interface UserActionListener{
@@ -76,11 +72,6 @@ public interface MainActivityContract {
                                 @Nullable android.view.View originView, int powerListColor);
         void onPowerClicked(String powerId, String powerListId,
                             android.view.View originView, String powerListName);
-
-        /**
-         * Power list has been scrolled, bottom toolbar might have to be hidden
-         */
-        void powerListScrolled();
     }
 
     /**

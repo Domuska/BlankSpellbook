@@ -64,7 +64,8 @@ import tomi.piipposoft.blankspellbook.Utils.Spell;
 
 public class MainActivity extends ApplicationActivity
         implements MainActivityContract.View,
-        SharedPreferences.OnSharedPreferenceChangeListener {
+        SharedPreferences.OnSharedPreferenceChangeListener,
+        PowersFragment.ListScrolledInterface{
 
     private final String DATABASE_PERSISTANCE_SET_KEY = "databasePersistanceSet";
     private final String TAG = "MainActivity";
@@ -820,9 +821,8 @@ public class MainActivity extends ApplicationActivity
     }
 
     @Override
-    public void retractBottomToolbar() {
-        if(bottomToolbar.isFabExpanded() && filterFragment == null)
-            bottomToolbar.slideOutFab();
+    public void powerListScrolled() {
+
     }
 
     private void animateBottomToolbarToTopOfFilter(){
@@ -926,15 +926,34 @@ public class MainActivity extends ApplicationActivity
     private class StopSearchClickListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-            filterButton.setVisibility(View.VISIBLE);
-            searchButton.setVisibility(View.VISIBLE);
-            addSpellButton.setVisibility(View.VISIBLE);
-            stopSearchButton.setVisibility(View.GONE);
-            searchView.setVisibility(View.GONE);
-            searchView.setQuery("", false);
+            showBottomBarButtons();
         }
     }
 
+    private void showBottomBarButtons(){
+        filterButton.setVisibility(View.VISIBLE);
+        searchButton.setVisibility(View.VISIBLE);
+        addSpellButton.setVisibility(View.VISIBLE);
+        stopSearchButton.setVisibility(View.GONE);
+        searchView.setVisibility(View.GONE);
+        searchView.setQuery("", false);
+    }
+
+    //interface PowersFragment.ListScrolledInterface
+
+
+    @Override
+    public void listScrolled() {
+        //hide the bottom toolbar
+        if(bottomToolbar.isFabExpanded() && filterFragment == null)
+            bottomToolbar.slideOutFab();
+
+        //if there is nothing in search, hide it
+        String searchViewText = searchView.getQuery().toString().trim();
+        if(searchViewText.equals("")){
+            showBottomBarButtons();
+        }
+    }
 
     //interface OnSharedPreferenceChangeListener
     //needed if later we add capability for large screen that might have the settings visible as additional fragment
