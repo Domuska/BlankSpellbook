@@ -124,9 +124,14 @@ public class MainActivity extends ApplicationActivity
             //if we get a value then activity was destroyed and is resuming
             currentlySelectedList = savedInstanceState
                     .getInt(FRAGMENT_LAST_VISIBLE);
+
+            //if we have savedInstanceState, the filter fragment might might be in the fragmentManager
+            filterFragment = (SpellFilterFragment)
+                    getSupportFragmentManager().findFragmentByTag(FILTER_FRAGMENT_TAG);
         }
 
-        fragmentManager = getSupportFragmentManager();
+        bottomToolbarDefaultColor = ContextCompat.getColor(this, R.color.my_color_app_accent);
+        bottomToolbarSearchColor = ContextCompat.getColor(this, R.color.my_color_app_accent_lighter);
 
         secondaryToolbarText = findViewById(R.id.toolar_secondary_text);
         //set the support library's toolbar as application toolbar
@@ -154,6 +159,7 @@ public class MainActivity extends ApplicationActivity
         powerListListener = new OnNewPowerListClickListener();
 
         initializeViewPager();
+        fragmentManager = getSupportFragmentManager();
 
         if(this.drawerActionListener == null) {
             this.drawerActionListener = (DrawerContract.UserActionListener) mActionlistener;
@@ -177,9 +183,6 @@ public class MainActivity extends ApplicationActivity
 
         initializeBottomToolbar();
         initializeFabAnimations();
-
-        bottomToolbarDefaultColor = ContextCompat.getColor(this, R.color.my_color_app_accent);
-        bottomToolbarSearchColor = ContextCompat.getColor(this, R.color.my_color_app_accent_lighter);
 
         // Make the drawer initialize itself
         this.drawerActionListener.powerListProfileSelected();
@@ -511,6 +514,13 @@ public class MainActivity extends ApplicationActivity
     protected void onPause() {
         Log.d(TAG, "onPause called");
         mActionlistener.pauseActivity();
+
+        /*FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.remove(fragmentManager.findFragmentByTag(FILTER_FRAGMENT_TAG));
+        transaction.commit();
+        filterFragment = null;*/
+
+
         super.onPause();
     }
 
@@ -522,6 +532,8 @@ public class MainActivity extends ApplicationActivity
 
     @Override
     protected void onDestroy() {
+        Log.d(TAG, "onDestroy");
+
         fabToolbarXPosition = NOT_INITIALIZED;
         fabToolbarYPosition = NOT_INITIALIZED;
         fabBottomXPosition = NOT_INITIALIZED;
@@ -791,7 +803,13 @@ public class MainActivity extends ApplicationActivity
 
         }
         else{
-            transaction.show(filterFragment);
+            if(filterFragment != null)
+                transaction.show(filterFragment);
+            else {
+                Toast.makeText(this, "Something went wrong, can't animate the filter fragment.",
+                        Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "addFilterFragment: filterFragment is empty, not animating");
+            }
         }
 
         transaction.commit();
@@ -907,6 +925,9 @@ public class MainActivity extends ApplicationActivity
         }
     }
 
+    /**
+     * OnClickListener for when user presses 'add new power' button. Opens the powerDetails activity.
+     */
     private class OnNewPowerClickListener implements View.OnClickListener{
 
         //https://android-developers.googleblog.com/2014/10/implementing-material-design-in-your.html
@@ -933,6 +954,10 @@ public class MainActivity extends ApplicationActivity
         }
     }
 
+    /**
+     * OnClickListener for when user clicks on the Search button. Hides other bottom toolbar buttons,
+     * brings SearchView visible and changes toolbar colour.
+     */
     private class SearchViewClickListener implements View.OnClickListener{
         @Override
         public void onClick(View view) {
@@ -969,6 +994,11 @@ public class MainActivity extends ApplicationActivity
     }
 
     //interface PowersFragment.ListScrolledInterface
+
+    /**
+     * Called when the list in the powers fragment has been scrolled. Used for retracting the toolbar
+     * into the fab
+     */
     @Override
     public void listScrolled() {
         //hide the bottom toolbar
@@ -984,7 +1014,11 @@ public class MainActivity extends ApplicationActivity
 
     //interface SpellFilterFragment.onFragmentExpandedListenerInterface
 
-
+    /**
+     * Called when the filter fragment has been expanded and layout calculated.
+     * Will animate the bottom toolbar to top of the fragment.
+     * @param fragmentTopY the Y coordinates of the fragment
+     */
     @Override
     public void fragmentExpanded(float fragmentTopY) {
         animateBottomToolbarToTopOfFilter(fragmentTopY);
