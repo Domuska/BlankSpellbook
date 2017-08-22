@@ -65,7 +65,8 @@ import tomi.piipposoft.blankspellbook.Utils.Spell;
 public class MainActivity extends ApplicationActivity
         implements MainActivityContract.View,
         SharedPreferences.OnSharedPreferenceChangeListener,
-        PowersFragment.ListScrolledInterface{
+        PowersFragment.ListScrolledInterface,
+        SpellFilterFragment.FragmentExpandedInterface{
 
     private final String DATABASE_PERSISTANCE_SET_KEY = "databasePersistanceSet";
     private final String TAG = "MainActivity";
@@ -124,6 +125,8 @@ public class MainActivity extends ApplicationActivity
             currentlySelectedList = savedInstanceState
                     .getInt(FRAGMENT_LAST_VISIBLE);
         }
+
+        fragmentManager = getSupportFragmentManager();
 
         secondaryToolbarText = findViewById(R.id.toolar_secondary_text);
         //set the support library's toolbar as application toolbar
@@ -282,9 +285,7 @@ public class MainActivity extends ApplicationActivity
             public void onPageSelected(int position) {
                 currentlySelectedList = position;
                 setFabFunctionality(position);
-                fragmentManager = getSupportFragmentManager();
                 switch (position) {
-
 
                     case MainActivityPresenter.DAILY_POWER_LISTS_SELECTED:
                         secondaryToolbarText.setText(getString(R.string.toolbar_text_daily_power_lists));
@@ -788,8 +789,6 @@ public class MainActivity extends ApplicationActivity
             //add the fragment and tag so we can find the fragment later
             transaction.add(R.id.fragmentFrameLayout, filterFragment, FILTER_FRAGMENT_TAG);
 
-
-
         }
         else{
             transaction.show(filterFragment);
@@ -799,22 +798,27 @@ public class MainActivity extends ApplicationActivity
     }
 
     /**
-     * Removes the filter fragment in the screen, will do nothing if it is not actually
-     * added to the activity
+     * Removes the filter fragment from the transaction altogether.
+     * Silently takes care of situation where the fragment might exist.
+     * For hiding the fragment, see {@link #hideFilterFragment(FragmentManager)}
      * @param fragmentManager fragmentManager for the current activity
+     * @return boolean true if filterFragment was visible, false otherwise
      */
-    private void removeFilterFragment(FragmentManager fragmentManager){
+    private boolean removeFilterFragment(FragmentManager fragmentManager){
         if(fragmentManager.findFragmentByTag(FILTER_FRAGMENT_TAG) != null) {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.setCustomAnimations(R.anim.filter_fragment_slide_in, R.anim.filter_fragment_slide_out);
             transaction.remove(fragmentManager.findFragmentByTag(FILTER_FRAGMENT_TAG));
             transaction.commit();
             filterFragment = null;
+            return true;
         }
+        else
+            return false;
     }
 
     /**
-     * Hide the filter fragment from view
+     * Hide the FilterFragment if it is visible, for removing see {@link #removeFilterFragment(FragmentManager)}
      * @param fragmentManager FragmentManager for this activity
      */
     private void hideFilterFragment(FragmentManager fragmentManager){
@@ -826,6 +830,11 @@ public class MainActivity extends ApplicationActivity
     }
 
     private void animateBottomToolbarToTopOfFilter(){
+        float filterLayoutTop = findViewById(R.id.powerListFilterRecyclerView).getY();
+        Log.d(TAG, "animateBottomToolbarToTopOfFilter: filterLayoutTop: " + filterLayoutTop);
+        float animationTarget2 = filterLayoutTop - bottomToolbar.getY();
+
+
         Log.d(TAG, "animateBottomToolbarToTopOfFilter: bottom frame y coord: " + bottomToolbar.getY());
         //request the top coordinates of layout where filter fragment is in (fragment bound by it)
         float frameTop = findViewById(R.id.viewPagerLayout).getY();
@@ -837,9 +846,23 @@ public class MainActivity extends ApplicationActivity
         float animationTarget = toolbarTop - bottomToolbar.getY();
 
         //create the animation and run it
-        bottomToolbarAnimator = ObjectAnimator.ofFloat(bottomToolbar, "translationY", animationTarget);
+        bottomToolbarAnimator = ObjectAnimator.ofFloat(bottomToolbar, "translationY", animationTarget2);
         bottomToolbarAnimator.setDuration(getResources().getInteger(R.integer.filter_slide_in_animation_length));
         bottomToolbarAnimator.start();
+    }
+
+    private void animateBottomToolbarToTopOfFilter(float fragmentHeight){
+
+        if(fragmentManager.findFragmentByTag(FILTER_FRAGMENT_TAG) != null) {
+            //filter's height as negative value is the toolbar animation target
+            //animations work as relative to current view position, so here we move the toolbar up
+            //by the filter fragment's height
+            float animationTarget = -fragmentHeight;
+            //create the animation and run it
+            bottomToolbarAnimator = ObjectAnimator.ofFloat(bottomToolbar, "translationY", animationTarget);
+            bottomToolbarAnimator.setDuration(getResources().getInteger(R.integer.filter_slide_in_animation_length));
+            bottomToolbarAnimator.start();
+        }
     }
 
     private void animateToolbarToBottomOfScreen(){
@@ -875,7 +898,7 @@ public class MainActivity extends ApplicationActivity
             //check if we have the fragment in the manager already
             if (fragmentManager.findFragmentByTag(FILTER_FRAGMENT_TAG) == null) {
                 addFilterFragment(fragmentManager);
-                animateBottomToolbarToTopOfFilter();
+                //animateBottomToolbarToTopOfFilter();
             }
             else{
                 removeFilterFragment(fragmentManager);
@@ -913,6 +936,11 @@ public class MainActivity extends ApplicationActivity
     private class SearchViewClickListener implements View.OnClickListener{
         @Override
         public void onClick(View view) {
+            //close the filter if it's open
+            boolean filterWasVisible = removeFilterFragment(getSupportFragmentManager());
+            //animate the toolbar to bottom of screen if needed
+            if(filterWasVisible)
+                animateToolbarToBottomOfScreen();
             bottomToolbar.setColor(bottomToolbarSearchColor);
             //hide the buttons and bring searchView visible
             filterButton.setVisibility(View.GONE);
@@ -941,8 +969,6 @@ public class MainActivity extends ApplicationActivity
     }
 
     //interface PowersFragment.ListScrolledInterface
-
-
     @Override
     public void listScrolled() {
         //hide the bottom toolbar
@@ -954,6 +980,14 @@ public class MainActivity extends ApplicationActivity
         if(searchViewText.equals("")){
             showBottomBarButtons();
         }
+    }
+
+    //interface SpellFilterFragment.onFragmentExpandedListenerInterface
+
+
+    @Override
+    public void fragmentExpanded(float fragmentTopY) {
+        animateBottomToolbarToTopOfFilter(fragmentTopY);
     }
 
     //interface OnSharedPreferenceChangeListener

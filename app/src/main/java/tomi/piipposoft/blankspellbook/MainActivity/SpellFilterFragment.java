@@ -1,5 +1,7 @@
 package tomi.piipposoft.blankspellbook.MainActivity;
 
+import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import java.util.AbstractMap;
@@ -41,11 +44,17 @@ public class SpellFilterFragment extends Fragment {
 
     private MainActivityContract.FilterFragmentUserActionListener mActionListener;
 
+    interface FragmentExpandedInterface{
+        void fragmentExpanded(float fragmentHeight);
+    }
+
+    SpellFilterFragment.FragmentExpandedInterface listener;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main_filters, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_main_filters, container, false);
         if(getArguments() != null) {
             ArrayList<String> groupNames = getArguments().getStringArrayList(GROUP_NAMES_BUNDLE);
             ArrayList<String> selectedGroups = getArguments().getStringArrayList(GROUP_NAMES_SELECTED_BUNDLE);
@@ -74,7 +83,7 @@ public class SpellFilterFragment extends Fragment {
             Log.e(TAG, "Error in onCreateView, bundle is null");
 
         //recyclerview for displaying the power list filters
-        RecyclerView powerListRecyclerView = rootView.findViewById(R.id.powerListFilterRecyclerView);
+        final RecyclerView powerListRecyclerView = rootView.findViewById(R.id.powerListFilterRecyclerView);
         LinearLayoutManager powerListLayoutManager = new LinearLayoutManager(getActivity());
         powerListRecyclerView.setLayoutManager(powerListLayoutManager);
         powerListsAdapter = new FilterListAdapter(true);
@@ -91,13 +100,42 @@ public class SpellFilterFragment extends Fragment {
         groupRecyclerView.setNestedScrollingEnabled(false);
         powerListRecyclerView.setNestedScrollingEnabled(false);
 
+        //add a listener to the rootview, when all is inflated we need the fragment height, which is same
+        //as the recyclerview height
+        rootView.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    public void onGlobalLayout() {
+                        //Remove the listener before proceeding
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                            rootView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        } else {
+                            rootView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                        }
+
+                        Log.d(TAG, "OnGlobalLayoutListener recycler height" + powerListRecyclerView.getHeight());
+                        listener.fragmentExpanded(powerListRecyclerView.getHeight());
+                    }
+                });
+
         Log.d(TAG, "power list names size: " + powerListNamesMap.size());
         Log.d(TAG, "group names list size: " + powerGroupNamesMap.size());
 
         return rootView;
     }
 
-
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        // Verify that the host activity implements the callback interface
+        try {
+            // Instantiate the NoticeDialogListener so we can send events to the host
+            listener = (SpellFilterFragment.FragmentExpandedInterface) context;
+        } catch (ClassCastException e) {
+            // The activity doesn't implement the interface, throw exception
+            throw new ClassCastException(context.toString()
+                    + " must implement NoticeDialogListener");
+        }
+    }
 
     public void attachActionListener(MainActivityContract.FilterFragmentUserActionListener listener){
         mActionListener = listener;
