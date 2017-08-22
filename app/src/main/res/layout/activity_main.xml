@@ -167,6 +167,7 @@
             android:src="@drawable/ic_add_black_36dp"
             app:layout_anchor="@id/toolbar_secondary_layout"
             app:layout_anchorGravity="start|bottom"
+            android:visibility="invisible"
             android:transitionName="fabTransition"/>
 
         <!-- fab in bottom of powers fragment, appears to user to be the same fab as above.

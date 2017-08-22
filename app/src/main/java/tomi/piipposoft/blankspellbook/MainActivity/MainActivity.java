@@ -86,8 +86,11 @@ public class MainActivity extends ApplicationActivity
 
     private boolean databasePersistanceSet = false;
     private ViewPager.OnPageChangeListener onPageChangeListener;
+    private boolean canFabAnimationSkipToEnd = false;
 
-    private FloatingActionButton mainToolbarFab, secondaryFab;
+    //we have actually two fabs, but only one is visible at a time. This is so the bottom toolbar animation
+    //is much more simple to accomplish
+    private FloatingActionButton mainToolbarFab, bottomFab;
     View.OnClickListener powersListener, dailyPowerListListener, powerListListener;
 
     //default selection is the spell lists fragment
@@ -128,6 +131,9 @@ public class MainActivity extends ApplicationActivity
             //if we have savedInstanceState, the filter fragment might might be in the fragmentManager
             filterFragment = (SpellFilterFragment)
                     getSupportFragmentManager().findFragmentByTag(FILTER_FRAGMENT_TAG);
+
+            //don't animate the fab if the activity is re-created. That is odd.
+            canFabAnimationSkipToEnd = true;
         }
 
         bottomToolbarDefaultColor = ContextCompat.getColor(this, R.color.my_color_app_accent);
@@ -234,7 +240,7 @@ public class MainActivity extends ApplicationActivity
             @Override
             public void onAnimationEnd(DynamicAnimation animation, boolean canceled, float value, float velocity) {
                 mainToolbarFab.setVisibility(View.INVISIBLE);
-                secondaryFab.setVisibility(View.VISIBLE);
+                bottomFab.setVisibility(View.VISIBLE);
             }
         };
 
@@ -259,6 +265,10 @@ public class MainActivity extends ApplicationActivity
         //Log.d(TAG, "fab final x: " + mainToolbarFab.getX() + " fab final y: " + mainToolbarFab.getY());
     }
 
+    /**
+     * Initialize the ViewPager. Initialize the pager
+     * if it is null and set up the listeners for page changes
+     */
     private void initializeViewPager(){
         if(viewPager == null) {
             viewPager = findViewById(R.id.pager);
@@ -297,7 +307,8 @@ public class MainActivity extends ApplicationActivity
                         //tell presenter which page was switched to
                         mActionlistener.userSwitchedTo(MainActivityPresenter.DAILY_POWER_LISTS_SELECTED);
                         hideFilterFragment(fragmentManager);
-                        secondaryFab.setVisibility(View.GONE);
+                        mainToolbarFab.setVisibility(View.VISIBLE);
+                        bottomFab.setVisibility(View.GONE);
                         bottomToolbar.setVisibility(View.GONE);
                         break;
 
@@ -307,6 +318,7 @@ public class MainActivity extends ApplicationActivity
                         if (secondaryToolbarTools != null)
                             secondaryToolbarTools.setVisibility(View.GONE);
                         mActionlistener.userSwitchedTo(MainActivityPresenter.POWER_LISTS_SELECTED);
+                        mainToolbarFab.setVisibility(View.VISIBLE);
                         hideFilterFragment(fragmentManager);
                         //calculate where the fab should be animated to
                         if(fabToolbarXPosition == NOT_INITIALIZED && fabToolbarYPosition == NOT_INITIALIZED)
@@ -315,7 +327,7 @@ public class MainActivity extends ApplicationActivity
                         mainToolbarFab.setImageResource(R.drawable.ic_add_black_36dp);
                         animateFABToToolbar();
                         //hide the toolbar and secondary fab if they are visible
-                        secondaryFab.setVisibility(View.INVISIBLE);
+                        bottomFab.setVisibility(View.INVISIBLE);
                         bottomToolbar.setVisibility(View.GONE);
                         break;
 
@@ -327,11 +339,9 @@ public class MainActivity extends ApplicationActivity
                         }
                         else
                             secondaryToolbarTools.setVisibility(View.VISIBLE);
-
                         //set the bottom bar and visible (fab does not need to be set, test and remove)
                         bottomToolbar.setVisibility(View.VISIBLE);
-                        secondaryFab.setVisibility(View.INVISIBLE);
-
+                        bottomFab.setVisibility(View.INVISIBLE);
                         //if filter fragment created, it should be re-opened
                         if(fragmentManager.findFragmentByTag(FILTER_FRAGMENT_TAG) != null){
                             addFilterFragment(fragmentManager);
@@ -341,9 +351,12 @@ public class MainActivity extends ApplicationActivity
                             //calculate where the fab should be animated to
                             if (fabBottomXPosition == NOT_INITIALIZED && fabBottomYPosition == NOT_INITIALIZED)
                                 calculateFabBottomPosition();
+
                             //set drawable for the fab, looks better than setting it after animation
                             mainToolbarFab.setImageResource(R.drawable.ic_expand_more_black_36dp);
-                            animateFABToBottom();
+                            animateFABToBottom(canFabAnimationSkipToEnd);
+                            canFabAnimationSkipToEnd = false;
+
                         }
                         else{
                             //if bottom fab is expanded, hide the toolbar fab anyway since animation end listener
@@ -373,65 +386,13 @@ public class MainActivity extends ApplicationActivity
 
 
     /**
-     * Calculate where the fab should be animated to when moving it to bottom right corner
-     */
-    private void calculateFabBottomPosition(){
-        fabBottomXPosition = secondaryFab.getX() - mainToolbarFab.getX();
-        fabBottomYPosition = secondaryFab.getY() - mainToolbarFab.getY();
-        Log.d(TAG, "fab bottom x " + fabBottomXPosition + " fab bottom y " + fabBottomYPosition);
-    }
-
-    /**
-     * Calculate where the fab should be animated to when moving it to the toolbar
-     */
-    private void calculateFabToolbarPosition(){
-        fabToolbarXPosition = mainToolbarFab.getX();
-        fabToolbarYPosition = mainToolbarFab.getY();
-        Log.d(TAG, "fab toolbar x " + fabToolbarXPosition + " fab toolbar y " + fabToolbarYPosition);
-    }
-
-    /**
-     * Move the fab to bottom right corner, the fabBottomXPosition and fabBottomYPosition
-     * should be calculated beforehand
-     */
-    private void animateFABToBottom(){
-        Log.d(TAG, "animating fab to " + fabBottomXPosition + "," + fabBottomYPosition);
-        if(fabBottomXPosition != NOT_INITIALIZED && fabBottomYPosition != NOT_INITIALIZED) {
-            //add the end listener so the toolbar fab is set invisible and secondary fab set visible after
-            springXAnimation.addEndListener(fabMoveAnimationEndListener);
-            springXAnimation.animateToFinalPosition(fabBottomXPosition);
-            springYAnimation.animateToFinalPosition(fabBottomYPosition);
-        }
-        else
-            throw new RuntimeException("fabBottomXPosition and fabBottomYPosition need to be set before calling");
-    }
-
-    /**
-     * Move the fab to the toolbar, fabToolbarXPosition and fabToolbarYPosition should
-     * be calculated beforehand
-     */
-    private void animateFABToToolbar(){
-        if(fabToolbarYPosition != NOT_INITIALIZED && fabToolbarXPosition != NOT_INITIALIZED) {
-            mainToolbarFab.setVisibility(View.VISIBLE);
-            secondaryFab.setVisibility(View.INVISIBLE);
-            Log.d(TAG, "animating fab to " + fabToolbarXPosition + "," + fabToolbarYPosition);
-            //remove the end listener so the correct fabs will stay visible/invisible
-            springXAnimation.removeEndListener(fabMoveAnimationEndListener);
-            springXAnimation.animateToFinalPosition(fabToolbarXPosition);
-            springYAnimation.animateToFinalPosition(fabToolbarYPosition);
-        }
-        else
-            throw new RuntimeException("fabBottomXPosition and fabBottomYPosition need to be set before calling");
-    }
-
-    /**
      * Initialize the secondary fab and toolbar
      */
     private void initializeBottomToolbar(){
 
-        secondaryFab = findViewById(R.id.mainactivity_fab2);
+        bottomFab = findViewById(R.id.mainactivity_fab2);
         bottomToolbar = findViewById(R.id.fabtoolbar);
-        bottomToolbar.setFab(secondaryFab);
+        bottomToolbar.setFab(bottomFab);
 
         filterButton = findViewById(R.id.bottombar_filterButton);
         searchButton = findViewById(R.id.bottombar_searchbutton);
@@ -449,46 +410,18 @@ public class MainActivity extends ApplicationActivity
             }
         });
 
-
         filterButton.setOnClickListener(new OpenFilterClickListener());
         addSpellButton.setOnClickListener(new OnNewPowerClickListener());
         searchButton.setOnClickListener(new SearchViewClickListener());
 
-        secondaryFab.setOnClickListener(new View.OnClickListener() {
+        bottomFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 bottomToolbar.expandFab();
             }
         });
 
-        /*searchToolbar2 = findViewById(R.id.bottomToolbar);
-        secondaryFab = findViewById(R.id.search_fab);
-        secondaryFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FabTransformation.with(secondaryFab).transformTo(searchToolbar2);
-            }
-        });*/
 
-
-
-        //search bar & search fab
-        /*secondaryFab = findViewById(R.id.search_fab);
-        bottomToolbar = findViewById(R.id.fabtoolbar);
-        bottomToolbar.setFab(secondaryFab);
-        final FrameLayout layout = findViewById(R.id.ASDF);
-        secondaryFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG,"onClick: toolbar x : " + layout.getX()
-                        + " toolbar y: " + layout.getY());
-                bottomToolbar.expandFab();
-                Log.d(TAG,"onClick: toolbar x : " + layout.getX()
-                        + " toolbar y: " + layout.getY());
-
-
-            }
-        });*/
 
     }
 
@@ -499,6 +432,78 @@ public class MainActivity extends ApplicationActivity
         secondaryToolbarTools = ((ViewStub) findViewById(R.id.toolbar_viewStub)).inflate();
         //filterTextView = findViewById(R.id.showFiltersView);
         //filterTextView.setOnClickListener(new OpenFilterClickListener());
+    }
+
+    /**
+     * Calculate where the fab should be animated to when moving it to bottom right corner
+     */
+    private void calculateFabBottomPosition(){
+        fabBottomXPosition = bottomFab.getX() - mainToolbarFab.getX();
+        fabBottomYPosition = bottomFab.getY() - mainToolbarFab.getY();
+        Log.d(TAG, "fab bottom x " + fabBottomXPosition + " fab bottom y " + fabBottomYPosition);
+    }
+
+    /**
+     * Calculate where the fab should be animated to when moving it to the toolbar
+     */
+    private void calculateFabToolbarPosition(){
+        fabToolbarXPosition = mainToolbarFab.getX();
+        fabToolbarYPosition = mainToolbarFab.getY();
+        Log.d(TAG, "fab toolbar x " + fabToolbarXPosition + " fab toolbar y " + fabToolbarYPosition);
+    }
+
+    /**
+     * Move the fab to bottom right corner, the fabBottomXPosition and fabBottomYPosition
+     * should be calculated beforehand
+     */
+    private void animateFABToBottom(boolean skipAnimation){
+        Log.d(TAG, "animating fab to " + fabBottomXPosition + "," + fabBottomYPosition);
+        if(fabBottomXPosition != NOT_INITIALIZED && fabBottomYPosition != NOT_INITIALIZED) {
+
+            //add the end listener so the toolbar fab is set invisible and secondary fab set visible after
+            springXAnimation.addEndListener(fabMoveAnimationEndListener);
+
+            if(skipAnimation){
+                //hide the fab so it does not flash visible at toolbar position
+                //better could be if we just could skip the whole animation, not sure if that's too much work,
+                //if we set the fab position with layoutparams the code becomes much more complicated
+                //when we need to return the fab to the toolbar
+                bottomFab.setVisibility(View.INVISIBLE);
+                if(springXAnimation.canSkipToEnd()) {
+                    springXAnimation.animateToFinalPosition(fabBottomXPosition);
+                    springXAnimation.skipToEnd();
+                }
+                if(springYAnimation.canSkipToEnd()) {
+                    springYAnimation.animateToFinalPosition(fabBottomYPosition);
+                    springYAnimation.skipToEnd();
+                }
+                bottomFab.setVisibility(View.VISIBLE);
+            }
+            else {
+                springXAnimation.animateToFinalPosition(fabBottomXPosition);
+                springYAnimation.animateToFinalPosition(fabBottomYPosition);
+            }
+        }
+        else
+            throw new RuntimeException("fabBottomXPosition and fabBottomYPosition need to be set before calling");
+    }
+
+    /**
+     * Move the fab to the toolbar, fabToolbarXPosition and fabToolbarYPosition should
+     * be calculated beforehand
+     */
+    private void animateFABToToolbar(){
+        if(fabToolbarYPosition != NOT_INITIALIZED && fabToolbarXPosition != NOT_INITIALIZED) {
+            mainToolbarFab.setVisibility(View.VISIBLE);
+            bottomFab.setVisibility(View.INVISIBLE);
+            Log.d(TAG, "animating fab to " + fabToolbarXPosition + "," + fabToolbarYPosition);
+            //remove the end listener so the correct fabs will stay visible/invisible
+            springXAnimation.removeEndListener(fabMoveAnimationEndListener);
+            springXAnimation.animateToFinalPosition(fabToolbarXPosition);
+            springYAnimation.animateToFinalPosition(fabToolbarYPosition);
+        }
+        else
+            throw new RuntimeException("fabBottomXPosition and fabBottomYPosition need to be set before calling");
     }
 
     /**
