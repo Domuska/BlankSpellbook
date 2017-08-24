@@ -32,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.bowyer.app.fabtoolbar.BuildConfig;
 import com.bowyer.app.fabtoolbar.FabToolbar;
 
 import java.util.ArrayList;
@@ -103,12 +104,17 @@ public class MainActivity extends ApplicationActivity
     private SearchView searchView;
     private int bottomToolbarDefaultColor, bottomToolbarSearchColor;
 
+    //flag when activity is destroyed or paused, so we can restore expansion
     private boolean wasFabExpanded;
 
     SpringAnimation springXAnimation, springYAnimation;
     DynamicAnimation.OnAnimationEndListener fabMoveAnimationEndListener;
-    float fabToolbarXPosition = NOT_INITIALIZED;
-    float fabToolbarYPosition = NOT_INITIALIZED;
+
+    //coordinates where the fab should be animated to when moving between spells fragment and
+    //power lists fragments. 0,0 position lets the layoutParams decide location, other coordinates
+    //are relative to this resting position
+    float fabToolbarXPosition = 0;
+    float fabToolbarYPosition = 0;
     float fabBottomXPosition = NOT_INITIALIZED;
     float fabBottomYPosition = NOT_INITIALIZED;
 
@@ -324,12 +330,14 @@ public class MainActivity extends ApplicationActivity
                         mActionlistener.userSwitchedTo(MainActivityPresenter.POWER_LISTS_SELECTED);
                         mainToolbarFab.setVisibility(View.VISIBLE);
                         hideFilterFragment(fragmentManager);
-                        //calculate where the fab should be animated to
-                        if(fabToolbarXPosition == NOT_INITIALIZED && fabToolbarYPosition == NOT_INITIALIZED)
-                            calculateFabToolbarPosition();
+
                         //set the drawable back to plus icon if it has been changed
                         mainToolbarFab.setImageResource(R.drawable.ic_add_black_36dp);
+
+                        //animate fab to correct position. Run needlessly at app start-up once, but
+                        //that shouldn't consume too much resources :)
                         animateFABToToolbar();
+
                         //hide the toolbar and secondary fab if they are visible
                         bottomFab.setVisibility(View.INVISIBLE);
                         bottomToolbar.setVisibility(View.GONE);
@@ -456,18 +464,6 @@ public class MainActivity extends ApplicationActivity
     }
 
     /**
-     * Calculate where the fab should be animated to when moving it to the toolbar
-     */
-    private void calculateFabToolbarPosition(){
-        fabToolbarXPosition = mainToolbarFab.getX();
-        fabToolbarYPosition = mainToolbarFab.getY();
-        Log.d(TAG, "fab toolbar x " + fabToolbarXPosition + " fab toolbar y " + fabToolbarYPosition);
-        Log.d(TAG, "secondary toolbar bottom "
-                + findViewById(R.id.toolbar_secondary_layout).getY()
-                + findViewById(R.id.toolbar_secondary_layout).getHeight());
-    }
-
-    /**
      * Move the fab to bottom right corner, the fabBottomXPosition and fabBottomYPosition
      * should be calculated beforehand
      */
@@ -508,17 +504,19 @@ public class MainActivity extends ApplicationActivity
      * be calculated beforehand
      */
     private void animateFABToToolbar(){
-        if(fabToolbarYPosition != NOT_INITIALIZED && fabToolbarXPosition != NOT_INITIALIZED) {
-            mainToolbarFab.setVisibility(View.VISIBLE);
-            bottomFab.setVisibility(View.INVISIBLE);
-            Log.d(TAG, "animating fab to " + fabToolbarXPosition + "," + fabToolbarYPosition);
-            //remove the end listener so the correct fabs will stay visible/invisible
-            springXAnimation.removeEndListener(fabMoveAnimationEndListener);
-            springXAnimation.animateToFinalPosition(fabToolbarXPosition);
-            springYAnimation.animateToFinalPosition(fabToolbarYPosition);
+        //sanity check, these should never be anything else but 0
+        if(BuildConfig.DEBUG && (fabToolbarXPosition != 0 || fabToolbarYPosition != 0)) {
+            throw new RuntimeException("fabToolbarXPosition should be 0 and fabToolbarYPosition should be 0, " +
+                    "were instead " + fabToolbarXPosition + ", " + fabToolbarYPosition);
         }
-        else
-            throw new RuntimeException("fabBottomXPosition and fabBottomYPosition need to be set before calling");
+
+        mainToolbarFab.setVisibility(View.VISIBLE);
+        bottomFab.setVisibility(View.INVISIBLE);
+        //remove the end listener so the correct fabs will stay visible/invisible
+        springXAnimation.removeEndListener(fabMoveAnimationEndListener);
+        springXAnimation.animateToFinalPosition(fabToolbarXPosition);
+        springYAnimation.animateToFinalPosition(fabToolbarYPosition);
+
     }
 
     /**
@@ -554,9 +552,6 @@ public class MainActivity extends ApplicationActivity
     @Override
     protected void onDestroy() {
         Log.d(TAG, "onDestroy");
-
-        fabToolbarXPosition = NOT_INITIALIZED;
-        fabToolbarYPosition = NOT_INITIALIZED;
         fabBottomXPosition = NOT_INITIALIZED;
         fabBottomYPosition = NOT_INITIALIZED;
         super.onDestroy();
