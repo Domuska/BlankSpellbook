@@ -72,6 +72,7 @@ public class MainActivity extends ApplicationActivity
     private final String TAG = "MainActivity";
     private final String FRAGMENT_LAST_VISIBLE = "lastVisibleFragment";
     private final String FILTER_FRAGMENT_TAG = "filterFragment";
+    private final String WAS_FAB_EXPANDED = "wasFabExpanded";
     private final float NOT_INITIALIZED = -9998;
 
     private ActionBarDrawerToggle mDrawerToggle;
@@ -102,6 +103,8 @@ public class MainActivity extends ApplicationActivity
     private SearchView searchView;
     private int bottomToolbarDefaultColor, bottomToolbarSearchColor;
 
+    private boolean wasFabExpanded;
+
     SpringAnimation springXAnimation, springYAnimation;
     DynamicAnimation.OnAnimationEndListener fabMoveAnimationEndListener;
     float fabToolbarXPosition = NOT_INITIALIZED;
@@ -131,6 +134,8 @@ public class MainActivity extends ApplicationActivity
             //if we have savedInstanceState, the filter fragment might might be in the fragmentManager
             filterFragment = (SpellFilterFragment)
                     getSupportFragmentManager().findFragmentByTag(FILTER_FRAGMENT_TAG);
+
+            wasFabExpanded = savedInstanceState.getBoolean(WAS_FAB_EXPANDED);
 
             //don't animate the fab if the activity is re-created. That is odd.
             canFabAnimationSkipToEnd = true;
@@ -339,12 +344,21 @@ public class MainActivity extends ApplicationActivity
                         }
                         else
                             secondaryToolbarTools.setVisibility(View.VISIBLE);
+
                         //set the bottom bar and visible (fab does not need to be set, test and remove)
                         bottomToolbar.setVisibility(View.VISIBLE);
                         bottomFab.setVisibility(View.INVISIBLE);
+
+                        if(wasFabExpanded)
+                            bottomToolbar.expandFab(false);
+
                         //if filter fragment created, it should be re-opened
                         if(fragmentManager.findFragmentByTag(FILTER_FRAGMENT_TAG) != null){
+                            //add filter fragment
                             addFilterFragment(fragmentManager);
+                            bottomFab.setVisibility(View.INVISIBLE);
+                            //put the expanded bottom toolbar to top of filter
+                            bottomToolbar.expandFab(false);
                         }
                         //else see if fab was expanded earlier
                         if(!bottomToolbar.isFabExpanded()) {
@@ -355,6 +369,7 @@ public class MainActivity extends ApplicationActivity
                             //set drawable for the fab, looks better than setting it after animation
                             mainToolbarFab.setImageResource(R.drawable.ic_expand_more_black_36dp);
                             animateFABToBottom(canFabAnimationSkipToEnd);
+                            //animation skipped once, set to false. Set to true at onCreate if needed.
                             canFabAnimationSkipToEnd = false;
 
                         }
@@ -588,6 +603,7 @@ public class MainActivity extends ApplicationActivity
         mActionlistener.saveInstanceState(outState);
         outState.putBoolean(DATABASE_PERSISTANCE_SET_KEY, databasePersistanceSet);
         outState.putInt(FRAGMENT_LAST_VISIBLE, viewPager.getCurrentItem());
+        outState.putBoolean(WAS_FAB_EXPANDED, bottomToolbar.isFabExpanded());
         super.onSaveInstanceState(outState);
     }
 
@@ -875,6 +891,8 @@ public class MainActivity extends ApplicationActivity
     }
 
     private void animateBottomToolbarToTopOfFilter(float fragmentHeight){
+
+        Log.d(TAG, "animateBottomToolbarToTopOfFilter");
 
         if(fragmentManager.findFragmentByTag(FILTER_FRAGMENT_TAG) != null) {
             //filter's height as negative value is the toolbar animation target

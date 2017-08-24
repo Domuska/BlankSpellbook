@@ -72,7 +72,8 @@ dependencies {
     }
 
     //for search bar in mainActivity, https://github.com/bowyer-app/fab-toolbar
-    compile 'com.bowyer.app:fab-toolbar:1.1.0@aar'
+    //compile 'com.bowyer.app:fab-toolbar:1.1.0@aar'
+    compile project(":fabtoolbar-release")
 
 }
 
