@@ -349,9 +349,6 @@ public class MainActivity extends ApplicationActivity
                         bottomToolbar.setVisibility(View.VISIBLE);
                         bottomFab.setVisibility(View.INVISIBLE);
 
-                        if(wasFabExpanded)
-                            bottomToolbar.expandFab(false);
-
                         //if filter fragment created, it should be re-opened
                         if(fragmentManager.findFragmentByTag(FILTER_FRAGMENT_TAG) != null){
                             //add filter fragment
@@ -436,8 +433,9 @@ public class MainActivity extends ApplicationActivity
             }
         });
 
-
-
+        //if we are resuming, fab might have to be expanded
+        if(wasFabExpanded)
+            bottomToolbar.expandFab(false);
     }
 
     /**
@@ -534,6 +532,7 @@ public class MainActivity extends ApplicationActivity
     protected void onPause() {
         Log.d(TAG, "onPause called");
         mActionlistener.pauseActivity();
+        wasFabExpanded = bottomToolbar.isFabExpanded();
 
         /*FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.remove(fragmentManager.findFragmentByTag(FILTER_FRAGMENT_TAG));

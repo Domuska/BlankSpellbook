@@ -181,7 +181,7 @@
             android:src="@drawable/ic_expand_more_black_36dp"
             app:layout_anchor="@id/viewPagerLayout"
             app:layout_anchorGravity="bottom|end"
-            android:visibility="visible" />
+            android:visibility="invisible" />
 
 
 
