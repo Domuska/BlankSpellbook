@@ -9,6 +9,9 @@
 
     <!-- for toolbar -->
     <dimen name="double_toolbar_size">112dp</dimen>
+    <dimen name="toolbar_height">56dp</dimen>
+        <!-- 56dp (fab size) + 20 dp for good measure -->
+    <dimen name="toolbar_text_after_fab_margin">76dp</dimen>
     <dimen name="toolbar_secondary_margin_left">20dp</dimen>
     <dimen name="toolbar_secondary_margin_top">10dp</dimen>
 

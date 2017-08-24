@@ -210,7 +210,7 @@ public class MainActivityPresenter extends DrawerPresenter
      * @param id ID of the power list
      */
     public static void handleNewPowerList(String name, String id){
-        Log.d(TAG, "handleNewPowerList: name: " + name + " id: " + id);
+        //Log.d(TAG, "handleNewPowerList: name: " + name + " id: " + id);
         //add the power list if it's not already known, might be if we are returning to activity
         //and re-attaching listener
         if(!powerLists.containsKey(id)) {
@@ -311,7 +311,7 @@ public class MainActivityPresenter extends DrawerPresenter
              Another solution might be that we re-work the map so we store spell-powerlistname instead
              of what we do now. This might even be a better idea.*/
                 power.setPowerListName(powerListName);
-                Log.d(TAG, "added power " + power.getName() + " with power list name " + powerListName);
+                //Log.d(TAG, "added power " + power.getName() + " with power list name " + powerListName);
             } else {
                 power.setPowerListName("");
             }

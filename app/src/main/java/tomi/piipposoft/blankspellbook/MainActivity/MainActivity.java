@@ -317,7 +317,6 @@ public class MainActivity extends ApplicationActivity
                         bottomToolbar.setVisibility(View.GONE);
                         break;
 
-
                     case MainActivityPresenter.POWER_LISTS_SELECTED:
                         secondaryToolbarText.setText(getString(R.string.toolbar_text_power_lists));
                         if (secondaryToolbarTools != null)
@@ -463,6 +462,9 @@ public class MainActivity extends ApplicationActivity
         fabToolbarXPosition = mainToolbarFab.getX();
         fabToolbarYPosition = mainToolbarFab.getY();
         Log.d(TAG, "fab toolbar x " + fabToolbarXPosition + " fab toolbar y " + fabToolbarYPosition);
+        Log.d(TAG, "secondary toolbar bottom "
+                + findViewById(R.id.toolbar_secondary_layout).getY()
+                + findViewById(R.id.toolbar_secondary_layout).getHeight());
     }
 
     /**

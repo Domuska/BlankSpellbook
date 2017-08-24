@@ -19,9 +19,9 @@
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appbar"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/double_toolbar_size"
-            android:fitsSystemWindows="true">
+            android:layout_height="wrap_content">
 
+            <!-- Support library toolbar as the topmost element -->
             <android.support.v7.widget.Toolbar
                 android:id="@+id/my_toolbar"
                 android:layout_width="match_parent"
@@ -31,15 +31,11 @@
                 app:layout_scrollFlags="enterAlways|scroll"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-            <!-- Support library toolbar as the topmost element -->
-
+            <!-- Layout for secondary toolbar under first one -->
             <RelativeLayout
                 android:id="@+id/toolbar_secondary_layout"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:layout_marginStart="@dimen/toolbar_secondary_margin_left"
-                android:layout_marginLeft="@dimen/toolbar_secondary_margin_left"
-                android:fitsSystemWindows="true"
                 app:layout_scrollFlags="snap">
 
                 <TextView
@@ -47,8 +43,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="7dp"
-                    android:layout_marginLeft="@dimen/fab_size"
-                    android:layout_marginStart="@dimen/fab_size"
+                    android:layout_marginLeft="@dimen/toolbar_text_after_fab_margin"
+                    android:layout_marginStart="@dimen/toolbar_text_after_fab_margin"
                     android:textColor="?android:attr/textColorPrimary"
                     android:textSize="18sp"
                     android:layout_centerVertical="true"
